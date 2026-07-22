@@ -8,6 +8,4 @@ GOOGLE_API_KEY = os.environ['GOOGLE_API_KEY']
 ANTHROPIC_API_KEY = os.environ['ANTHROPIC_API_KEY']
 
 
-# def call_llm():
-
 

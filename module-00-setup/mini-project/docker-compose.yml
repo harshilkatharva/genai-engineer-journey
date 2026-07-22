@@ -1,0 +1,16 @@
+services:
+  redis:
+    image: redis:latest
+    container_name: redis-test
+    ports:
+      - 6379:6379
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres-test
+    environment:
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: testpassword
+      POSTGRES_DB: testdb
+    ports:
+      - 5432:5432
