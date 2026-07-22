@@ -1,0 +1,11 @@
+# Generated .gitignore file
+
+# Command values 
+.env
+.DS_Store
+.vscode/
+.venv/
+
+# Python project 
+*.pyc
+__pycache__/
