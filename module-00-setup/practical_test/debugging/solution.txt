@@ -1,0 +1,7 @@
+5 causes of raise KeyError
+
+1. wrong file name of .env may be (env, env., .eenv,etc)
+2. variable Name Not same with that file and .env file
+3. He mistakly define load_dotenv() after calling variable.
+4. May be key is encode by  diffrent encoder and he use diffrent encoder
+5. .env file in root of app_folder and he open a sub folder in IDE.

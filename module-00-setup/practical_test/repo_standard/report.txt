@@ -1,0 +1,25 @@
+Folder Structure
+
+/app_name
+|
+|-.venv
+|-src
+    |-config.py
+|-.env
+|-.env.example
+|-.gitignore
+|-requirements.txt
+
+
+
+.venv for managing packages version so it will not confilit in future or with other developer.because many engineers working on same project so all have same versions and all functionality work properly and.
+
+src/config.py if any api keys or any environment variable missing than our app crash from start so that after not facing trouble.
+
+.env storing credential data like api keys, username password for databse,etc. and we will not share this file anywhere in production or server. because of we publish this data than chance to leak our data or missuse it or high bills or apis.
+
+.env.example whenever we push our project that time we not push our .env file but it's variable use in mulitple place in our project. suppose that one engineer add a variale in .env file and it create that variable in .env.example file so that other engineer know that he should add new variable in his .env file.
+
+.gitignore :- whenever we push our project that time we dont want to push some files and folders. every time specify that file and folder it is hactic and some time by mistake upload that file, so that we will specify all files and folder that we dont want to publish.
+
+requirements.txt :- we store packages with that specific verison so if other engineer or later same version can download.

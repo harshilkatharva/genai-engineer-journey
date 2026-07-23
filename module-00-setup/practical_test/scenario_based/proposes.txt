@@ -1,0 +1,18 @@
+Strategy - 1 
+We can store outout of API call or create a demo function which return same reposne and CI pipeline whenever called that api we return that output for check whether new changes working or not.
+positive
+    no api cost
+    fast testing
+negative
+    not test with real api
+    change formate if reposne create confict
+
+
+
+Strategy - 2
+create diffrent CI cases for specific api calls testing. use only for pruduction testing.
+Positive 
+    Check with real api test
+    less api cost
+negative
+    not test with every comit
