@@ -126,27 +126,139 @@ except LLMError:
 
 '''
 
+'''
+#5
 
 from pydantic import BaseModel
 import asyncio
 import httpx
 
-test_api = 'https://jsonplaceholder.typicode.com/todos/1'
+test_api = 'https://jsonplaceholder.typicode.com/posts/1'
 
-def check_response(BaseModel):
+class check_response(BaseModel):
     userId : int
-    id : int
+    id : int 
     title : str
     body : str
 
 async def call_api(api):
-    async with httpx.AsyncClient as client:
+    async with httpx.AsyncClient() as client:
         response = await client.get(api)
-        response.raise_for_status() 
-        return response
-    # check_response(response)
+        # response.raise_for_status() 
+        data = response.json()
+        try:
+            check_response.model_validate(data)
+            print(data)
+        except Exception as e:
+            print(f"Output diffrent from expactations. check error \n {e}")
     
 
-result = asyncio.run(call_api(test_api))
-print(result)
+asyncio.run(call_api(test_api))
+
+'''
+
+
+'''
+
+#6
+
+from unittest.mock import patch,AsyncMock, MagicMock
+import httpx
+import asyncio
+import pytest
+
+test_api = 'https://jsonplaceholder.typicode.com/posts/1'
+
+async def call_api(api):
+    async with httpx.AsyncClient() as client:
+        response = await client.get(api)
+        response.raise_for_status()
+        return response.json()
+
+# fake_response = MagicMock()
+# fake_response.json.return_value = {
+#     'userId': 1, 
+#     'id': 1, 
+#     'title': 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit', 
+#     'body': 'quia et suscipit '
+# }
+
+# fake_response.raise_for_status.return_value = None
+
+# with patch("httpx.AsyncClient.get", new=AsyncMock(return_value=fake_response)):
+#     result = asyncio.run(call_api(test_api))
+
+# print(result)
+
+@pytest.mark.asyncio
+@patch("httpx.AsyncClient.get")
+async def fake_call_api(api,mock_get):
+    fake_response = MagicMock()
+    fake_response.json.return_value = {
+        'userId': 1, 
+        'id': 1, 
+        'title': 'sunt aut facere repellat provident occaecati excepturi optio reprehenderit', 
+        'body': 'quia et suscipit '
+    }
+    fake_response.raise_for_status.return_value = None
+
+    mock_get.return_value = fake_response
+
+    result = await call_api(api)
+
+    return result
+
+
+print(asyncio.run(fake_call_api(test_api)))
+    
+'''
+
+
+
+# '''
+
+#7
+
+import hashlib
+import time
+import asyncio
+
+def compute_hash():
+    for _ in range(500000):
+        hashlib.sha256(b"Hello").hexdigest()
+
+async def cpu_task():
+    start = time.perf_counter()
+    compute_hash()
+    print("CPU-bond time :- ", time.perf_counter() - start)
+
+async def async_test():
+
+    start = time.perf_counter()
+
+    await asyncio.gather(
+        cpu_task(),
+        cpu_task(),
+        cpu_task()
+    )
+
+    print("Async task :- ", time.perf_counter() - start)
+
+asyncio.run(async_test())
+
+
+from concurrent.futures import ProcessPoolExecutor
+
+def worker(_):
+    compute_hash()
+
+
+start = time.perf_counter()
+
+with ProcessPoolExecutor() as executor:
+    list(executor.map(worker, range(3)))
+
+print("Preprocess Pool task :- ", time.perf_counter() - start)
+
+# '''
 

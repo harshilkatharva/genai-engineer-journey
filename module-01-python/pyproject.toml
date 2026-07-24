@@ -5,10 +5,16 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "anyio>=4.14.2",
     "asyncio>=4.0.0",
     "dotenv>=0.9.9",
     "google>=3.0.0",
     "google-genai>=2.14.0",
     "httpx>=0.28.1",
     "openai>=2.47.0",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "pytest-tornasync>=0.6.0.post2",
+    "pytest-trio>=0.8.0",
+    "pytest-twisted>=1.14.3",
 ]
