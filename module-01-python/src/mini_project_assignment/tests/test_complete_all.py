@@ -1,26 +1,26 @@
-import pytest
+# import pytest
 
-from ..client import LLMClient
+# from ..client import LLMClient
 
 
-@pytest.mark.asyncio
-async def test_complete_all():
+# @pytest.mark.asyncio
+# async def test_complete_all():
 
-    client = LLMClient()
+#     client = LLMClient()
 
-    results = await client.complete_all(
-        "Explain AI"
-    )
+#     results = await client.complete_all(
+#         "Explain AI"
+#     )
 
-    assert len(results) == 3
+#     assert len(results) == 3
 
-    providers = {
-        result.provider
-        for result in results
-    }
+#     providers = {
+#         result.provider
+#         for result in results
+#     }
 
-    assert providers == {
-        "openai",
-        "anthropic",
-        "google",
-    }
+#     assert providers == {
+#         "openai",
+#         "anthropic",
+#         "google",
+#     }

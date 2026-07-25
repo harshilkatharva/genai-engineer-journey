@@ -1,7 +1,8 @@
 import time
-from  mini_project_assignment.models import CompletionResult
+from mini_project_assignment.models import CompletionResult
 from mini_project_assignment.config import GOOGLE_API_KEY
 from google import genai
+import asyncio
 
 class GoogleProvider:
     """
@@ -13,16 +14,17 @@ class GoogleProvider:
         start = time.perf_counter()
 
         client = genai.Client(api_key=GOOGLE_API_KEY)
-        response = await client.models.generate_content(
-            model="gemini-3.6-flash",
-            contents=prompt
+        response = await client.aio.models.generate_content(
+            model="gemini-3.5-flash-lite",
+            contents=prompt,
         )
-        response = response.json()
+
         latency = (time.perf_counter() - start) * 1000
 
         return CompletionResult(
             text=response.text,
             provider="google",
             latency_ms=latency,
-            token_usage=response.usage_metadata,
+            token_usage=response.usage_metadata.total_token_count,
         )   
+    

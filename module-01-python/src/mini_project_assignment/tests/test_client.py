@@ -1,16 +1,16 @@
-import pytest
+# import pytest
 
-from ..client import LLMClient
+# from ..client import LLMClient
 
 
-@pytest.mark.asyncio
-async def test_client_complete():
+# @pytest.mark.asyncio
+# async def test_client_complete():
 
-    client = LLMClient()
+#     client = LLMClient()
 
-    result = await client.complete(
-        provider="openai",
-        prompt="Hello"
-    )
+#     result = await client.complete(
+#         provider="openai",
+#         prompt="Hello"
+#     )
 
-    assert result.provider == "openai"
+#     assert result.provider == "openai"

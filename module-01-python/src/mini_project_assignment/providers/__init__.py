@@ -1,6 +1,6 @@
-from .openai import OpenAIProvider
-from .google import GoogleProvider
-from .anthropic import AnthropicProvider
+from .openai_provider import OpenAIProvider
+from .google_provider import GoogleProvider
+from .anthropic_provider import AnthropicProvider
 
 __all__ = [
     "OpenAIProvider",

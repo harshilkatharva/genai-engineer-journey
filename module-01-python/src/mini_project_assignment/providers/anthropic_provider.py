@@ -12,8 +12,7 @@ class AnthropicProvider:
 
         start = time.perf_counter()
 
-        # TODO:
-        # Call Anthropic API
+        # response = 
 
         latency = (time.perf_counter() - start) * 1000
 
