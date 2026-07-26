@@ -50,4 +50,8 @@ class LLMClient:
         )
         return results
 
+
+    async def stream(self, provider : str, prompt : str) :
+        async for token in self.providers[provider].stream(prompt):
+            yield token
     

@@ -1,20 +1,24 @@
 import time
+from typing import AsyncIterator
+
 
 from mini_project_assignment.models import CompletionResult
 from mini_project_assignment.config import ANTHROPIC_API_KEY
-import anthropic
+from anthropic import AsyncAnthropic
 
 class AnthropicProvider:
     """
     Communicate with Anthropic.
     """
 
+    def __init__(self):
+        self.client = AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
+
     async def complete(self, prompt: str) -> CompletionResult:
 
         start = time.perf_counter()
 
-        client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
-        response = await client.messages.create(
+        response = await self.client.messages.create(
             model="claude-sonnet-4-6",
             messages=[
                 {"role" : "user", "content  " : prompt}
@@ -31,3 +35,17 @@ class AnthropicProvider:
             latency_ms=latency,
             token_usage=total_token,
         )
+
+    async def stream(self, prompt: str) -> AsyncIterator[str]:
+        """
+        Stream response text deltas from Anthropic
+        """
+        async with self.client.messages.stream(
+            model="claude-sonnet-4-6",
+            max_tokens=1024,
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
+        ) as stream:
+            async for text in stream.text_stream:
+                yield text
