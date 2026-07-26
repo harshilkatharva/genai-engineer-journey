@@ -1,7 +1,7 @@
 import time
 from mini_project_assignment.models import CompletionResult
 from openai import OpenAI
-from ..config import OPENAI_API_KEY
+from mini_project_assignment.config import OPENAI_API_KEY
 
 class OpenAIProvider:
     """
