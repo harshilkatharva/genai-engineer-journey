@@ -16,7 +16,6 @@ class AnthropicProvider:
         self.client = AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
 
     async def complete(self, prompt: str) -> CompletionResult:
-
         start = time.perf_counter()
 
         response = await self.client.messages.create(

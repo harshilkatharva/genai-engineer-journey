@@ -44,7 +44,6 @@ async def test_client_complete(provider, patch_target):
     ],
 )
 async def test_client_stream(provider, patch_target):
-
     with patch(patch_target) as mock_provider:
 
         async def fake_text_stream(prompt):

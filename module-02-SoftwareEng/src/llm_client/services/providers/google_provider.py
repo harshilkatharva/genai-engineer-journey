@@ -16,7 +16,6 @@ class GoogleProvider:
         self.client = genai.Client(api_key=GOOGLE_API_KEY)
 
     async def complete(self, prompt: str) -> CompletionResult:
-
         start = time.perf_counter()
 
         response = await self.client.aio.models.generate_content(
