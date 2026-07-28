@@ -1,6 +1,6 @@
 import time
-from mini_project_assignment.models import CompletionResult
-from mini_project_assignment.config import GOOGLE_API_KEY
+from llm_client.models.response_model import CompletionResult
+from llm_client.config import GOOGLE_API_KEY
 from google import genai
 import asyncio
 from typing import Iterator, AsyncIterator

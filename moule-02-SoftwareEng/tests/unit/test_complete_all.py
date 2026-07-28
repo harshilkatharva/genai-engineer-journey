@@ -1,7 +1,7 @@
 import pytest
-from mini_project_assignment.client import LLMClient
+from llm_client.services import LLMClient
 from unittest.mock import patch, MagicMock, AsyncMock
-from mini_project_assignment.models import CompletionResult
+from llm_client.models import CompletionResult
 
 @pytest.mark.asyncio
 async def test_complete_all_mock():

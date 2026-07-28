@@ -1,1 +1,1 @@
-from .models import CompletionResult
+from llm_client.models.response_model import CompletionResult

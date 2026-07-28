@@ -1,12 +1,8 @@
 import asyncio
  
-from mini_project_assignment.models import CompletionResult
-from mini_project_assignment.providers import (
-    OpenAIProvider,
-    AnthropicProvider,
-    GoogleProvider
-)
-from mini_project_assignment.exceptions import LLMError
+from llm_client.models.response_model import CompletionResult
+from llm_client.services.providers import *
+from llm_client.exceptions import LLMError
 
 class LLMClient:
     """ 
