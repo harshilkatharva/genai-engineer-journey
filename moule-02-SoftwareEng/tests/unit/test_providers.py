@@ -7,7 +7,7 @@ from llm_client.services.providers import *
 
 @pytest.mark.asyncio
 @patch("llm_client.services.providers.openai_provider.AsyncOpenAI")
-async def test_openai_provider_mock(mock_openai_client):
+async def test_openai_provider_complete_mock(mock_openai_client):
     mock_resposne = MagicMock()
     mock_resposne.output_text = "This response created for mock test OpenAI"
     mock_resposne.provider = "openai"
@@ -25,9 +25,35 @@ async def test_openai_provider_mock(mock_openai_client):
     assert result.latency_ms > 0.0
 
 
+class MockStreamOpenAI:
+    def __aiter__(self):
+        async def gen():
+            for text in "Hello how are you".split():
+                event = MagicMock()
+                event.type = "response.output_text.delta"
+                event.delta = text
+                yield event
+        return gen()
+
+
+@pytest.mark.asyncio
+@patch("llm_client.services.providers.openai_provider.AsyncOpenAI")
+async def test_opnai_provider_stream_mock(mock_openai_client):
+
+    mock_client = mock_openai_client.return_value
+    mock_client.responses.create = AsyncMock(return_value=MockStreamOpenAI())
+
+    provider = OpenAIProvider()
+
+    chunks = [chunk async for chunk in provider.stream("Hello")]
+
+    assert len(chunks) >= 2
+
+
+
 @pytest.mark.asyncio
 @patch("llm_client.services.providers.google_provider.genai.Client")
-async def test_google_provider_mock(mock_genai_client):
+async def test_google_provider_complete_mock(mock_genai_client):
 
     mock_response = MagicMock()
     mock_response.text = "This response is created for mock test"
@@ -46,9 +72,36 @@ async def test_google_provider_mock(mock_genai_client):
     assert result.latency_ms > 0.0
 
 
+
+class MockStreamGoogle:
+    def __aiter__(self):
+        async def gen():
+            for text in "Hello how are you".split():
+                chunk = MagicMock()
+                chunk.text = text
+                yield chunk
+        return gen()
+
+
+@pytest.mark.asyncio
+@patch("llm_client.services.providers.google_provider.genai.Client")
+async def test_google_provider_stream_mock(mock_genai_client):
+    mock_client = mock_genai_client.return_value
+
+    mock_client.aio.models.generate_content_stream = AsyncMock(return_value = MockStreamGoogle())
+
+    provider = GoogleProvider()
+    chunks = [chunk async for chunk in provider.stream("Hello")]
+
+    assert len(chunks) >= 2
+
+
+
+
+
 @pytest.mark.asyncio
 @patch('llm_client.services.providers.anthropic_provider.AsyncAnthropic')
-async def test_anthropic_provider_mock(mock_anthropic_client):
+async def test_anthropic_provider_complete_mock(mock_anthropic_client):
     mock_content_block = MagicMock()
     mock_content_block.text = "This response created for mock test"
 
@@ -71,6 +124,25 @@ async def test_anthropic_provider_mock(mock_anthropic_client):
     assert result.latency_ms >= 0.0
 
 
+async def MockStreamAnthropic():
+    for text in "Hello how are you".split():
+        yield text + " "
+
+@pytest.mark.asyncio
+@patch('llm_client.services.providers.anthropic_provider.AsyncAnthropic')
+async def test_anthropic_provider_stream_mock(mock_anthropic_client):
+    context = MagicMock()
+    context.__aenter__ = AsyncMock(return_value = context)
+    context.__aexit__ = AsyncMock(return_value = None)
+    context.text_stream = MockStreamAnthropic()
+
+    mock_client = mock_anthropic_client.return_value
+    mock_client.messages.stream.return_value = context
+
+    provider = AnthropicProvider()
+    result = [chunk async for chunk in provider.stream("Hello")]
+
+    assert len(result) >= 2
 
 
 
