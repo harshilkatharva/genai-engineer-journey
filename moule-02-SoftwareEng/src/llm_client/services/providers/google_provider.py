@@ -42,14 +42,14 @@ class GoogleProvider:
                 yield chunk.text
 
 
-async def main():
+# async def main():
 
-    google_pro = GoogleProvider()
-    async for text_chunk in google_pro.stream("What is AI? Explain me in 2 sentence"):
-        print(text_chunk,end="",flush=True)
-        print("\n")
-    print()
+#     google_pro = GoogleProvider()
+#     async for text_chunk in google_pro.stream("What is AI? Explain me in 2 sentence"):
+#         print(text_chunk,end="",flush=True)
+#         print("\n")
+#     print()
 
-if __name__ == "__main__":
-    asyncio.run(main())
+# if __name__ == "__main__":
+#     asyncio.run(main())
     
