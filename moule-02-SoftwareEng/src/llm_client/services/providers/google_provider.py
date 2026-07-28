@@ -9,13 +9,14 @@ class GoogleProvider:
     """
     Communicate with Google Gemini.
     """
+    def __init__(self):
+        self.client = genai.Client(api_key=GOOGLE_API_KEY)
 
     async def complete(self, prompt: str) -> CompletionResult:
 
         start = time.perf_counter()
 
-        client = genai.Client(api_key=GOOGLE_API_KEY)
-        response = await client.aio.models.generate_content(
+        response = await self.client.aio.models.generate_content(
             model="gemini-3.5-flash-lite",
             contents=prompt,
         )
@@ -31,8 +32,7 @@ class GoogleProvider:
 
 
     async def stream(self, prompt : str) -> AsyncIterator[str]:
-        client = genai.Client(api_key=GOOGLE_API_KEY)
-        response_stream = await client.aio.models.generate_content_stream(
+        response_stream = await self.client.aio.models.generate_content_stream(
             model="gemini-3.5-flash-lite",
             contents=prompt,
         )
