@@ -1,12 +1,10 @@
 import pytest
-import asyncio
 from unittest.mock import patch, AsyncMock, MagicMock
-from mini_project_assignment.providers import AnthropicProvider 
-
+from mini_project_assignment.providers import AnthropicProvider
 
 
 @pytest.mark.asyncio
-@patch('mini_project_assignment.providers.anthropic_provider.anthropic.Anthropic')
+@patch("mini_project_assignment.providers.anthropic_provider.anthropic.Anthropic")
 async def test_anthropic_provider_mock(mock_anthropic_client):
     mock_content_block = MagicMock()
     mock_content_block.text = "This response created for mock test"
@@ -20,7 +18,7 @@ async def test_anthropic_provider_mock(mock_anthropic_client):
     mock_response.usage = mock_usage
 
     mock_client = mock_anthropic_client.return_value
-    mock_client.messages.create = AsyncMock(return_value= mock_response)
+    mock_client.messages.create = AsyncMock(return_value=mock_response)
 
     provider = AnthropicProvider()
     result = await provider.complete("Hello")
@@ -28,8 +26,3 @@ async def test_anthropic_provider_mock(mock_anthropic_client):
     assert result.provider == "anthropic"
     assert len(result.text) > 0
     assert result.latency_ms >= 0.0
-
-
-
-
-

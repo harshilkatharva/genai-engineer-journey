@@ -1,6 +1,6 @@
-'''
+"""
 
-#1 
+#1
 
 import asyncio
 
@@ -15,9 +15,9 @@ async def retry_async(coro_fn,max_attempt = 3, backoff_seconds=1.0):
             delay = backoff_seconds* (2 ** attempt)
             await asyncio.sleep(delay)
 
-'''
+"""
 
-'''
+"""
 #2
 
 from pydantic import BaseModel, field_validator
@@ -33,11 +33,11 @@ class Prediction(BaseModel):
             raise ValueError("confidence must be between 0 and 1")
         return value
 
-'''
+"""
 
-#3
+# 3
 
-'''
+"""
 
 import asyncio 
 import time
@@ -78,12 +78,12 @@ def ratelimiter():
         return wrapper
 
 
-'''
+"""
 
 
-#4
+# 4
 
-'''
+"""
 
 import asyncio
 
@@ -106,9 +106,9 @@ async def main():
 
 asyncio.run(main())
 
-'''
+"""
 
-'''
+"""
 
 #5
 
@@ -145,9 +145,9 @@ async def main():
 
 asyncio.run(main())
 
-'''
+"""
 
-'''
+"""
 #6
 import asyncio
 
@@ -165,9 +165,9 @@ async def merge_stream(stream_chunk):
         yield buffer.strip()
 
 
-'''
+"""
 
-'''
+"""
 
 #7
 
@@ -201,9 +201,9 @@ class TestTokenUsages(unittest.TestCase):
 if __name__ == "__main__":
     unittest.main()
 
-'''
+"""
 
-'''
+"""
 
 #8
 
@@ -245,9 +245,9 @@ async def main():
 asyncio.run(main())
 
 
-'''
+"""
 
-'''
+"""
 #9
 
 from pydantic import BaseModel, Field
@@ -264,9 +264,9 @@ def json_converter(model : type[BaseModel]):
 
 print(json_converter(ModelDemo))
 
-'''
+"""
 
-'''
+"""
 
 #10
 
@@ -294,4 +294,4 @@ class HTTPClient:
         return respose
 
 
-'''
+"""

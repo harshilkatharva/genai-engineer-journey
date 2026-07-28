@@ -1,4 +1,4 @@
-'''
+"""
 #1
 import httpx
 import asyncio
@@ -16,7 +16,7 @@ def test_sequential(api) -> float:
     end = time.perf_counter()
 
 
-    return end - start 
+    return end - start
 
 
 sequential_time = test_sequential(test_api)
@@ -36,9 +36,9 @@ async def test_concurrently(api) -> float:
 concurrent_time = asyncio.run(test_concurrently(test_api))
 print(concurrent_time)
 
-'''
+"""
 
-'''
+"""
 #2
 from pydantic import BaseModel, Field
 from typing import Literal
@@ -48,9 +48,9 @@ class product_review(BaseModel):
     rating : int = Field(ge=1, le=5)
     sentiment : Literal['Positive', 'Negative', 'Neutral']
     complaints = list[str]
-'''
+"""
 
-'''
+"""
 
 #3
 from typing import Iterator
@@ -69,9 +69,9 @@ async def test_stream():
 asyncio.run(test_stream())
 
 
-'''
+"""
 
-'''
+"""
 #4
 
 class LLMError(Exception):
@@ -124,9 +124,9 @@ except LLMResposneError:
 except LLMError:
     print("Unknown LLM Error")
 
-'''
+"""
 
-'''
+"""
 #5
 
 from pydantic import BaseModel
@@ -155,10 +155,10 @@ async def call_api(api):
 
 asyncio.run(call_api(test_api))
 
-'''
+"""
 
 
-'''
+"""
 
 #6
 
@@ -211,43 +211,43 @@ async def fake_call_api(api,mock_get):
 
 print(asyncio.run(fake_call_api(test_api)))
     
-'''
-
+"""
 
 
 # '''
 
-#7
+"""
+# 7
 
 import hashlib
 import time
 import asyncio
 
+
 def compute_hash():
     for _ in range(500000):
         hashlib.sha256(b"Hello").hexdigest()
+
 
 async def cpu_task():
     start = time.perf_counter()
     compute_hash()
     print("CPU-bond time :- ", time.perf_counter() - start)
 
-async def async_test():
 
+async def async_test():
     start = time.perf_counter()
 
-    await asyncio.gather(
-        cpu_task(),
-        cpu_task(),
-        cpu_task()
-    )
+    await asyncio.gather(cpu_task(), cpu_task(), cpu_task())
 
     print("Async task :- ", time.perf_counter() - start)
+
 
 asyncio.run(async_test())
 
 
 from concurrent.futures import ProcessPoolExecutor
+
 
 def worker(_):
     compute_hash()
@@ -260,5 +260,6 @@ with ProcessPoolExecutor() as executor:
 
 print("Preprocess Pool task :- ", time.perf_counter() - start)
 
-# '''
+# 
 
+"""

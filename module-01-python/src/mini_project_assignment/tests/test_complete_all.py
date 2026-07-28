@@ -1,7 +1,8 @@
 import pytest
 from mini_project_assignment.client import LLMClient
-from unittest.mock import patch, MagicMock, AsyncMock
+from unittest.mock import AsyncMock
 from mini_project_assignment.models import CompletionResult
+
 
 @pytest.mark.asyncio
 async def test_complete_all_mock():
@@ -23,7 +24,7 @@ async def test_complete_all_mock():
     llm_client.providers["openai"].complete = AsyncMock(return_value=openai_res)
     llm_client.providers["google"].complete = AsyncMock(return_value=google_res)
     llm_client.providers["anthropic"].complete = AsyncMock(
-        side_effect = Exception("Anthropic server is down!")
+        side_effect=Exception("Anthropic server is down!")
     )
 
     result = await llm_client.complete_all("Hello, Who are you ?")
