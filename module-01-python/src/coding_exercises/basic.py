@@ -1,4 +1,4 @@
-'''
+"""
 
 import asyncio
 import httpx
@@ -29,9 +29,9 @@ async def main():
 asyncio.run(main())
 
 
-'''
+"""
 
-'''
+"""
 
 from pydantic import BaseModel,Field
 from typing import Literal
@@ -43,7 +43,7 @@ class check_sentiment(BaseModel):
     key_phrase = list[str]
 
 
-'''
+"""
 
 
 # from typing import Iterator
@@ -57,5 +57,3 @@ class check_sentiment(BaseModel):
 #     async def stream_completion(prompt: str):
 #         async for chunk in llm_client.stream(prompt):
 #             yield chunk.textt
-
-

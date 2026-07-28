@@ -10,25 +10,28 @@ import time
 console = Console()
 
 # Fetching API Key from config
-OPENAI_API_KEY = getattr(config, 'OPENAI_API_KEY', None)
-GOOGLE_API_KEY = getattr(config, 'GOOGLE_API_KEY', None)
-ANTHROPIC_API_KEY = getattr(config, 'ANTHROPIC_API_KEY', None)
-POSTGRESQL_CONNECTION = getattr(config, 'POSTGRESQL_CONNECTION', False)
-REDIS_CONNECTION = getattr(config, 'REDIS_CONNECTION', False)
+OPENAI_API_KEY = getattr(config, "OPENAI_API_KEY", None)
+GOOGLE_API_KEY = getattr(config, "GOOGLE_API_KEY", None)
+ANTHROPIC_API_KEY = getattr(config, "ANTHROPIC_API_KEY", None)
+POSTGRESQL_CONNECTION = getattr(config, "POSTGRESQL_CONNECTION", False)
+REDIS_CONNECTION = getattr(config, "REDIS_CONNECTION", False)
 
 # Schema of result
 results = {
-    'OpenAI' : {'key_available' : 'Yes' if OPENAI_API_KEY else 'No', 
-                'latency' : None,
-                'result' : None
+    "OpenAI": {
+        "key_available": "Yes" if OPENAI_API_KEY else "No",
+        "latency": None,
+        "result": None,
     },
-    'Google' : {'key_available' : 'Yes' if GOOGLE_API_KEY else 'No', 
-                'latency' : None,
-                'result' : None
+    "Google": {
+        "key_available": "Yes" if GOOGLE_API_KEY else "No",
+        "latency": None,
+        "result": None,
     },
-    'Anthropic' : {'key_available' : 'Yes' if ANTHROPIC_API_KEY else 'No', 
-                'latency' : None,
-                'result' : None
+    "Anthropic": {
+        "key_available": "Yes" if ANTHROPIC_API_KEY else "No",
+        "latency": None,
+        "result": None,
     },
 }
 
@@ -39,35 +42,33 @@ with console.status("[bold blue]Checking API's...", spinner="dots"):
         try:
             openai_client = OpenAI(api_key=OPENAI_API_KEY)
             response = openai_client.responses.create(
-                model='gpt-4.1-mini',
-                input="Hello World!"
+                model="gpt-4.1-mini", input="Hello World!"
             )
             end = time.perf_counter()
-            results['OpenAI']['latency'] = end - start
-            results['OpenAI']['results'] = 'success'
-            
-        except Exception as e:
-            end = time.perf_counter()
-            results['OpenAI']['latency'] = end - start
-            results['OpenAI']['result'] = 'failed'
+            results["OpenAI"]["latency"] = end - start
+            results["OpenAI"]["results"] = "success"
 
-     # Google Check
+        except Exception:
+            end = time.perf_counter()
+            results["OpenAI"]["latency"] = end - start
+            results["OpenAI"]["result"] = "failed"
+
+    # Google Check
     if GOOGLE_API_KEY:
         start = time.perf_counter()
         try:
             google_client = genai.Client(api_key=GOOGLE_API_KEY)
             response = google_client.interactions.create(
-                model="gemini-3.6-flash",
-                input="Hello World!"
+                model="gemini-3.6-flash", input="Hello World!"
             )
             end = time.perf_counter()
-            results['Google']['latency'] = end - start
-            results['Google']['result'] = 'success'
-            
-        except Exception as e:
+            results["Google"]["latency"] = end - start
+            results["Google"]["result"] = "success"
+
+        except Exception:
             end = time.perf_counter()
-            results['Google']['latency'] = end - start
-            results['Google']['result'] = 'failed'
+            results["Google"]["latency"] = end - start
+            results["Google"]["result"] = "failed"
 
     # Anthropic Check
     if ANTHROPIC_API_KEY:
@@ -76,20 +77,15 @@ with console.status("[bold blue]Checking API's...", spinner="dots"):
             anthropic_client = Anthropic(api_key=ANTHROPIC_API_KEY)
             response = anthropic_client.messages.create(
                 model="claude-3.0",
-                messages = [
-                    {
-                        'role' : 'user',
-                        'content' : 'Hello World!'
-                    }
-                ]
+                messages=[{"role": "user", "content": "Hello World!"}],
             )
             end = time.perf_counter()
-            results['Anthropic']['latency'] = end - start
-            results['Anthropic']['result'] = 'success'
-        except Exception as e:
+            results["Anthropic"]["latency"] = end - start
+            results["Anthropic"]["result"] = "success"
+        except Exception:
             end = time.perf_counter()
-            results['Anthropic']['latency'] = end - start
-            results['Anthropic']['result'] = 'failed'
+            results["Anthropic"]["latency"] = end - start
+            results["Anthropic"]["result"] = "failed"
 
 # Create table for showing result of our API's
 api_table = Table(title="Health Check Results for API's")
@@ -101,9 +97,9 @@ api_table.add_column("Result", style="yellow")
 for provider, data in results.items():
     api_table.add_row(
         provider,
-        data['key_available'],
-        str(data['latency']) if data['latency'] is not None else "N/A",
-        data['result'] if data['result'] is not None else "N/A"
+        data["key_available"],
+        str(data["latency"]) if data["latency"] is not None else "N/A",
+        data["result"] if data["result"] is not None else "N/A",
     )
 
 
@@ -113,7 +109,7 @@ database_table = Table(title="Health Check Results for Databases")
 database_table.add_column("Database", style="cyan", no_wrap=True)
 database_table.add_column("Connection Status", style="magenta")
 
-database_table.add_row("PostgreSQL",str(POSTGRESQL_CONNECTION))
-database_table.add_row("Redis",str(REDIS_CONNECTION))
+database_table.add_row("PostgreSQL", str(POSTGRESQL_CONNECTION))
+database_table.add_row("Redis", str(REDIS_CONNECTION))
 
 console.print(database_table)

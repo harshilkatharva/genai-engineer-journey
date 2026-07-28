@@ -3,7 +3,8 @@ from mini_project_assignment.models import CompletionResult
 from mini_project_assignment.config import GOOGLE_API_KEY
 from google import genai
 import asyncio
-from typing import Iterator, AsyncIterator
+from typing import AsyncIterator
+
 
 class GoogleProvider:
     """
@@ -11,7 +12,6 @@ class GoogleProvider:
     """
 
     async def complete(self, prompt: str) -> CompletionResult:
-
         start = time.perf_counter()
 
         client = genai.Client(api_key=GOOGLE_API_KEY)
@@ -27,10 +27,9 @@ class GoogleProvider:
             provider="google",
             latency_ms=latency,
             token_usage=response.usage_metadata.total_token_count,
-        )   
+        )
 
-
-    async def stream(self, prompt : str) -> AsyncIterator[str]:
+    async def stream(self, prompt: str) -> AsyncIterator[str]:
         client = genai.Client(api_key=GOOGLE_API_KEY)
         response_stream = await client.aio.models.generate_content_stream(
             model="gemini-3.5-flash-lite",
@@ -43,13 +42,12 @@ class GoogleProvider:
 
 
 async def main():
-
     google_pro = GoogleProvider()
     async for text_chunk in google_pro.stream("What is AI? Explain me in 2 sentence"):
-        print(text_chunk,end="",flush=True)
+        print(text_chunk, end="", flush=True)
         print("\n")
     print()
 
+
 if __name__ == "__main__":
     asyncio.run(main())
-    

@@ -6,6 +6,7 @@ from mini_project_assignment.models import CompletionResult
 from mini_project_assignment.config import ANTHROPIC_API_KEY
 from anthropic import AsyncAnthropic
 
+
 class AnthropicProvider:
     """
     Communicate with Anthropic.
@@ -15,15 +16,12 @@ class AnthropicProvider:
         self.client = AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
 
     async def complete(self, prompt: str) -> CompletionResult:
-
         start = time.perf_counter()
 
         response = await self.client.messages.create(
             model="claude-sonnet-4-6",
-            messages=[
-                {"role" : "user", "content  " : prompt}
-            ],
-            max_tokens=1024
+            messages=[{"role": "user", "content  ": prompt}],
+            max_tokens=1024,
         )
 
         latency = (time.perf_counter() - start) * 1000
@@ -43,9 +41,7 @@ class AnthropicProvider:
         async with self.client.messages.stream(
             model="claude-sonnet-4-6",
             max_tokens=1024,
-            messages=[
-                {"role": "user", "content": prompt}
-            ],
+            messages=[{"role": "user", "content": prompt}],
         ) as stream:
             async for text in stream.text_stream:
                 yield text

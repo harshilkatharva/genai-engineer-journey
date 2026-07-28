@@ -1,20 +1,14 @@
 import os
 from dotenv import load_dotenv
-from openai import OpenAI
-from google import genai
+
 load_dotenv()
-import time
-from functools import wraps
-from pydantic_settings import BaseSettings
 
 
-
-
-#1
-def load_required_env(names : list[str]) -> dict:
+# 1
+def load_required_env(names: list[str]) -> dict:
     """
     Load required environment variables from .env file and return all missing variables at once.
-    
+
     Args:
         names (list[str]): List of environment variable names to load.
 
@@ -26,10 +20,20 @@ def load_required_env(names : list[str]) -> dict:
     for name in names:
         value = os.environ.get(name)
         if value is None:
-            env_vars[name] = 'Missing'
+            env_vars[name] = "Missing"
     return env_vars
 
-missing = load_required_env(['OPENAI_API_KEY', 'GOOGLE_API_KEY', 'ANTHROPIC_API_KEY', 'POSTGRES_URL', 'REDIS_URL', 'TEST_ENV'])
+
+missing = load_required_env(
+    [
+        "OPENAI_API_KEY",
+        "GOOGLE_API_KEY",
+        "ANTHROPIC_API_KEY",
+        "POSTGRES_URL",
+        "REDIS_URL",
+        "TEST_ENV",
+    ]
+)
 print(f"Missing environment variables: {missing}")
 
 '''
