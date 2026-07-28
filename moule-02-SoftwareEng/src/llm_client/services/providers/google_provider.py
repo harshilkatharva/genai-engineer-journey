@@ -1,14 +1,17 @@
 import time
-from llm_client.models.response_model import CompletionResult
-from llm_client.config import GOOGLE_API_KEY
+from collections.abc import AsyncIterator
+
 from google import genai
-import asyncio
-from typing import Iterator, AsyncIterator
+
+from llm_client.config import GOOGLE_API_KEY
+from llm_client.models.response_model import CompletionResult
+
 
 class GoogleProvider:
     """
     Communicate with Google Gemini.
     """
+
     def __init__(self):
         self.client = genai.Client(api_key=GOOGLE_API_KEY)
 
@@ -28,10 +31,9 @@ class GoogleProvider:
             provider="google",
             latency_ms=latency,
             token_usage=response.usage_metadata.total_token_count,
-        )   
+        )
 
-
-    async def stream(self, prompt : str) -> AsyncIterator[str]:
+    async def stream(self, prompt: str) -> AsyncIterator[str]:
         response_stream = await self.client.aio.models.generate_content_stream(
             model="gemini-3.5-flash-lite",
             contents=prompt,
@@ -52,4 +54,3 @@ class GoogleProvider:
 
 # if __name__ == "__main__":
 #     asyncio.run(main())
-    

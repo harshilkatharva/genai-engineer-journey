@@ -1,10 +1,11 @@
 import time
-from typing import AsyncIterator
+from collections.abc import AsyncIterator
 
-
-from llm_client.models.response_model import CompletionResult
-from llm_client.config import ANTHROPIC_API_KEY
 from anthropic import AsyncAnthropic
+
+from llm_client.config import ANTHROPIC_API_KEY
+from llm_client.models.response_model import CompletionResult
+
 
 class AnthropicProvider:
     """
@@ -20,10 +21,8 @@ class AnthropicProvider:
 
         response = await self.client.messages.create(
             model="claude-sonnet-4-6",
-            messages=[
-                {"role" : "user", "content  " : prompt}
-            ],
-            max_tokens=1024
+            messages=[{"role": "user", "content  ": prompt}],
+            max_tokens=1024,
         )
 
         latency = (time.perf_counter() - start) * 1000
@@ -43,9 +42,7 @@ class AnthropicProvider:
         async with self.client.messages.stream(
             model="claude-sonnet-4-6",
             max_tokens=1024,
-            messages=[
-                {"role": "user", "content": prompt}
-            ],
+            messages=[{"role": "user", "content": prompt}],
         ) as stream:
             async for text in stream.text_stream:
                 yield text
