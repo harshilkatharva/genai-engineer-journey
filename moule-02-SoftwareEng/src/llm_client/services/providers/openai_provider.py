@@ -1,7 +1,7 @@
 import time
-from mini_project_assignment.models import CompletionResult
+from llm_client.models.response_model import CompletionResult
 from openai import AsyncOpenAI
-from mini_project_assignment.config import OPENAI_API_KEY
+from llm_client.config import OPENAI_API_KEY
 from typing import AsyncIterator
 
 class OpenAIProvider:

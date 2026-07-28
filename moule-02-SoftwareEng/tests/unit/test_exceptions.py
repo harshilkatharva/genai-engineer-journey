@@ -1,6 +1,6 @@
 import pytest
 
-from mini_project_assignment.exceptions import (
+from llm_client.exceptions import (
     LLMError,
     LLMRateLimitError,
     LLMTimeoutError,

@@ -2,8 +2,8 @@ import time
 from typing import AsyncIterator
 
 
-from mini_project_assignment.models import CompletionResult
-from mini_project_assignment.config import ANTHROPIC_API_KEY
+from llm_client.models.response_model import CompletionResult
+from llm_client.config import ANTHROPIC_API_KEY
 from anthropic import AsyncAnthropic
 
 class AnthropicProvider:
