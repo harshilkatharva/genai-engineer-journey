@@ -43,6 +43,10 @@ line-length = 100
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
+markers = [
+    "integration : marks tests that call external services"
+]
+addopts = "-m 'not intregration'"
 
 [tool.mypy]
 python_version = "3.12"

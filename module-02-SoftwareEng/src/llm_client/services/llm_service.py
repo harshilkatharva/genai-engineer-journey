@@ -1,7 +1,10 @@
 import asyncio
+import json
 
 from llm_client.models.response_model import CompletionResult
 from llm_client.services.providers import AnthropicProvider, OpenAIProvider, GoogleProvider
+
+from llm_client.utils.logger import logger
 
 
 class LLMClient:
@@ -25,7 +28,11 @@ class LLMClient:
         if provider not in self.providers:
             raise ValueError(f"Unspported provider {provider}")
 
-        return await self.providers[provider].complete(prompt)
+        response = await self.providers[provider].complete(prompt)
+
+        logger.info(json.dumps({"provider": provider, "prompt": prompt, "response": str(response)}))
+
+        return response
 
     async def complete_all(
         self,
