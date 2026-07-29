@@ -4,7 +4,7 @@ class LLMError(Exception):
     """
 
     def __init__(
-        self, message: str = "An unknowm=n LLM error occured", user_message: str | None = None
+        self, message: str = "An unknown LLM error occured", user_message: str | None = None
     ):
         self.message = message
         super().__init__(self.message)
@@ -27,7 +27,11 @@ class LLMTimeoutError(LLMError):
     Raised when an API request exceeds the configured timeout.
     """
 
-    pass
+    def __init__(self, message: str):
+        super().__init__(
+            message=message,
+            user_message="Timeout due to long waiting time. Please Try again later.",
+        )
 
 
 class LLMContentFilterError(LLMError):
@@ -35,7 +39,11 @@ class LLMContentFilterError(LLMError):
     Raised when the provider blocks the prompt or response due to safety/content filtering.
     """
 
-    pass
+    def __init__(self, message: str):
+        super().__init__(
+            message=message,
+            user_message="Your message contain Invalid content. Please modify your message before retry.",
+        )
 
 
 class LLMInvalidResponseError(LLMError):
@@ -43,7 +51,8 @@ class LLMInvalidResponseError(LLMError):
     Raised when the provider returns an unexpected or invalid response format.
     """
 
-    pass
+    def __init__(self, message: str):
+        super().__init__(message=message, user_message="Invalid response from provider.")
 
 
 class LLMAuthenticationError(LLMError):
@@ -51,7 +60,8 @@ class LLMAuthenticationError(LLMError):
     Raised when API authentication fails due to an invalid or missing API key.
     """
 
-    pass
+    def __init__(self, message: str):
+        super().__init__(message=message, user_message="You are unauthorized to access provider.")
 
 
 class LLMConnectionError(LLMError):
@@ -59,4 +69,8 @@ class LLMConnectionError(LLMError):
     Raised when the client cannot connect to the provider because of network or connectivity issues.
     """
 
-    pass
+    def __init__(self, message: str):
+        super().__init__(
+            message=message,
+            user_message="We can not connect with server. Please try again after some time.",
+        )
