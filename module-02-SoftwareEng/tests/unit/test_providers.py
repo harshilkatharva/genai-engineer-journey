@@ -1,4 +1,4 @@
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
@@ -6,15 +6,14 @@ from llm_client.services.providers import AnthropicProvider, OpenAIProvider, Goo
 
 
 @pytest.mark.asyncio
-@patch("llm_client.services.providers.openai_provider.AsyncOpenAI")
-async def test_openai_provider_complete_mock(mock_openai_client):
+async def test_openai_provider_complete_mock(mock_clients):
     mock_resposne = MagicMock()
     mock_resposne.output_text = "This response created for mock test OpenAI"
     mock_resposne.provider = "openai"
     mock_resposne.usage.total_tokens = 30
     mock_resposne.latency_ms = 303
 
-    mock_client = mock_openai_client.return_value
+    mock_client = mock_clients["openai"].return_value
     mock_client.responses.create = AsyncMock(return_value=mock_resposne)
 
     provider = OpenAIProvider()
@@ -38,9 +37,8 @@ class MockStreamOpenAI:
 
 
 @pytest.mark.asyncio
-@patch("llm_client.services.providers.openai_provider.AsyncOpenAI")
-async def test_opnai_provider_stream_mock(mock_openai_client):
-    mock_client = mock_openai_client.return_value
+async def test_opnai_provider_stream_mock(mock_clients):
+    mock_client = mock_clients["openai"].return_value
     mock_client.responses.create = AsyncMock(return_value=MockStreamOpenAI())
 
     provider = OpenAIProvider()
@@ -51,15 +49,14 @@ async def test_opnai_provider_stream_mock(mock_openai_client):
 
 
 @pytest.mark.asyncio
-@patch("llm_client.services.providers.google_provider.genai.Client")
-async def test_google_provider_complete_mock(mock_genai_client):
+async def test_google_provider_complete_mock(mock_clients):
     mock_response = MagicMock()
     mock_response.text = "This response is created for mock test"
     mock_response.usage_metadata.total_token_count = 30
     mock_response.provider = "google"
     mock_response.latency_ms = 150
 
-    mock_client = mock_genai_client.return_value
+    mock_client = mock_clients["google"].return_value
     mock_client.aio.models.generate_content = AsyncMock(return_value=mock_response)
 
     provider = GoogleProvider()
@@ -82,9 +79,8 @@ class MockStreamGoogle:
 
 
 @pytest.mark.asyncio
-@patch("llm_client.services.providers.google_provider.genai.Client")
-async def test_google_provider_stream_mock(mock_genai_client):
-    mock_client = mock_genai_client.return_value
+async def test_google_provider_stream_mock(mock_clients):
+    mock_client = mock_clients["google"].return_value
 
     mock_client.aio.models.generate_content_stream = AsyncMock(return_value=MockStreamGoogle())
 
@@ -95,8 +91,7 @@ async def test_google_provider_stream_mock(mock_genai_client):
 
 
 @pytest.mark.asyncio
-@patch("llm_client.services.providers.anthropic_provider.AsyncAnthropic")
-async def test_anthropic_provider_complete_mock(mock_anthropic_client):
+async def test_anthropic_provider_complete_mock(mock_clients):
     mock_content_block = MagicMock()
     mock_content_block.text = "This response created for mock test"
 
@@ -108,7 +103,7 @@ async def test_anthropic_provider_complete_mock(mock_anthropic_client):
     mock_response.content = [mock_content_block]
     mock_response.usage = mock_usage
 
-    mock_client = mock_anthropic_client.return_value
+    mock_client = mock_clients["anthropic"].return_value
     mock_client.messages.create = AsyncMock(return_value=mock_response)
 
     provider = AnthropicProvider()
@@ -125,14 +120,13 @@ async def MockStreamAnthropic():
 
 
 @pytest.mark.asyncio
-@patch("llm_client.services.providers.anthropic_provider.AsyncAnthropic")
-async def test_anthropic_provider_stream_mock(mock_anthropic_client):
+async def test_anthropic_provider_stream_mock(mock_clients):
     context = MagicMock()
     context.__aenter__ = AsyncMock(return_value=context)
     context.__aexit__ = AsyncMock(return_value=None)
     context.text_stream = MockStreamAnthropic()
 
-    mock_client = mock_anthropic_client.return_value
+    mock_client = mock_clients["anthropic"].return_value
     mock_client.messages.stream.return_value = context
 
     provider = AnthropicProvider()
