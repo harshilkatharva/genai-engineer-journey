@@ -11,6 +11,12 @@ class LLMError(Exception):
         self.user_message = user_message or message
 
 
+class ConfigError(LLMError):
+    def __init__(self, key: str):
+        self.key = key
+        self.message = f"Missing required configuration: '{key}'. Please set it in your .env file."
+
+
 class LLMRateLimitError(LLMError):
     """
     This error occured when provider reject request becuase the rate limit has been exceeded

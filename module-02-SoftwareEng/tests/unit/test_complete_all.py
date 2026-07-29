@@ -1,13 +1,14 @@
-from unittest.mock import AsyncMock
-
 import pytest
+from typing import cast, Any
+
+from unittest.mock import AsyncMock
 
 from llm_client.models import CompletionResult
 from llm_client.services import LLMClient
 
 
 @pytest.mark.asyncio
-async def test_complete_all_mock():
+async def test_complete_all_mock() -> None:
     openai_res = CompletionResult(
         provider="openai",
         text="OpenAI mock response",
@@ -23,11 +24,13 @@ async def test_complete_all_mock():
 
     llm_client = LLMClient()
 
-    llm_client.providers["openai"].complete = AsyncMock(return_value=openai_res)
-    llm_client.providers["google"].complete = AsyncMock(return_value=google_res)
-    llm_client.providers["anthropic"].complete = AsyncMock(
-        side_effect=Exception("Anthropic server is down!")
-    )
+    openai = cast(Any, llm_client.providers["openai"])
+    google = cast(Any, llm_client.providers["google"])
+    anthropic = cast(Any, llm_client.providers["anthropic"])
+
+    openai.complete = AsyncMock(return_value=openai_res)
+    google.complete = AsyncMock(return_value=google_res)
+    anthropic.complete = AsyncMock(side_effect=Exception("Anthropic server is down!"))
 
     result = await llm_client.complete_all("Hello, Who are you ?")
     errors = [r for r in result if isinstance(r, Exception)]

@@ -1,6 +1,10 @@
 import asyncio
 from unittest.mock import AsyncMock
 
+from typing import Any
+
+from collections.abc import AsyncGenerator
+
 import pytest
 
 from llm_client.models import CompletionResult
@@ -16,7 +20,7 @@ from llm_client.services import LLMClient
         ("anthropic"),
     ],
 )
-async def test_client_complete(provider, mock_providers):
+async def test_client_complete(provider: str, mock_providers: dict[str, Any]) -> None:
     mock_response = CompletionResult(
         provider=provider,
         text=f"This mock response for client test of {provider}",
@@ -42,8 +46,8 @@ async def test_client_complete(provider, mock_providers):
         ("anthropic"),
     ],
 )
-async def test_client_stream(provider, mock_providers):
-    async def fake_text_stream(prompt):
+async def test_client_stream(provider: str, mock_providers: dict[str, Any]) -> None:
+    async def fake_text_stream(prompt: str) -> AsyncGenerator[str, None]:
         sent = "Hello How are you?"
         for word in sent.split():
             await asyncio.sleep(0.1)

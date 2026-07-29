@@ -1,9 +1,12 @@
 import pytest
 from unittest.mock import patch
 
+from collections.abc import Generator
+from unittest.mock import MagicMock
+
 
 @pytest.fixture(autouse=True)
-def mock_providers():
+def mock_providers() -> Generator[dict[str, MagicMock], None, None]:
     with (
         patch("llm_client.services.llm_service.OpenAIProvider") as openai,
         patch("llm_client.services.llm_service.GoogleProvider") as google,
@@ -13,7 +16,7 @@ def mock_providers():
 
 
 @pytest.fixture(autouse=True)
-def mock_clients():
+def mock_clients() -> Generator[dict[str, MagicMock], None, None]:
     with (
         patch("llm_client.services.providers.openai_provider.AsyncOpenAI") as openai,
         patch("llm_client.services.providers.google_provider.genai.Client") as google,

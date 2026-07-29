@@ -20,7 +20,7 @@ class GoogleProvider:
     Communicate with Google Gemini.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.client = genai.Client(api_key=GOOGLE_API_KEY)
 
     async def complete(self, prompt: str) -> CompletionResult:
@@ -33,12 +33,18 @@ class GoogleProvider:
             )
 
             latency = (time.perf_counter() - start) * 1000
+            usage = response.usage_metadata
+            token_usage = (
+                usage.total_token_count
+                if usage is not None and usage.total_token_count is not None
+                else 0
+            )
 
             return CompletionResult(
-                text=response.text,
+                text=response.text or "",
                 provider="google",
                 latency_ms=latency,
-                token_usage=response.usage_metadata.total_token_count,
+                token_usage=token_usage,
             )
 
         except ClientError as e:

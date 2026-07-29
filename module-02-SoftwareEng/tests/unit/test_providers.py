@@ -1,4 +1,6 @@
 from unittest.mock import AsyncMock, MagicMock
+from typing import AsyncIterator, Any
+
 
 import pytest
 
@@ -6,7 +8,7 @@ from llm_client.services.providers import AnthropicProvider, OpenAIProvider, Goo
 
 
 @pytest.mark.asyncio
-async def test_openai_provider_complete_mock(mock_clients):
+async def test_openai_provider_complete_mock(mock_clients: dict[str, Any]) -> None:
     mock_resposne = MagicMock()
     mock_resposne.output_text = "This response created for mock test OpenAI"
     mock_resposne.provider = "openai"
@@ -25,8 +27,8 @@ async def test_openai_provider_complete_mock(mock_clients):
 
 
 class MockStreamOpenAI:
-    def __aiter__(self):
-        async def gen():
+    def __aiter__(self) -> AsyncIterator[Any]:
+        async def gen() -> AsyncIterator[Any]:
             for text in ["Hello", "how", "are", "you"]:
                 event = MagicMock()
                 event.type = "response.output_text.delta"
@@ -37,7 +39,7 @@ class MockStreamOpenAI:
 
 
 @pytest.mark.asyncio
-async def test_opnai_provider_stream_mock(mock_clients):
+async def test_opnai_provider_stream_mock(mock_clients: dict[str, Any]) -> None:
     mock_client = mock_clients["openai"].return_value
     mock_client.responses.create = AsyncMock(return_value=MockStreamOpenAI())
 
@@ -49,7 +51,7 @@ async def test_opnai_provider_stream_mock(mock_clients):
 
 
 @pytest.mark.asyncio
-async def test_google_provider_complete_mock(mock_clients):
+async def test_google_provider_complete_mock(mock_clients: dict[str, Any]) -> None:
     mock_response = MagicMock()
     mock_response.text = "This response is created for mock test"
     mock_response.usage_metadata.total_token_count = 30
@@ -68,8 +70,8 @@ async def test_google_provider_complete_mock(mock_clients):
 
 
 class MockStreamGoogle:
-    def __aiter__(self):
-        async def gen():
+    def __aiter__(self) -> AsyncIterator[Any]:
+        async def gen() -> AsyncIterator[Any]:
             for text in ["Hello", "how", "are", "you"]:
                 chunk = MagicMock()
                 chunk.text = text
@@ -79,7 +81,7 @@ class MockStreamGoogle:
 
 
 @pytest.mark.asyncio
-async def test_google_provider_stream_mock(mock_clients):
+async def test_google_provider_stream_mock(mock_clients: dict[str, Any]) -> None:
     mock_client = mock_clients["google"].return_value
 
     mock_client.aio.models.generate_content_stream = AsyncMock(return_value=MockStreamGoogle())
@@ -91,7 +93,7 @@ async def test_google_provider_stream_mock(mock_clients):
 
 
 @pytest.mark.asyncio
-async def test_anthropic_provider_complete_mock(mock_clients):
+async def test_anthropic_provider_complete_mock(mock_clients: dict[str, Any]) -> None:
     mock_content_block = MagicMock()
     mock_content_block.text = "This response created for mock test"
 
@@ -114,13 +116,13 @@ async def test_anthropic_provider_complete_mock(mock_clients):
     assert result.latency_ms >= 0.0
 
 
-async def MockStreamAnthropic():
+async def MockStreamAnthropic() -> AsyncIterator[Any]:
     for text in ["Hello", "how", "are", "you"]:
         yield text + " "
 
 
 @pytest.mark.asyncio
-async def test_anthropic_provider_stream_mock(mock_clients):
+async def test_anthropic_provider_stream_mock(mock_clients: dict[str, Any]) -> None:
     context = MagicMock()
     context.__aenter__ = AsyncMock(return_value=context)
     context.__aexit__ = AsyncMock(return_value=None)

@@ -25,7 +25,7 @@ class OpenAIProvider:
     Communicate with OpenAI
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.client = AsyncOpenAI(api_key=OPENAI_API_KEY)
 
     async def complete(self, prompt: str) -> CompletionResult:
@@ -44,7 +44,7 @@ class OpenAIProvider:
                 text=response.output_text,
                 provider="openai",
                 latency_ms=latency,
-                token_usage=response.usage.total_tokens,
+                token_usage=response.usage.total_tokens if response.usage else 0,
             )
         except RateLimitError as e:
             raise LLMRateLimitError(str(e))
@@ -63,7 +63,7 @@ class OpenAIProvider:
 
     async def stream(self, prompt: str) -> AsyncIterator[str]:
         response_stream = await self.client.responses.create(
-            model="gemini-3.5-flash-lite", contents=prompt, stream=True
+            model="ggpt-4o-mini", input=prompt, stream=True
         )
 
         async for event in response_stream:

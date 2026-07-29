@@ -1,8 +1,12 @@
 import asyncio
 import json
 
+from llm_client.services.provider import LLMProvider
+
 from llm_client.models.response_model import CompletionResult
 from llm_client.services.providers import AnthropicProvider, OpenAIProvider, GoogleProvider
+
+from collections.abc import AsyncIterator
 
 from llm_client.exceptions import LLMError
 
@@ -15,8 +19,8 @@ class LLMClient:
     Connection of all provider
     """
 
-    def __init__(self):
-        self.providers = {
+    def __init__(self) -> None:
+        self.providers: dict[str, LLMProvider] = {
             "openai": OpenAIProvider(),
             "anthropic": AnthropicProvider(),
             "google": GoogleProvider(),
@@ -68,6 +72,6 @@ class LLMClient:
         results = await asyncio.gather(*tasks, return_exceptions=True)
         return results
 
-    async def stream(self, provider: str, prompt: str):
+    async def stream(self, provider: str, prompt: str) -> AsyncIterator[str]:
         async for token in self.providers[provider].stream(prompt):
             yield token

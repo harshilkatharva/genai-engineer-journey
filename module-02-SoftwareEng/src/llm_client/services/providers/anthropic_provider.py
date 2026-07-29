@@ -26,7 +26,7 @@ class AnthropicProvider:
     Communicate with Anthropic.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.client = AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
 
     async def complete(self, prompt: str) -> CompletionResult:
@@ -35,15 +35,18 @@ class AnthropicProvider:
 
             response = await self.client.messages.create(
                 model="claude-sonnet-4-6",
-                messages=[{"role": "user", "content  ": prompt}],
+                messages=[{"role": "user", "content": prompt}],
                 max_tokens=1024,
             )
 
             latency = (time.perf_counter() - start) * 1000
+            block = response.content[0]
+            if block.type == "text":
+                text = block.text
             total_token = response.usage.input_tokens + response.usage.output_tokens
 
             return CompletionResult(
-                text=response.content[0].text,
+                text=text,
                 provider="anthropic",
                 latency_ms=latency,
                 token_usage=total_token,

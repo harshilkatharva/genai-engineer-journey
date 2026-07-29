@@ -15,7 +15,7 @@ pytestmark = [
 
 @pytest.mark.asyncio
 @pytest.mark.parametrize("provider", ["openai", "google", "anthropic"])
-async def test_all_provider_real(provider):
+async def test_all_provider_real(provider: str) -> None:
     client = LLMClient()
 
     responce = await client.complete(provider=provider, prompt="Say Hello")
