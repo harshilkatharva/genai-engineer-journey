@@ -11,13 +11,22 @@ pytestmark = [
         reason="Set RUN_INTEGRATION_TESTS=1 to enable integration test",
     ),
 ]
+# pytest.mark.asyncio
+# async def test_google_provider():
+#     client = LLMClient()
+
+#     responce = await client.complete(provider="google", prompt="Say Hello")
+
+#     assert responce is not None
+#     assert len(responce.text) > 0
+
 pytest.mark.asyncio
 
 
-async def test_google_provider():
+async def test_openai_provider():
     client = LLMClient()
 
-    responce = await client.complete(provider="google", prompt="Say Hello")
+    responce = await client.complete(provider="openai", prompt="Say Hello")
 
     assert responce is not None
     assert len(responce.text) > 0

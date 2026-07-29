@@ -3,9 +3,12 @@ class LLMError(Exception):
     Base Exception for all error
     """
 
-    def __ini__(self, message: str = "An unknowm=n LLM error occured"):
+    def __init__(
+        self, message: str = "An unknowm=n LLM error occured", user_message: str | None = None
+    ):
         self.message = message
         super().__init__(self.message)
+        self.user_message = user_message or message
 
 
 class LLMRateLimitError(LLMError):
@@ -13,11 +16,18 @@ class LLMRateLimitError(LLMError):
     This error occured when provider reject request becuase the rate limit has been exceeded
     """
 
+    def __init__(self, message: str):
+        super().__init__(
+            message=message, user_message="Rate limit exceeded. Please Try again later."
+        )
+
 
 class LLMTimeoutError(LLMError):
     """
     Raised when an API request exceeds the configured timeout.
     """
+
+    pass
 
 
 class LLMContentFilterError(LLMError):
@@ -25,11 +35,15 @@ class LLMContentFilterError(LLMError):
     Raised when the provider blocks the prompt or response due to safety/content filtering.
     """
 
+    pass
+
 
 class LLMInvalidResponseError(LLMError):
     """
     Raised when the provider returns an unexpected or invalid response format.
     """
+
+    pass
 
 
 class LLMAuthenticationError(LLMError):
@@ -37,8 +51,12 @@ class LLMAuthenticationError(LLMError):
     Raised when API authentication fails due to an invalid or missing API key.
     """
 
+    pass
+
 
 class LLMConnectionError(LLMError):
     """
     Raised when the client cannot connect to the provider because of network or connectivity issues.
     """
+
+    pass

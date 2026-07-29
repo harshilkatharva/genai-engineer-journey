@@ -4,7 +4,10 @@ import json
 from llm_client.models.response_model import CompletionResult
 from llm_client.services.providers import AnthropicProvider, OpenAIProvider, GoogleProvider
 
-from llm_client.utils.logger import logger
+from llm_client.exceptions import LLMError
+
+from llm_client.utils.llm_sucess_logger import llm_sucess_logger
+from llm_client.utils.llm_error_logger import llm_error_logger
 
 
 class LLMClient:
@@ -28,11 +31,28 @@ class LLMClient:
         if provider not in self.providers:
             raise ValueError(f"Unspported provider {provider}")
 
-        response = await self.providers[provider].complete(prompt)
+        try:
+            response = await self.providers[provider].complete(prompt)
 
-        logger.info(json.dumps({"provider": provider, "prompt": prompt, "response": str(response)}))
+            llm_sucess_logger.info(
+                json.dumps({"provider": provider, "prompt": prompt, "response": str(response)})
+            )
 
-        return response
+            return response
+        except LLMError as e:
+            llm_error_logger.exception(
+                {
+                    "provider": provider,
+                    "prompt": prompt,
+                    "error_type": type(e).__name__,
+                    "user_error_message": e.user_message,
+                    "error": str(e),
+                }
+            )
+
+            return CompletionResult(
+                text=e.user_message, provider=provider, latency_ms=0.0, token_usage=0
+            )
 
     async def complete_all(
         self,

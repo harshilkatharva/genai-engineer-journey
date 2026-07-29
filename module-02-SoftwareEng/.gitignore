@@ -4,7 +4,10 @@
 
 __pycache__/ 
 
+logs/
 *.log
+
+docs/
 
 *.egg-info/
 
