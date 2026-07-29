@@ -17,6 +17,7 @@ dependencies = [
     "google>=3.0.0",
     "google-genai>=2.14.0",
     "httpx>=0.28.1",
+    "hypothesis>=6.163.0",
     "openai>=2.47.0",
 ]
 

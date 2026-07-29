@@ -1,22 +1,23 @@
 from unittest.mock import AsyncMock, MagicMock
 from typing import AsyncIterator, Any
 
+from hypothesis import given, strategies as st
 
 import pytest
 
 from llm_client.services.providers import AnthropicProvider, OpenAIProvider, GoogleProvider
 
 
+@given(st.text())
 @pytest.mark.asyncio
-async def test_openai_provider_complete_mock(mock_clients: dict[str, Any]) -> None:
-    mock_resposne = MagicMock()
-    mock_resposne.output_text = "This response created for mock test OpenAI"
-    mock_resposne.provider = "openai"
-    mock_resposne.usage.total_tokens = 30
-    mock_resposne.latency_ms = 303
+async def test_openai_provider_complete_mock(mock_clients: dict[str, Any], text: str) -> None:
+    mock_response = MagicMock()
+    mock_response.output_text = "This response created for mock test OpenAI" + text
+    mock_response.provider = "openai"
+    mock_response.usage.total_tokens = 30
 
     mock_client = mock_clients["openai"].return_value
-    mock_client.responses.create = AsyncMock(return_value=mock_resposne)
+    mock_client.responses.create = AsyncMock(return_value=mock_response)
 
     provider = OpenAIProvider()
     result = await provider.complete("Hello")
@@ -24,6 +25,7 @@ async def test_openai_provider_complete_mock(mock_clients: dict[str, Any]) -> No
     assert result.provider == "openai"
     assert len(result.text) > 0
     assert result.latency_ms > 0.0
+    assert text in result.text
 
 
 class MockStreamOpenAI:
@@ -95,6 +97,7 @@ async def test_google_provider_stream_mock(mock_clients: dict[str, Any]) -> None
 @pytest.mark.asyncio
 async def test_anthropic_provider_complete_mock(mock_clients: dict[str, Any]) -> None:
     mock_content_block = MagicMock()
+    mock_content_block.type = "text"
     mock_content_block.text = "This response created for mock test"
 
     mock_usage = MagicMock()
