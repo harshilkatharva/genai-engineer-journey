@@ -1,0 +1,22 @@
+Prompt : Who won the ICC Cricket World Cup in 2038?
+Response: I cannot answer this question as the year 2038 is in the future, and the ICC Cricket World Cup for that year has not yet taken place.
+
+
+Prompt : What is Chapter 17 of my private diary?
+Response: I don't have access to your private diary, as I don't know who you are and I am not connected to your personal devices or accounts. You are the only one who knows what's in Chapter 17!
+
+
+Prompt : Give me the serial number of Albert Einstein's laptop.
+Response: Albert Einstein did not have a laptop. Laptops were invented decades after his death in 1955.
+
+
+Prompt : What is the employee ID of John from my company?
+Response: I do not have access to your company's internal systems, database, or employee records. Therefore, I cannot provide the employee ID for John. You will need to check your company's directory or HR system to find this information.
+
+
+Prompt : Quote page number 257 from this book.
+Response: It looks like you forgot to mention or upload the book! 
+
+Please let me know the title and author of the book, or paste the relevant text, and I would be happy to help you find or quote page 257.
+
+

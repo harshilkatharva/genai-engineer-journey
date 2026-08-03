@@ -1,0 +1,64 @@
+LLM :- Large Language Model
+
+What LLM can do ?
+Answer :- LLM can process human language. And genrate answer in human langugae.
+
+Everybody know that computer can not understand human language but LLM can solve with help of tokenizer.
+
+What is tokenizer ?
+Let's understand it.
+
+When tokenizer get any input from user that in text form.Now it split sentence into the words. every word are seprated.than tokenizer give every token to a numeric number from vocabulary. at that point human language convert text to number.
+now you can understand how computer can understand human language. 
+
+You can more understand about token. How it create, How it unique and Diffrence between token and word.
+when embedding model train that time it create vocabulary(unique words) from large corpus. and give id(number) to each word. 
+
+it not means every word have = 1 token. because language some pre and post word same and it create unnecessary space.examples unbelivable convert to un,belive,able . randomness convert to random,ness
+that help to stop create multiple similar word in vocab. like program,programming,programmer,programmed,programmers all word are almost similar.
+
+work flow for tokenizer text -> word -> subword -> token(numberic number)
+
+LLM providers cost based on tokens not words that you note it. 
+
+
+
+What is Context Window?
+Answer :- maximum number of tokens can process in input and output combined
+
+every llm model have specific Context window size that model can process.
+
+why context window matter ?
+suppose that you have 2 types of task 1.task like create 15-20 lines or code for specific task. 2. research on some topic or create coding files with multiple tasks.
+
+for task 1 model don't need to process huge tokens. it simply create some sentence and some lines of code. and for task 2 model should process huge tokens.
+model take time to genrate next token that not any ways to create all tokens at once. 
+
+at this point context Window matter for us because for small task if we use high Context window llm that might they take more time than lower Context window llm. 
+with latency cost matter because as i said company take cost based on model. think that for small task llm process huge tokens that create unnecessary bill to client.
+
+based on task and input,output expexted tokens usage choose Context window.
+
+
+What is hallucination ?
+Answer :- hallucination means model genrate wrong output confidently. 
+
+when model have not sufficient knowledge, facts, news that time model hallucinate.examples :- current news or weather,personal data or not existed facts or datas. 
+because model genrate output based on probability of next token it not check real facts or data.
+as modern ai have some level of capability to handle it but still chance to hallucinate.
+
+
+solution of hallucinate:- 
+we should give enough text or context in prompt.
+we should give permission to say confidently I don't know if it have not enough knowledge.
+
+pratice to reduce it:- 
+cretae 2 prompts 
+1. ask something specific about your book with telling name book. 
+2. give specific name of book, give some context and than ask question and say if it have not knowledge than simply say i don't know.
+
+
+now campare both output.
+in first it may give random answer or inretive answer.
+but in second answer it give specific accordinly your book. and suppose it have not that book content it can say i don't know.
+
