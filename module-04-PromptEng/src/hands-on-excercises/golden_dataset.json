@@ -1,0 +1,158 @@
+[
+  {
+    "question": "i want to watch horror movie tonight",
+    "expected_output": {
+      "genre": "Horror",
+      "movies": [
+        "The Conjuring",
+        "Hereditary",
+        "It",
+        "The Ring",
+        "A Quiet Place"
+      ]
+    }
+  },
+  {
+    "question": "recommend me some comedy movies",
+    "expected_output": {
+      "genre": "Comedy",
+      "movies": [
+        "Superbad",
+        "The Hangover",
+        "21 Jump Street",
+        "Step Brothers",
+        "We're the Millers"
+      ]
+    }
+  },
+  {
+    "question": "i feel like watching an action movie",
+    "expected_output": {
+      "genre": "Action",
+      "movies": [
+        "Mad Max: Fury Road",
+        "John Wick",
+        "Die Hard",
+        "The Dark Knight",
+        "Gladiator"
+      ]
+    }
+  },
+  {
+    "question": "give me some romantic movies",
+    "expected_output": {
+      "genre": "Romance",
+      "movies": [
+        "The Notebook",
+        "La La Land",
+        "Pride & Prejudice",
+        "Me Before You",
+        "Titanic"
+      ]
+    }
+  },
+  {
+    "question": "i want to watch a science fiction movie",
+    "expected_output": {
+      "genre": "Science Fiction",
+      "movies": [
+        "Interstellar",
+        "The Matrix",
+        "Arrival",
+        "Blade Runner 2049",
+        "Dune"
+      ]
+    }
+  },
+  {
+    "question": "suggest some thriller movies",
+    "expected_output": {
+      "genre": "Thriller",
+      "movies": [
+        "Se7en",
+        "Gone Girl",
+        "Prisoners",
+        "Shutter Island",
+        "Nightcrawler"
+      ]
+    }
+  },
+  {
+    "question": "recommend family movies to watch with kids",
+    "expected_output": {
+      "genre": "Family",
+      "movies": [
+        "Toy Story",
+        "Finding Nemo",
+        "Frozen",
+        "The Lion King",
+        "Moana"
+      ]
+    }
+  },
+  {
+    "question": "i want animated movies",
+    "expected_output": {
+      "genre": "Animation",
+      "movies": [
+        "Spirited Away",
+        "Coco",
+        "Inside Out",
+        "Up",
+        "How to Train Your Dragon"
+      ]
+    }
+  },
+  {
+    "question": "recommend mystery movies",
+    "expected_output": {
+      "genre": "Mystery",
+      "movies": [
+        "Knives Out",
+        "The Prestige",
+        "Memento",
+        "Zodiac",
+        "The Girl with the Dragon Tattoo"
+      ]
+    }
+  },
+  {
+    "question": "i want to watch a fantasy movie",
+    "expected_output": {
+      "genre": "Fantasy",
+      "movies": [
+        "The Lord of the Rings: The Fellowship of the Ring",
+        "Harry Potter and the Sorcerer's Stone",
+        "Pan's Labyrinth",
+        "The Hobbit: An Unexpected Journey",
+        "The Chronicles of Narnia: The Lion, the Witch and the Wardrobe"
+      ]
+    }
+  },
+  {
+    "question": "recommend crime movies",
+    "expected_output": {
+      "genre": "Crime",
+      "movies": [
+        "The Godfather",
+        "Goodfellas",
+        "The Departed",
+        "Heat",
+        "Scarface"
+      ]
+    }
+  },
+  {
+    "question": "i want something emotional and dramatic",
+    "expected_output": {
+      "genre": "Drama",
+      "movies": [
+        "The Shawshank Redemption",
+        "Forrest Gump",
+        "The Green Mile",
+        "A Beautiful Mind",
+        "Whiplash"
+      ]
+    }
+  }
+]
