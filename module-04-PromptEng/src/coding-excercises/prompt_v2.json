@@ -1,0 +1,5 @@
+[
+  {"id": 1, "passed": true},
+  {"id": 2, "passed": false},
+  {"id": 3, "passed": true}
+]

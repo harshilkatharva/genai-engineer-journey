@@ -1,0 +1,20 @@
+test_cases:
+  - id: 1
+    input: "John lives in New York. Call him at 9876543210."
+    expected:
+      names:
+        - John
+      numbers:
+        - "9876543210"
+      locations:
+        - "New York"
+
+  - id: 2
+    input: "Sarah met Rahul in Mumbai."
+    expected:
+      names:
+        - Sarah
+        - Rahul
+      numbers: []
+      locations:
+        - Mumbai
