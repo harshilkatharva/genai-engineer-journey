@@ -5,7 +5,6 @@ your out format must match with schema
 
 Do not add unrelated movies 
 Do not give priority to new movies over user's requirements
-If user's requirement not match with you simply genrate null.
 
 search query:- 
 {{user_query}}

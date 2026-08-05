@@ -156,10 +156,10 @@
     }
   },
   {
-    "question": "i want to watch movies which shoot in moon",
+    "question": "i want to watch movies which shooted/filmed in moon. not about moon",
     "expected_output": {
       "genre": "None",
-      "movies": ["None"]
+      "movies": []
     }
   }
 ]
