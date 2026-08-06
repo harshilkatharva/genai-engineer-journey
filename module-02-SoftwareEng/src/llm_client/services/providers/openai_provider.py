@@ -2,22 +2,23 @@ import time
 from collections.abc import AsyncIterator
 
 from openai import (
-    AsyncOpenAI,
-    RateLimitError,
-    APITimeoutError,
-    AuthenticationError,
     APIConnectionError,
+    APIError,
+    APITimeoutError,
+    AsyncOpenAI,
+    AuthenticationError,
+    RateLimitError,
 )
 
 from llm_client.config import OPENAI_API_KEY
-from llm_client.models.response_model import CompletionResult
 from llm_client.exceptions import (
-    LLMError,
     LLMAuthenticationError,
     LLMConnectionError,
+    LLMError,
     LLMRateLimitError,
     LLMTimeoutError,
 )
+from llm_client.models.response_model import CompletionResult
 
 
 class OpenAIProvider:
@@ -58,7 +59,7 @@ class OpenAIProvider:
         except AuthenticationError as e:
             raise LLMAuthenticationError(str(e))
 
-        except Exception as e:
+        except APIError as e:
             raise LLMError(str(e))
 
     async def stream(self, prompt: str) -> AsyncIterator[str]:

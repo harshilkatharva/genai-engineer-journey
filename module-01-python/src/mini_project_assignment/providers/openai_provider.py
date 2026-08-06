@@ -31,9 +31,9 @@ class OpenAIProvider:
             token_usage=response.usage.total_tokens,
         )
 
-    async def steam(self, prompt: str) -> AsyncIterator[str]:
+    async def stream(self, prompt: str) -> AsyncIterator[str]:
         response_stream = await self.client.responses.create(
-            model="gemini-3.5-flash-lite", contents=prompt, stream=True
+            model="gpt-5.6-terra", contents=prompt, stream=True
         )
 
         async for event in response_stream:

@@ -1,5 +1,5 @@
-from typing import Protocol
 from collections.abc import AsyncIterator
+from typing import Protocol
 
 from llm_client.models.response_model import CompletionResult
 

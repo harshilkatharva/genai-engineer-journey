@@ -7,9 +7,7 @@ requires-python = ">=3.12"
 dependencies = [
     "anthropic>=0.120.0",
     "anyio>=4.14.2",
-    "asyncio>=4.0.0",
     "dotenv>=0.9.9",
-    "google>=3.0.0",
     "google-genai>=2.14.0",
     "httpx>=0.28.1",
     "openai>=2.47.0",

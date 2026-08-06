@@ -46,7 +46,7 @@ with console.status("[bold blue]Checking API's...", spinner="dots"):
             )
             end = time.perf_counter()
             results["OpenAI"]["latency"] = end - start
-            results["OpenAI"]["results"] = "success"
+            results["OpenAI"]["result"] = "success"
 
         except Exception:
             end = time.perf_counter()

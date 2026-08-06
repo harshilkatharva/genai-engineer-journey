@@ -1,7 +1,7 @@
-import pytest
-from typing import cast, Any
-
+from typing import Any, cast
 from unittest.mock import AsyncMock
+
+import pytest
 
 from llm_client.models import CompletionResult
 from llm_client.services import LLMClient

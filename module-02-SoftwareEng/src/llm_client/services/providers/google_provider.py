@@ -5,14 +5,13 @@ from google import genai
 from google.genai.errors import APIError, ClientError, ServerError
 
 from llm_client.config import GOOGLE_API_KEY
-from llm_client.models.response_model import CompletionResult
-
 from llm_client.exceptions import (
-    LLMError,
     LLMAuthenticationError,
     LLMConnectionError,
+    LLMError,
     LLMRateLimitError,
 )
+from llm_client.models.response_model import CompletionResult
 
 
 class GoogleProvider:
@@ -60,8 +59,6 @@ class GoogleProvider:
             raise LLMConnectionError(str(e))
         except APIError as e:
             raise LLMError(str(e))
-        except Exception as e:
-            raise LLMError(str(e))
 
     async def stream(self, prompt: str) -> AsyncIterator[str]:
         response_stream = await self.client.aio.models.generate_content_stream(
@@ -72,15 +69,3 @@ class GoogleProvider:
         async for chunk in response_stream:
             if chunk.text:
                 yield chunk.text
-
-
-# async def main():
-
-#     google_pro = GoogleProvider()
-#     async for text_chunk in google_pro.stream("What is AI? Explain me in 2 sentence"):
-#         print(text_chunk,end="",flush=True)
-#         print("\n")
-#     print()
-
-# if __name__ == "__main__":
-#     asyncio.run(main())

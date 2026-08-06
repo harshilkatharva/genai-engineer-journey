@@ -1,11 +1,12 @@
+from collections.abc import AsyncIterator
+from typing import Any
 from unittest.mock import AsyncMock, MagicMock
-from typing import AsyncIterator, Any
-
-from hypothesis import given, strategies as st
 
 import pytest
+from hypothesis import given
+from hypothesis import strategies as st
 
-from llm_client.services.providers import AnthropicProvider, OpenAIProvider, GoogleProvider
+from llm_client.services.providers import AnthropicProvider, GoogleProvider, OpenAIProvider
 
 
 @given(st.text())

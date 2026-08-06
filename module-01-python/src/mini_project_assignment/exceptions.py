@@ -3,7 +3,7 @@ class LLMError(Exception):
     Base Exception for all error
     """
 
-    def __ini__(self, message: str = "An unknowm=n LLM error occured"):
+    def __init__(self, message: str = "An unknowm=n LLM error occured"):
         self.message = message
         super().__init__(self.message)
 

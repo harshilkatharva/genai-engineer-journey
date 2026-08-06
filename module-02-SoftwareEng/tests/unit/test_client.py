@@ -1,9 +1,7 @@
 import asyncio
-from unittest.mock import AsyncMock
-
-from typing import Any
-
 from collections.abc import AsyncGenerator
+from typing import Any
+from unittest.mock import AsyncMock
 
 import pytest
 

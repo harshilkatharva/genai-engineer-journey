@@ -1,8 +1,12 @@
-# API Keys
+# Generated .gitignore file
+
+# Command values 
 .env
+.DS_Store
+.vscode/
+venv
+.venv/
 
-# Python Libraries
-venv/
-
-
+# Python project 
+*.pyc
 __pycache__/

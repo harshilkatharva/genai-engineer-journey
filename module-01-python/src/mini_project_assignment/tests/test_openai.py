@@ -4,7 +4,7 @@ import pytest
 
 
 @pytest.mark.asyncio
-@patch("mini_project_assignment.providers.openai_provider.OpenAI")
+@patch("mini_project_assignment.providers.openai_provider.AsyncOpenAI")
 async def test_openai_provider_mock(mock_openai_client):
     mock_resposne = MagicMock()
     mock_resposne.output_text = "This response created for mock test OpenAI"

@@ -4,7 +4,7 @@ from mini_project_assignment.providers import AnthropicProvider
 
 
 @pytest.mark.asyncio
-@patch("mini_project_assignment.providers.anthropic_provider.anthropic.Anthropic")
+@patch("mini_project_assignment.providers.anthropic_provider.AsyncAnthropic")
 async def test_anthropic_provider_mock(mock_anthropic_client):
     mock_content_block = MagicMock()
     mock_content_block.text = "This response created for mock test"

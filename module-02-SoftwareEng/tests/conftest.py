@@ -1,8 +1,7 @@
-import pytest
-from unittest.mock import patch
-
 from collections.abc import Generator
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
+
+import pytest
 
 
 @pytest.fixture(autouse=True, scope="session")

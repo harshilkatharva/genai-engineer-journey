@@ -20,7 +20,7 @@ class AnthropicProvider:
 
         response = await self.client.messages.create(
             model="claude-sonnet-4-6",
-            messages=[{"role": "user", "content  ": prompt}],
+            messages=[{"role": "user", "content": prompt}],
             max_tokens=1024,
         )
 
