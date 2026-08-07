@@ -1,22 +1,21 @@
+from collections.abc import AsyncIterator
+from typing import Any
 from unittest.mock import AsyncMock, MagicMock
-from typing import AsyncIterator, Any
-
-from hypothesis import given, strategies as st
 
 import pytest
+from hypothesis import given
+from hypothesis import strategies as st
 
 from llm_client.services.providers import (
     AnthropicProvider,
-    OpenAIProvider,
     GoogleProvider,
+    OpenAIProvider,
 )
 
 
 @given(st.text())
 @pytest.mark.asyncio
-async def test_openai_provider_complete_mock(
-    mock_clients: dict[str, Any], text: str
-) -> None:
+async def test_openai_provider_complete_mock(mock_clients: dict[str, Any], text: str) -> None:
     mock_response = MagicMock()
     mock_response.output_text = "This response created for mock test OpenAI" + text
     mock_response.provider = "openai"
@@ -92,9 +91,7 @@ class MockStreamGoogle:
 async def test_google_provider_stream_mock(mock_clients: dict[str, Any]) -> None:
     mock_client = mock_clients["google"].return_value
 
-    mock_client.aio.models.generate_content_stream = AsyncMock(
-        return_value=MockStreamGoogle()
-    )
+    mock_client.aio.models.generate_content_stream = AsyncMock(return_value=MockStreamGoogle())
 
     provider = GoogleProvider()
     chunks = [chunk async for chunk in provider.stream("Hello")]

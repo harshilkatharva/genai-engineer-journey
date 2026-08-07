@@ -1,13 +1,11 @@
 import asyncio
-from unittest.mock import AsyncMock
-
-from typing import Any
-
 from collections.abc import AsyncGenerator
+from typing import Any
+from unittest.mock import AsyncMock
 
 import pytest
 
-from llm_client.models import CompletionResult
+from llm_client.models import LLMResponseModel
 from llm_client.services import LLMClient
 
 
@@ -21,7 +19,7 @@ from llm_client.services import LLMClient
     ],
 )
 async def test_client_complete(provider: str, mock_providers: dict[str, Any]) -> None:
-    mock_response = CompletionResult(
+    mock_response = LLMResponseModel(
         provider=provider,
         text=f"This mock response for client test of {provider}",
         latency_ms=15.0,

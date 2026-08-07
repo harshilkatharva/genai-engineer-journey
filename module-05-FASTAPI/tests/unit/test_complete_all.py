@@ -1,21 +1,21 @@
-import pytest
-from typing import cast, Any
-
+from typing import Any, cast
 from unittest.mock import AsyncMock
 
-from llm_client.models import CompletionResult
+import pytest
+
+from llm_client.models import LLMResponseModel
 from llm_client.services import LLMClient
 
 
 @pytest.mark.asyncio
 async def test_complete_all_mock() -> None:
-    openai_res = CompletionResult(
+    openai_res = LLMResponseModel(
         provider="openai",
         text="OpenAI mock response",
         latency_ms=300,
         token_usage=303,
     )
-    google_res = CompletionResult(
+    google_res = LLMResponseModel(
         provider="google",
         text="Google mock response",
         latency_ms=300,

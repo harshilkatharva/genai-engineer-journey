@@ -16,9 +16,8 @@ class LLMError(Exception):
 class ConfigError(LLMError):
     def __init__(self, key: str):
         self.key = key
-        self.message = (
-            f"Missing required configuration: '{key}'. Please set it in your .env file."
-        )
+        message = f"Missing required configuration: '{key}'. Please set it in your .env file."
+        super().__init__(message)
 
 
 class LLMRateLimitError(LLMError):
@@ -62,9 +61,7 @@ class LLMInvalidResponseError(LLMError):
     """
 
     def __init__(self, message: str):
-        super().__init__(
-            message=message, user_message="Invalid response from provider."
-        )
+        super().__init__(message=message, user_message="Invalid response from provider.")
 
 
 class LLMAuthenticationError(LLMError):
@@ -73,9 +70,7 @@ class LLMAuthenticationError(LLMError):
     """
 
     def __init__(self, message: str):
-        super().__init__(
-            message=message, user_message="You are unauthorized to access provider."
-        )
+        super().__init__(message=message, user_message="You are unauthorized to access provider.")
 
 
 class LLMConnectionError(LLMError):

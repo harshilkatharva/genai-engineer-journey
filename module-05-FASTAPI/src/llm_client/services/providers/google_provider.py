@@ -5,14 +5,13 @@ from google import genai
 from google.genai.errors import APIError, ClientError, ServerError
 
 from llm_client.config import GOOGLE_API_KEY
-from llm_client.models.response_model import CompletionResult
-
 from llm_client.exceptions import (
-    LLMError,
     LLMAuthenticationError,
     LLMConnectionError,
+    LLMError,
     LLMRateLimitError,
 )
+from llm_client.models.llm_response_model import LLMResponseModel
 
 
 class GoogleProvider:
@@ -23,7 +22,7 @@ class GoogleProvider:
     def __init__(self) -> None:
         self.client = genai.Client(api_key=GOOGLE_API_KEY)
 
-    async def complete(self, prompt: str) -> CompletionResult:
+    async def complete(self, prompt: str) -> LLMResponseModel:
         try:
             start = time.perf_counter()
 
@@ -40,7 +39,7 @@ class GoogleProvider:
                 else 0
             )
 
-            return CompletionResult(
+            return LLMResponseModel(
                 text=response.text or "",
                 provider="google",
                 latency_ms=latency,
@@ -59,8 +58,6 @@ class GoogleProvider:
         except ServerError as e:
             raise LLMConnectionError(str(e))
         except APIError as e:
-            raise LLMError(str(e))
-        except Exception as e:
             raise LLMError(str(e))
 
     async def stream(self, prompt: str) -> AsyncIterator[str]:

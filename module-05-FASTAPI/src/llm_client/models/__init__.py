@@ -1,3 +1,4 @@
-from .response_model import CompletionResult
+from .llm_request_model import LLMRequestModel
+from .llm_response_model import LLMResponseModel
 
-__all__ = ["CompletionResult"]
+__all__ = ["LLMRequestModel", "LLMResponseModel"]

@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 
 
-class CompletionResult(BaseModel):
+class LLMResponseModel(BaseModel):
     """
     Standard Response model for all providers
     """
@@ -12,6 +12,4 @@ class CompletionResult(BaseModel):
 
     latency_ms: float = Field(..., description="Request latency in milisecond")
 
-    token_usage: int = Field(
-        ..., description="Total number of token consumed in request"
-    )
+    token_usage: int = Field(..., description="Total number of token consumed in request")

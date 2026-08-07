@@ -2,23 +2,23 @@ import time
 from collections.abc import AsyncIterator
 
 from anthropic import (
+    APIConnectionError,
+    APIError,
+    APITimeoutError,
     AsyncAnthropic,
     AuthenticationError,
-    APIConnectionError,
     RateLimitError,
-    APITimeoutError,
 )
 
 from llm_client.config import ANTHROPIC_API_KEY
-from llm_client.models.response_model import CompletionResult
-
 from llm_client.exceptions import (
-    LLMError,
     LLMAuthenticationError,
     LLMConnectionError,
+    LLMError,
     LLMRateLimitError,
     LLMTimeoutError,
 )
+from llm_client.models.llm_response_model import LLMResponseModel
 
 
 class AnthropicProvider:
@@ -29,7 +29,7 @@ class AnthropicProvider:
     def __init__(self) -> None:
         self.client = AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
 
-    async def complete(self, prompt: str) -> CompletionResult:
+    async def complete(self, prompt: str) -> LLMResponseModel:
         try:
             start = time.perf_counter()
 
@@ -45,7 +45,7 @@ class AnthropicProvider:
                 text = block.text
             total_token = response.usage.input_tokens + response.usage.output_tokens
 
-            return CompletionResult(
+            return LLMResponseModel(
                 text=text,
                 provider="anthropic",
                 latency_ms=latency,
@@ -64,7 +64,7 @@ class AnthropicProvider:
         except AuthenticationError as e:
             raise LLMAuthenticationError(str(e))
 
-        except Exception as e:
+        except APIError as e:
             raise LLMError(str(e))
 
     async def stream(self, prompt: str) -> AsyncIterator[str]:

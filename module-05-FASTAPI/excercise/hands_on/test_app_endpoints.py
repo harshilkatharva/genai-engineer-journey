@@ -1,15 +1,14 @@
 import pytest
 from fastapi.testclient import TestClient
+from httpx import ASGITransport, AsyncClient
+
 from hands_on.tasks import app, get_llm_services
-from httpx import AsyncClient, ASGITransport
 
 client = TestClient(app)
 
 
 def test_chat_without_key():
-    response = client.post(
-        "/chat_auth", json={"provider": "openai", "query": "What is ai"}
-    )
+    response = client.post("/chat_auth", json={"provider": "openai", "query": "What is ai"})
 
     assert response.status_code == 401
 

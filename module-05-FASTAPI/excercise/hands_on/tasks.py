@@ -1,9 +1,10 @@
-from fastapi import FastAPI, Security, HTTPException, Request, Depends
-from fastapi.security import APIKeyHeader
-from fastapi.responses import StreamingResponse, JSONResponse
-from pydantic import BaseModel, Field
-from typing import Literal
 import asyncio
+from typing import Literal, Annotated
+
+from fastapi import Depends, FastAPI, HTTPException, Request, Security
+from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.security import APIKeyHeader
+from pydantic import BaseModel, Field
 
 # 1
 
@@ -48,9 +49,7 @@ async def verify_api_key(key: str = Security(api_key_header)) -> str:
 
 
 @app.post("/chat_auth")
-def chat_llm_auth(
-    request: CheckRequest, api_key: str = Security(verify_api_key)
-) -> CheckResponse:
+def chat_llm_auth(request: CheckRequest, api_key: str = Security(verify_api_key)) -> CheckResponse:
     # call llm provider
     return {"answer": "llm answer", "token_usages": "1000"}
 
@@ -116,7 +115,7 @@ def get_llm_services():
 
 
 @app.post("/chat_overrideable")
-async def chat(request: CheckRequest, llm: LLMServices = Depends(get_llm_services)):
+async def chat(request: CheckRequest, llm: Annotated[LLMServices, Depends(get_llm_services)]):
     response = await llm.complete(request.provider, request.query)
 
     return response
