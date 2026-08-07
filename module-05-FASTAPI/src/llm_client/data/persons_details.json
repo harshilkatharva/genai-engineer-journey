@@ -1,0 +1,137 @@
+[
+  {
+    "id": 1,
+    "input": "John Smith lives in New York. His phone number is 9876543210.",
+    "expected_output": {
+      "names": ["John Smith"],
+      "numbers": ["9876543210"],
+      "locations": ["New York"]
+    }
+  },
+  {
+    "id": 2,
+    "input": "Sarah met Rahul in Mumbai. Rahul's contact number is 9123456789.",
+    "expected_output": {
+      "names": ["Sarah", "Rahul"],
+      "numbers": ["9123456789"],
+      "locations": ["Mumbai"]
+    }
+  },
+  {
+    "id": 3,
+    "input": "Emma moved to London last year. Contact her at 9988776655.",
+    "expected_output": {
+      "names": ["Emma"],
+      "numbers": ["9988776655"],
+      "locations": ["London"]
+    }
+  },
+  {
+    "id": 4,
+    "input": "Michael and Jennifer are traveling from Chicago to Boston. Michael's number is 8765432109.",
+    "expected_output": {
+      "names": ["Michael", "Jennifer"],
+      "numbers": ["8765432109"],
+      "locations": ["Chicago", "Boston"]
+    }
+  },
+  {
+    "id": 5,
+    "input": "Dr. Priya Sharma works in Ahmedabad. Call her on 9012345678.",
+    "expected_output": {
+      "names": ["Dr. Priya Sharma"],
+      "numbers": ["9012345678"],
+      "locations": ["Ahmedabad"]
+    }
+  },
+  {
+    "id": 6,
+    "input": "No phone number was provided, but David lives in Sydney.",
+    "expected_output": {
+      "names": ["David"],
+      "numbers": [],
+      "locations": ["Sydney"]
+    }
+  },
+  {
+    "id": 7,
+    "input": "The office is located in Paris. Contact Alice at 7654321098 or Bob at 6543210987.",
+    "expected_output": {
+      "names": ["Alice", "Bob"],
+      "numbers": ["7654321098", "6543210987"],
+      "locations": ["Paris"]
+    }
+  },
+  {
+    "id": 8,
+    "input": "Ramesh visited Jaipur and Udaipur. His number is 9876501234.",
+    "expected_output": {
+      "names": ["Ramesh"],
+      "numbers": ["9876501234"],
+      "locations": ["Jaipur", "Udaipur"]
+    }
+  },
+  {
+    "id": 9,
+    "input": "Lisa lives in Toronto. She can be reached at 8887776665.",
+    "expected_output": {
+      "names": ["Lisa"],
+      "numbers": ["8887776665"],
+      "locations": ["Toronto"]
+    }
+  },
+  {
+    "id": 10,
+    "input": "Kevin called Maria from Berlin using 7894561230.",
+    "expected_output": {
+      "names": ["Kevin", "Maria"],
+      "numbers": ["7894561230"],
+      "locations": ["Berlin"]
+    }
+  },
+  {
+    "id": 11,
+    "input": "Rajesh Patel from Surat can be contacted at 9876543210 and 9123456789.",
+    "expected_output": {
+      "names": ["Rajesh Patel"],
+      "numbers": ["9876543210", "9123456789"],
+      "locations": ["Surat"]
+    }
+  },
+  {
+    "id": 12,
+    "input": "Yesterday, Neha and Arjun met in Delhi before traveling to Agra. Neha's number is 9001122334.",
+    "expected_output": {
+      "names": ["Neha", "Arjun"],
+      "numbers": ["9001122334"],
+      "locations": ["Delhi", "Agra"]
+    }
+  },
+  {
+    "id": 13,
+    "input": "The package should be delivered to San Francisco. Contact Emily Johnson at 1234567890.",
+    "expected_output": {
+      "names": ["Emily Johnson"],
+      "numbers": ["1234567890"],
+      "locations": ["San Francisco"]
+    }
+  },
+  {
+    "id": 14,
+    "input": "Call 9988112233 for customer support. No person's name is mentioned.",
+    "expected_output": {
+      "names": [],
+      "numbers": ["9988112233"],
+      "locations": []
+    }
+  },
+  {
+    "id": 15,
+    "input": "Robert lives in California, while Sophia moved to Seattle. Their numbers are 9876500001 and 9876500002.",
+    "expected_output": {
+      "names": ["Robert", "Sophia"],
+      "numbers": ["9876500001", "9876500002"],
+      "locations": ["California", "Seattle"]
+    }
+  }
+]

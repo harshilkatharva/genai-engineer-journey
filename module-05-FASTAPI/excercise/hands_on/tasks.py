@@ -1,5 +1,5 @@
 import asyncio
-from typing import Literal, Annotated
+from typing import Annotated, Literal
 
 from fastapi import Depends, FastAPI, HTTPException, Request, Security
 from fastapi.responses import JSONResponse, StreamingResponse

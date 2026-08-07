@@ -1,9 +1,10 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends
-from llm_client.services.llm_service import LLMClient
-from llm_client.models import LLMRequestModel, LLMResponseModel
 from fastapi.responses import StreamingResponse
 
-from typing import Annotated
+from llm_client.models import LLMRequestModel, LLMResponseModel
+from llm_client.services.llm_service import LLMClient
 
 router = APIRouter()
 

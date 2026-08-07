@@ -1,14 +1,13 @@
-from collections.abc import Generator, AsyncIterator
+import asyncio
+from collections.abc import AsyncIterator, Generator
 from unittest.mock import MagicMock, patch
 
 import pytest
 import pytest_asyncio
-import asyncio
 from httpx import ASGITransport, AsyncClient
 
 from llm_client.api.app import app
 from llm_client.api.routes.chat import get_llm_client
-
 from llm_client.models import LLMResponseModel
 
 
