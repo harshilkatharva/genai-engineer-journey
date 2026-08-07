@@ -7,6 +7,7 @@ from llm_client.api.limiter import limiter
 from llm_client.models import LLMRequestModel, LLMResponseModel
 from llm_client.services.llm_service import LLMClient
 
+
 router = APIRouter()
 
 
@@ -23,7 +24,6 @@ async def chat(
     llm_client: Annotated[LLMClient, Depends(get_llm_client)],
 ) -> LLMResponseModel:
     llm_result = await llm_client.complete(body.provider, body.prompt)
-
     return llm_result
 
 
