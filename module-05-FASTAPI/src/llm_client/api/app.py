@@ -1,16 +1,20 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.security import APIKeyHeader
+
+from llm_client.api.exception_handler import register_exception_handler
+from llm_client.api.routes import chat, health
 from llm_client.config import X_API_KEY
-from llm_client.api.routes import health, chat
 
 app = FastAPI(title="AI Application API", version="0.141.1")
+
+register_exception_handler(app)
 
 api_key_header = APIKeyHeader(name="X_API_KEY")
 
 
 async def verify_api_key(x_api_key: str = Depends(api_key_header)):
     if x_api_key != X_API_KEY:
-        raise HTTPException(status_code=401, detail="Invalid API key")
+        raise HTTPException(status_code=401, detail="Invalid API key to access")
 
 
 app.include_router(health.router, prefix="/health", tags=["health"])
