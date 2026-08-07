@@ -23,8 +23,11 @@ async def chat(
     body: LLMRequestModel,
     llm_client: Annotated[LLMClient, Depends(get_llm_client)],
 ) -> LLMResponseModel:
+
     llm_result = await llm_client.complete(body.provider, body.prompt)
     return llm_result
+
+
 
 
 @router.post("/stream")
