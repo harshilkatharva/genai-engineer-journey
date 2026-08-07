@@ -1,10 +1,15 @@
-from collections.abc import Generator
+from collections.abc import Generator, AsyncIterator
 from unittest.mock import MagicMock, patch
 
 import pytest
-from fastapi.testclient import TestClient
+import pytest_asyncio
+import asyncio
+from httpx import ASGITransport, AsyncClient
 
 from llm_client.api.app import app
+from llm_client.api.routes.chat import get_llm_client
+
+from llm_client.models import LLMResponseModel
 
 
 @pytest.fixture(autouse=True, scope="session")
@@ -27,6 +32,31 @@ def mock_clients() -> Generator[dict[str, MagicMock], None, None]:
         yield {"openai": openai, "google": google, "anthropic": anthropic}
 
 
-@pytest.fixture(autouse=True, scope="session")
-def api_client():
-    return TestClient(app)
+class FakeLLMClient:
+    async def complete(self, provider: str, prompt: str) -> LLMResponseModel:
+        return LLMResponseModel(
+            text="Hello form fake client", provider=provider, latency_ms=1, token_usage=0
+        )
+
+    async def stream(self, provider: str, prompt: str) -> AsyncIterator[str]:
+        sentences = ["Hello", "How", "are", "you!"]
+
+        for token in sentences:
+            await asyncio.sleep(1)
+            yield token
+
+
+async def override_llm_client():
+    return FakeLLMClient()
+
+
+@pytest_asyncio.fixture(autouse=True, scope="session")
+async def api_client():
+    app.dependency_overrides[get_llm_client] = override_llm_client
+
+    transport = ASGITransport(app=app)
+
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        yield client
+
+    app.dependency_overrides.clear()
