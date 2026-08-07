@@ -8,6 +8,7 @@ from httpx import ASGITransport, AsyncClient
 
 from llm_client.api.app import app
 from llm_client.api.routes.chat import get_llm_client
+from llm_client.api.routes.prompts import get_prompt_test
 from llm_client.models import LLMResponseModel
 
 
@@ -52,6 +53,33 @@ async def override_llm_client():
 @pytest_asyncio.fixture(autouse=True, scope="session")
 async def api_client():
     app.dependency_overrides[get_llm_client] = override_llm_client
+
+    transport = ASGITransport(app=app)
+
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        yield client
+
+    app.dependency_overrides.clear()
+
+
+class FakePromptTest:
+    async def process(self, provider: str):
+        pass
+
+    def check_result(self):
+        return {
+            "Pass Percentage": 100,
+            "Comparison Result": [],
+        }
+
+
+def override_prompt_test():
+    return FakePromptTest()
+
+
+@pytest_asyncio.fixture(autouse=True, scope="session")
+async def api_client_prompt():
+    app.dependency_overrides[get_prompt_test] = override_prompt_test
 
     transport = ASGITransport(app=app)
 
