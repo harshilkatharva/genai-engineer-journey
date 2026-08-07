@@ -1,5 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 
 from llm_client.exceptions import (
     ConfigError,
@@ -14,6 +16,11 @@ from llm_client.exceptions import (
 
 
 def register_exception_handler(app: FastAPI) -> None:
+    app.add_exception_handler(
+        RateLimitExceeded,
+        _rate_limit_exceeded_handler,
+    )
+
     @app.exception_handler(LLMTimeoutError)
     async def timeout_handler(request: Request, exc: LLMTimeoutError):
         return JSONResponse(
