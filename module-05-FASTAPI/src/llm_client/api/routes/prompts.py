@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request, Response
 
 from llm_client.api.limiter import limiter
 from llm_client.models import PromptTestRequest
@@ -18,8 +18,11 @@ def get_prompt_test() -> PromptTest:
 @router.post("/test")
 @limiter.limit("2/minute")
 async def prompt_test_golden_set(
-    request: PromptTestRequest, prompt_test: Annotated[PromptTest, Depends(get_prompt_test)]
+    request: Request,
+    response: Response,
+    body: PromptTestRequest,
+    prompt_test: Annotated[PromptTest, Depends(get_prompt_test)],
 ) -> dict:
-    await prompt_test.process(request.provider)
+    await prompt_test.process(body.provider)
     result = prompt_test.check_result()
     return result
