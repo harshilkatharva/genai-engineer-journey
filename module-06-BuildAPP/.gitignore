@@ -1,0 +1,23 @@
+# API Keys
+.env
+
+# Python Libraries
+venv/
+
+
+__pycache__/
+
+
+logs/
+.log
+
+*.egg-info/
+
+.mypy_cache/
+
+.pytest_cache/
+
+.ruff_cache/
+
+.hypothesis/
+
