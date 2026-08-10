@@ -1,6 +1,15 @@
 import time
 from collections.abc import AsyncIterator
 
+from openai import (
+    APIConnectionError,
+    APIError,
+    APITimeoutError,
+    AsyncOpenAI,
+    AuthenticationError,
+    RateLimitError,
+)
+
 from ai_app.core.config import OPENAI_API_KEY
 from ai_app.exceptions import (
     LLMAuthenticationError,
@@ -10,14 +19,6 @@ from ai_app.exceptions import (
     LLMTimeoutError,
 )
 from ai_app.models.llm_response_model import LLMResponseModel
-from openai import (
-    APIConnectionError,
-    APIError,
-    APITimeoutError,
-    AsyncOpenAI,
-    AuthenticationError,
-    RateLimitError,
-)
 
 
 class OpenAIProvider:

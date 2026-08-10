@@ -3,6 +3,7 @@ from collections.abc import AsyncIterator
 
 from google import genai
 from google.genai.errors import APIError, ClientError, ServerError
+
 from ai_app.core.config import GOOGLE_API_KEY
 from ai_app.exceptions import (
     LLMAuthenticationError,
