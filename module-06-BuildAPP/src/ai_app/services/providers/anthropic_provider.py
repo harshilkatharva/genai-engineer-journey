@@ -43,13 +43,16 @@ class AnthropicProvider:
             block = response.content[0]
             if block.type == "text":
                 text = block.text
-            total_token = response.usage.input_tokens + response.usage.output_tokens
+
+            input_tokens = response.usage.input_tokens
+            output_tokens = response.usage.output_tokens
 
             return LLMResponseModel(
                 text=text,
-                provider="anthropic",
+                model=response.model,
                 latency_ms=latency,
-                token_usage=total_token,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
             )
 
         except RateLimitError as e:

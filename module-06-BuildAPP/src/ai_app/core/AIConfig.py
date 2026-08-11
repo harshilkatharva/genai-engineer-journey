@@ -2,7 +2,7 @@ from pydantic_settings import BaseSettings
 
 
 class AiConfig(BaseSettings):
-    default_prvoider: str = "google"
+    default_provider: str = "google"
     default_model: str = "gemini-3.5-flash-lite"
     fallback_provider: str = "google"
     fallback_model: str = "gemini-3.5-flash"

@@ -1,8 +1,6 @@
 from ai_app.core.AIConfig import AiConfig
-from ai_app.db.db_conversation_operations import DBOperator
-
 from ai_app.core.config import DATABASE_CONNECTION_CONVERSATION_URL
-
+from ai_app.db.db_conversation_operations import DBOperator
 from ai_app.models.message import Message
 
 
@@ -65,6 +63,6 @@ class ConversationManager:
                 break
 
             token_counts += message.input_tokens + message.output_tokens
-            truncated.append(message)
+            truncated.append({"role": message.role, "content": message.content})
 
         return truncated

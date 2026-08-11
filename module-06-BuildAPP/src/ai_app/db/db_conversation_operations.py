@@ -1,4 +1,5 @@
 import uuid
+from uuid import UUID
 
 import psycopg
 
@@ -9,11 +10,11 @@ class DBOperator:
     def __init__(self, connection_string: str):
         self.connection_string = connection_string
 
-    def create_conversation(self, user_id: str):
+    async def create_conversation(self, user_id: str):
         conversation_id = uuid.uuid4()
 
-        with psycopg.connect(self.connection_string) as conn:
-            conn.execute(
+        async with await psycopg.AsyncConnection.connect(self.connection_string) as conn:
+            await conn.execute(
                 """
                 INSERT INTO conversations (conversation_id, user_id)
                 VALUES (%s, %s)
@@ -26,11 +27,11 @@ class DBOperator:
 
         return conversation_id
 
-    def add_history(
+    async def add_history(
         self,
-        conversation_id,
+        conversation_id: UUID,
         user_id,
-        request_id,
+        request_id: UUID,
         role: str,
         content: str,
         feature: str,
@@ -40,8 +41,8 @@ class DBOperator:
         estimated_cost: float,
         duration_ms: float,
     ):
-        with psycopg.connect(self.connection_string) as conn:
-            conn.execute(
+        async with await psycopg.AsyncConnection.connect(self.connection_string) as conn:
+            await conn.execute(
                 """
                 INSERT INTO history 
                     (conversation_id,user_id,request_id, role, content, feature, llm_model, input_tokens, output_tokens, estimated_cost, duration_ms)
@@ -63,18 +64,26 @@ class DBOperator:
                 ),
             )
 
-    def get_history(self, conversation_id):
-        with psycopg.connect(self.connection_string) as conn:
-            rows = conn.execute(
+    async def get_history(self, conversation_id):
+        async with (
+            await psycopg.AsyncConnection.connect(self.connection_string) as conn,
+            conn.cursor() as cursor,
+        ):
+            await cursor.execute(
                 """
-                SELECT role,content,input_tokens, output_tokens
-                FROM history
-                WHERE conversation_id = (%s)
-                ORDER BY created at ASC, id ASC
-                """(
-                    conversation_id,
-                ),
-            ).fetchall()
+                    SELECT
+                        role,
+                        content,
+                        input_tokens,
+                        output_tokens
+                    FROM history
+                    WHERE conversation_id = %s
+                    ORDER BY created_at ASC, id ASC
+                    """,
+                (conversation_id,),
+            )
+
+            rows = await cursor.fetchall()
 
         return [
             Message(

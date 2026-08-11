@@ -4,6 +4,7 @@ from collections.abc import AsyncIterator
 from google import genai
 from google.genai.errors import APIError, ClientError, ServerError
 
+from ai_app.core.AIConfig import AiConfig
 from ai_app.core.config import GOOGLE_API_KEY
 from ai_app.exceptions import (
     LLMAuthenticationError,
@@ -21,29 +22,34 @@ class GoogleProvider:
 
     def __init__(self) -> None:
         self.client = genai.Client(api_key=GOOGLE_API_KEY)
+        self.ai_config = AiConfig()
 
     async def complete(self, prompt: str) -> LLMResponseModel:
         try:
             start = time.perf_counter()
 
+            model = (
+                self.ai_config.default_model
+                if self.ai_config.default_provider == "google"
+                else "gemini-3.5-flash-lite"
+            )
+
             response = await self.client.aio.models.generate_content(
-                model="gemini-3.5-flash-lite",
+                model=model,
                 contents=prompt,
             )
 
             latency = (time.perf_counter() - start) * 1000
             usage = response.usage_metadata
-            token_usage = (
-                usage.total_token_count
-                if usage is not None and usage.total_token_count is not None
-                else 0
-            )
+            input_tokens = usage.prompt_token_count
+            output_tokens = usage.candidates_token_count
 
             return LLMResponseModel(
                 text=response.text or "",
-                provider="google",
+                model=response.model_version,
                 latency_ms=latency,
-                token_usage=token_usage,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
             )
 
         except ClientError as e:
