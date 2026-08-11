@@ -1,30 +1,22 @@
-from dataclasses import dataclass
-
 from ai_app.core.AIConfig import AiConfig
-from ai_app.core.cost_tracker import CostTracker
 from ai_app.db.db_conversation_operations import DBOperator
 
+from ai_app.core.config import DATABASE_CONNECTION_CONVERSATION_URL
 
-@dataclass
-class Message:
-    role: str
-    content: str
-    input_tokens: int
-    output_tokens: int
+from ai_app.models.message import Message
 
 
 class ConversationManager:
     def __init__(self):
-        self.cost_tracker = CostTracker()
         self.ai_config = AiConfig()
-        self.db_operator = DBOperator()
+        self.db_operator = DBOperator(connection_string=DATABASE_CONNECTION_CONVERSATION_URL)
 
-    def start_conversation(self, user_id: str):
-        conversation_id = self.db_operator.create_conversation(user_id)
+    async def start_conversation(self, user_id: str):
+        conversation_id = await self.db_operator.create_conversation(user_id)
 
         return conversation_id
 
-    def add_conversation(
+    async def add_conversation(
         self,
         conversation_id,
         user_id,
@@ -38,7 +30,7 @@ class ConversationManager:
         estimated_cost: float,
         duration_ms: float,
     ) -> None:
-        self.db_operator.add_history(
+        await self.db_operator.add_history(
             conversation_id,
             user_id,
             request_id,
@@ -52,8 +44,8 @@ class ConversationManager:
             duration_ms,
         )
 
-    def get_conversations(self, conversation_id):
-        conversations = self.db_operator.get_history(conversation_id)
+    async def get_conversations(self, conversation_id):
+        conversations = await self.db_operator.get_history(conversation_id)
 
         if len(conversations) > 0:
             truncate_conversation = self._truncate_history(conversations)
@@ -68,7 +60,7 @@ class ConversationManager:
         for message in reversed(history):
             if (
                 token_counts + message.input_tokens + message.output_tokens
-                > self.conversation_history_max_token_size
+                > self.ai_config.conversation_history_max_token_size
             ):
                 break
 

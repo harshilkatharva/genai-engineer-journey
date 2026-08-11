@@ -2,7 +2,7 @@ import uuid
 
 import psycopg
 
-from ai_app.core.conversation_manager import Message
+from ai_app.models.message import Message
 
 
 class DBOperator:
@@ -69,7 +69,7 @@ class DBOperator:
                 """
                 SELECT role,content,input_tokens, output_tokens
                 FROM history
-                WHERE conversation_id = %s
+                WHERE conversation_id = (%s)
                 ORDER BY created at ASC, id ASC
                 """(
                     conversation_id,
