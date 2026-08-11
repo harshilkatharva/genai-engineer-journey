@@ -4,6 +4,8 @@ from uuid import UUID
 from fastapi import BackgroundTasks
 from jinja2 import Template
 
+from ai_app.models.message import Message
+
 from ai_app.core.AIConfig import AiConfig
 from ai_app.core.conversation_manager import ConversationManager
 from ai_app.core.cost_tracker import CostTracker
@@ -46,10 +48,11 @@ class ChatService:
     async def _get_conversation(self, conversation_id: UUID):
         return await self.conversation_manager.get_conversations(conversation_id=conversation_id)
 
-    def _build_prompt(self, conversations: list, user_message: str):
+    def _build_prompt(self, conversations: list[Message], user_message: str):
         prompt_template = Template(Path("src/ai_app/features/chat/prompts/prompt.md").read_text())
+        history = [{"role": con["role"], "content": con["content"]} for con in conversations]
 
-        return prompt_template.render(conversation_history=conversations, user_message=user_message)
+        return prompt_template.render(conversation_history=history, user_message=user_message)
 
     async def _add_conversations(
         self,

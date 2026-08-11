@@ -65,6 +65,6 @@ class ConversationManager:
                 break
 
             token_counts += message.input_tokens + message.output_tokens
-            truncated.append({"role": message.role, "content": message.content})
+            truncated.append(message)
 
         return truncated
