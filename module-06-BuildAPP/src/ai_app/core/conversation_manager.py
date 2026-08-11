@@ -3,13 +3,15 @@ from ai_app.core.config import DATABASE_CONNECTION_CONVERSATION_URL
 from ai_app.db.db_conversation_operations import DBOperator
 from ai_app.models.message import Message
 
+from uuid import UUID
+
 
 class ConversationManager:
     def __init__(self):
         self.ai_config = AiConfig()
         self.db_operator = DBOperator(connection_string=DATABASE_CONNECTION_CONVERSATION_URL)
 
-    async def start_conversation(self, user_id: str):
+    async def start_conversation(self, user_id: UUID):
         conversation_id = await self.db_operator.create_conversation(user_id)
 
         return conversation_id
