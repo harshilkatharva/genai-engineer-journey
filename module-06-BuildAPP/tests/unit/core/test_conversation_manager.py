@@ -1,7 +1,8 @@
-import pytest
-from ai_app.models.message import Message
-
 from unittest.mock import AsyncMock
+
+import pytest
+
+from ai_app.models.message import Message
 
 
 @pytest.mark.asyncio

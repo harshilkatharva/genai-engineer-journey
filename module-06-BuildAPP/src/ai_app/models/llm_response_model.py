@@ -8,8 +8,10 @@ class LLMResponseModel(BaseModel):
 
     text: str = Field(..., description="Genrated Response text by provider")
 
-    provider: str = Field(..., description="Name of Provider")
+    model: str = Field(..., description="Name of model")
 
     latency_ms: float = Field(..., description="Request latency in milisecond")
 
-    token_usage: int = Field(..., description="Total number of token consumed in request")
+    input_tokens: int = Field(..., description="Input token consumed in request")
+
+    output_tokens: int = Field(..., description="Output token consumed in request")

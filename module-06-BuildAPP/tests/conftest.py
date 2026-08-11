@@ -5,7 +5,7 @@ import pytest
 from ai_app.core.conversation_manager import ConversationManager
 
 
-@pytest.fixture(autouse=True, scope="session")
+@pytest.fixture(autouse=False, scope="session")
 def conversation_manager():
     with (
         patch("ai_app.core.conversation_manager.AiConfig") as mock_ai_config,

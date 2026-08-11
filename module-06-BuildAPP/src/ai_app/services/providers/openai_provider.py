@@ -41,11 +41,17 @@ class OpenAIProvider:
 
             latency = (time.perf_counter() - start) * 1000
 
+            usage = response.usage
+
+            input_tokens = usage.input_tokens
+            output_tokens = usage.output_tokens
+
             return LLMResponseModel(
                 text=response.output_text,
-                provider="openai",
+                model=response.model,
                 latency_ms=latency,
-                token_usage=response.usage.total_tokens if response.usage else 0,
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
             )
         except RateLimitError as e:
             raise LLMRateLimitError(str(e))

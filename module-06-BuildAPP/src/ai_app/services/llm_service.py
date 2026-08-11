@@ -55,7 +55,11 @@ class LLMClient:
             )
 
             return LLMResponseModel(
-                text=e.user_message, provider=provider, latency_ms=0.0, token_usage=0
+                text=e.user_message,
+                provider=provider,
+                latency_ms=0.0,
+                input_tokens=0,
+                output_tokens=0,
             )
 
     async def complete_all(
