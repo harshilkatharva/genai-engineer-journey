@@ -2,8 +2,10 @@ from ai_app.core.AIConfig import AiConfig
 from ai_app.core.config import DATABASE_CONNECTION_CONVERSATION_URL
 from ai_app.db.db_conversation_operations import DBOperator
 from ai_app.models.message import Message
+from ai_app.models import LLMResponseModel
 
 from uuid import UUID
+import re
 
 
 class ConversationManager:
@@ -68,3 +70,44 @@ class ConversationManager:
             truncated.append(message)
 
         return truncated
+
+    def _normalize_text(text: str) -> str:
+        """
+        Normalize user input for exact-match caching.
+
+        Examples:
+            "  Summarize this  " -> "summarize this"
+            "SUMMARIZE   THIS"  -> "summarize this"
+        """
+        return re.sub(r"\s+", " ", text.strip().lower())
+
+    async def get_cached_response(
+        self,
+        user_message: str,
+        feature: str = "summarization",
+    ):
+        normalized_message = self._normalize_text(user_message)
+
+        cached_history = await self.db_operator.get_cached_history(
+            normalized_message=normalized_message,
+            feature=feature,
+        )
+
+        if cached_history is None or len(cached_history) == 0:
+            return None
+
+        (
+            content,
+            llm_model,
+            input_tokens,
+            output_tokens,
+            duration_ms,
+        ) = cached_history
+
+        return LLMResponseModel(
+            text=content,
+            model=llm_model,
+            input_tokens=0,
+            output_tokens=0,
+            latency_ms=0,
+        )

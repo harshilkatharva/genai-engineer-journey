@@ -1,6 +1,5 @@
 import uuid
 from uuid import UUID
-
 import psycopg
 
 from ai_app.models.message import Message
@@ -94,3 +93,57 @@ class DBOperator:
             )
             for role, content, input_tokens, output_tokens in rows
         ]
+
+    async def get_cached_history(
+        self,
+        normalized_message: str,
+        feature: str,
+    ):
+        """
+        Find a recently served response for the same normalized
+        user message.
+
+        user_id and conversation_id are intentionally NOT used here.
+        """
+
+        async with (
+            await psycopg.AsyncConnection.connect(self.connection_string) as conn,
+            conn.cursor() as cursor,
+        ):
+            await cursor.execute(
+                """
+                SELECT
+                    assistant.content,
+                    assistant.llm_model,
+                    assistant.input_tokens,
+                    assistant.output_tokens,
+                    assistant.duration_ms
+                FROM history AS user_message
+                JOIN history AS assistant
+                    ON assistant.request_id = user_message.request_id
+                    AND assistant.role = 'assistant'
+                    AND assistant.feature = %s
+                WHERE user_message.role = 'user'
+                    AND user_message.feature = %s
+                    AND LOWER(
+                        REGEXP_REPLACE(
+                            TRIM(user_message.content),
+                            '\\s+',
+                            ' ',
+                            'g'
+                        )
+                    ) = %s
+                    AND user_message.created_at >= NOW() - INTERVAL '24 hours'
+                ORDER BY assistant.created_at DESC
+                LIMIT 1
+                """,
+                (
+                    feature,
+                    feature,
+                    normalized_message,
+                ),
+            )
+
+            row = await cursor.fetchone()
+
+        return row

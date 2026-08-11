@@ -26,6 +26,23 @@ class SummarizationService:
         user_message: str,
         background_tasks: BackgroundTasks,
     ) -> LLMResponseModel:
+        cached_response = await self.conversation_manager.get_cached_response(
+            user_message=user_message,
+            feature="summarization",
+        )
+
+        if cached_response is not None:
+            background_tasks.add_task(
+                self._add_conversations,
+                conversation_id=conversation_id,
+                user_id=user_id,
+                request_id=request_id,
+                user_message=user_message,
+                response=cached_response,
+            )
+
+            return cached_response
+
         conversations = await self._get_conversation(conversation_id=conversation_id)
         prompt = self._build_prompt(conversations=conversations, user_message=user_message)
         response = await self.llm_client.complete(
