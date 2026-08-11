@@ -1,10 +1,15 @@
 from uuid import UUID
 
+from ai_app.core.config import DATABASE_CONNECTION_CONVERSATION_URL
+
 import psycopg
 from ai_app.models.usage_report import UsageBreakdown, UsageReport
 
 
 class DBReport:
+    def __init__(self):
+        self.connection_string = DATABASE_CONNECTION_CONVERSATION_URL
+
     async def get_user_usage_report(
         self,
         user_id: UUID,

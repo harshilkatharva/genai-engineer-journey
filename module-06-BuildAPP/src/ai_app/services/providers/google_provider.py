@@ -41,8 +41,8 @@ class GoogleProvider:
 
             latency = (time.perf_counter() - start) * 1000
             usage = response.usage_metadata
-            input_tokens = usage.prompt_token_count
-            output_tokens = usage.candidates_token_count
+            input_tokens = usage.prompt_token_count | 0
+            output_tokens = usage.candidates_token_count | 0
 
             return LLMResponseModel(
                 text=response.text or "",
