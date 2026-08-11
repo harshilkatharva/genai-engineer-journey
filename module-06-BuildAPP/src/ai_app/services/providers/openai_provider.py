@@ -43,8 +43,8 @@ class OpenAIProvider:
 
             usage = response.usage
 
-            input_tokens = usage.input_tokens
-            output_tokens = usage.output_tokens
+            input_tokens = usage.input_tokens | 0
+            output_tokens = usage.output_tokens | 0
 
             return LLMResponseModel(
                 text=response.output_text,
