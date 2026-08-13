@@ -29,13 +29,13 @@ class Settings(BaseSettings):
     chunking_strategy: str = "sentence"
 
     chunk_size: int = Field(
-        default=500,
+        default=200,
         gt=0,
         description="Target chunk size in tokens",
     )
 
     chunk_overlap: int = Field(
-        default=50,
+        default=20,
         ge=0,
         description="Number of overlapping tokens between chunks",
     )
