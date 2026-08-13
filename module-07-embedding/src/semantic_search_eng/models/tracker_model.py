@@ -1,6 +1,7 @@
-class ChunkTrackerModel:
-    pass
+from datetime import datetime
+
+from pydantic import BaseModel, Field
 
 
-class QueryTrackerModel:
-    pass
+class TrackerModel(BaseModel):
+    timestamp: datetime = Field(default_factory=datetime.now)

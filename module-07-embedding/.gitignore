@@ -26,3 +26,6 @@ logs/
 
 # Ruff
 .ruff_cache/
+
+# User data
+user_data/
