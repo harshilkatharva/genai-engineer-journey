@@ -1,0 +1,62 @@
+## Retrieval Quality Comparison
+
+The four chunking strategies produced noticeably different retrieval behavior. Overall, **200-token chunks produced more focused retrieval**, while **500-token chunks provided more surrounding context**. Sentence-boundary chunking generally preserved semantic coherence better than fixed-size chunking.
+
+### 1. 500-token Sentence Boundary + 50-token Overlap
+
+This strategy produced a strong result for the test query, with a top similarity score of **0.660**. The first result correctly retrieved the section explaining that overlap is useful when an important explanation crosses chunk boundaries:
+
+> “Chunk overlap is valuable when an important explanation crosses the boundary between two chunks.”
+
+It also included the surrounding explanation about sentence boundaries and context preservation. This makes the result highly relevant, although the 498-token chunk also contained unrelated embedding and authentication material. Therefore, retrieval quality was **high in relevance but somewhat broad in context**.
+
+### 2. 500-token Fixed Size
+
+The fixed-size strategy retrieved the same general topic, but its top similarity score dropped to **0.465**. It still contained the important overlap explanation, but the chunk started in the middle of the preceding discussion and extended into unrelated authentication/password-reset content.
+
+Compared with 500-token sentence-boundary chunking, this result was **less semantically clean**. The fixed boundary can split related information at arbitrary positions, causing the retrieved chunk to contain more unrelated material.
+
+### 3. 200-token Sentence Boundary + 20-token Overlap
+
+The 200-token sentence-boundary strategy produced a much more focused result. Its top score was **0.656**, almost the same as the 500-token sentence-boundary strategy.
+
+The first result focused specifically on:
+
+* 500-token/50-token sentence chunking
+* preserving complete sentences
+* contextual overlap
+* chunk metadata
+* information crossing chunk boundaries
+
+This demonstrates that **smaller sentence-aware chunks can maintain high retrieval relevance while reducing unrelated context**.
+
+However, the second result was also needed to provide the beginning of the explanation. This indicates a tradeoff: smaller chunks may require retrieving multiple chunks to reconstruct the full context.
+
+### 4. 200-token Fixed Size
+
+Interestingly, the 200-token fixed-size strategy produced the **highest individual similarity score: 0.720**.
+
+Its top result contained almost exactly the important explanation about overlap:
+
+> “Chunk overlap is valuable when an important explanation crosses the boundary between two chunks.”
+
+It also included the explanation that overlap increases the probability of retrieving enough context.
+
+However, the result begins partway through the preceding discussion, and the second result is required to recover the earlier context. Therefore, the high similarity score does not necessarily mean the overall retrieval is better. **The chunk is highly relevant but less self-contained.**
+
+### Overall Comparison
+
+| Strategy                  | Top Score | Retrieval Quality                  | Main Strength                       | Main Weakness                    |
+| ------------------------- | --------: | ---------------------------------- | ----------------------------------- | -------------------------------- |
+| 500 Sentence + 50 Overlap | **0.660** | High                               | Strong context + semantic coherence | More unrelated content           |
+| 500 Fixed                 | **0.465** | Moderate                           | Large context                       | Arbitrary boundaries, more noise |
+| 200 Sentence + 20 Overlap | **0.656** | **High**                           | Focused + sentence coherent         | May need multiple chunks         |
+| 200 Fixed                 | **0.720** | High relevance, lower completeness | Very focused matching               | Context can be fragmented        |
+
+### Conclusion
+
+For this experiment, **sentence-boundary chunking appears more reliable for overall retrieval quality**, because the retrieved text preserves complete ideas instead of cutting them arbitrarily. The **200-token sentence-boundary strategy is particularly attractive** because it achieved almost the same relevance score as the 500-token sentence strategy while returning substantially more focused context.
+
+The **200-token fixed-size strategy achieved the highest similarity score**, but this should not be interpreted as the best overall strategy. Similarity measures semantic proximity, not whether the retrieved chunk contains enough complete context to answer the question.
+
+The experiment therefore suggests that **chunk size should be evaluated together with retrieval relevance, context completeness, and noise—not similarity score alone**. This aligns with the corpus's recommendation to use Recall@K together with manual inspection when evaluating retrieval quality.

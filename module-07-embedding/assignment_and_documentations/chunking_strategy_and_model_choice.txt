@@ -1,0 +1,11 @@
+Chunking Strategy:-
+* chunk size = 500, overlap = 50
+* In this project i used text file with contextual content and so i used sentence boundry Strategy. because if i used fixed size Strategy than my documents paragraph are connected with each other so when i try to retrive chunks that time may be it not contain context of that paragraph or miss some connected part.
+* chunk size 500 becuase it contain enough text to find answer of specific query.
+* overlap 50 because overlap helps preserve context when an important idea crosses a chunk boundary.
+
+Model choice :- 
+* I used local model all-MiniLM-L6-v2 
+Reason to chooce this model 
+    * it is symmtric model. as my requirement of fetch only similar chunks this is perfect for it.
+    * lighweighted 
