@@ -1,14 +1,32 @@
 from fastapi import FastAPI
 
+from semantic_search_eng.api.routes.search import (
+    router as search_router,
+)
+from semantic_search_eng.config import get_settings
 
-app = FastAPI()
+settings = get_settings()
+
+app = FastAPI(
+    title=settings.app_name,
+    version=settings.app_version,
+)
+
+# for this model only without prefix
+app.include_router(search_router, tags=["search"])
 
 
-@app.post("/process_documents")
-def process_documents(conversation_id: str, documents):
-    pass
+@app.get("/")
+def root() -> dict:
+    return {
+        "name": settings.app_name,
+        "version": settings.app_version,
+        "status": "running",
+    }
 
 
-@app.post("/get_chunks")
-def get_chunks(conversation_id: str, query: str, top_k: int) -> list[tuple[str, float]]:
-    pass
+@app.get("/health")
+def health() -> dict:
+    return {
+        "status": "ok",
+    }

@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
 
-class ChunkResponseModel(BaseModel):
-    pass
+class ResponseModel(BaseModel):
+    success: bool = True
+    message: str | None = None
