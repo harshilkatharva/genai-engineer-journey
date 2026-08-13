@@ -1,8 +1,9 @@
 from __future__ import annotations
 
-import tiktoken
 import re
 from time import perf_counter
+
+import tiktoken
 
 from semantic_search_eng.config import get_settings
 from semantic_search_eng.logger.chunking_tracker import (
