@@ -3,7 +3,6 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 
-
 [project]
 name = "module-05-fastapi"
 version = "0.1.0"
@@ -63,4 +62,6 @@ addopts = "-m 'not intregration'"
 [tool.mypy]
 python_version = "3.12"
 strict = true
+
+
 
