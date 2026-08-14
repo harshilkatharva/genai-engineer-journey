@@ -1,0 +1,14 @@
+if i am building semantic search over a 50,000-document internal knowledge base that updates daily my startegy will be:-
+
+* Split documents based on document structure and semantic boundaries
+* once create chunk, embed and store it.
+* main things i should set flexible chunk size 
+* for daily
+    * build pipeline that track files daily
+    * new document add in that similar document structure and semantic boundaries
+    * build pipline that add new document to embed and store
+    * if changes in existing 
+        * if in life more than threshold changes i re-embed that specific file and re-store it
+        * if minor change in file than as i said i can easly add that specific part to that chunk and re-embed that specific chunk.
+    *if delete specif file or part build a pipline that remove file or specific chunk and embedding
+    * add metadata for analys or filter or access
