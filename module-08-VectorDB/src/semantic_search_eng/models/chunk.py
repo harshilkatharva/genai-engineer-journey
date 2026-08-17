@@ -1,10 +1,11 @@
 from pydantic import BaseModel, Field
+from uuid import UUID
 
 
 class Chunk(BaseModel):
     chunk_id: str
-    document_id: str
-    tenant_id: str
+    document_id: UUID
+    tenant_id: UUID
 
     document_type: str
     metadata: dict
