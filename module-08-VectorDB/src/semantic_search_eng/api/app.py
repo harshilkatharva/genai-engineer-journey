@@ -1,10 +1,10 @@
+import uuid
+
 from fastapi import FastAPI
 
-from semantic_search_eng.api.routes.retrive import router as retrive_router
 from semantic_search_eng.api.routes.index import router as index_router
+from semantic_search_eng.api.routes.retrive import router as retrive_router
 from semantic_search_eng.config import get_settings
-
-import uuid
 
 settings = get_settings()
 

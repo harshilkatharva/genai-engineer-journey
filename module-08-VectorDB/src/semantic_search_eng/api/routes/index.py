@@ -3,7 +3,6 @@ from fastapi import APIRouter, HTTPException
 from semantic_search_eng.models import (
     ProcessRequest,
 )
-
 from semantic_search_eng.services.index_services import IndexServiceManager
 
 router = APIRouter()

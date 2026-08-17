@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from time import perf_counter
-
 from uuid import UUID
 
 from sentence_transformers import SentenceTransformer
@@ -55,7 +54,7 @@ class EmbeddingManager:
         embeddings = self.model.encode(
             texts,
             batch_size=self.settings.embedding_batch_size,
-            show_progress_bar=False,
+            show_progress_bar=True,
             convert_to_numpy=True,
             normalize_embeddings=True,
         )
