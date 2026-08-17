@@ -1,5 +1,5 @@
 from semantic_search_eng.models.chunk import Chunk
-from semantic_search_eng.models.search_response import (
+from semantic_search_eng.models.retrive_response import (
     SearchResponse,
     SearchResult,
 )

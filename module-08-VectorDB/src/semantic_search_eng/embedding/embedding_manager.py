@@ -104,16 +104,6 @@ class EmbeddingManager:
 
         return result
 
-    def load_document_embeddings(
-        self,
-        tenant_id: UUID,
-        document_id: UUID,
-    ) -> list[list[float]]:
-        return self.data_manager.get_embeddings(
-            tenant_id=tenant_id,
-            document_id=document_id,
-        )
-
     def embed_query(
         self,
         query: str,

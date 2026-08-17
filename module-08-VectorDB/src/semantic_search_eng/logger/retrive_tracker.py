@@ -3,15 +3,15 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from semantic_search_eng.config import get_settings
-from semantic_search_eng.models.query_tracker import QueryTracker
+from semantic_search_eng.models.retrive_tracker import RetriveTracker
 
 
-class QueryTrackerLogger:
+class RetriveTrackerLogger:
     """
-    Logs query/retrieval metrics as JSONL.
+    Logs retrieval metrics as JSONL.
 
     Output:
-        user_data/logs/query_tracker.jsonl
+        user_data/logs/retrive_tracker.jsonl
     """
 
     def __init__(self) -> None:
@@ -23,11 +23,11 @@ class QueryTrackerLogger:
             exist_ok=True,
         )
 
-        self.log_file = self.log_directory / "query_tracker.jsonl"
+        self.log_file = self.log_directory / "retrive_tracker.jsonl"
 
     def track(
         self,
-        tracker: QueryTracker,
+        tracker: RetriveTracker,
     ) -> None:
         record = self._build_record(tracker)
 
@@ -35,7 +35,7 @@ class QueryTrackerLogger:
 
     def _build_record(
         self,
-        tracker: QueryTracker,
+        tracker: RetriveTracker,
     ) -> dict:
         record = tracker.model_dump()
 

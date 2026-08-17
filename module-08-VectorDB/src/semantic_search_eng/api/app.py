@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from semantic_search_eng.api.routes.search import router as search_router
+from semantic_search_eng.api.routes.retrive import router as retrive_router
 from semantic_search_eng.api.routes.index import router as index_router
 from semantic_search_eng.config import get_settings
 
@@ -14,7 +14,7 @@ app = FastAPI(
 )
 
 app.include_router(index_router, prefix="/index", tags=["index"])
-app.include_router(search_router, prefix="/search", tags=["search"])
+app.include_router(retrive_router, prefix="/retrive", tags=["retrive"])
 
 
 @app.get("/")

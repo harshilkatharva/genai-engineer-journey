@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-from semantic_search_eng.models.process_request import (
+from semantic_search_eng.models import (
     ProcessRequest,
 )
 
