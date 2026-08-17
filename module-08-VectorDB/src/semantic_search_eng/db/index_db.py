@@ -1,11 +1,14 @@
+from time import perf_counter
+from uuid import UUID
+
 import psycopg
 from pgvector.psycopg import register_vector_async
-from uuid import UUID
-from semantic_search_eng.models.chunk import Chunk
+from psycopg.types.json import Jsonb
 
 from semantic_search_eng.config import get_settings
-
-from psycopg.types.json import Jsonb
+from semantic_search_eng.models.chunk import Chunk
+from semantic_search_eng.models.index_batch_tracker import IndexBatchTracker
+from semantic_search_eng.logger.db_operation_tracker import DBOperationTracker
 
 
 class IndexDBManager:
@@ -13,6 +16,7 @@ class IndexDBManager:
 
     def __init__(self):
         self.settings = get_settings()
+        self.db_tracker = DBOperationTracker()
 
     async def store_index(self, tenant_id: UUID, chunks: list[Chunk], embeddings: list):
         if len(chunks) != len(embeddings):
@@ -32,7 +36,7 @@ class IndexDBManager:
         ]
 
         query = """
-            INSERT INTO document_chunks (
+            INSERT INTO document_chunks_no_index (
                 tenant_id,
                 document_id,
                 chunk_id,
@@ -52,9 +56,20 @@ class IndexDBManager:
             await register_vector_async(conn)
 
             async with conn.cursor() as cur:
-                for i in range(0, len(rows), self.BATCH_SIZE):
+                for batch_num, i in enumerate(range(0, len(rows), self.BATCH_SIZE), 1):
                     batch = rows[i : i + self.BATCH_SIZE]
+                    batch_start = perf_counter()
                     await cur.executemany(query, batch)
-                    # add index db tracker here
+                    insertion_latency_ms = (perf_counter() - batch_start) * 1000
+
+                    # Track index batch insertion
+                    index_tracker = IndexBatchTracker(
+                        tenant_id=str(tenant_id),
+                        batch_number=batch_num,
+                        batch_size=len(batch),
+                        total_chunks=len(rows),
+                        insertion_latency_ms=insertion_latency_ms,
+                    )
+                    self.db_tracker.track_index_batch(index_tracker)
 
             await conn.commit()

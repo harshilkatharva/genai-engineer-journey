@@ -1,24 +1,32 @@
-from semantic_search_eng.models import RetriveResult
+from time import perf_counter
+from uuid import UUID
+
 import psycopg
 from pgvector.psycopg import register_vector_async
+
 from semantic_search_eng.config import get_settings
-from uuid import UUID
+from semantic_search_eng.models import RetriveResult
+from semantic_search_eng.models.db_query_tracker import DBQueryTracker
+from semantic_search_eng.logger.db_operation_tracker import DBOperationTracker
 
 
 class RetriveDBManager:
     def __init__(self):
         self.settings = get_settings()
+        self.db_tracker = DBOperationTracker()
 
     async def retrive_chunks(
         self, tenant_id: UUID, query_embedding: list[float], top_k: int | None = None
     ):
         db_query = """
-        SELECT chunk_text, 1 - (embedding <=> %s) as similarity_score
-        FROM document_chunks
+        SELECT chunk_text, 1 - (embedding <=> %s) as similarity_score, chunk_id
+        FROM document_chunks_no_index
         WHERE tenant_id = %s
         ORDER BY embedding <=> %s 
         LIMIT %s
         """
+
+        query_start = perf_counter()
 
         async with await psycopg.AsyncConnection.connect(
             self.settings.DATABASE_CONNECTION_CONVERSATION_URL
@@ -38,6 +46,8 @@ class RetriveDBManager:
 
                 rows = await cur.fetchall()
 
+        query_latency_ms = (perf_counter() - query_start) * 1000
+
         results = [
             RetriveResult(
                 chunk_text=row[0],
@@ -45,5 +55,15 @@ class RetriveDBManager:
             )
             for row in rows
         ]
+
+        # Track query execution
+        db_query_tracker = DBQueryTracker(
+            tenant_id=str(tenant_id),
+            top_k=top_k or self.settings.default_top_k,
+            results_count=len(results),
+            query_latency_ms=query_latency_ms,
+            chunk_ids=[id[2] for id in rows],
+        )
+        self.db_tracker.track_query(db_query_tracker)
 
         return results

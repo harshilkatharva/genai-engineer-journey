@@ -1,6 +1,7 @@
 from semantic_search_eng.chunking.chunking_manager import (
     ChunkingManager,
 )
+from semantic_search_eng.db.index_db import IndexDBManager
 from semantic_search_eng.embedding.embedding_manager import (
     EmbeddingManager,
 )
@@ -9,8 +10,6 @@ from semantic_search_eng.user_data.data_manager import DataManager
 from semantic_search_eng.user_data.data_processor import (
     DataProcessor,
 )
-
-from semantic_search_eng.db.index_db import IndexDBManager
 
 
 class IndexServiceManager:

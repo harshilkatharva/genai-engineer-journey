@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import re
 from time import perf_counter
-
 from uuid import UUID
 
 import tiktoken

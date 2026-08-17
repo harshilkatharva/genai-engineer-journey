@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
-from semantic_search_eng.config import get_settings
 
+from semantic_search_eng.config import get_settings
 
 settings = get_settings()
 

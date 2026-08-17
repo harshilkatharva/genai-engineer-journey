@@ -3,16 +3,17 @@ from __future__ import annotations
 from time import perf_counter
 from uuid import UUID
 
+from pgvector import Vector
+
 from semantic_search_eng.config import get_settings
+from semantic_search_eng.db.retrive_db import RetriveDBManager
 from semantic_search_eng.embedding.embedding_manager import (
     EmbeddingManager,
 )
 from semantic_search_eng.logger.retrive_tracker import (
     RetriveTrackerLogger,
 )
-from semantic_search_eng.db.retrive_db import RetriveDBManager
 from semantic_search_eng.models.retrive_tracker import RetriveTracker
-from pgvector import Vector
 
 
 class RetriverManager:

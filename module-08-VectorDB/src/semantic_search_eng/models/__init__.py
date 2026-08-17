@@ -1,6 +1,8 @@
 from .chunk import Chunk
 from .chunking_tracker import ChunkingTracker
+from .db_query_tracker import DBQueryTracker
 from .embedding_tracker import EmbeddingTracker
+from .index_batch_tracker import IndexBatchTracker
 from .process_request import ProcessRequest
 from .query_tracker import QueryTracker
 from .request_model import RequestModel
@@ -13,7 +15,9 @@ from .tracker_model import TrackerModel
 __all__ = [
     "Chunk",
     "ChunkingTracker",
+    "DBQueryTracker",
     "EmbeddingTracker",
+    "IndexBatchTracker",
     "ProcessRequest",
     "QueryTracker",
     "RequestModel",

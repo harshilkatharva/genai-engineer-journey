@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-from semantic_search_eng.models import RetriveResponse, RetriveRequest
+from semantic_search_eng.models import RetriveRequest, RetriveResponse
 from semantic_search_eng.services.retrive_services import RetriveServiceManager
 
 router = APIRouter()
