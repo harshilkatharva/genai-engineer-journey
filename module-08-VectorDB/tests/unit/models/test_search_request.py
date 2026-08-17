@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from semantic_search_eng.models.search_request import SearchRequest
+from semantic_search_eng.models.retrive_request import SearchRequest
 
 
 def test_search_request_defaults_top_k() -> None:

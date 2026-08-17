@@ -242,7 +242,7 @@ def test_search_success(
     dependencies = mocked_dependencies
 
     from semantic_search_eng.models.chunk import Chunk
-    from semantic_search_eng.models.search_response import (
+    from semantic_search_eng.models.retrive_response import (
         SearchResult,
     )
 
@@ -280,7 +280,7 @@ def test_search_success(
 
     # Patch the route helper functions directly so this test focuses
     # on the API contract rather than filesystem implementation.
-    import semantic_search_eng.api.routes.search as search_module
+    import semantic_search_eng.api.routes.retrive as search_module
 
     search_module._load_all_chunks = MagicMock(return_value=chunks)
 
@@ -334,7 +334,7 @@ def test_search_uses_default_top_k_when_omitted(
 ):
     dependencies = mocked_dependencies
 
-    from semantic_search_eng.api.routes import search as search_module
+    from semantic_search_eng.api.routes import retrive as search_module
 
     search_module._load_all_chunks = MagicMock(return_value=[])
 
@@ -383,7 +383,7 @@ def test_search_handles_value_error(
     client,
     mocked_dependencies,
 ):
-    import semantic_search_eng.api.routes.search as search_module
+    import semantic_search_eng.api.routes.retrive as search_module
     from semantic_search_eng.models.chunk import Chunk
 
     search_module._load_all_chunks = MagicMock(
@@ -424,7 +424,7 @@ def test_search_handles_missing_conversation(
     client,
     mocked_dependencies,
 ):
-    import semantic_search_eng.api.routes.search as search_module
+    import semantic_search_eng.api.routes.retrive as search_module
 
     search_module._load_all_chunks = MagicMock(
         side_effect=FileNotFoundError("Conversation not found")

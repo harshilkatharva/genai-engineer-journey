@@ -4,18 +4,8 @@ from semantic_search_eng.chunking.chunking_manager import (
 from semantic_search_eng.embedding.embedding_manager import (
     EmbeddingManager,
 )
-from semantic_search_eng.models.process_request import (
-    ProcessRequest,
-)
-from semantic_search_eng.models.search_response import (
-    SearchResponse,
-)
-from semantic_search_eng.retrival.retriver_manager import (
-    RetriverManager,
-)
-from semantic_search_eng.user_data.data_manager import (
-    DataManager,
-)
+from semantic_search_eng.models import ProcessRequest
+from semantic_search_eng.user_data.data_manager import DataManager
 from semantic_search_eng.user_data.data_processor import (
     DataProcessor,
 )
@@ -29,10 +19,9 @@ class IndexServiceManager:
         self.data_processor = DataProcessor()
         self.chunking_manager = ChunkingManager()
         self.embedding_manager = EmbeddingManager()
-        self.retriver_manager = RetriverManager()
         self.index_db_manager = IndexDBManager()
 
-    async def index(self, request: ProcessRequest) -> SearchResponse:
+    async def index(self, request: ProcessRequest):
         document_ids = self.data_processor.process_documents(
             tenant_id=request.tenant_id,
             documents=request.documents,
