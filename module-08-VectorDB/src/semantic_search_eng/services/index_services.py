@@ -55,7 +55,6 @@ class IndexServiceManager:
         embeddings = self.embedding_manager.embed_chunks(
             tenant_id=request.tenant_id,
             chunks=chunks,
-            save=True,
         )
 
         await self.index_db_manager.store_index(

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from time import perf_counter
 
+from uuid import UUID
+
 from sentence_transformers import SentenceTransformer
 
 from semantic_search_eng.config import get_settings
@@ -32,9 +34,8 @@ class EmbeddingManager:
 
     def embed_chunks(
         self,
-        tenant_id: str,
+        tenant_id: UUID,
         chunks: list[Chunk],
-        save: bool = True,
     ) -> list[list[float]]:
         """
         Embed a list of chunks in batches.
@@ -66,7 +67,7 @@ class EmbeddingManager:
         estimated_cost = self._calculate_cost(total_tokens)
 
         tracker = EmbeddingTracker(
-            tenant_id=tenant_id,
+            tenant_id=str(tenant_id),
             embedding_model=self.settings.embedding_model,
             total_chunks=len(chunks),
             total_tokens=total_tokens,
@@ -76,18 +77,11 @@ class EmbeddingManager:
 
         self.tracker_logger.track(tracker)
 
-        if save:
-            self._save_embeddings(
-                tenant_id=tenant_id,
-                chunks=chunks,
-                embeddings=embedding_vectors,
-            )
-
         return embedding_vectors
 
     def embed_documents(
         self,
-        tenant_id: str,
+        tenant_id: UUID,
         documents: dict[str, list[Chunk]],
         save: bool = True,
     ) -> dict[str, list[list[float]]]:
@@ -112,8 +106,8 @@ class EmbeddingManager:
 
     def load_document_embeddings(
         self,
-        tenant_id: str,
-        document_id: str,
+        tenant_id: UUID,
+        document_id: UUID,
     ) -> list[list[float]]:
         return self.data_manager.get_embeddings(
             tenant_id=tenant_id,
@@ -144,7 +138,7 @@ class EmbeddingManager:
 
     def _save_embeddings(
         self,
-        tenant_id: str,
+        tenant_id: UUID,
         chunks: list[Chunk],
         embeddings: list[list[float]],
     ) -> None:

@@ -3,6 +3,8 @@ from __future__ import annotations
 import re
 from time import perf_counter
 
+from uuid import UUID
+
 import tiktoken
 
 from semantic_search_eng.config import get_settings
@@ -32,8 +34,8 @@ class ChunkingManager:
 
     def chunk_document(
         self,
-        tenant_id: str,
-        document_id: str,
+        tenant_id: UUID,
+        document_id: UUID,
         text: str,
     ) -> list[Chunk]:
         if not text.strip():
@@ -52,7 +54,7 @@ class ChunkingManager:
         total_tokens = sum(chunk.token_count for chunk in chunks)
 
         tracker = ChunkingTracker(
-            tenant_id=tenant_id,
+            tenant_id=str(tenant_id),
             document_count=1,
             total_chunks=len(chunks),
             chunking_strategy=self.settings.chunking_strategy,
@@ -68,10 +70,10 @@ class ChunkingManager:
 
     def chunk_documents(
         self,
-        tenant_id: str,
+        tenant_id: UUID,
         documents: dict[str, str],
-        document_type: str,
-        metadata: dict,
+        document_type: list[str],
+        metadata: list[dict],
     ) -> list[Chunk]:
         """
         Chunk multiple documents.
@@ -79,18 +81,42 @@ class ChunkingManager:
         Args:
             tenant_id: Conversation identifier.
             documents: Mapping of document_id -> document text.
+            document_type: Document type for each document, in the same
+                order as `documents.values()`.
+            metadata: Metadata for each document, in the same order as
+                `documents.values()`.
+
+        Returns:
+            A list of chunks generated from all documents.
         """
         started_at = perf_counter()
 
+        document_count = len(documents)
+
+        if len(document_type) != document_count:
+            raise ValueError(
+                f"document_type count ({len(document_type)}) does not match "
+                f"document count ({document_count})"
+            )
+
+        if len(metadata) != document_count:
+            raise ValueError(
+                f"metadata count ({len(metadata)}) does not match document count ({document_count})"
+            )
+
         all_chunks: list[Chunk] = []
 
-        for document_id, text in documents.items():
+        for (document_id, text), doc_type, doc_metadata in zip(
+            documents.items(),
+            document_type,
+            metadata,
+        ):
             all_chunks.extend(
                 self._build_chunks(
                     tenant_id=tenant_id,
                     document_id=document_id,
-                    document_type=document_type,
-                    metadata=metadata,
+                    document_type=doc_type,
+                    metadata=doc_metadata,
                     sentences=self._split_sentences(text),
                 )
             )
@@ -99,8 +125,8 @@ class ChunkingManager:
         total_tokens = sum(chunk.token_count for chunk in all_chunks)
 
         tracker = ChunkingTracker(
-            tenant_id=tenant_id,
-            document_count=len(documents),
+            tenant_id=str(tenant_id),
+            document_count=document_count,
             total_chunks=len(all_chunks),
             chunking_strategy=self.settings.chunking_strategy,
             chunk_size=self.settings.chunk_size,
@@ -115,8 +141,8 @@ class ChunkingManager:
 
     def _build_chunks(
         self,
-        tenant_id: str,
-        document_id: str,
+        tenant_id: UUID,
+        document_id: UUID,
         document_type: str,
         metadata: dict,
         sentences: list[tuple[str, int, int]],
@@ -177,8 +203,8 @@ class ChunkingManager:
 
     def _create_chunk(
         self,
-        tenant_id: str,
-        document_id: str,
+        tenant_id: UUID,
+        document_id: UUID,
         chunk_index: int,
         document_type: str,
         metadata: dict,
