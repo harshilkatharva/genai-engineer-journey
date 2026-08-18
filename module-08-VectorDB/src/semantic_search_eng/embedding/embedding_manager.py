@@ -98,7 +98,6 @@ class EmbeddingManager:
             result[document_id] = self.embed_chunks(
                 tenant_id=tenant_id,
                 chunks=chunks,
-                save=save,
             )
 
         return result

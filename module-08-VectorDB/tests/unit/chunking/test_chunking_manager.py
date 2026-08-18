@@ -1,17 +1,23 @@
 from unittest.mock import MagicMock
+from uuid import UUID
 
 import pytest
 
-from semantic_search_eng.chunking.chunking_manager import (
-    ChunkingManager,
-)
+from semantic_search_eng.chunking.chunking_manager import ChunkingManager
 
 
 @pytest.fixture
-def chunking_manager(
-    monkeypatch,
-    test_settings,
-):
+def tenant_id():
+    return UUID("bd7bc54b-27df-4f06-9d15-3de0e49cf103")
+
+
+@pytest.fixture
+def document_id():
+    return UUID("bd7bc54b-27df-4f06-9d15-3de0e54cf103")
+
+
+@pytest.fixture
+def chunking_manager(monkeypatch, test_settings):
     monkeypatch.setattr(
         "semantic_search_eng.chunking.chunking_manager.get_settings",
         lambda: test_settings,
@@ -29,136 +35,115 @@ def chunking_manager(
     return manager, mock_logger
 
 
-def test_chunk_document_returns_chunks(
+def test_chunk_documents_processes_multiple_documents(
     chunking_manager,
     tenant_id,
-    document_id,
+):
+    manager, logger = chunking_manager
+
+    document_id_1 = UUID("bd7bc54b-27df-4f06-9d15-3de0e54cf103")
+    document_id_2 = UUID("bd7bc54b-27df-4f48-9d15-3de0e54cf103")
+
+    documents = {
+        document_id_1: "First document sentence.",
+        document_id_2: "Second document sentence.",
+    }
+
+    chunks = manager.chunk_documents(
+        tenant_id=tenant_id,
+        documents=documents,
+        document_type=["text", "text"],
+        metadata=[{}, {}],
+    )
+
+    assert len(chunks) == 2
+    assert {chunk.document_id for chunk in chunks} == {
+        document_id_1,
+        document_id_2,
+    }
+    assert all(chunk.document_type == "text" for chunk in chunks)
+    assert all(chunk.metadata == {} for chunk in chunks)
+
+    logger.track.assert_called_once()
+
+
+def test_chunk_documents_accepts_per_document_metadata(
+    chunking_manager,
+    tenant_id,
 ):
     manager, _ = chunking_manager
 
-    text = (
-        "The first sentence explains semantic search. "
-        "The second sentence explains embeddings. "
-        "The third sentence explains retrieval."
-    )
+    document_id_1 = UUID("bd7bc54b-27df-4f06-9d15-3de0e54cf103")
+    document_id_2 = UUID("bd7bc54b-27df-4f48-9d15-3de0e54cf103")
 
-    chunks = manager.chunk_document(
+    documents = {
+        document_id_1: "First document sentence.",
+        document_id_2: "Second document sentence.",
+    }
+
+    document_type = ["pdf", "html"]
+    metadata = [
+        {"page": 1},
+        {"url": "https://example.com"},
+    ]
+
+    chunks = manager.chunk_documents(
         tenant_id=tenant_id,
-        document_id=document_id,
-        text=text,
+        documents=documents,
+        document_type=document_type,
+        metadata=metadata,
     )
 
-    assert len(chunks) == 1
+    assert len(chunks) == 2
 
-    chunk = chunks[0]
+    first = next(chunk for chunk in chunks if chunk.document_id == document_id_1)
 
-    assert chunk.chunk_id == ("document_0000_chunk_0000")
-    assert chunk.document_id == document_id
-    assert chunk.tenant_id == tenant_id
-    assert chunk.chunk_index == 0
-    assert chunk.text == text
-    assert chunk.token_count > 0
+    second = next(chunk for chunk in chunks if chunk.document_id == document_id_2)
+
+    assert first.document_type == "pdf"
+    assert first.metadata == {"page": 1}
+    assert second.document_type == "html"
+    assert second.metadata == {"url": "https://example.com"}
 
 
-def test_chunk_preserves_sentence_boundaries(
-    monkeypatch,
-    test_settings,
+def test_chunk_documents_rejects_wrong_document_type_count(
+    chunking_manager,
     tenant_id,
-    document_id,
 ):
-    # Force a very small target so multiple chunks are created.
-    test_settings.chunk_size = 8
-    test_settings.chunk_overlap = 0
+    manager, _ = chunking_manager
 
-    monkeypatch.setattr(
-        "semantic_search_eng.chunking.chunking_manager.get_settings",
-        lambda: test_settings,
-    )
+    documents = {
+        UUID("bd7bc54b-27df-4f06-9d15-3de0e54cf103"): "First document.",
+        UUID("bd7bc54b-27df-4f48-9d15-3de0e54cf103"): "Second document.",
+    }
 
-    mock_logger = MagicMock()
-
-    monkeypatch.setattr(
-        "semantic_search_eng.chunking.chunking_manager.ChunkingTrackerLogger",
-        lambda: mock_logger,
-    )
-
-    manager = ChunkingManager()
-
-    text = "Alpha sentence is here. Beta sentence is here. Gamma sentence is here."
-
-    chunks = manager.chunk_document(
-        tenant_id=tenant_id,
-        document_id=document_id,
-        text=text,
-    )
-
-    assert len(chunks) == 3
-
-    assert chunks[0].text == ("Alpha sentence is here.")
-    assert chunks[1].text == ("Beta sentence is here.")
-    assert chunks[2].text == ("Gamma sentence is here.")
+    with pytest.raises(ValueError, match="document_type count"):
+        manager.chunk_documents(
+            tenant_id=tenant_id,
+            documents=documents,
+            document_type=["pdf"],
+            metadata=[{}, {}],
+        )
 
 
-def test_chunk_indexes_are_sequential(
-    monkeypatch,
-    test_settings,
+def test_chunk_documents_rejects_wrong_metadata_count(
+    chunking_manager,
     tenant_id,
-    document_id,
 ):
-    test_settings.chunk_size = 7
-    test_settings.chunk_overlap = 0
+    manager, _ = chunking_manager
 
-    monkeypatch.setattr(
-        "semantic_search_eng.chunking.chunking_manager.get_settings",
-        lambda: test_settings,
-    )
+    documents = {
+        UUID("bd7bc54b-27df-4f06-9d15-3de0e54cf103"): "First document.",
+        UUID("bd7bc54b-27df-4f48-9d15-3de0e54cf103"): "Second document.",
+    }
 
-    monkeypatch.setattr(
-        "semantic_search_eng.chunking.chunking_manager.ChunkingTrackerLogger",
-        lambda: MagicMock(),
-    )
-
-    manager = ChunkingManager()
-
-    chunks = manager.chunk_document(
-        tenant_id=tenant_id,
-        document_id=document_id,
-        text=("One sentence here. Two sentence here. Three sentence here."),
-    )
-
-    assert [chunk.chunk_index for chunk in chunks] == list(range(len(chunks)))
-
-
-def test_chunk_ids_are_unique(
-    monkeypatch,
-    test_settings,
-    tenant_id,
-    document_id,
-):
-    test_settings.chunk_size = 7
-    test_settings.chunk_overlap = 0
-
-    monkeypatch.setattr(
-        "semantic_search_eng.chunking.chunking_manager.get_settings",
-        lambda: test_settings,
-    )
-
-    monkeypatch.setattr(
-        "semantic_search_eng.chunking.chunking_manager.ChunkingTrackerLogger",
-        lambda: MagicMock(),
-    )
-
-    manager = ChunkingManager()
-
-    chunks = manager.chunk_document(
-        tenant_id=tenant_id,
-        document_id=document_id,
-        text=("One sentence. Two sentence. Three sentence."),
-    )
-
-    chunk_ids = [chunk.chunk_id for chunk in chunks]
-
-    assert len(chunk_ids) == len(set(chunk_ids))
+    with pytest.raises(ValueError, match="metadata count"):
+        manager.chunk_documents(
+            tenant_id=tenant_id,
+            documents=documents,
+            document_type=["pdf", "html"],
+            metadata=[{"page": 1}],
+        )
 
 
 def test_empty_document_returns_no_chunks(
@@ -168,61 +153,36 @@ def test_empty_document_returns_no_chunks(
 ):
     manager, logger = chunking_manager
 
-    chunks = manager.chunk_document(
+    chunks = manager.chunk_documents(
         tenant_id=tenant_id,
-        document_id=document_id,
-        text="   ",
+        documents={document_id: "   "},
+        document_type=["text"],
+        metadata=[{}],
     )
 
     assert chunks == []
-
-    logger.track.assert_not_called()
-
-
-def test_chunk_documents_processes_multiple_documents(
-    chunking_manager,
-    tenant_id,
-):
-    manager, logger = chunking_manager
-
-    documents = {
-        "document_0000": "First document sentence.",
-        "document_0001": "Second document sentence.",
-    }
-
-    chunks = manager.chunk_documents(
-        tenant_id=tenant_id,
-        documents=documents,
-    )
-
-    assert len(chunks) == 2
-
-    assert {chunk.document_id for chunk in chunks} == {
-        "document_0000",
-        "document_0001",
-    }
-
     logger.track.assert_called_once()
 
 
-def test_chunking_tracker_is_recorded(
+def test_chunk_documents_records_tracker(
     chunking_manager,
     tenant_id,
     document_id,
 ):
     manager, logger = chunking_manager
 
-    manager.chunk_document(
+    manager.chunk_documents(
         tenant_id=tenant_id,
-        document_id=document_id,
-        text="A simple test sentence.",
+        documents={document_id: "A simple test sentence."},
+        document_type=["text"],
+        metadata=[{}],
     )
 
     logger.track.assert_called_once()
 
     tracker = logger.track.call_args.args[0]
 
-    assert tracker.tenant_id == tenant_id
+    assert tracker.tenant_id == str(tenant_id)
     assert tracker.document_count == 1
     assert tracker.total_chunks == 1
     assert tracker.chunking_strategy == "sentence"
@@ -255,10 +215,11 @@ def test_large_sentence_is_not_split_mid_sentence(
 
     text = "This is a very long sentence that contains many words and therefore exceeds the target."
 
-    chunks = manager.chunk_document(
+    chunks = manager.chunk_documents(
         tenant_id=tenant_id,
-        document_id=document_id,
-        text=text,
+        documents={document_id: text},
+        document_type=["text"],
+        metadata=[{}],
     )
 
     assert len(chunks) == 1
@@ -288,14 +249,119 @@ def test_chunk_overlap_keeps_previous_sentences(
 
     text = "Alpha one two three. Beta one two three. Gamma one two three."
 
-    chunks = manager.chunk_document(
+    chunks = manager.chunk_documents(
         tenant_id=tenant_id,
-        document_id=document_id,
-        text=text,
+        documents={document_id: text},
+        document_type=["text"],
+        metadata=[{}],
     )
 
     assert len(chunks) >= 2
 
-    # Because overlap is sentence-based, the previous chunk's trailing
-    # sentence(s) should appear at the beginning of the next chunk.
-    assert "Beta one two three." in chunks[1].text or "Alpha one two three." in chunks[1].text
+    assert any(
+        sentence in chunks[1].text
+        for sentence in (
+            "Alpha one two three.",
+            "Beta one two three.",
+        )
+    )
+
+
+def test_chunk_preserves_sentence_boundaries(
+    monkeypatch,
+    test_settings,
+    tenant_id,
+    document_id,
+):
+    test_settings.chunk_size = 8
+    test_settings.chunk_overlap = 0
+
+    monkeypatch.setattr(
+        "semantic_search_eng.chunking.chunking_manager.get_settings",
+        lambda: test_settings,
+    )
+
+    monkeypatch.setattr(
+        "semantic_search_eng.chunking.chunking_manager.ChunkingTrackerLogger",
+        lambda: MagicMock(),
+    )
+
+    manager = ChunkingManager()
+
+    text = "Alpha sentence is here. Beta sentence is here. Gamma sentence is here."
+
+    chunks = manager.chunk_documents(
+        tenant_id=tenant_id,
+        documents={document_id: text},
+        document_type=["text"],
+        metadata=[{}],
+    )
+
+    assert len(chunks) == 3
+    assert chunks[0].text == "Alpha sentence is here."
+    assert chunks[1].text == "Beta sentence is here."
+    assert chunks[2].text == "Gamma sentence is here."
+
+
+def test_chunk_indexes_are_sequential(
+    monkeypatch,
+    test_settings,
+    tenant_id,
+    document_id,
+):
+    test_settings.chunk_size = 7
+    test_settings.chunk_overlap = 0
+
+    monkeypatch.setattr(
+        "semantic_search_eng.chunking.chunking_manager.get_settings",
+        lambda: test_settings,
+    )
+
+    monkeypatch.setattr(
+        "semantic_search_eng.chunking.chunking_manager.ChunkingTrackerLogger",
+        lambda: MagicMock(),
+    )
+
+    manager = ChunkingManager()
+
+    chunks = manager.chunk_documents(
+        tenant_id=tenant_id,
+        documents={document_id: ("One sentence here. Two sentence here. Three sentence here.")},
+        document_type=["text"],
+        metadata=[{}],
+    )
+
+    assert [chunk.chunk_index for chunk in chunks] == list(range(len(chunks)))
+
+
+def test_chunk_ids_are_unique(
+    monkeypatch,
+    test_settings,
+    tenant_id,
+    document_id,
+):
+    test_settings.chunk_size = 7
+    test_settings.chunk_overlap = 0
+
+    monkeypatch.setattr(
+        "semantic_search_eng.chunking.chunking_manager.get_settings",
+        lambda: test_settings,
+    )
+
+    monkeypatch.setattr(
+        "semantic_search_eng.chunking.chunking_manager.ChunkingTrackerLogger",
+        lambda: MagicMock(),
+    )
+
+    manager = ChunkingManager()
+
+    chunks = manager.chunk_documents(
+        tenant_id=tenant_id,
+        documents={document_id: ("One sentence. Two sentence. Three sentence.")},
+        document_type=["text"],
+        metadata=[{}],
+    )
+
+    chunk_ids = [chunk.chunk_id for chunk in chunks]
+
+    assert len(chunk_ids) == len(set(chunk_ids))
