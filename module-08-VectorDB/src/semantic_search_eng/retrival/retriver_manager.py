@@ -42,6 +42,9 @@ class RetriverManager:
         if not query.strip():
             raise ValueError("Query cannot be empty.")
 
+        if top_k is None:
+            top_k = self.settings.default_top_k
+
         if top_k > self.settings.max_top_k:
             raise ValueError(f"Can not retrive more than {self.settings.max_top_k}")
 

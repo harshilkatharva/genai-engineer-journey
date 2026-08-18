@@ -31,42 +31,6 @@ class ChunkingManager:
         self.tracker_logger = ChunkingTrackerLogger()
         self.tiktoken = tiktoken.get_encoding("cl100k_base")
 
-    def chunk_document(
-        self,
-        tenant_id: UUID,
-        document_id: UUID,
-        text: str,
-    ) -> list[Chunk]:
-        if not text.strip():
-            return []
-
-        started_at = perf_counter()
-
-        sentences = self._split_sentences(text)
-        chunks = self._build_chunks(
-            tenant_id=tenant_id,
-            document_id=document_id,
-            sentences=sentences,
-        )
-
-        latency_ms = (perf_counter() - started_at) * 1000
-        total_tokens = sum(chunk.token_count for chunk in chunks)
-
-        tracker = ChunkingTracker(
-            tenant_id=str(tenant_id),
-            document_count=1,
-            total_chunks=len(chunks),
-            chunking_strategy=self.settings.chunking_strategy,
-            chunk_size=self.settings.chunk_size,
-            overlap=self.settings.chunk_overlap,
-            total_input_tokens=total_tokens,
-            latency_ms=latency_ms,
-        )
-
-        self.tracker_logger.track(tracker)
-
-        return chunks
-
     def chunk_documents(
         self,
         tenant_id: UUID,

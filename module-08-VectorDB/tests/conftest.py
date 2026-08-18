@@ -1,6 +1,7 @@
 from types import SimpleNamespace
 
 import pytest
+from uuid import UUID
 
 
 @pytest.fixture
@@ -25,13 +26,13 @@ def test_settings(tmp_path):
 
 
 @pytest.fixture
-def tenant_id() -> str:
-    return "conversation_test_001"
+def tenant_id():
+    return UUID("bd7bc54b-27df-4f06-9d15-3de0e49cf103")
 
 
 @pytest.fixture
-def document_id() -> str:
-    return "document_0000"
+def document_id():
+    return UUID("bd7bc54b-27df-4f06-9d15-3de0e54cf103")
 
 
 @pytest.fixture
