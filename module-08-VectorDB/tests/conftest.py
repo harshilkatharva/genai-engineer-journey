@@ -1,7 +1,7 @@
 from types import SimpleNamespace
+from uuid import UUID
 
 import pytest
-from uuid import UUID
 
 
 @pytest.fixture

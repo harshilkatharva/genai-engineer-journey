@@ -6,9 +6,9 @@ from pgvector.psycopg import register_vector_async
 from psycopg.types.json import Jsonb
 
 from semantic_search_eng.config import get_settings
+from semantic_search_eng.logger.db_operation_tracker import DBOperationTracker
 from semantic_search_eng.models.chunk import Chunk
 from semantic_search_eng.models.index_batch_tracker import IndexBatchTracker
-from semantic_search_eng.logger.db_operation_tracker import DBOperationTracker
 
 
 class IndexDBManager:
@@ -36,7 +36,7 @@ class IndexDBManager:
         ]
 
         query = """
-            INSERT INTO document_chunks_no_index (
+            INSERT INTO document_chunks (
                 tenant_id,
                 document_id,
                 chunk_id,

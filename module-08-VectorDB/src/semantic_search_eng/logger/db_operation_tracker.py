@@ -3,8 +3,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from semantic_search_eng.config import get_settings
-from semantic_search_eng.models.index_batch_tracker import IndexBatchTracker
 from semantic_search_eng.models.db_query_tracker import DBQueryTracker
+from semantic_search_eng.models.index_batch_tracker import IndexBatchTracker
 
 
 class DBOperationTracker:

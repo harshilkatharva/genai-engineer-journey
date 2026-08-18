@@ -380,7 +380,7 @@ async def test_retrive_chunks_executes_query_with_expected_parameters(
 
     query, params = mock_cursor.execute.await_args.args
 
-    assert "FROM document_chunks_no_index" in query
+    assert "FROM document_chunks" in query
     assert "WHERE tenant_id = %s" in query
     assert "LIMIT %s" in query
 

@@ -190,7 +190,7 @@ async def test_retrieve_rejects_top_k_exceeding_maximum(retriver_manager, mock_s
 
 @pytest.mark.asyncio
 async def test_retrieve_with_default_top_k(retriver_manager, sample_results, mock_settings):
-    manager, embedding_manager, retrive_db_manager, tracker_logger = retriver_manager
+    manager, embedding_manager, retrive_db_manager, _ = retriver_manager
     mock_settings.default_top_k = 10
 
     embedding_manager.embed_query.return_value = [1.0, 0.0, 0.0]
