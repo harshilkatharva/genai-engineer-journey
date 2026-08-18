@@ -51,7 +51,7 @@ class UpsertDBManager:
             return 0
 
         query = """
-            UPDATE document_chunks_no_index
+            UPDATE document_chunks
             SET
                 chunk_text = %s,
                 embedding = %s,
