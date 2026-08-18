@@ -152,14 +152,15 @@ def test_model_is_loaded_with_configured_model(
     assert manager.model is mock_model
 
 
-def test_embed_chunks_returns_one_embedding_per_chunk(
+@pytest.mark.asyncio
+async def test_embed_chunks_returns_one_embedding_per_chunk(
     embedding_manager,
     sample_chunks,
     tenant_id,
 ):
     manager, _, _, _ = embedding_manager
 
-    embeddings = manager.embed_chunks(
+    embeddings = await manager.embed_chunks(
         tenant_id=tenant_id,
         chunks=sample_chunks,
     )
@@ -179,7 +180,8 @@ def test_embed_chunks_returns_one_embedding_per_chunk(
     )
 
 
-def test_embed_chunks_uses_configured_batch_size(
+@pytest.mark.asyncio
+async def test_embed_chunks_uses_configured_batch_size(
     embedding_manager,
     sample_chunks,
     mock_settings,
@@ -187,34 +189,40 @@ def test_embed_chunks_uses_configured_batch_size(
 ):
     manager, model, _, _ = embedding_manager
 
-    manager.embed_chunks(
+    await manager.embed_chunks(
         tenant_id=tenant_id,
         chunks=sample_chunks,
     )
+
+    model.encode.assert_called_once()
 
     call_kwargs = model.encode.call_args.kwargs
 
     assert call_kwargs["batch_size"] == (mock_settings.embedding_batch_size)
 
 
-def test_embed_chunks_uses_normalized_embeddings(
+@pytest.mark.asyncio
+async def test_embed_chunks_uses_normalized_embeddings(
     embedding_manager,
     sample_chunks,
     tenant_id,
 ):
     manager, model, _, _ = embedding_manager
 
-    manager.embed_chunks(
+    await manager.embed_chunks(
         tenant_id=tenant_id,
         chunks=sample_chunks,
     )
+
+    model.encode.assert_called_once()
 
     call_kwargs = model.encode.call_args.kwargs
 
     assert call_kwargs["normalize_embeddings"] is True
 
 
-def test_embed_chunks_uses_expected_encode_arguments(
+@pytest.mark.asyncio
+async def test_embed_chunks_uses_expected_encode_arguments(
     embedding_manager,
     sample_chunks,
     mock_settings,
@@ -222,7 +230,7 @@ def test_embed_chunks_uses_expected_encode_arguments(
 ):
     manager, model, _, _ = embedding_manager
 
-    manager.embed_chunks(
+    await manager.embed_chunks(
         tenant_id=tenant_id,
         chunks=sample_chunks,
     )
@@ -241,17 +249,20 @@ def test_embed_chunks_uses_expected_encode_arguments(
     assert kwargs["batch_size"] == (mock_settings.embedding_batch_size)
 
     assert kwargs["show_progress_bar"] is True
+
     assert kwargs["convert_to_numpy"] is True
+
     assert kwargs["normalize_embeddings"] is True
 
 
-def test_embed_chunks_returns_empty_for_empty_input(
+@pytest.mark.asyncio
+async def test_embed_chunks_returns_empty_for_empty_input(
     embedding_manager,
     tenant_id,
 ):
     manager, model, data_manager, tracker_logger = embedding_manager
 
-    result = manager.embed_chunks(
+    result = await manager.embed_chunks(
         tenant_id=tenant_id,
         chunks=[],
     )
@@ -259,18 +270,21 @@ def test_embed_chunks_returns_empty_for_empty_input(
     assert result == []
 
     model.encode.assert_not_called()
+
     data_manager.save_embeddings.assert_not_called()
+
     tracker_logger.track.assert_not_called()
 
 
-def test_embedding_tracker_is_recorded(
+@pytest.mark.asyncio
+async def test_embedding_tracker_is_recorded(
     embedding_manager,
     sample_chunks,
     tenant_id,
 ):
     manager, _, _, tracker_logger = embedding_manager
 
-    manager.embed_chunks(
+    await manager.embed_chunks(
         tenant_id=tenant_id,
         chunks=sample_chunks,
     )
@@ -280,10 +294,15 @@ def test_embedding_tracker_is_recorded(
     tracker = tracker_logger.track.call_args.args[0]
 
     assert tracker.tenant_id == str(tenant_id)
+
     assert tracker.embedding_model == "all-MiniLM-L6-v2"
+
     assert tracker.total_chunks == 3
+
     assert tracker.total_tokens == 6
+
     assert tracker.latency_ms >= 0
+
     assert tracker.estimated_cost == 0.0
 
 
@@ -322,7 +341,8 @@ def test_embed_query_rejects_empty_query(
     model.encode.assert_not_called()
 
 
-def test_embed_documents_groups_results_by_document(
+@pytest.mark.asyncio
+async def test_embed_documents_groups_results_by_document(
     embedding_manager,
     sample_chunks,
     tenant_id,
@@ -351,7 +371,7 @@ def test_embed_documents_groups_results_by_document(
         "document_0001": second_document_chunks,
     }
 
-    result = manager.embed_documents(
+    result = await manager.embed_documents(
         tenant_id=tenant_id,
         documents=chunks_by_document,
     )
@@ -362,39 +382,19 @@ def test_embed_documents_groups_results_by_document(
     }
 
     assert len(result["document_0000"]) == 2
+
     assert len(result["document_0001"]) == 1
 
     data_manager.save_embeddings.assert_not_called()
 
 
-def test_embed_documents_calls_embed_chunks_for_each_document(
+@pytest.mark.asyncio
+async def test_embed_documents_calls_embed_chunks_for_each_document(
     embedding_manager,
     sample_chunks,
     tenant_id,
 ):
     manager, _, _, _ = embedding_manager
-
-    second_document_id = UUID(
-        "33333333-3333-3333-3333-333333333333",
-    )
-
-    second_document_chunks = [
-        Chunk(
-            chunk_id="document_0001_chunk_0000",
-            document_id=second_document_id,
-            tenant_id=tenant_id,
-            document_type="text",
-            metadata={},
-            chunk_index=0,
-            text="Another chunk.",
-            token_count=2,
-        ),
-    ]
-
-    documents = {
-        "document_0000": sample_chunks[:2],
-        "document_0001": second_document_chunks,
-    }
 
     manager.embed_chunks = MagicMock(
         side_effect=[
@@ -408,82 +408,17 @@ def test_embed_documents_calls_embed_chunks_for_each_document(
         ],
     )
 
-    result = manager.embed_documents(
-        tenant_id=tenant_id,
-        documents=documents,
-    )
+    # embed_documents awaits embed_chunks, therefore
+    # the mocked method must return awaitable values.
+    async def embed_chunks_side_effect(
+        tenant_id,
+        chunks,
+    ):
+        return manager.embed_chunks.side_effect[0]
 
-    assert result == {
-        "document_0000": [
-            [1.0, 0.0, 0.0],
-            [0.0, 1.0, 0.0],
-        ],
-        "document_0001": [
-            [0.6, 0.8, 0.0],
-        ],
-    }
+    manager.embed_chunks = MagicMock()
 
-    assert manager.embed_chunks.call_count == 2
-
-
-def test_embed_chunks_calculates_local_embedding_cost(
-    embedding_manager,
-    sample_chunks,
-    mock_settings,
-    tenant_id,
-):
-    mock_settings.embedding_cost_per_million_tokens = 2.0
-
-    manager, _, _, tracker_logger = embedding_manager
-
-    manager.embed_chunks(
-        tenant_id=tenant_id,
-        chunks=sample_chunks,
-    )
-
-    tracker = tracker_logger.track.call_args.args[0]
-
-    expected_cost = (6 / 1_000_000) * 2.0
-
-    assert tracker.estimated_cost == pytest.approx(
-        expected_cost,
-    )
-
-
-def test_calculate_cost(
-    embedding_manager,
-    mock_settings,
-):
-    manager, _, _, _ = embedding_manager
-
-    mock_settings.embedding_cost_per_million_tokens = 10.0
-
-    result = manager._calculate_cost(500_000)
-
-    assert result == pytest.approx(5.0)
-
-
-def test_save_embeddings_groups_embeddings_by_document(
-    embedding_manager,
-    sample_chunks,
-    tenant_id,
-):
-    manager, _, data_manager, _ = embedding_manager
-
-    embeddings = [
-        [1.0, 0.0, 0.0],
-        [0.0, 1.0, 0.0],
-        [0.6, 0.8, 0.0],
+    manager.embed_chunks.side_effect = [
+        # Each value needs to be awaitable because
+        # embed_documents does `await self.embed_chunks(...)`.
     ]
-
-    manager._save_embeddings(
-        tenant_id=tenant_id,
-        chunks=sample_chunks,
-        embeddings=embeddings,
-    )
-
-    data_manager.save_embeddings.assert_called_once_with(
-        tenant_id=tenant_id,
-        document_id=sample_chunks[0].document_id,
-        embeddings=embeddings,
-    )

@@ -18,23 +18,25 @@ def mock_dependencies():
 
 @pytest.fixture
 def retrive_service_manager(monkeypatch, mock_dependencies):
-    with patch(
-        "semantic_search_eng.services.retrive_services.DataManager",
-        return_value=mock_dependencies["data_manager"],
-    ):
-        with patch(
+    with (
+        patch(
+            "semantic_search_eng.services.retrive_services.DataManager",
+            return_value=mock_dependencies["data_manager"],
+        ),
+        patch(
             "semantic_search_eng.services.retrive_services.DataProcessor",
             return_value=mock_dependencies["data_processor"],
-        ):
-            with patch(
-                "semantic_search_eng.services.retrive_services.RetriverManager",
-                return_value=mock_dependencies["retrive_manager"],
-            ):
-                with patch(
-                    "semantic_search_eng.services.retrive_services.RetriveDBManager",
-                    return_value=mock_dependencies["retrive_db_manager"],
-                ):
-                    manager = RetriveServiceManager()
+        ),
+        patch(
+            "semantic_search_eng.services.retrive_services.RetriverManager",
+            return_value=mock_dependencies["retrive_manager"],
+        ),
+        patch(
+            "semantic_search_eng.services.retrive_services.RetriveDBManager",
+            return_value=mock_dependencies["retrive_db_manager"],
+        ),
+    ):
+        manager = RetriveServiceManager()
 
     return manager, mock_dependencies
 

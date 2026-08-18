@@ -11,6 +11,7 @@ from .retrive_request import RetriveRequest
 from .retrive_response import RetriveResponse, RetriveResult
 from .retrive_tracker import RetriveTracker
 from .tracker_model import TrackerModel
+from .upsert_request import UpsertRequest
 
 __all__ = [
     "Chunk",
@@ -27,4 +28,5 @@ __all__ = [
     "RetriveResult",
     "RetriveTracker",
     "TrackerModel",
+    "UpsertRequest",
 ]

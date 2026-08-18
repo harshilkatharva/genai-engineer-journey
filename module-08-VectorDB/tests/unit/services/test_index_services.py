@@ -13,34 +13,36 @@ def mock_dependencies():
         "data_processor": MagicMock(),
         "data_manager": MagicMock(),
         "chunking_manager": MagicMock(),
-        "embedding_manager": MagicMock(),
+        "embedding_manager": AsyncMock(),
         "index_db_manager": AsyncMock(),
     }
 
 
 @pytest.fixture
 def index_service_manager(monkeypatch, mock_dependencies):
-    with patch(
-        "semantic_search_eng.services.index_services.DataProcessor",
-        return_value=mock_dependencies["data_processor"],
-    ):
-        with patch(
+    with (
+        patch(
+            "semantic_search_eng.services.index_services.DataProcessor",
+            return_value=mock_dependencies["data_processor"],
+        ),
+        patch(
             "semantic_search_eng.services.index_services.DataManager",
             return_value=mock_dependencies["data_manager"],
-        ):
-            with patch(
-                "semantic_search_eng.services.index_services.ChunkingManager",
-                return_value=mock_dependencies["chunking_manager"],
-            ):
-                with patch(
-                    "semantic_search_eng.services.index_services.EmbeddingManager",
-                    return_value=mock_dependencies["embedding_manager"],
-                ):
-                    with patch(
-                        "semantic_search_eng.services.index_services.IndexDBManager",
-                        return_value=mock_dependencies["index_db_manager"],
-                    ):
-                        manager = IndexServiceManager()
+        ),
+        patch(
+            "semantic_search_eng.services.index_services.ChunkingManager",
+            return_value=mock_dependencies["chunking_manager"],
+        ),
+        patch(
+            "semantic_search_eng.services.index_services.EmbeddingManager",
+            return_value=mock_dependencies["embedding_manager"],
+        ),
+        patch(
+            "semantic_search_eng.services.index_services.IndexDBManager",
+            return_value=mock_dependencies["index_db_manager"],
+        ),
+    ):
+        manager = IndexServiceManager()
 
     return manager, mock_dependencies
 

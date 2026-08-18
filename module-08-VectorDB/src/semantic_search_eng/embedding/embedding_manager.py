@@ -1,5 +1,5 @@
 from __future__ import annotations
-
+import asyncio
 from time import perf_counter
 from uuid import UUID
 
@@ -31,7 +31,7 @@ class EmbeddingManager:
 
         self.model = SentenceTransformer(self.settings.embedding_model)
 
-    def embed_chunks(
+    async def embed_chunks(
         self,
         tenant_id: UUID,
         chunks: list[Chunk],
@@ -51,7 +51,8 @@ class EmbeddingManager:
 
         total_tokens = sum(chunk.token_count for chunk in chunks)
 
-        embeddings = self.model.encode(
+        embeddings = await asyncio.to_thread(
+            self.model.encode,
             texts,
             batch_size=self.settings.embedding_batch_size,
             show_progress_bar=True,
@@ -78,7 +79,7 @@ class EmbeddingManager:
 
         return embedding_vectors
 
-    def embed_documents(
+    async def embed_documents(
         self,
         tenant_id: UUID,
         documents: dict[str, list[Chunk]],
@@ -95,7 +96,7 @@ class EmbeddingManager:
         result: dict[str, list[list[float]]] = {}
 
         for document_id, chunks in documents.items():
-            result[document_id] = self.embed_chunks(
+            result[document_id] = await self.embed_chunks(
                 tenant_id=tenant_id,
                 chunks=chunks,
             )

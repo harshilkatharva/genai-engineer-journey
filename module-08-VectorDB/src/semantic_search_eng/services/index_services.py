@@ -40,7 +40,7 @@ class IndexServiceManager:
             metadata=request.meta_data,
         )
 
-        embeddings = self.embedding_manager.embed_chunks(
+        embeddings = await self.embedding_manager.embed_chunks(
             tenant_id=request.tenant_id,
             chunks=chunks,
         )

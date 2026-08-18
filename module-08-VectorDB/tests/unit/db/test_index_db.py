@@ -278,7 +278,7 @@ async def test_store_index_inserts_expected_rows(
 
     query, rows = mock_cursor.executemany.await_args.args
 
-    assert "INSERT INTO document_chunks_no_index" in query
+    assert "INSERT INTO document_chunks" in query
     assert "tenant_id" in query
     assert "document_id" in query
     assert "chunk_id" in query

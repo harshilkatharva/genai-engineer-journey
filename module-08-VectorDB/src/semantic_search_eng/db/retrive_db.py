@@ -5,9 +5,9 @@ import psycopg
 from pgvector.psycopg import register_vector_async
 
 from semantic_search_eng.config import get_settings
+from semantic_search_eng.logger.db_operation_tracker import DBOperationTracker
 from semantic_search_eng.models import RetriveResult
 from semantic_search_eng.models.db_query_tracker import DBQueryTracker
-from semantic_search_eng.logger.db_operation_tracker import DBOperationTracker
 
 
 class RetriveDBManager:
@@ -29,7 +29,7 @@ class RetriveDBManager:
                     chunk_text,
                     1 - (embedding <=> %s) AS similarity_score,
                     chunk_id
-                FROM document_chunks_no_index
+                FROM document_chunks
                 WHERE tenant_id = %s
                 ORDER BY embedding <=> %s
                 LIMIT %s
@@ -48,7 +48,7 @@ class RetriveDBManager:
                     chunk_text,
                     1 - (embedding <=> %s) AS similarity_score,
                     chunk_id
-                FROM document_chunks_no_index
+                FROM document_chunks
                 WHERE tenant_id = %s
                   AND document_type = %s
                 ORDER BY embedding <=> %s

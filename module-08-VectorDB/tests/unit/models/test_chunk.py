@@ -1,6 +1,7 @@
+from uuid import UUID
+
 import pytest
 from pydantic import ValidationError
-from uuid import UUID
 
 from semantic_search_eng.models.chunk import Chunk
 
