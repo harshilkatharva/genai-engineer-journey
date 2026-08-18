@@ -16,15 +16,52 @@ class RetriveDBManager:
         self.db_tracker = DBOperationTracker()
 
     async def retrive_chunks(
-        self, tenant_id: UUID, query_embedding: list[float], top_k: int | None = None
+        self,
+        tenant_id: UUID,
+        query_embedding: list[float],
+        top_k: int | None = None,
+        document_type: str | None = None,
     ):
-        db_query = """
-        SELECT chunk_text, 1 - (embedding <=> %s) as similarity_score, chunk_id
-        FROM document_chunks_no_index
-        WHERE tenant_id = %s
-        ORDER BY embedding <=> %s 
-        LIMIT %s
-        """
+        print(document_type)
+        if document_type is None:
+            db_query = """
+                SELECT
+                    chunk_text,
+                    1 - (embedding <=> %s) AS similarity_score,
+                    chunk_id
+                FROM document_chunks_no_index
+                WHERE tenant_id = %s
+                ORDER BY embedding <=> %s
+                LIMIT %s
+            """
+
+            query_params = (
+                query_embedding,
+                tenant_id,
+                query_embedding,
+                top_k,
+            )
+
+        else:
+            db_query = """
+                SELECT
+                    chunk_text,
+                    1 - (embedding <=> %s) AS similarity_score,
+                    chunk_id
+                FROM document_chunks_no_index
+                WHERE tenant_id = %s
+                  AND document_type = %s
+                ORDER BY embedding <=> %s
+                LIMIT %s
+            """
+
+            query_params = (
+                query_embedding,
+                tenant_id,
+                document_type,
+                query_embedding,
+                top_k,
+            )
 
         query_start = perf_counter()
 
@@ -36,12 +73,7 @@ class RetriveDBManager:
             async with conn.cursor() as cur:
                 await cur.execute(
                     db_query,
-                    (
-                        query_embedding,
-                        tenant_id,
-                        query_embedding,
-                        top_k,
-                    ),
+                    query_params,
                 )
 
                 rows = await cur.fetchall()

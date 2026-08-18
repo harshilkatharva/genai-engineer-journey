@@ -23,6 +23,21 @@ def test_retrive_request_creation() -> None:
     assert request.tenant_id == "550e8400-e29b-41d4-a716-446655440001"
     assert request.query == "How does authentication work?"
     assert request.top_k == 10
+    assert request.document_type is None
+
+
+def test_retrive_request_creation_with_document_type() -> None:
+    request = RetriveRequest(
+        tenant_id="550e8400-e29b-41d4-a716-446655440001",
+        query="How does authentication work?",
+        top_k=10,
+        document_type="PDF",
+    )
+
+    assert request.tenant_id == "550e8400-e29b-41d4-a716-446655440001"
+    assert request.query == "How does authentication work?"
+    assert request.top_k == 10
+    assert request.document_type == "PDF"
 
 
 @pytest.mark.parametrize(

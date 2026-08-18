@@ -23,6 +23,7 @@ class RetriveServiceManager:
             tenant_id=request.tenant_id,
             query=request.query,
             top_k=request.top_k,
+            document_type=request.document_type,
         )
 
         return RetriveResponse(

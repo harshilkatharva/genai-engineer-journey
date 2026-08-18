@@ -92,6 +92,34 @@ async def test_retrive_chunks_calls_retriver_manager(retrive_service_manager, sa
     assert call_kwargs["tenant_id"] == "550e8400-e29b-41d4-a716-446655440001"
     assert call_kwargs["query"] == "test query"
     assert call_kwargs["top_k"] == 5
+    assert call_kwargs["document_type"] is None
+
+
+@pytest.mark.asyncio
+async def test_retrive_chunks_calls_retriver_manager_with_document_type(
+    retrive_service_manager, sample_results
+):
+    manager, mocks = retrive_service_manager
+
+    mocks["retrive_manager"].retrieve.return_value = sample_results
+
+    from semantic_search_eng.models.retrive_request import RetriveRequest
+
+    request = RetriveRequest(
+        tenant_id="550e8400-e29b-41d4-a716-446655440001",
+        query="test query",
+        top_k=5,
+        document_type="HR Policy",
+    )
+
+    await manager.retrive_chunks(request)
+
+    mocks["retrive_manager"].retrieve.assert_called_once()
+    call_kwargs = mocks["retrive_manager"].retrieve.call_args[1]
+    assert call_kwargs["tenant_id"] == "550e8400-e29b-41d4-a716-446655440001"
+    assert call_kwargs["query"] == "test query"
+    assert call_kwargs["top_k"] == 5
+    assert call_kwargs["document_type"] == "HR Policy"
 
 
 @pytest.mark.asyncio
