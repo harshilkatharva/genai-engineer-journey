@@ -138,6 +138,28 @@ async def test_retrieve_tracks_metrics(retriver_manager, sample_results):
 
 
 @pytest.mark.asyncio
+async def test_retrieve_tracks_metrics_with_document_types(retriver_manager, sample_results):
+    manager, embedding_manager, retrive_db_manager, tracker_logger = retriver_manager
+
+    embedding_manager.embed_query.return_value = [1.0, 0.0, 0.0]
+    retrive_db_manager.retrive_chunks.return_value = sample_results
+
+    await manager.retrieve(
+        tenant_id=UUID("550e8400-e29b-41d4-a716-446655440001"),
+        query="test query",
+        top_k=3,
+        document_type="HR Policy",
+    )
+
+    assert tracker_logger.track.called
+    call_args = tracker_logger.track.call_args[0][0]
+    assert call_args.tenant_id == "550e8400-e29b-41d4-a716-446655440001"
+    assert call_args.query == "test query"
+    assert call_args.top_k == 3
+    assert call_args.results_count == 3
+
+
+@pytest.mark.asyncio
 async def test_retrieve_rejects_empty_query(retriver_manager):
     manager, embedding_manager, _, _ = retriver_manager
 

@@ -186,11 +186,57 @@ async def test_retrive_chunks_uses_vector_operator(
     assert "embedding" in query
     assert "ORDER BY embedding <=>" in query
     assert "LIMIT %s" in query
+    assert "AND document_type = %s" not in query
 
     assert params[0] == sample_query_embedding
     assert params[1] == UUID("550e8400-e29b-41d4-a716-446655440001")
     assert params[2] == sample_query_embedding
     assert params[3] == 5
+
+
+@pytest.mark.asyncio
+async def test_retrive_chunks_uses_vector_operator_with_document_type(
+    retrive_db_manager,
+    sample_query_embedding,
+    mock_db,
+):
+    manager, _ = retrive_db_manager
+    mock_conn, mock_cursor = mock_db
+
+    mock_cursor.fetchall.return_value = []
+
+    with (
+        patch(
+            "semantic_search_eng.db.retrive_db.psycopg.AsyncConnection.connect",
+            new=AsyncMock(return_value=mock_conn),
+        ),
+        patch(
+            "semantic_search_eng.db.retrive_db.register_vector_async",
+            new=AsyncMock(),
+        ),
+    ):
+        await manager.retrive_chunks(
+            tenant_id=UUID("550e8400-e29b-41d4-a716-446655440001"),
+            query_embedding=sample_query_embedding,
+            top_k=5,
+            document_type="HR Policy",
+        )
+
+    mock_cursor.execute.assert_awaited_once()
+
+    query, params = mock_cursor.execute.await_args.args
+
+    assert "<=>" in query
+    assert "embedding" in query
+    assert "ORDER BY embedding <=>" in query
+    assert "LIMIT %s" in query
+    assert "AND document_type = %s" in query
+
+    assert params[0] == sample_query_embedding
+    assert params[1] == UUID("550e8400-e29b-41d4-a716-446655440001")
+    assert params[2] == "HR Policy"
+    assert params[3] == sample_query_embedding
+    assert params[4] == 5
 
 
 @pytest.mark.asyncio
