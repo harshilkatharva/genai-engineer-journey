@@ -1,4 +1,4 @@
-from rag_app.models.chunking_tracker import (
+from rag_app.models import (
     ChunkingTracker,
 )
 

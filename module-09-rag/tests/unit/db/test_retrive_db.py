@@ -4,7 +4,7 @@ from uuid import UUID
 import pytest
 
 from rag_app.db.retrive_db import RetriveDBManager
-from rag_app.models.retrive_response import RetriveResult
+from rag_app.models.retrive.retrive_response import RetriveResult
 
 
 @pytest.fixture

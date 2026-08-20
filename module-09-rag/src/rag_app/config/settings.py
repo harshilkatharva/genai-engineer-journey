@@ -1,8 +1,8 @@
-import os
 from functools import lru_cache
 
 from dotenv import load_dotenv
 from pydantic import Field
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 load_dotenv()
@@ -25,8 +25,7 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------------
     # Data
     # ------------------------------------------------------------------
-    data_directory: str = "src/rag_app/user_data/data"
-    DATABASE_CONNECTION_CONVERSATION_URL: str = os.environ["DATABASE_CONNECTION_CONVERSATION_URL"]
+    data_directory: str = "user_data/data"
 
     # ------------------------------------------------------------------
     # Chunking
@@ -48,7 +47,7 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------------
     # Embedding
     # ------------------------------------------------------------------
-    embedding_model: str = "all-MiniLM-L6-v2"
+    default_embedding_model: str = "all-MiniLM-L6-v2"
 
     embedding_batch_size: int = Field(
         default=100,
@@ -57,10 +56,7 @@ class Settings(BaseSettings):
 
     # ------------------------------------------------------------------
     # Embedding pricing
-    #
     # Price is expressed as USD per 1 million input tokens.
-    # Keep this configurable so we don't hardcode pricing in the
-    # embedding manager.
     # ------------------------------------------------------------------
     embedding_cost_per_million_tokens: float = Field(
         default=0.0,
@@ -68,29 +64,77 @@ class Settings(BaseSettings):
     )
 
     # ------------------------------------------------------------------
+    # Query
+    # ------------------------------------------------------------------
+
+    default_query_strategy: str = Field(
+        default="None",
+    )
+
+    default_hyde_strategy: str = Field(
+        default="Google",
+    )
+
+    # ------------------------------------------------------------------
     # Retrieval
     # ------------------------------------------------------------------
-    default_top_k: int = Field(
+
+    default_retrieval_strategy: str = Field(
+        default="Vector",
+    )
+
+    canidate_default_top_k: int = Field(
         default=5,
         gt=0,
     )
 
-    max_top_k: int = Field(
+    canidate_max_top_k: int = Field(
         default=100,
         gt=0,
     )
 
     # ------------------------------------------------------------------
+    # ReRanker
+    # ------------------------------------------------------------------
+
+    re_ranker_availability: bool = Field(
+        default=False,
+    )
+
+    re_ranker_model: str = Field(
+        default="",
+    )
+
+    re_ranker_default_top_k: int = Field(
+        default=5,
+        gt=0,
+    )
+
+    re_ranker_max_top_k: int = Field(
+        default=20,
+        gt=0,
+    )
+
+    # ------------------------------------------------------------------
+    # LLM Providers
+    # ------------------------------------------------------------------
+
+    default_llm_model: str = Field(default="gemini-3.5-flash-lite")
+
+    default_fallback_model: str = Field(default="gemini-3.5-flash")
+
+    # ------------------------------------------------------------------
     # Logging
     # ------------------------------------------------------------------
-    log_directory: str = "src/rag_app/user_data/logs"
+
+    log_directory: str = "logs"
 
     log_level: str = "INFO"
 
     # ------------------------------------------------------------------
     # Evaluation
     # ------------------------------------------------------------------
-    evaluation_file: str = "src/rag_app/evaluation/evalution.json"
+    evaluation_file_path: str = "src/rag_app/evaluation/evalution.json"
 
     # ------------------------------------------------------------------
     # Pydantic Settings

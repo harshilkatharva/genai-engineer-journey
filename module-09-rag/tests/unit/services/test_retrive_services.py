@@ -2,7 +2,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from rag_app.models.retrive_response import RetriveResult
+from rag_app.models.retrive.retrive_response import RetriveResult
 from rag_app.services.retrive_services import RetriveServiceManager
 
 
@@ -55,7 +55,7 @@ async def test_retrive_chunks_returns_response(retrive_service_manager, sample_r
 
     mocks["retrive_manager"].retrieve.return_value = sample_results
 
-    from rag_app.models.retrive_request import RetriveRequest
+    from rag_app.models.retrive.retrive_request import RetriveRequest
 
     request = RetriveRequest(
         tenant_id="550e8400-e29b-41d4-a716-446655440001",
@@ -79,7 +79,7 @@ async def test_retrive_chunks_calls_retriver_manager(retrive_service_manager, sa
 
     mocks["retrive_manager"].retrieve.return_value = sample_results
 
-    from rag_app.models.retrive_request import RetriveRequest
+    from rag_app.models.retrive.retrive_request import RetriveRequest
 
     request = RetriveRequest(
         tenant_id="550e8400-e29b-41d4-a716-446655440001",
@@ -105,7 +105,7 @@ async def test_retrive_chunks_calls_retriver_manager_with_document_type(
 
     mocks["retrive_manager"].retrieve.return_value = sample_results
 
-    from rag_app.models.retrive_request import RetriveRequest
+    from rag_app.models.retrive.retrive_request import RetriveRequest
 
     request = RetriveRequest(
         tenant_id="550e8400-e29b-41d4-a716-446655440001",
@@ -130,7 +130,7 @@ async def test_retrive_chunks_returns_empty_results_when_no_matches(retrive_serv
 
     mocks["retrive_manager"].retrieve.return_value = []
 
-    from rag_app.models.retrive_request import RetriveRequest
+    from rag_app.models.retrive.retrive_request import RetriveRequest
 
     request = RetriveRequest(
         tenant_id="550e8400-e29b-41d4-a716-446655440001",

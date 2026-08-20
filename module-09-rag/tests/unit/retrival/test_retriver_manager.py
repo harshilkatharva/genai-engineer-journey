@@ -6,7 +6,7 @@ from uuid import UUID
 import pytest
 from pgvector import Vector
 
-from rag_app.models.retrive_response import RetriveResult
+from rag_app.models.retrive.retrive_response import RetriveResult
 from rag_app.retrival.retriver_manager import RetriverManager
 
 

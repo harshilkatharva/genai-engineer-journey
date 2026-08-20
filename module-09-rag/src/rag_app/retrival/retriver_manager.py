@@ -13,7 +13,7 @@ from rag_app.embedding.embedding_manager import (
 from rag_app.logger.retrive_tracker import (
     RetriveTrackerLogger,
 )
-from rag_app.models.retrive_tracker import RetriveTracker
+from rag_app.models.tracker.retrive_tracker import RetriveTracker
 
 
 class RetriverManager:

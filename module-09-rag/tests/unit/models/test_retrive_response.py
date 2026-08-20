@@ -22,12 +22,10 @@ def test_retrive_response_creation() -> None:
 
     response = RetriveResponse(
         tenant_id="550e8400-e29b-41d4-a716-446655440001",
-        query="How does authentication work?",
-        top_k=5,
+        queries=["How does authentication work?"],
         results=[result],
     )
 
     assert response.tenant_id == "550e8400-e29b-41d4-a716-446655440001"
-    assert response.query == "How does authentication work?"
-    assert response.top_k == 5
+    assert response.queries == ["How does authentication work?"]
     assert len(response.results) == 1

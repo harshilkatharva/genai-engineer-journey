@@ -3,7 +3,7 @@ from uuid import UUID
 
 import pytest
 
-from rag_app.models.chunk import Chunk
+from rag_app.models.chunk.chunk import Chunk
 from rag_app.services.index_services import IndexServiceManager
 
 
@@ -105,7 +105,7 @@ async def test_index_orchestrates_document_processing(
 
     mocks["index_db_manager"].store_index.return_value = None
 
-    from rag_app.models.process_request import ProcessRequest
+    from rag_app.models.index.process_request import ProcessRequest
 
     request = ProcessRequest(
         tenant_id=UUID("550e8400-e29b-41d4-a716-446655440001"),
@@ -136,7 +136,7 @@ async def test_index_calls_all_managers_in_sequence(
     mocks["chunking_manager"].chunk_documents.return_value = sample_chunks
     mocks["embedding_manager"].embed_chunks.return_value = sample_embeddings
 
-    from rag_app.models.process_request import ProcessRequest
+    from rag_app.models.index.process_request import ProcessRequest
 
     request = ProcessRequest(
         tenant_id=UUID("550e8400-e29b-41d4-a716-446655440001"),
@@ -168,7 +168,7 @@ async def test_index_passes_correct_parameters(
     mocks["chunking_manager"].chunk_documents.return_value = sample_chunks
     mocks["embedding_manager"].embed_chunks.return_value = sample_embeddings
 
-    from rag_app.models.process_request import ProcessRequest
+    from rag_app.models.index.process_request import ProcessRequest
 
     tenant_id = UUID("550e8400-e29b-41d4-a716-446655440001")
     request = ProcessRequest(

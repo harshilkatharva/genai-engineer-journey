@@ -4,7 +4,7 @@ from uuid import UUID
 import pytest
 
 from rag_app.db.index_db import IndexDBManager
-from rag_app.models.chunk import Chunk
+from rag_app.models.chunk.chunk import Chunk
 
 
 @pytest.fixture
