@@ -3,7 +3,7 @@ from uuid import UUID
 import pytest
 from pydantic import ValidationError
 
-from rag_app.models.process_request import ProcessRequest
+from rag_app.models.index.process_request import ProcessRequest
 
 
 def test_process_request_creation() -> None:

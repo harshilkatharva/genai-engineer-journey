@@ -3,7 +3,7 @@ from uuid import UUID
 import pytest
 from pydantic import ValidationError
 
-from rag_app.models.chunk import Chunk
+from rag_app.models import Chunk
 
 
 def test_chunk_creation() -> None:

@@ -3,7 +3,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from rag_app.config import get_settings
-from rag_app.models.chunking_tracker import ChunkingTracker
+from rag_app.models.tracker.chunking_tracker import ChunkingTracker
 
 
 class ChunkingTrackerLogger:

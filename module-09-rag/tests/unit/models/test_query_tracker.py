@@ -1,4 +1,4 @@
-from rag_app.models.query_tracker import QueryTracker
+from rag_app.models import QueryTracker
 
 
 def test_query_tracker_creation() -> None:

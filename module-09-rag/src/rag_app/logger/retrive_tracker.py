@@ -3,7 +3,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from rag_app.config import get_settings
-from rag_app.models.retrive_tracker import RetriveTracker
+from rag_app.models.tracker.retrive_tracker import RetriveTracker
 
 
 class RetriveTrackerLogger:

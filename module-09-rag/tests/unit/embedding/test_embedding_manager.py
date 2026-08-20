@@ -7,7 +7,7 @@ import pytest
 from rag_app.embedding.embedding_manager import (
     EmbeddingManager,
 )
-from rag_app.models.chunk import Chunk
+from rag_app.models.chunk.chunk import Chunk
 
 
 @pytest.fixture

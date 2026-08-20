@@ -9,8 +9,8 @@ from rag_app.config import get_settings
 from rag_app.logger.embedding_tracker import (
     EmbeddingTrackerLogger,
 )
-from rag_app.models.chunk import Chunk
-from rag_app.models.embedding_tracker import (
+from rag_app.models.chunk.chunk import Chunk
+from rag_app.models.tracker.embedding_tracker import (
     EmbeddingTracker,
 )
 from rag_app.user_data.data_manager import DataManager

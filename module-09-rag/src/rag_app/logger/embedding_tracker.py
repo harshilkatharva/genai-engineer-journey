@@ -3,7 +3,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from rag_app.config import get_settings
-from rag_app.models.embedding_tracker import EmbeddingTracker
+from rag_app.models.tracker.embedding_tracker import EmbeddingTracker
 
 
 class EmbeddingTrackerLogger:

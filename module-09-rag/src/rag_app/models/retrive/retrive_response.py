@@ -8,6 +8,5 @@ class RetriveResult(BaseModel):
 
 class RetriveResponse(BaseModel):
     tenant_id: str
-    query: str
-    top_k: int
+    queries: list[str]
     results: list[RetriveResult]

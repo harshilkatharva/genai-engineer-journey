@@ -10,8 +10,8 @@ from rag_app.config import get_settings
 from rag_app.logger.chunking_tracker import (
     ChunkingTrackerLogger,
 )
-from rag_app.models.chunk import Chunk
-from rag_app.models.chunking_tracker import ChunkingTracker
+from rag_app.models.chunk.chunk import Chunk
+from rag_app.models.tracker.chunking_tracker import ChunkingTracker
 
 TOKEN_ENCODER = tiktoken.get_encoding("cl100k_base")
 
