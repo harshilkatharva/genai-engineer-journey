@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
-from rag_app.models import RetriveResult
 
 from rag_app.config import get_settings
+from .candidate_response import RetriveResult
 
 settings = get_settings()
 

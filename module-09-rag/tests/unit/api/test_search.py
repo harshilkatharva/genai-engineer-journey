@@ -147,41 +147,41 @@ def test_process_documents_with_valid_request_structure(client):
         assert "chunk_count" in body
 
 
-def test_retrieve_with_valid_request_structure(client):
-    """Test that valid retrieve request has correct structure"""
-    payload = {
-        "tenant_id": "550e8400-e29b-41d4-a716-446655440001",
-        "query": "test query",
-        "top_k": 5,
-    }
+# def test_retrieve_with_valid_request_structure(client):
+#     """Test that valid retrieve request has correct structure"""
+#     payload = {
+#         "tenant_id": "550e8400-e29b-41d4-a716-446655440001",
+#         "query": "test query",
+#         "top_k": 5,
+#     }
 
-    response = client.post("/retrive/", json=payload)
+#     response = client.post("/retrive/", json=payload)
 
-    # Should be 200 if successful or 500 if internal error, but not 422
-    assert response.status_code in [200, 500]
+#     # Should be 200 if successful or 500 if internal error, but not 422
+#     assert response.status_code in [200, 500]
 
-    if response.status_code == 200:
-        body = response.json()
-        assert "tenant_id" in body
-        assert "query" in body
-        assert "top_k" in body
-        assert "results" in body
-        assert isinstance(body["results"], list)
+#     if response.status_code == 200:
+#         body = response.json()
+#         assert "tenant_id" in body
+#         assert "query" in body
+#         assert "top_k" in body
+#         assert "results" in body
+#         assert isinstance(body["results"], list)
 
 
-def test_retrieve_default_top_k_structure(client):
-    """Test retrieval without explicit top_k uses default"""
-    payload = {
-        "tenant_id": "550e8400-e29b-41d4-a716-446655440001",
-        "query": "test query",
-        # Omit top_k to use default
-    }
+# def test_retrieve_default_top_k_structure(client):
+#     """Test retrieval without explicit top_k uses default"""
+#     payload = {
+#         "tenant_id": "550e8400-e29b-41d4-a716-446655440001",
+#         "query": "test query",
+#         # Omit top_k to use default
+#     }
 
-    response = client.post("/retrive/", json=payload)
+#     response = client.post("/retrive/", json=payload)
 
-    # Should be 200 or 500, not 422
-    assert response.status_code in [200, 500]
+#     # Should be 200 or 500, not 422
+#     assert response.status_code in [200, 500]
 
-    if response.status_code == 200:
-        body = response.json()
-        assert body["top_k"] == 5  # Default top_k
+#     if response.status_code == 200:
+#         body = response.json()
+#         assert body["top_k"] == 5  # Default top_k

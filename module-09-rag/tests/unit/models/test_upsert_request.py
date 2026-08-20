@@ -1,6 +1,8 @@
 from uuid import uuid4
+
 import pytest
 from pydantic import ValidationError
+
 from rag_app.models import UpsertRequest
 
 

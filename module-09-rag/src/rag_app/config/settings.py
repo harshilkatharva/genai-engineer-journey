@@ -2,7 +2,6 @@ from functools import lru_cache
 
 from dotenv import load_dotenv
 from pydantic import Field
-
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 load_dotenv()
@@ -80,7 +79,7 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------------
 
     default_retrieval_strategy: str = Field(
-        default="Vector",
+        default="vector_search",
     )
 
     canidate_default_top_k: int = Field(

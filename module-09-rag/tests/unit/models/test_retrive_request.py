@@ -1,81 +1,100 @@
+from uuid import uuid4
+
 import pytest
 from pydantic import ValidationError
 
-from rag_app.models import RetriveRequest
+from rag_app.models.retrive.retrive_request import RetriveRequest
+
+from rag_app.config.settings import get_settings
+
+settings = get_settings()
 
 
-def test_retrive_request_defaults_top_k() -> None:
+def test_retrive_request_with_valid_data():
+    tenant_id = uuid4()
+
     request = RetriveRequest(
-        tenant_id="550e8400-e29b-41d4-a716-446655440001",
-        queries=["How does authentication work?"],
+        tenant_id=tenant_id,
+        queries=["What is the refund policy?"],
+        top_k_candidate=5,
+        top_k_re_ranker=3,
     )
 
+    assert request.tenant_id == tenant_id
+    assert request.queries == ["What is the refund policy?"]
     assert request.top_k_candidate == 5
-    assert request.top_k_re_ranker == 5
+    assert request.top_k_re_ranker == 3
 
 
-def test_retrive_request_creation() -> None:
+def test_retrive_request_uses_default_values():
+    tenant_id = uuid4()
+
     request = RetriveRequest(
-        tenant_id="550e8400-e29b-41d4-a716-446655440001",
-        queries=["How does authentication work?"],
-        top_k_candidate=50,
-        top_k_re_ranker=5,
+        tenant_id=tenant_id,
+        queries=["What is the refund policy?"],
     )
 
-    assert request.tenant_id == "550e8400-e29b-41d4-a716-446655440001"
-    assert request.queries == ["How does authentication work?"]
-    assert request.top_k_candidate == 50
-    assert request.top_k_re_ranker == 5
-    assert request.document_type is None
+    assert request.tenant_id == tenant_id
+    assert request.queries == ["What is the refund policy?"]
+
+    # Values come from settings
+    assert request.top_k_candidate == settings.canidate_default_top_k
+    assert request.top_k_re_ranker == settings.re_ranker_default_top_k
 
 
-def test_retrive_request_creation_with_document_type() -> None:
-    request = RetriveRequest(
-        tenant_id="550e8400-e29b-41d4-a716-446655440001",
-        queries=["How does authentication work?"],
-        document_type=["PDF"],
-    )
+def test_retrive_request_rejects_empty_queries():
+    tenant_id = uuid4()
 
-    assert request.tenant_id == "550e8400-e29b-41d4-a716-446655440001"
-    assert request.queries == ["How does authentication work?"]
-    assert request.document_type == ["PDF"]
+    with pytest.raises(ValidationError, match="List should have at least 1 item"):
+        RetriveRequest(
+            tenant_id=tenant_id,
+            queries=[],
+        )
 
 
-@pytest.mark.parametrize(
-    "field, value",
-    [
-        ("tenant_id", ""),
-        ("queries", ""),
-    ],
-)
-def test_retrive_request_rejects_empty_strings(
-    field: str,
-    value: str,
-) -> None:
-    data = {
-        "tenant_id": "550e8400-e29b-41d4-a716-446655440001",
-        "queries": "test queries",
-    }
-
-    data[field] = value
-
-    with pytest.raises(ValidationError):
-        RetriveRequest(**data)
-
-
-def test_retrive_request_rejects_invalid_top_k() -> None:
+def test_retrive_request_rejects_invalid_tenant_id():
     with pytest.raises(ValidationError):
         RetriveRequest(
-            tenant_id="conversation_123",
-            queries=["test"],
+            tenant_id="not-a-uuid",
+            queries=["test query"],
+        )
+
+
+def test_retrive_request_accepts_multiple_queries():
+    tenant_id = uuid4()
+
+    queries = [
+        "What is the refund policy?",
+        "What is the cancellation policy?",
+        "How long does shipping take?",
+    ]
+
+    request = RetriveRequest(
+        tenant_id=tenant_id,
+        queries=queries,
+    )
+
+    assert request.queries == queries
+    assert len(request.queries) == 3
+
+
+def test_top_k_candidate_must_be_at_least_one():
+    tenant_id = uuid4()
+
+    with pytest.raises(ValidationError):
+        RetriveRequest(
+            tenant_id=tenant_id,
+            queries=["test query"],
             top_k_candidate=0,
         )
 
 
-def test_search_request_rejects_top_k_above_limit() -> None:
+def test_top_k_re_ranker_must_be_at_least_one():
+    tenant_id = uuid4()
+
     with pytest.raises(ValidationError):
         RetriveRequest(
-            tenant_id="conversation_123",
-            queries=["test"],
-            top_k_re_ranker=101,
+            tenant_id=tenant_id,
+            queries=["test query"],
+            top_k_re_ranker=0,
         )

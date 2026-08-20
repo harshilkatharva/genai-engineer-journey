@@ -59,7 +59,7 @@ async def test_retrive_chunks_returns_response(retrive_service_manager, sample_r
 
     request = RetriveRequest(
         tenant_id="550e8400-e29b-41d4-a716-446655440001",
-        query="test query",
+        queries=["test query"],
         top_k=2,
     )
 
@@ -83,7 +83,7 @@ async def test_retrive_chunks_calls_retriver_manager(retrive_service_manager, sa
 
     request = RetriveRequest(
         tenant_id="550e8400-e29b-41d4-a716-446655440001",
-        query="test query",
+        queries=["test query"],
         top_k=5,
     )
 
@@ -109,7 +109,7 @@ async def test_retrive_chunks_calls_retriver_manager_with_document_type(
 
     request = RetriveRequest(
         tenant_id="550e8400-e29b-41d4-a716-446655440001",
-        query="test query",
+        queries=["test query"],
         top_k=5,
         document_type="HR Policy",
     )
@@ -134,7 +134,7 @@ async def test_retrive_chunks_returns_empty_results_when_no_matches(retrive_serv
 
     request = RetriveRequest(
         tenant_id="550e8400-e29b-41d4-a716-446655440001",
-        query="no results query",
+        queries=["no results query"],
         top_k=5,
     )
 

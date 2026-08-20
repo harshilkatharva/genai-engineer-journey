@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import asyncio
 from time import perf_counter
 from uuid import UUID
@@ -29,7 +30,7 @@ class EmbeddingManager:
         self.data_manager = DataManager()
         self.tracker_logger = EmbeddingTrackerLogger()
 
-        self.model = SentenceTransformer(self.settings.embedding_model)
+        self.model = SentenceTransformer(self.settings.default_embedding_model)
 
     async def embed_chunks(
         self,
