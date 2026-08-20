@@ -22,7 +22,6 @@ class RetriveDBManager:
         top_k: int | None = None,
         document_type: str | None = None,
     ):
-        print(document_type)
         if document_type is None:
             db_query = """
                 SELECT

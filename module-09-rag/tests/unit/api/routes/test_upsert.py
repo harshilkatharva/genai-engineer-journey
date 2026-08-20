@@ -1,7 +1,9 @@
 from unittest.mock import patch
 from uuid import uuid4
+
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+
 from rag_app.api.routes.upsert import router
 
 app = FastAPI()

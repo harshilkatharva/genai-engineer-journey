@@ -1,5 +1,6 @@
 from pydantic import BaseModel
-from rag_app.models import RetriveResult
+
+from .candidate_response import RetriveResult
 
 
 class ReRankerResponse(BaseModel):

@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from uuid import UUID
 
 
 class RetriveResult(BaseModel):
@@ -7,6 +8,6 @@ class RetriveResult(BaseModel):
 
 
 class RetriveResponse(BaseModel):
-    tenant_id: str
+    tenant_id: UUID
     queries: list[str]
     results: list[RetriveResult]

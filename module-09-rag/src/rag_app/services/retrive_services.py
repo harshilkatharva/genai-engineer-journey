@@ -1,6 +1,6 @@
 from rag_app.db.retrive_db import RetriveDBManager
 from rag_app.models import RetriveRequest, RetriveResponse
-from rag_app.retrival.retriver_manager import (
+from rag_app.retrieval.retriver_manager import (
     RetriverManager,
 )
 from rag_app.user_data.data_manager import (

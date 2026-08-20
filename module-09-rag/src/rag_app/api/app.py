@@ -3,9 +3,9 @@ import uuid
 from fastapi import FastAPI
 
 from rag_app.api.routes.index import router as index_router
+from rag_app.api.routes.rag import router as rag_router
 from rag_app.api.routes.retrive import router as retrive_router
 from rag_app.api.routes.upsert import router as upsert_router
-from rag_app.api.routes.rag import router as rag_router
 from rag_app.config import get_settings
 
 settings = get_settings()

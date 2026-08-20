@@ -1,5 +1,6 @@
 from pydantic import BaseModel
-from rag_app.models import RetriveResult
+
+from .retrive_response import RetriveResult
 
 
 class CandidateResponse(BaseModel):
