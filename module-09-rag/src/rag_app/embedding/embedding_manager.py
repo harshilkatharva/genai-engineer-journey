@@ -6,7 +6,7 @@ from uuid import UUID
 
 from sentence_transformers import SentenceTransformer
 
-from rag_app.config import get_settings
+from rag_app.core import get_settings
 from rag_app.logger.embedding_tracker import (
     EmbeddingTrackerLogger,
 )

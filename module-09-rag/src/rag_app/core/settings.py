@@ -117,10 +117,16 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------------
     # LLM Providers
     # ------------------------------------------------------------------
-
+    default_llm_provider: str = Field(default="google")
     default_llm_model: str = Field(default="gemini-3.5-flash-lite")
 
+    default_fallback_provider: str = Field(default="google")
     default_fallback_model: str = Field(default="gemini-3.5-flash")
+
+    # ------------------------------------------------------------------
+    # Latest Prompt file/version
+    # ------------------------------------------------------------------
+    rag_prompt_running_version: str = Field(default="rag_v1.md")
 
     # ------------------------------------------------------------------
     # Logging

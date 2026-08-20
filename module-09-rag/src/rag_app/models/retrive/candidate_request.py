@@ -2,7 +2,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
-from rag_app.config import get_settings
+from rag_app.core import get_settings
 
 settings = get_settings()
 

@@ -3,9 +3,8 @@ from uuid import uuid4
 import pytest
 from pydantic import ValidationError
 
+from rag_app.core.settings import get_settings
 from rag_app.models.retrive.retrive_request import RetriveRequest
-
-from rag_app.config.settings import get_settings
 
 settings = get_settings()
 

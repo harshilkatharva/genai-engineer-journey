@@ -6,7 +6,7 @@ from uuid import UUID
 
 import tiktoken
 
-from rag_app.config import get_settings
+from rag_app.core import get_settings
 from rag_app.logger.chunking_tracker import (
     ChunkingTrackerLogger,
 )

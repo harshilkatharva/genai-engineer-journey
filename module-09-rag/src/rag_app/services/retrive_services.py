@@ -19,16 +19,10 @@ class RetriveServiceManager:
         self.retrive_db_manager = RetriveDBManager()
 
     async def retrive_chunks(self, request: RetriveRequest):
-        results = await self.retrive_manager.retrieve(
-            tenant_id=request.tenant_id,
-            query=request.query,
-            top_k=request.top_k,
-            document_type=request.document_type,
-        )
+        results = await self.retrive_manager.retrieve(request=request)
 
         return RetriveResponse(
             tenant_id=request.tenant_id,
             query=request.query,
-            top_k=request.top_k,
             results=results,
         )

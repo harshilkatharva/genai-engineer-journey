@@ -6,6 +6,7 @@ from rag_app.models.index.process_request import ProcessRequest
 # LLM Models
 from rag_app.models.llm.llm_manager_request import LLMManagerRequest
 from rag_app.models.llm.llm_manager_response import LLMManagerResponse
+from rag_app.models.llm.llm_response_model import LLMResponseModel
 
 # Prompt Models
 from rag_app.models.prompt.prompt_request import PromptRequest
@@ -49,6 +50,7 @@ __all__ = [
     "IndexBatchTracker",
     "LLMManagerRequest",
     "LLMManagerResponse",
+    "LLMResponseModel",
     "ProcessRequest",
     "PromptRequest",
     "PromptResposne",

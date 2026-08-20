@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from rag_app.config import get_settings
+from rag_app.core import get_settings
 from rag_app.models import RetriveRequest, RetriveResponse
 
 from .candidate.vector_search import VectorSearch

@@ -4,8 +4,8 @@ import pytest
 from pydantic import ValidationError
 
 from rag_app.models.retrive.retrive_response import (
-    RetriveResult,
     RetriveResponse,
+    RetriveResult,
 )
 
 
