@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from rag_app.api.routes.index import router as index_router
 from rag_app.api.routes.retrive import router as retrive_router
 from rag_app.api.routes.upsert import router as upsert_router
+from rag_app.api.routes.rag import router as rag_router
 from rag_app.config import get_settings
 
 settings = get_settings()
@@ -14,6 +15,7 @@ app = FastAPI(
     version=settings.app_version,
 )
 
+app.include_router(rag_router, prefix="/rag", tags=["rag"])
 app.include_router(index_router, prefix="/index", tags=["index"])
 app.include_router(retrive_router, prefix="/retrive", tags=["retrive"])
 app.include_router(upsert_router, prefix="/upsert", tags=["upsert"])

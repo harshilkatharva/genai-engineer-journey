@@ -67,8 +67,8 @@ class Settings(BaseSettings):
     # Query
     # ------------------------------------------------------------------
 
-    default_query_strategy: str = Field(
-        default="None",
+    default_query_strategy: str | None = Field(
+        default=None,
     )
 
     default_hyde_strategy: str = Field(
