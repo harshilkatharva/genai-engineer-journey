@@ -5,7 +5,7 @@ import psycopg
 from pgvector.psycopg import register_vector_async
 from psycopg.types.json import Jsonb
 
-from rag_app.config import get_settings
+from rag_app.core import get_settings
 from rag_app.logger.db_operation_tracker import DBOperationTracker
 from rag_app.models.chunk.chunk import Chunk
 from rag_app.models.tracker.index_batch_tracker import IndexBatchTracker

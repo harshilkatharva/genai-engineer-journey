@@ -1,6 +1,6 @@
 import pytest
 
-from rag_app.config import Settings
+from rag_app.core import Settings
 
 
 def test_settings_default_values() -> None:

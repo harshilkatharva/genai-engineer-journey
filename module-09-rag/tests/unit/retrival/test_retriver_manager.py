@@ -1,5 +1,6 @@
-from uuid import uuid4
 from unittest.mock import AsyncMock, MagicMock, patch
+from uuid import uuid4
+
 import pytest
 
 from rag_app.models import RetriveRequest, RetriveResult

@@ -2,7 +2,7 @@ import json
 from datetime import UTC, datetime
 from pathlib import Path
 
-from rag_app.config import get_settings
+from rag_app.core import get_settings
 from rag_app.models.tracker.db_query_tracker import DBQueryTracker
 from rag_app.models.tracker.index_batch_tracker import IndexBatchTracker
 
