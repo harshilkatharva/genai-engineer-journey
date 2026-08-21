@@ -51,7 +51,7 @@ User Question:
             "rag_app.prompts.prompt_manager.Path",
             return_value=prompt_file,
         ):
-            result = manager.buil_rag_prompt(request)
+            result = manager.build_rag_prompt(request)
             print(result)
 
     assert "What is the refund policy?" in result

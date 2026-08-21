@@ -5,6 +5,7 @@ import pytest
 from pgvector import Vector
 
 from rag_app.retrieval.candidate.vector_search import VectorSearch
+from rag_app.models import RetriveResult
 
 
 @pytest.mark.asyncio
@@ -16,8 +17,14 @@ async def test_retrive_returns_results_for_each_query():
     query_embedding_1 = [0.1, 0.2, 0.3]
     query_embedding_2 = [0.4, 0.5, 0.6]
 
-    db_result_1 = ["chunk-1", "chunk-2"]
-    db_result_2 = ["chunk-3", "chunk-4"]
+    db_result_1 = [
+        RetriveResult(chunk_text="Chunk - 1", similarity_score=0.95),
+        RetriveResult(chunk_text="Chunk - 2", similarity_score=0.55),
+    ]
+    db_result_2 = [
+        RetriveResult(chunk_text="Chunk - 3", similarity_score=0.75),
+        RetriveResult(chunk_text="Chunk - 4", similarity_score=0.65),
+    ]
 
     with (
         patch("rag_app.retrieval.candidate.vector_search.RetriveDBManager") as mock_db_manager,
@@ -49,7 +56,7 @@ async def test_retrive_returns_results_for_each_query():
             top_k_candidates=top_k_candidates,
         )
 
-    assert results == [db_result_1, db_result_2]
+    assert results == [*db_result_1, *db_result_2]
 
     # Embedding generated once per query
     assert embedding_manager.embed_query.call_count == 2
