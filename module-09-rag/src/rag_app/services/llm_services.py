@@ -1,14 +1,14 @@
 import asyncio
 from collections.abc import AsyncIterator
-
+from rag_app.observability.events import EventName
 from rag_app.exceptions.llm_exceptions import LLMError
-from rag_app.logger.llm_error_logger import llm_error_logger
 from rag_app.models import LLMManagerRequest, LLMManagerResponse, LLMResponseModel
 from rag_app.providers import (
     AnthropicProvider,
     GoogleProvider,
     OpenAIProvider,
 )
+from rag_app.observability.logger import logger
 from rag_app.providers.llm_provider import LLMProvider
 
 
@@ -36,23 +36,25 @@ class LLMServicemanager:
         try:
             response = await self.providers[provider].complete(request.prompt)
 
-            # llm_sucess_logger.info(
-            #     json.dumps(
-            #         {"provider": provider, "prompt": request.prompt, "response": str(response)}
-            #     )
-            # )
+            logger.info(
+                "LLM Response Genrated",
+                event="llm_response_generated",
+                component="llm_services",
+                provider=provider,
+                model=response.model,
+                input_tokens=response.input_tokens,
+                output_tokens=response.output_tokens,
+            )
 
             return LLMManagerResponse(text=response.text)
 
         except LLMError as e:
-            llm_error_logger.exception(
-                {
-                    "provider": provider,
-                    "prompt": request.prompt,
-                    "error_type": type(e).__name__,
-                    "user_error_message": e.user_message,
-                    "error": str(e),
-                }
+            logger.exception(
+                "LLM Genration Error",
+                event=EventName.LLM_FAILED,
+                provider=provider,
+                error_type=type(e).__name__,
+                error_message=e.user_message,
             )
 
             return LLMManagerResponse(text=e.user_message)
