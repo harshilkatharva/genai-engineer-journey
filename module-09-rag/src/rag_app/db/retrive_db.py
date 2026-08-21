@@ -8,6 +8,7 @@ from rag_app.core import get_settings
 from rag_app.logger.db_operation_tracker import DBOperationTracker
 from rag_app.models import RetriveResult
 from rag_app.models.tracker.db_query_tracker import DBQueryTracker
+from rag_app.core.config import DATABASE_CONNECTION_CONVERSATION_URL
 
 
 class RetriveDBManager:
@@ -65,7 +66,7 @@ class RetriveDBManager:
         query_start = perf_counter()
 
         async with await psycopg.AsyncConnection.connect(
-            self.settings.DATABASE_CONNECTION_CONVERSATION_URL
+            DATABASE_CONNECTION_CONVERSATION_URL
         ) as conn:
             await register_vector_async(conn)
 
