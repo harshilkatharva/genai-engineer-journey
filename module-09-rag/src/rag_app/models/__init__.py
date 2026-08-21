@@ -18,8 +18,11 @@ from rag_app.models.query.query_request import QueryRequest
 from rag_app.models.query.query_response import QueryResponse
 
 # RAG Models
+from rag_app.models.rag.rag_endpoint_request import RAGEndpointRequest
 from rag_app.models.rag.rag_request import RAGRequest
 from rag_app.models.rag.rag_response import RAGResposne
+
+
 from rag_app.models.retrive.candidate_request import CandidateRequest
 from rag_app.models.retrive.candidate_response import CandidateResponse
 from rag_app.models.retrive.re_ranker_request import ReRankerRequest
@@ -70,4 +73,5 @@ __all__ = [
     "RetriveTracker",
     "TrackerModel",
     "UpsertRequest",
+    "RAGEndpointRequest",
 ]

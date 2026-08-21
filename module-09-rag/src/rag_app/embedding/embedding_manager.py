@@ -29,7 +29,7 @@ class EmbeddingManager:
         self.settings = get_settings()
         self.data_manager = DataManager()
         self.tracker_logger = EmbeddingTrackerLogger()
-
+        print("load sentence weight")
         self.model = SentenceTransformer(self.settings.default_embedding_model)
 
     async def embed_chunks(
