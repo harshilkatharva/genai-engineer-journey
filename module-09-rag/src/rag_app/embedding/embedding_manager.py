@@ -1,4 +1,5 @@
 from __future__ import annotations
+from functools import lru_cache
 
 import asyncio
 from time import perf_counter
@@ -29,8 +30,7 @@ class EmbeddingManager:
         self.settings = get_settings()
         self.data_manager = DataManager()
         self.tracker_logger = EmbeddingTrackerLogger()
-        print("load sentence weight")
-        self.model = SentenceTransformer(self.settings.default_embedding_model)
+        self.model = get_embedding_model()
 
     async def embed_chunks(
         self,
@@ -162,3 +162,12 @@ class EmbeddingManager:
         total_tokens: int,
     ) -> float:
         return total_tokens / 1_000_000 * self.settings.embedding_cost_per_million_tokens
+
+
+@lru_cache(maxsize=1)
+def get_embedding_model() -> SentenceTransformer:
+    settings = get_settings()
+
+    print("Loading sentence transformer weights...")
+
+    return SentenceTransformer(settings.default_embedding_model)

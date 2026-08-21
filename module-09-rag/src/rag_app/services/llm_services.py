@@ -1,10 +1,8 @@
 import asyncio
-import json
 from collections.abc import AsyncIterator
 
 from rag_app.exceptions.llm_exceptions import LLMError
 from rag_app.logger.llm_error_logger import llm_error_logger
-from rag_app.logger.llm_sucess_logger import llm_sucess_logger
 from rag_app.models import LLMManagerRequest, LLMManagerResponse, LLMResponseModel
 from rag_app.providers import (
     AnthropicProvider,
@@ -38,11 +36,11 @@ class LLMServicemanager:
         try:
             response = await self.providers[provider].complete(request.prompt)
 
-            llm_sucess_logger.info(
-                json.dumps(
-                    {"provider": provider, "prompt": request.prompt, "response": str(response)}
-                )
-            )
+            # llm_sucess_logger.info(
+            #     json.dumps(
+            #         {"provider": provider, "prompt": request.prompt, "response": str(response)}
+            #     )
+            # )
 
             return LLMManagerResponse(text=response.text)
 
