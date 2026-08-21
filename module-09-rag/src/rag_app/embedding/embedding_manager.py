@@ -104,10 +104,10 @@ class EmbeddingManager:
 
         return result
 
-    def embed_query(
+    async def embed_query(
         self,
         query: str,
-    ) -> list[float]:
+    ) -> (list[float], int, int):
         """
         Create a normalized embedding for a search query.
 
@@ -117,14 +117,17 @@ class EmbeddingManager:
         if not query.strip():
             raise ValueError("Query cannot be empty.")
 
-        embedding = self.model.encode(
+        embedding = await asyncio.to_thread(
+            self.model.encode,
             query,
             show_progress_bar=False,
             convert_to_numpy=True,
             normalize_embeddings=True,
         )
+        token_counts = 0
+        estimated_cost = 0
 
-        return embedding.tolist()
+        return (embedding.tolist(), token_counts, estimated_cost)
 
     def _save_embeddings(
         self,
@@ -167,7 +170,5 @@ class EmbeddingManager:
 @lru_cache(maxsize=1)
 def get_embedding_model() -> SentenceTransformer:
     settings = get_settings()
-
-    print("Loading sentence transformer weights...")
 
     return SentenceTransformer(settings.default_embedding_model)

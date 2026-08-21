@@ -17,4 +17,6 @@ class PromptManager:
                 f"src/rag_app/prompts/services/{self.settings.rag_prompt_running_version}"
             ).read_text()
         )
-        return prompt_template.render(context=context, user_query=request.query)
+        return prompt_template.render(
+            context=context, user_query=request.query
+        ), self.settings.rag_prompt_running_version

@@ -35,12 +35,14 @@ class RetriverManager:
 
         strategy = self.settings.default_retrieval_strategy
 
+        # Strategy retrival
         results = await self.strategies[strategy].retrive(
             tenant_id=tenant_id, queries=queries, top_k_candidates=top_k_candidate
         )
 
+        # re ranker
         if self.settings.re_ranker_availability:
-            # Send to re ranker
+            # Send to re ranker and it log it self
             pass
 
         return RetriveResponse(tenant_id=tenant_id, queries=queries, results=results)

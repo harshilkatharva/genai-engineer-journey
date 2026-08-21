@@ -46,6 +46,11 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------------
     # Embedding
     # ------------------------------------------------------------------
+    DATABASE_CONNECTION_CONVERSATION_URL: str = Field(
+        default="postgresql://postgres:postgres@127.0.0.1:5432/ai_search"
+    )
+
+    embedding_model: str = "all-MiniLM-L6-v2"
     default_embedding_model: str = "all-MiniLM-L6-v2"
 
     embedding_batch_size: int = Field(
