@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "module-09-rag"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "anthropic>=0.125.0",
+    "asyncpg>=0.31.0",
+    "fastapi>=0.141.1",
+    "google>=3.0.0",
+    "google-genai>=2.19.0",
+    "httpx2>=2.10.0",
+    "openai>=3.3.1",
+    "pgvector>=0.5.0",
+    "psycopg[binary]>=3.3.4",
+    "pydantic-settings>=2.15.0",
+    "pytest-asyncio>=1.4.0",
+    "sentence-transformers>=5.7.0",
+    "tiktoken>=0.13.0",
+    "uuid>=1.30",
+    "uvicorn>=0.52.3",
+]
+
+
+
+[dependency-groups]
+dev = [
+    "mypy>=2.3.0",
+    "pre-commit>=4.6.1",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "respx>=0.23.1",
+    "ruff>=0.16.0",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+
+
+
