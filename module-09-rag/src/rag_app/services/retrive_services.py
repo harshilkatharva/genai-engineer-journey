@@ -23,6 +23,6 @@ class RetriveServiceManager:
 
         return RetriveResponse(
             tenant_id=request.tenant_id,
-            query=request.query,
-            results=results,
+            queries=request.queries,
+            results=results.results,
         )

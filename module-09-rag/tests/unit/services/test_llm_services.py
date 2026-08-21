@@ -133,7 +133,7 @@ async def test_complete_raises_error_for_unsupported_provider(
 
     with pytest.raises(
         ValueError,
-        match="Unspported provider unsupported",
+        match="Unsupported provider unsupported",
     ):
         await service.complete(request)
 

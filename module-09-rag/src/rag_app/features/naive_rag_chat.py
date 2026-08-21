@@ -19,7 +19,7 @@ class RAGChat:
         self.prompt_manager = PromptManager()
         self.llm_manager = LLMServicemanager()
 
-    async def get_answer(self, request: RAGRequest) -> RAGResposne:
+    async def get_chat_answer(self, request: RAGRequest) -> RAGResposne:
         queries = await self.query_manager.get_queries(
             request=QueryManagerRequest(query=request.query)
         )
