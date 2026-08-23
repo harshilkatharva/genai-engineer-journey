@@ -3,7 +3,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 from uuid import uuid4
 
-from rag_app.features.naive_rag_chat import RAGChat
+from rag_app.features.rag_chat import RAGChat
 from rag_app.models import (
     LLMManagerRequest,
     PromptRequest,

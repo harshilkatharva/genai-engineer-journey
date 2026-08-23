@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field
+from typing import Any
 
 
 class LLMResponseModel(BaseModel):
@@ -6,7 +7,9 @@ class LLMResponseModel(BaseModel):
     Standard Response model for all providers
     """
 
-    text: str = Field(..., description="Genrated Response text by provider")
+    text: str | None = Field(..., description="Genrated Response text by provider")
+
+    data: dict[str, Any] | None = Field(..., description="Formated data from LLMc")
 
     model: str = Field(..., description="Name of model")
 

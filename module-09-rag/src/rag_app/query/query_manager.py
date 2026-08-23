@@ -1,13 +1,14 @@
 from rag_app.core import get_settings
 from rag_app.models import QueryManagerRequest, QueryResponse
-from rag_app.query.query_expansion import QueryExpansion
+from rag_app.query.techniques.query_expansion import QueryExpansion
+from rag_app.query.techniques.query_hyde import QueryHyDE
 from rag_app.observability.logger import logger
 
 
 class QueryManager:
     def __init__(self):
         self.settings = get_settings()
-        self.types = {"query_expansion": QueryExpansion()}
+        self.types = {"query_expansion": QueryExpansion(), "query_HyDE": QueryHyDE()}
 
     async def get_queries(self, request: QueryManagerRequest) -> QueryResponse:
         technique = (
@@ -21,7 +22,6 @@ class QueryManager:
 
             return QueryResponse(queries=[request.query])
         else:
-            # each technique log sepratly
             queries = await self.types[technique].process_query(request.query)
 
-            return queries
+            return QueryResponse(queries=queries)

@@ -8,7 +8,7 @@ from uuid import UUID
 from sentence_transformers import SentenceTransformer
 
 from rag_app.core import get_settings
-from rag_app.logger.embedding_tracker import (
+from rag_app.tracker.embedding_tracker import (
     EmbeddingTrackerLogger,
 )
 from rag_app.models.chunk.chunk import Chunk

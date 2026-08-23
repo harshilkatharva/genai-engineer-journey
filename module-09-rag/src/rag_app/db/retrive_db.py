@@ -5,7 +5,7 @@ import psycopg
 from pgvector.psycopg import register_vector_async
 
 from rag_app.core import get_settings
-from rag_app.logger.db_operation_tracker import DBOperationTracker
+from rag_app.tracker.db_operation_tracker import DBOperationTracker
 from rag_app.models import RetriveResult
 from rag_app.models.tracker.db_query_tracker import DBQueryTracker
 from rag_app.core.config import DATABASE_CONNECTION_CONVERSATION_URL

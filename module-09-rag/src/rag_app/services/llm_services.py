@@ -34,8 +34,9 @@ class LLMServicemanager:
             raise ValueError(f"Unsupported provider {provider}")
 
         try:
-            response = await self.providers[provider].complete(request.prompt)
-
+            response = await self.providers[provider].complete(
+                prompt=request.prompt, response_schema=request.response_schema
+            )
             logger.info(
                 "LLM Response Genrated",
                 event="llm_response_generated",
@@ -46,7 +47,7 @@ class LLMServicemanager:
                 output_tokens=response.output_tokens,
             )
 
-            return LLMManagerResponse(text=response.text)
+            return LLMManagerResponse(text=response.text, data=response.data)
 
         except LLMError as e:
             logger.exception(

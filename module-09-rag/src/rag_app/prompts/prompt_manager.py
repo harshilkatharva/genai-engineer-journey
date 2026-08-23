@@ -20,3 +20,13 @@ class PromptManager:
         return prompt_template.render(
             context=context, user_query=request.query
         ), self.settings.rag_prompt_running_version
+
+    def build_query_expansion_prompt(self, query: str):
+        prompt_template = Template(Path("src/rag_app/prompts/query/query_expansion.md").read_text())
+
+        return prompt_template.render(query=query)
+
+    def build_query_HyDE_prompt(self, query: str):
+        prompt_template = Template(Path("src/rag_app/prompts/query/query_hyde.md").read_text())
+        print("HyDE PRompt use")
+        return prompt_template.render(query=query)

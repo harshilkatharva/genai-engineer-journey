@@ -3,15 +3,29 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from rag_app.core import get_settings
-from rag_app.models.tracker.retrive_tracker import RetriveTracker
+from rag_app.models.tracker.query_performance_tracker import (
+    QueryPerformanceTracker,
+)
 
 
-class RetriveTrackerLogger:
+class QueryPerformanceTrackerLogger:
     """
-    Logs retrieval metrics as JSONL.
+    Logs RAG query performance as JSONL.
+
+    Tracks:
+        - Application version
+        - User query
+        - Number of queries
+        - Retrieved chunk IDs
+        - LLM answer
+        - Query latency
+        - Retrieval latency
+        - Prompt latency
+        - LLM latency
+        - Total latency
 
     Output:
-        user_data/logs/retrive_tracker.jsonl
+        user_data/logs/query_performance_tracker.jsonl
     """
 
     def __init__(self) -> None:
@@ -23,19 +37,18 @@ class RetriveTrackerLogger:
             exist_ok=True,
         )
 
-        self.log_file = self.log_directory / "retrive_tracker.jsonl"
+        self.log_file = self.log_directory / "query_performance_tracker.jsonl"
 
     def track(
         self,
-        tracker: RetriveTracker,
+        tracker: QueryPerformanceTracker,
     ) -> None:
         record = self._build_record(tracker)
-
         self._write(record)
 
     def _build_record(
         self,
-        tracker: RetriveTracker,
+        tracker: QueryPerformanceTracker,
     ) -> dict:
         record = tracker.model_dump()
 

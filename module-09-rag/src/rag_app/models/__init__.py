@@ -16,6 +16,8 @@ from rag_app.models.query.query_manager_request import QueryManagerRequest
 # Query Models
 from rag_app.models.query.query_request import QueryRequest
 from rag_app.models.query.query_response import QueryResponse
+from rag_app.models.query.query_expansion import QueryExpansionModel
+from rag_app.models.query.query_HyDE import QueryHyDEModel
 
 # RAG Models
 from rag_app.models.rag.rag_endpoint_request import RAGEndpointRequest
@@ -42,6 +44,8 @@ from rag_app.models.tracker.retrive_tracker import RetriveTracker
 
 # Upsert Models
 from rag_app.models.upsert.upsert_request import UpsertRequest
+
+from rag_app.models.tracker.query_performance_tracker import QueryPerformanceTracker
 
 __all__ = [
     "CandidateRequest",
@@ -74,4 +78,7 @@ __all__ = [
     "TrackerModel",
     "UpsertRequest",
     "RAGEndpointRequest",
+    "QueryPerformanceTracker",
+    "QueryExpansionModel",
+    "QueryHyDEModel",
 ]

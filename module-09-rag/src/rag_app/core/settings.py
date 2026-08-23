@@ -72,7 +72,7 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------------
 
     default_query_strategy: str | None = Field(
-        default=None,
+        default="query_HyDE",
     )
 
     default_hyde_strategy: str = Field(
@@ -127,6 +127,8 @@ class Settings(BaseSettings):
 
     default_fallback_provider: str = Field(default="google")
     default_fallback_model: str = Field(default="gemini-3.5-flash")
+
+    default_llm_temperature: float = Field(default=0.2)
 
     # ------------------------------------------------------------------
     # Latest Prompt file/version
