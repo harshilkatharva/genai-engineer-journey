@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 import time
-from rag_app.features.naive_rag_chat import RAGChat
+from rag_app.features.rag_chat import RAGChat
 from rag_app.models import RAGRequest, RAGEndpointRequest
 from rag_app.observability.logger import logger
 

@@ -1,8 +1,12 @@
 import time
 from collections.abc import AsyncIterator
+import json
 
 from google import genai
+from google.genai import types
 from google.genai.errors import APIError, ClientError, ServerError
+
+from pydantic import BaseModel
 
 from rag_app.core.config import GOOGLE_API_KEY
 from rag_app.core.settings import get_settings
@@ -12,7 +16,7 @@ from rag_app.exceptions.llm_exceptions import (
     LLMError,
     LLMRateLimitError,
 )
-from rag_app.models.llm.llm_response_model import LLMResponseModel
+from rag_app.models import LLMResponseModel
 
 
 class GoogleProvider:
@@ -24,22 +28,38 @@ class GoogleProvider:
         self.client = genai.Client(api_key=GOOGLE_API_KEY)
         self.setting = get_settings()
 
-    async def complete(self, prompt: str) -> LLMResponseModel:
+    async def complete(
+        self,
+        prompt: str,
+        response_schema: type[BaseModel] | None = None,
+    ) -> LLMResponseModel:
         try:
             start = time.perf_counter()
 
+            config = types.GenerateContentConfig(
+                temperature=self.setting.default_llm_temperature,
+            )
+
+            if response_schema:
+                config.response_mime_type = "application/json"
+                config.response_schema = response_schema
+
             response = await self.client.aio.models.generate_content(
-                model=self._get_model(),
-                contents=prompt,
+                model=self._get_model(), contents=prompt, config=config
             )
 
             latency = (time.perf_counter() - start) * 1000
             usage = response.usage_metadata
             input_tokens = usage.prompt_token_count or 0
             output_tokens = usage.candidates_token_count or 0
+            expanded_data = None
+
+            if response_schema:
+                expanded_data = json.loads(response.text)
 
             return LLMResponseModel(
-                text=response.text or "",
+                text=response.text or None,
+                data=expanded_data,
                 model=response.model_version,
                 latency_ms=latency,
                 input_tokens=input_tokens,
