@@ -15,10 +15,12 @@ async def test_retrieve_returns_results():
 
     expected_results = [
         RetriveResult(
+            chunk_id="chunk_text_01",
             chunk_text="Customers can request a refund within 30 days.",
             similarity_score=0.92,
         ),
         RetriveResult(
+            chunk_id="chunk_text_02",
             chunk_text="Refund requests must include the original receipt.",
             similarity_score=0.85,
         ),
@@ -66,6 +68,7 @@ async def test_retrieve_uses_configured_retrieval_strategy():
 
     expected_results = [
         RetriveResult(
+            chunk_id="test_chunk",
             chunk_text="test chunk",
             similarity_score=0.9,
         )

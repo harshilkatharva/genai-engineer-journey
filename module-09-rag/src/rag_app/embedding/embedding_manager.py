@@ -84,7 +84,6 @@ class EmbeddingManager:
         self,
         tenant_id: UUID,
         documents: dict[str, list[Chunk]],
-        save: bool = True,
     ) -> dict[str, list[list[float]]]:
         """
         Embed chunks grouped by document.
@@ -128,37 +127,6 @@ class EmbeddingManager:
         estimated_cost = 0
 
         return (embedding.tolist(), token_counts, estimated_cost)
-
-    def _save_embeddings(
-        self,
-        tenant_id: UUID,
-        chunks: list[Chunk],
-        embeddings: list[list[float]],
-    ) -> None:
-        """
-        Store embeddings grouped by document.
-
-        Each document gets one embedding file containing vectors in the
-        same chunk order as the corresponding chunk file.
-        """
-        grouped: dict[str, list[list[float]]] = {}
-
-        for chunk, embedding in zip(
-            chunks,
-            embeddings,
-            strict=True,
-        ):
-            grouped.setdefault(
-                chunk.document_id,
-                [],
-            ).append(embedding)
-
-        for document_id, document_embeddings in grouped.items():
-            self.data_manager.save_embeddings(
-                tenant_id=tenant_id,
-                document_id=document_id,
-                embeddings=document_embeddings,
-            )
 
     def _calculate_cost(
         self,

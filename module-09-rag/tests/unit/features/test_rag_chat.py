@@ -31,7 +31,7 @@ async def test_get_chat_answer():
     rag_chat.llm_manager = MagicMock()
     rag_chat.llm_manager.complete = AsyncMock()
 
-    request = RAGRequest(query="What is RAG?", tenant_id=uuid4(), request_id=uuid4())
+    request = RAGRequest(query="What is RAG?", tenant_id=uuid4())
 
     queries = MagicMock()
     queries.queries = ["What is retrieval augmented generation?"]
@@ -39,19 +39,21 @@ async def test_get_chat_answer():
     context = MagicMock()
     context.results = [
         RetriveResult(
+            chunk_id="chunk_test_01",
             chunk_text="RAG combines retrieval with generation.",
             similarity_score=0.95,
         )
     ]
 
     prompt = "Answer the question using the provided context."
+    prompt_version = "test_v1"
 
     answer = MagicMock()
     answer.text = "RAG stands for Retrieval-Augmented Generation."
 
     rag_chat.query_manager.get_queries.return_value = queries
     rag_chat.retriver_manager.retrieve.return_value = context
-    rag_chat.prompt_manager.build_rag_prompt.return_value = prompt
+    rag_chat.prompt_manager.build_rag_prompt.return_value = prompt, prompt_version
     rag_chat.llm_manager.complete.return_value = answer
 
     # Act
@@ -79,6 +81,7 @@ async def test_get_chat_answer():
             query="What is RAG?",
             chunks=[
                 RetriveResult(
+                    chunk_id="chunk_test_01",
                     chunk_text="RAG combines retrieval with generation.",
                     similarity_score=0.95,
                 )

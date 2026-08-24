@@ -1,12 +1,10 @@
-from unittest.mock import MagicMock
+from unittest.mock import AsyncMock, MagicMock
 from uuid import UUID
 
 import numpy as np
 import pytest
 
-from rag_app.embedding.embedding_manager import (
-    EmbeddingManager,
-)
+from rag_app.embedding.embedding_manager import EmbeddingManager
 from rag_app.models.chunk.chunk import Chunk
 
 
@@ -15,6 +13,7 @@ def mock_settings():
     settings = MagicMock()
 
     settings.embedding_model = "all-MiniLM-L6-v2"
+    settings.default_embedding_model = "all-MiniLM-L6-v2"
     settings.embedding_batch_size = 2
     settings.embedding_cost_per_million_tokens = 0.0
     settings.data_directory = "user_data/data"
@@ -84,6 +83,11 @@ def embedding_manager(
         lambda: mock_tracker_logger,
     )
 
+    # IMPORTANT: clear @lru_cache
+    from rag_app.embedding.embedding_manager import get_embedding_model
+
+    get_embedding_model.cache_clear()
+
     manager = EmbeddingManager()
 
     return (
@@ -92,16 +96,6 @@ def embedding_manager(
         mock_data_manager,
         mock_tracker_logger,
     )
-
-
-@pytest.fixture
-def tenant_id():
-    return UUID("11111111-1111-1111-1111-111111111111")
-
-
-@pytest.fixture
-def document_id():
-    return UUID("22222222-2222-2222-2222-222222222222")
 
 
 @pytest.fixture
@@ -198,7 +192,7 @@ async def test_embed_chunks_uses_configured_batch_size(
 
     call_kwargs = model.encode.call_args.kwargs
 
-    assert call_kwargs["batch_size"] == (mock_settings.embedding_batch_size)
+    assert call_kwargs["batch_size"] == mock_settings.embedding_batch_size
 
 
 @pytest.mark.asyncio
@@ -246,12 +240,9 @@ async def test_embed_chunks_uses_expected_encode_arguments(
         "Third chunk.",
     ]
 
-    assert kwargs["batch_size"] == (mock_settings.embedding_batch_size)
-
+    assert kwargs["batch_size"] == mock_settings.embedding_batch_size
     assert kwargs["show_progress_bar"] is True
-
     assert kwargs["convert_to_numpy"] is True
-
     assert kwargs["normalize_embeddings"] is True
 
 
@@ -270,9 +261,7 @@ async def test_embed_chunks_returns_empty_for_empty_input(
     assert result == []
 
     model.encode.assert_not_called()
-
     data_manager.save_embeddings.assert_not_called()
-
     tracker_logger.track.assert_not_called()
 
 
@@ -294,30 +283,29 @@ async def test_embedding_tracker_is_recorded(
     tracker = tracker_logger.track.call_args.args[0]
 
     assert tracker.tenant_id == str(tenant_id)
-
     assert tracker.embedding_model == "all-MiniLM-L6-v2"
-
     assert tracker.total_chunks == 3
-
     assert tracker.total_tokens == 6
-
     assert tracker.latency_ms >= 0
-
     assert tracker.estimated_cost == 0.0
 
 
-def test_embed_query_returns_single_vector(
+@pytest.mark.asyncio
+async def test_embed_query_returns_single_vector(
     embedding_manager,
 ):
     manager, model, _, _ = embedding_manager
 
-    result = manager.embed_query(
+    result = await manager.embed_query(
         "How does semantic search work?",
     )
 
-    assert result == pytest.approx(
-        [0.6, 0.8, 0.0],
-    )
+    embedding, token_counts, estimated_cost = result
+
+    assert embedding == pytest.approx([0.6, 0.8, 0.0])
+
+    assert token_counts == 0
+    assert estimated_cost == 0
 
     model.encode.assert_called_once_with(
         "How does semantic search work?",
@@ -327,7 +315,8 @@ def test_embed_query_returns_single_vector(
     )
 
 
-def test_embed_query_rejects_empty_query(
+@pytest.mark.asyncio
+async def test_embed_query_rejects_empty_query(
     embedding_manager,
 ):
     manager, model, _, _ = embedding_manager
@@ -336,7 +325,7 @@ def test_embed_query_rejects_empty_query(
         ValueError,
         match="Query cannot be empty",
     ):
-        manager.embed_query("   ")
+        await manager.embed_query("")
 
     model.encode.assert_not_called()
 
@@ -382,7 +371,6 @@ async def test_embed_documents_groups_results_by_document(
     }
 
     assert len(result["document_0000"]) == 2
-
     assert len(result["document_0001"]) == 1
 
     data_manager.save_embeddings.assert_not_called()
@@ -396,7 +384,29 @@ async def test_embed_documents_calls_embed_chunks_for_each_document(
 ):
     manager, _, _, _ = embedding_manager
 
-    manager.embed_chunks = MagicMock(
+    second_document_id = UUID(
+        "33333333-3333-3333-3333-333333333333",
+    )
+
+    second_document_chunks = [
+        Chunk(
+            chunk_id="document_0001_chunk_0000",
+            document_id=second_document_id,
+            tenant_id=tenant_id,
+            document_type="text",
+            metadata={},
+            chunk_index=0,
+            text="Another chunk.",
+            token_count=2,
+        ),
+    ]
+
+    chunks_by_document = {
+        "document_0000": sample_chunks[:2],
+        "document_0001": second_document_chunks,
+    }
+
+    manager.embed_chunks = AsyncMock(
         side_effect=[
             [
                 [1.0, 0.0, 0.0],
@@ -408,17 +418,28 @@ async def test_embed_documents_calls_embed_chunks_for_each_document(
         ],
     )
 
-    # embed_documents awaits embed_chunks, therefore
-    # the mocked method must return awaitable values.
-    async def embed_chunks_side_effect(
-        tenant_id,
-        chunks,
-    ):
-        return manager.embed_chunks.side_effect[0]
+    result = await manager.embed_documents(
+        tenant_id=tenant_id,
+        documents=chunks_by_document,
+    )
 
-    manager.embed_chunks = MagicMock()
+    assert result == {
+        "document_0000": [
+            [1.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0],
+        ],
+        "document_0001": [
+            [0.6, 0.8, 0.0],
+        ],
+    }
 
-    manager.embed_chunks.side_effect = [
-        # Each value needs to be awaitable because
-        # embed_documents does `await self.embed_chunks(...)`.
-    ]
+    assert manager.embed_chunks.await_count == 2
+
+    first_call = manager.embed_chunks.await_args_list[0]
+    second_call = manager.embed_chunks.await_args_list[1]
+
+    assert first_call.kwargs["tenant_id"] == tenant_id
+    assert first_call.kwargs["chunks"] == sample_chunks[:2]
+
+    assert second_call.kwargs["tenant_id"] == tenant_id
+    assert second_call.kwargs["chunks"] == second_document_chunks

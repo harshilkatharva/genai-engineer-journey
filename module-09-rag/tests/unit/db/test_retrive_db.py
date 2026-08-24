@@ -66,9 +66,21 @@ async def test_retrive_chunks_returns_results(
     mock_conn, mock_cursor = mock_db
 
     mock_cursor.fetchall.return_value = [
-        ("Chunk 1 text", 0.95, "chunk_1"),
-        ("Chunk 2 text", 0.87, "chunk_2"),
-        ("Chunk 3 text", 0.65, "chunk_3"),
+        (
+            "chunk_1",
+            "Chunk 1 text",
+            0.95,
+        ),
+        (
+            "chunk_2",
+            "Chunk 2 text",
+            0.87,
+        ),
+        (
+            "chunk_3",
+            "Chunk 3 text",
+            0.65,
+        ),
     ]
 
     tenant_id = UUID("550e8400-e29b-41d4-a716-446655440001")
@@ -118,8 +130,16 @@ async def test_retrive_chunks_tracks_query(
     mock_conn, mock_cursor = mock_db
 
     mock_cursor.fetchall.return_value = [
-        ("Chunk 1", 0.95, "chunk_1"),
-        ("Chunk 2", 0.87, "chunk_2"),
+        (
+            "chunk_1",
+            "Chunk 1",
+            0.95,
+        ),
+        (
+            "chunk_2",
+            "Chunk 2",
+            0.87,
+        ),
     ]
 
     tenant_id = UUID("550e8400-e29b-41d4-a716-446655440001")
@@ -251,7 +271,7 @@ async def test_retrive_chunks_with_default_top_k(
     manager.settings.default_top_k = 10
 
     mock_cursor.fetchall.return_value = [
-        ("Chunk 1", 0.95, "chunk_1"),
+        ("chunk_1", "Chunk 1", 0.95),
     ]
 
     tenant_id = UUID("550e8400-e29b-41d4-a716-446655440001")

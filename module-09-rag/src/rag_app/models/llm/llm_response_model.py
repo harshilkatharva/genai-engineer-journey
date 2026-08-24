@@ -9,7 +9,7 @@ class LLMResponseModel(BaseModel):
 
     text: str | None = Field(..., description="Genrated Response text by provider")
 
-    data: dict[str, Any] | None = Field(..., description="Formated data from LLMc")
+    data: dict[str, Any] | None = Field(default=None, description="Formated data from LLMc")
 
     model: str = Field(..., description="Name of model")
 

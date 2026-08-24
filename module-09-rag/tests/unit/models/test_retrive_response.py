@@ -11,6 +11,7 @@ from rag_app.models.retrive.retrive_response import (
 
 def test_retrive_result_with_valid_data():
     result = RetriveResult(
+        chunk_id="chunk_test_01",
         chunk_text="Customers can request a refund within 30 days.",
         similarity_score=0.92,
     )
@@ -21,6 +22,7 @@ def test_retrive_result_with_valid_data():
 
 def test_retrive_result_accepts_zero_similarity_score():
     result = RetriveResult(
+        chunk_id="chunk_test_01",
         chunk_text="Some chunk",
         similarity_score=0.0,
     )
@@ -30,6 +32,7 @@ def test_retrive_result_accepts_zero_similarity_score():
 
 def test_retrive_result_accepts_negative_similarity_score():
     result = RetriveResult(
+        chunk_id="chunk_test_01",
         chunk_text="Some chunk",
         similarity_score=-0.5,
     )
@@ -56,10 +59,12 @@ def test_retrive_response_with_valid_data():
 
     results = [
         RetriveResult(
+            chunk_id="chunk_test_01",
             chunk_text="Refunds are available within 30 days.",
             similarity_score=0.95,
         ),
         RetriveResult(
+            chunk_id="chunk_test_01",
             chunk_text="Refund requests require an invoice.",
             similarity_score=0.87,
         ),
@@ -140,6 +145,7 @@ def test_retrive_response_builds_nested_retrive_result():
         queries=["What is the refund policy?"],
         results=[
             {
+                "chunk_id": "chunk_test_01",
                 "chunk_text": "Refunds are available within 30 days.",
                 "similarity_score": 0.91,
             }
