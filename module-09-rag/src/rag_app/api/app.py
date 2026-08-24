@@ -6,6 +6,7 @@ from rag_app.api.routes.index import router as index_router
 from rag_app.api.routes.rag import router as rag_router
 from rag_app.api.routes.retrive import router as retrive_router
 from rag_app.api.routes.upsert import router as upsert_router
+from rag_app.api.routes.evalution import router as evalution_router
 from rag_app.core import get_settings
 from rag_app.observability.context import (
     set_request_id,
@@ -55,6 +56,7 @@ app.include_router(rag_router, prefix="/rag", tags=["rag"])
 app.include_router(index_router, prefix="/index", tags=["index"])
 app.include_router(retrive_router, prefix="/retrive", tags=["retrive"])
 app.include_router(upsert_router, prefix="/upsert", tags=["upsert"])
+app.include_router(evalution_router, prefix="/evalution", tags=["evalution"])
 
 
 @app.get("/")

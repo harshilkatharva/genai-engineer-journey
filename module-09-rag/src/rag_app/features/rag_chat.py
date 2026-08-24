@@ -121,7 +121,7 @@ class RAGChat:
             app_version=self.settings.app_version,
             query=request.query,
             no_of_queries=len(queries.queries),
-            chunk_ids=["test_1", "test_1"],
+            chunk_ids=[chunk.chunk_id for chunk in context.results],
             llm_answer=answer.text,
         )
 

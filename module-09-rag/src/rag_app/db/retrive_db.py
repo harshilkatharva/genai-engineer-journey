@@ -26,9 +26,9 @@ class RetriveDBManager:
         if document_type is None:
             db_query = """
                 SELECT
+                    chunk_id,
                     chunk_text,
-                    1 - (embedding <=> %s) AS similarity_score,
-                    chunk_id
+                    1 - (embedding <=> %s) AS similarity_score
                 FROM document_chunks
                 WHERE tenant_id = %s
                 ORDER BY embedding <=> %s
@@ -45,9 +45,9 @@ class RetriveDBManager:
         else:
             db_query = """
                 SELECT
+                    chunk_id,
                     chunk_text,
-                    1 - (embedding <=> %s) AS similarity_score,
-                    chunk_id
+                    1 - (embedding <=> %s) AS similarity_score
                 FROM document_chunks
                 WHERE tenant_id = %s
                   AND document_type = %s
@@ -82,8 +82,9 @@ class RetriveDBManager:
 
         results = [
             RetriveResult(
-                chunk_text=row[0],
-                similarity_score=float(row[1]),
+                chunk_id=row[0],
+                chunk_text=row[1],
+                similarity_score=float(row[2]),
             )
             for row in rows
         ]
@@ -94,7 +95,7 @@ class RetriveDBManager:
             top_k=top_k or self.settings.default_top_k,
             results_count=len(results),
             query_latency_ms=query_latency_ms,
-            chunk_ids=[id[2] for id in rows],
+            chunk_ids=[id[0] for id in rows],
         )
         self.db_tracker.track_query(db_query_tracker)
 

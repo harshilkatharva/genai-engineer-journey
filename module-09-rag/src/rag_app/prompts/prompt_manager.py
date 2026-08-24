@@ -28,5 +28,4 @@ class PromptManager:
 
     def build_query_HyDE_prompt(self, query: str):
         prompt_template = Template(Path("src/rag_app/prompts/query/query_hyde.md").read_text())
-        print("HyDE PRompt use")
         return prompt_template.render(query=query)

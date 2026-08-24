@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 
 class RetriveResult(BaseModel):
+    chunk_id: str
     chunk_text: str
     similarity_score: float
 
