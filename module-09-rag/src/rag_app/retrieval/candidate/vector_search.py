@@ -50,10 +50,29 @@ class VectorSearch:
             )
             for val in result:
                 results.append(
-                    RetriveResult(chunk_text=val.chunk_text, similarity_score=val.similarity_score)
+                    RetriveResult(
+                        chunk_id=val.chunk_id,
+                        chunk_text=val.chunk_text,
+                        similarity_score=val.similarity_score,
+                    )
                 )
 
         retrieval_latency_ms = (perf_counter() - retrieval_start_time) * 1000
+
+        unique_results: dict[str, RetriveResult] = {}
+
+        for result in results:
+            existing = unique_results.get(result.chunk_id)
+
+            if existing is None or result.similarity_score > existing.similarity_score:
+                unique_results[result.chunk_id] = result
+
+        # Sort by highest similarity score first
+        final_results = sorted(
+            unique_results.values(),
+            key=lambda x: x.similarity_score,
+            reverse=True,
+        )[:top_k_candidates]
 
         logger.info(
             "Candidate Chunks retrieved successfully",
@@ -65,4 +84,4 @@ class VectorSearch:
             no_of_chunks=len(results),
         )
 
-        return results
+        return final_results

@@ -1,5 +1,5 @@
 from functools import lru_cache
-
+from typing import Literal
 from dotenv import load_dotenv
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     # Application
     # ------------------------------------------------------------------
     app_name: str = "Semantic Search Engine"
-    app_version: str = "0.1.0"
+    app_version: str = "0.1.12"
     debug: bool = False
 
     # ------------------------------------------------------------------
@@ -71,11 +71,11 @@ class Settings(BaseSettings):
     # Query
     # ------------------------------------------------------------------
 
-    default_query_strategy: str | None = Field(
+    default_query_strategy: Literal["query_expansion", "query_HyDE"] | None = Field(
         default="query_HyDE",
     )
 
-    default_hyde_strategy: str = Field(
+    default_query_strategy_llm_model: str = Field(
         default="Google",
     )
 
@@ -133,7 +133,7 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------------
     # Latest Prompt file/version
     # ------------------------------------------------------------------
-    rag_prompt_running_version: str = Field(default="rag_v1.md")
+    rag_prompt_running_version: str = Field(default="rag_v2.md")
 
     # ------------------------------------------------------------------
     # Logging
@@ -146,7 +146,8 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------------
     # Evaluation
     # ------------------------------------------------------------------
-    evaluation_file_path: str = "src/rag_app/evaluation/evalution.json"
+    evalution_dataset: str = "evalution_results/evalution_dataset.json"
+    evaluation_file_path: str = "evalution_results"
 
     # ------------------------------------------------------------------
     # Pydantic Settings

@@ -1,0 +1,220 @@
+{
+  "app_version": "0.1.0",
+  "metric": "chunk_recall",
+  "formula": "matched_expected_chunk_ids / expected_chunk_ids",
+  "total_questions": 10,
+  "average_recall": 0.0,
+  "questions": [
+    {
+      "question_id": 1,
+      "query": "What is the product code, processor, RAM, storage, demo price, and warranty of the HP ProBook 440 G11?",
+      "app_version": "0.1.0",
+      "expected_chunk_ids": [
+        "55b20ba0-62c0-4a2b-b7e5-21594ccca2a0_chunk_0000"
+      ],
+      "retrieved_chunk_ids": [
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_0326",
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_0614",
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_0641",
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1460",
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1856"
+      ],
+      "matched_chunk_ids": [],
+      "expected_count": 1,
+      "matched_count": 0,
+      "recall": 0.0,
+      "logged_at": "2026-08-24T05:50:47.877204+00:00"
+    },
+    {
+      "question_id": 2,
+      "query": "Which laptop has the highest listed price in the synthetic laptop catalog, and what is its product code?",
+      "app_version": "0.1.0",
+      "expected_chunk_ids": [
+        "55b20ba0-62c0-4a2b-b7e5-21594ccca2a0_chunk_0000",
+        "55b20ba0-62c0-4a2b-b7e5-21594ccca2a0_chunk_0001",
+        "55b20ba0-62c0-4a2b-b7e5-21594ccca2a0_chunk_0002"
+      ],
+      "retrieved_chunk_ids": [
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1226",
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1289",
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1514",
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1694",
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1856"
+      ],
+      "matched_chunk_ids": [],
+      "expected_count": 3,
+      "matched_count": 0,
+      "recall": 0.0,
+      "logged_at": "2026-08-24T06:34:36.481788+00:00"
+    },
+    {
+      "question_id": 3,
+      "query": "Which two phones have 512 GB storage, and how do their memory and prices differ?",
+      "app_version": "0.1.0",
+      "expected_chunk_ids": [
+        "3341cae1-3f65-437d-9940-18abb9a73ff2_chunk_0001",
+        "3341cae1-3f65-437d-9940-18abb9a73ff2_chunk_0002"
+      ],
+      "retrieved_chunk_ids": [
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_0753",
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1518",
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1572",
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1575",
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1599"
+      ],
+      "matched_chunk_ids": [],
+      "expected_count": 2,
+      "matched_count": 0,
+      "recall": 0.0,
+      "logged_at": "2026-08-24T06:34:58.818675+00:00"
+    },
+    {
+      "question_id": 4,
+      "query": "Which 55-inch televisions are priced below ₹75,000?",
+      "app_version": "0.1.0",
+      "expected_chunk_ids": [
+        "401c66ed-07d6-4d21-a930-a95119ec3a23_chunk_0000",
+        "401c66ed-07d6-4d21-a930-a95119ec3a23_chunk_0001"
+      ],
+      "retrieved_chunk_ids": [
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_0054",
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_0261",
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1566",
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1638",
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1746"
+      ],
+      "matched_chunk_ids": [],
+      "expected_count": 2,
+      "matched_count": 0,
+      "recall": 0.0,
+      "logged_at": "2026-08-24T06:35:29.140842+00:00"
+    },
+    {
+      "question_id": 5,
+      "query": "What is the 2.0-ton AC in the catalog, and what installation path does it require?",
+      "app_version": "0.1.0",
+      "expected_chunk_ids": [
+        "64a76b67-0703-4f0c-939b-4a5d3030fd59_chunk_0001",
+        "64a76b67-0703-4f0c-939b-4a5d3030fd59_chunk_0002"
+      ],
+      "retrieved_chunk_ids": [
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_0075",
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_0300",
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_0930",
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_0975",
+        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1200"
+      ],
+      "matched_chunk_ids": [],
+      "expected_count": 2,
+      "matched_count": 0,
+      "recall": 0.0,
+      "logged_at": "2026-08-24T06:36:19.432513+00:00"
+    },
+    {
+      "question_id": 6,
+      "query": "Which HR policy clause deals specifically with correcting an attendance record?",
+      "app_version": "0.1.0",
+      "expected_chunk_ids": [
+        "c038cd20-743e-4737-b05f-d99ae06478c2_chunk_0016",
+        "c038cd20-743e-4737-b05f-d99ae06478c2_chunk_0017",
+        "c038cd20-743e-4737-b05f-d99ae06478c2_chunk_0018"
+      ],
+      "retrieved_chunk_ids": [
+        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_12019",
+        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_12040",
+        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_14455",
+        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_15059",
+        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_7258"
+      ],
+      "matched_chunk_ids": [],
+      "expected_count": 3,
+      "matched_count": 0,
+      "recall": 0.0,
+      "logged_at": "2026-08-24T06:40:38.181293+00:00"
+    },
+    {
+      "question_id": 7,
+      "query": "Which clause specifically discusses a joining-date exception?",
+      "app_version": "0.1.0",
+      "expected_chunk_ids": [
+        "f9ec8635-8887-452e-bb26-59c0a4bb772c_chunk_0018",
+        "f9ec8635-8887-452e-bb26-59c0a4bb772c_chunk_0019"
+      ],
+      "retrieved_chunk_ids": [
+        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_10040",
+        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_14511",
+        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_16756",
+        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_5923",
+        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_6641"
+      ],
+      "matched_chunk_ids": [],
+      "expected_count": 2,
+      "matched_count": 0,
+      "recall": 0.0,
+      "logged_at": "2026-08-24T06:41:43.295440+00:00"
+    },
+    {
+      "question_id": 8,
+      "query": "Which client-policy clause deals with quotation validity?",
+      "app_version": "0.1.0",
+      "expected_chunk_ids": [
+        "d22a367f-d34d-4d41-958f-79b2047740ec_chunk_0002",
+        "d22a367f-d34d-4d41-958f-79b2047740ec_chunk_0003"
+      ],
+      "retrieved_chunk_ids": [
+        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_0352",
+        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_2498",
+        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_6389",
+        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_8271",
+        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_8546"
+      ],
+      "matched_chunk_ids": [],
+      "expected_count": 2,
+      "matched_count": 0,
+      "recall": 0.0,
+      "logged_at": "2026-08-24T06:42:11.630971+00:00"
+    },
+    {
+      "question_id": 9,
+      "query": "Which client-policy clause deals specifically with activated phones?",
+      "app_version": "0.1.0",
+      "expected_chunk_ids": [
+        "46021bdf-0aa8-4cc8-a555-4de431c98c98_chunk_0004",
+        "46021bdf-0aa8-4cc8-a555-4de431c98c98_chunk_0005"
+      ],
+      "retrieved_chunk_ids": [
+        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_0080",
+        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_10783",
+        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_17056",
+        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_18466",
+        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_4273"
+      ],
+      "matched_chunk_ids": [],
+      "expected_count": 2,
+      "matched_count": 0,
+      "recall": 0.0,
+      "logged_at": "2026-08-24T06:44:01.410794+00:00"
+    },
+    {
+      "question_id": 10,
+      "query": "Which security clause should be retrieved for a request to obtain production-system access?",
+      "app_version": "0.1.0",
+      "expected_chunk_ids": [
+        "fb4f9526-108b-4489-a59f-6c2f4ca2d24f_chunk_0005",
+        "fb4f9526-108b-4489-a59f-6c2f4ca2d24f_chunk_0006"
+      ],
+      "retrieved_chunk_ids": [
+        "7d883691-2aec-40ab-be84-b27743e14254_chunk_0007",
+        "7d883691-2aec-40ab-be84-b27743e14254_chunk_0107",
+        "7d883691-2aec-40ab-be84-b27743e14254_chunk_0376",
+        "7d883691-2aec-40ab-be84-b27743e14254_chunk_0445",
+        "7d883691-2aec-40ab-be84-b27743e14254_chunk_1021"
+      ],
+      "matched_chunk_ids": [],
+      "expected_count": 2,
+      "matched_count": 0,
+      "recall": 0.0,
+      "logged_at": "2026-08-24T06:44:33.759786+00:00"
+    }
+  ]
+}
