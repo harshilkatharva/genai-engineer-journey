@@ -47,7 +47,7 @@ class LLMServicemanager:
                 output_tokens=response.output_tokens,
             )
 
-            return LLMManagerResponse(text=response.text, data=response.data)
+            return LLMManagerResponse(text=response.text or "", data=response.data)
 
         except LLMError as e:
             logger.exception(

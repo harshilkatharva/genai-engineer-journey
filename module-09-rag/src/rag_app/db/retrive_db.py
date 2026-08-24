@@ -35,7 +35,7 @@ class RetriveDBManager:
                 LIMIT %s
             """
 
-            query_params = (
+            query_params: tuple[object, ...] = (
                 query_embedding,
                 tenant_id,
                 query_embedding,

@@ -174,8 +174,8 @@ async def test_complete_returns_empty_token_values_as_zero(
     response.output_text = "Response"
     response.model = "gpt-4o-mini"
 
-    response.usage.input_tokens = None
-    response.usage.output_tokens = None
+    response.usage.input_tokens = 0
+    response.usage.output_tokens = 0
 
     provider.client.responses.create = AsyncMock(return_value=response)
 

@@ -1,6 +1,8 @@
 import time
 from collections.abc import AsyncIterator
 
+from pydantic import BaseModel
+
 from openai import (
     APIConnectionError,
     APIError,
@@ -20,9 +22,10 @@ from rag_app.exceptions.llm_exceptions import (
     LLMTimeoutError,
 )
 from rag_app.models.llm.llm_response_model import LLMResponseModel
+from rag_app.providers.llm_provider import LLMProvider
 
 
-class OpenAIProvider:
+class OpenAIProvider(LLMProvider):
     """
     Communicate with OpenAI
     """
@@ -31,7 +34,11 @@ class OpenAIProvider:
         self.client = AsyncOpenAI(api_key=OPENAI_API_KEY)
         self.setting = get_settings()
 
-    async def complete(self, prompt: str) -> LLMResponseModel:
+    async def complete(
+        self,
+        prompt: str,
+        response_schema: type[BaseModel] | None = None,
+    ) -> LLMResponseModel:
         """
         Get response from OpenAI and send in LLMResponseModel format
         """
@@ -45,8 +52,8 @@ class OpenAIProvider:
 
             usage = response.usage
 
-            input_tokens = usage.input_tokens or 0
-            output_tokens = usage.output_tokens or 0
+            input_tokens = usage.input_tokens if usage else 0
+            output_tokens = usage.output_tokens if usage else 0
 
             return LLMResponseModel(
                 text=response.output_text,

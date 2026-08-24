@@ -17,9 +17,10 @@ from rag_app.exceptions.llm_exceptions import (
     LLMRateLimitError,
 )
 from rag_app.models import LLMResponseModel
+from rag_app.providers.llm_provider import LLMProvider
 
 
-class GoogleProvider:
+class GoogleProvider(LLMProvider):
     """
     Communicate with Google Gemini.
     """
@@ -39,7 +40,6 @@ class GoogleProvider:
             config = types.GenerateContentConfig(
                 temperature=self.setting.default_llm_temperature,
             )
-
             if response_schema:
                 config.response_mime_type = "application/json"
                 config.response_schema = response_schema
@@ -50,17 +50,23 @@ class GoogleProvider:
 
             latency = (time.perf_counter() - start) * 1000
             usage = response.usage_metadata
-            input_tokens = usage.prompt_token_count or 0
-            output_tokens = usage.candidates_token_count or 0
+            input_tokens = (
+                usage.prompt_token_count if usage and usage.prompt_token_count is not None else 0
+            )
+            output_tokens = (
+                usage.candidates_token_count
+                if usage and usage.candidates_token_count is not None
+                else 0
+            )
             expanded_data = None
 
-            if response_schema:
+            if response_schema and response.text is not None:
                 expanded_data = json.loads(response.text)
 
             return LLMResponseModel(
                 text=response.text or None,
                 data=expanded_data,
-                model=response.model_version,
+                model=response.model_version or self._get_model(),
                 latency_ms=latency,
                 input_tokens=input_tokens,
                 output_tokens=output_tokens,
