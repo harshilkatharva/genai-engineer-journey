@@ -33,7 +33,7 @@ class UpsertDBManager:
         updated_embeddings: list[list[float]],
         document_ids: list,
         chunk_ids: list,
-    ) -> list[str]:
+    ) -> list[str] | None:
         """
         Update multiple existing chunks.
 
@@ -48,7 +48,7 @@ class UpsertDBManager:
             raise ValueError("Number of chunks must match number of embeddings")
 
         if not updated_chunks:
-            return 0
+            return None
 
         query = """
             UPDATE document_chunks

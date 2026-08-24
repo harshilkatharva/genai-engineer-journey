@@ -34,7 +34,7 @@ class ChunkingManager:
     def chunk_documents(
         self,
         tenant_id: UUID,
-        documents: dict[str, str],
+        documents: dict[UUID, str],
         document_type: list[str],
         metadata: list[dict],
     ) -> list[Chunk]:

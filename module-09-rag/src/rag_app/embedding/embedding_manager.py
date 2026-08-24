@@ -106,7 +106,7 @@ class EmbeddingManager:
     async def embed_query(
         self,
         query: str,
-    ) -> (list[float], int, int):
+    ) -> tuple[list[float], int, int]:
         """
         Create a normalized embedding for a search query.
 

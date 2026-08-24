@@ -1,6 +1,8 @@
 import time
 from collections.abc import AsyncIterator
 
+from pydantic import BaseModel
+
 from anthropic import (
     APIConnectionError,
     APIError,
@@ -20,9 +22,10 @@ from rag_app.exceptions.llm_exceptions import (
     LLMTimeoutError,
 )
 from rag_app.models.llm.llm_response_model import LLMResponseModel
+from rag_app.providers.llm_provider import LLMProvider
 
 
-class AnthropicProvider:
+class AnthropicProvider(LLMProvider):
     """
     Communicate with Anthropic.
     """
@@ -31,7 +34,11 @@ class AnthropicProvider:
         self.client = AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
         self.setting = get_settings()
 
-    async def complete(self, prompt: str) -> LLMResponseModel:
+    async def complete(
+        self,
+        prompt: str,
+        response_schema: type[BaseModel] | None = None,
+    ) -> LLMResponseModel:
         try:
             start = time.perf_counter()
 
