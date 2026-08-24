@@ -23,10 +23,12 @@ User Question:
 
     chunks = [
         RetriveResult(
+            chunk_id="test_chunk_01",
             chunk_text="Refunds are allowed within 30 days.",
             similarity_score=0.95,
         ),
         RetriveResult(
+            chunk_id="test_chunk_02",
             chunk_text="A receipt is required for refunds.",
             similarity_score=0.87,
         ),
@@ -51,12 +53,13 @@ User Question:
             "rag_app.prompts.prompt_manager.Path",
             return_value=prompt_file,
         ):
-            result = manager.build_rag_prompt(request)
+            result, prompt_version = manager.build_rag_prompt(request)
             print(result)
 
     assert "What is the refund policy?" in result
     assert "Refunds are allowed within 30 days." in result
     assert "A receipt is required for refunds." in result
+    assert prompt_version == "rag_v1.md"
 
     # Similarity scores should NOT appear in the prompt.
     assert "0.95" not in result

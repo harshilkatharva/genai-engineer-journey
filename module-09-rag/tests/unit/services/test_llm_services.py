@@ -79,7 +79,9 @@ async def test_complete_returns_successful_response(
     assert isinstance(result, LLMManagerResponse)
     assert result.text == "This is an OpenAI response."
 
-    mock_providers["openai"].complete.assert_awaited_once_with("Explain RAG.")
+    mock_providers["openai"].complete.assert_awaited_once_with(
+        prompt="Explain RAG.", response_schema=None
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -111,7 +113,9 @@ async def test_complete_uses_requested_provider(
 
     assert result.text == "Gemini response"
 
-    mock_providers["google"].complete.assert_awaited_once_with("Explain embeddings.")
+    mock_providers["google"].complete.assert_awaited_once_with(
+        prompt="Explain embeddings.", response_schema=None
+    )
 
     mock_providers["openai"].complete.assert_not_called()
     mock_providers["anthropic"].complete.assert_not_called()
@@ -162,7 +166,9 @@ async def test_complete_returns_user_error_message_when_provider_fails(
     assert isinstance(result, LLMManagerResponse)
     assert result.text == error.user_message
 
-    mock_providers["openai"].complete.assert_awaited_once_with("Explain RAG.")
+    mock_providers["openai"].complete.assert_awaited_once_with(
+        prompt="Explain RAG.", response_schema=None
+    )
 
 
 # ---------------------------------------------------------------------------
