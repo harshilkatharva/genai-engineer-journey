@@ -1,7 +1,13 @@
+import uuid
 from types import SimpleNamespace
 from uuid import UUID
 
 import pytest
+
+from rag_app.observability.context import (
+    reset_request_id,
+    set_request_id,
+)
 
 
 @pytest.fixture
@@ -25,12 +31,12 @@ def test_settings(tmp_path):
     )
 
 
-@pytest.fixture
+@pytest.fixture(autouse=True)
 def tenant_id():
     return UUID("bd7bc54b-27df-4f06-9d15-3de0e49cf103")
 
 
-@pytest.fixture
+@pytest.fixture(autouse=True)
 def document_id():
     return UUID("bd7bc54b-27df-4f06-9d15-3de0e54cf103")
 
@@ -44,3 +50,14 @@ def sample_document() -> str:
         "A retriever compares the query vector with document vectors. "
         "The highest scoring chunks are returned to the user."
     )
+
+
+@pytest.fixture(autouse=True)
+def observability_context():
+    request_id = uuid.uuid4()
+
+    token = set_request_id(request_id)
+
+    yield request_id
+
+    reset_request_id(token)

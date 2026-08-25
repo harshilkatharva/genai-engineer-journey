@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from rag_app.chunking.chunking_manager import (
     ChunkingManager,
 )
@@ -26,7 +28,7 @@ class IndexServiceManager:
             documents=request.documents,
         )
 
-        document_texts: dict[str, str] = {}
+        document_texts: dict[UUID, str] = {}
         for document_id in document_ids:
             document_texts[document_id] = self.data_manager.get_document(
                 tenant_id=request.tenant_id,

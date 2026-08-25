@@ -1,5 +1,5 @@
-from uuid import UUID
 from unittest.mock import AsyncMock, MagicMock
+from uuid import UUID
 
 import pytest
 
@@ -85,10 +85,12 @@ async def test_retrive_chunks_returns_results(
 
     results = [
         RetriveResult(
+            chunk_id="test_chunk_001",
             chunk_text="RAG stands for Retrieval-Augmented Generation.",
             similarity_score=0.95,
         ),
         RetriveResult(
+            chunk_id="test_chunk_002",
             chunk_text="RAG retrieves relevant information before generation.",
             similarity_score=0.89,
         ),
@@ -232,10 +234,12 @@ async def test_retrive_chunks_preserves_retrive_results(
 
     expected_results = [
         RetriveResult(
+            chunk_id="test_chunk_text_1",
             chunk_text="First retrieved chunk",
             similarity_score=0.98,
         ),
         RetriveResult(
+            chunk_id="test_chunk_text_1",
             chunk_text="Second retrieved chunk",
             similarity_score=0.91,
         ),

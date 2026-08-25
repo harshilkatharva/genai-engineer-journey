@@ -1,0 +1,90 @@
+{
+  "version": "0.1.0",
+  "metric": {
+    "name": "chunk_recall",
+    "formula": "len(retrieved_chunk_ids ∩ expected_chunk_ids) / len(expected_chunk_ids)"
+  },
+  "questions": [
+    {
+      "id": 1,
+      "query": "What is the product code, processor, RAM, storage, demo price, and warranty of the HP ProBook 440 G11?",
+      "chunk_ids": [
+        "55b20ba0-62c0-4a2b-b7e5-21594ccca2a0_chunk_0000"
+      ]
+    },
+    {
+      "id": 2,
+      "query": "Which laptop has the highest listed price in the synthetic laptop catalog, and what is its product code?",
+      "chunk_ids": [
+        "55b20ba0-62c0-4a2b-b7e5-21594ccca2a0_chunk_0000",
+        "55b20ba0-62c0-4a2b-b7e5-21594ccca2a0_chunk_0001",
+        "55b20ba0-62c0-4a2b-b7e5-21594ccca2a0_chunk_0002"
+      ]
+    },
+    {
+      "id": 3,
+      "query": "Which two phones have 512 GB storage, and how do their memory and prices differ?",
+      "chunk_ids": [
+        "3341cae1-3f65-437d-9940-18abb9a73ff2_chunk_0001",
+        "3341cae1-3f65-437d-9940-18abb9a73ff2_chunk_0002"
+      ]
+    },
+    {
+      "id": 4,
+      "query": "Which 55-inch televisions are priced below ₹75,000?",
+      "chunk_ids": [
+        "401c66ed-07d6-4d21-a930-a95119ec3a23_chunk_0000",
+        "401c66ed-07d6-4d21-a930-a95119ec3a23_chunk_0001"
+      ]
+    },
+    {
+      "id": 5,
+      "query": "What is the 2.0-ton AC in the catalog, and what installation path does it require?",
+      "chunk_ids": [
+        "64a76b67-0703-4f0c-939b-4a5d3030fd59_chunk_0001",
+        "64a76b67-0703-4f0c-939b-4a5d3030fd59_chunk_0002"
+      ]
+    },
+    {
+      "id": 6,
+      "query": "Which HR policy clause deals specifically with correcting an attendance record?",
+      "chunk_ids": [
+        "c038cd20-743e-4737-b05f-d99ae06478c2_chunk_0016",
+        "c038cd20-743e-4737-b05f-d99ae06478c2_chunk_0017",
+        "c038cd20-743e-4737-b05f-d99ae06478c2_chunk_0018"
+      ]
+    },
+    {
+      "id": 7,
+      "query": "Which clause specifically discusses a joining-date exception?",
+      "chunk_ids": [
+        "f9ec8635-8887-452e-bb26-59c0a4bb772c_chunk_0018",
+        "f9ec8635-8887-452e-bb26-59c0a4bb772c_chunk_0019"
+      ]
+    },
+    {
+      "id": 8,
+      "query": "Which client-policy clause deals with quotation validity?",
+      "chunk_ids": [
+        "d22a367f-d34d-4d41-958f-79b2047740ec_chunk_0002",
+        "d22a367f-d34d-4d41-958f-79b2047740ec_chunk_0003"
+      ]
+    },
+    {
+      "id": 9,
+      "query": "Which client-policy clause deals specifically with activated phones?",
+      "chunk_ids": [
+        "46021bdf-0aa8-4cc8-a555-4de431c98c98_chunk_0004",
+        "46021bdf-0aa8-4cc8-a555-4de431c98c98_chunk_0005"
+      ]
+    },
+    {
+      "id": 10,
+      "query": "Which security clause should be retrieved for a request to obtain production-system access?",
+      "chunk_ids": [
+        "fb4f9526-108b-4489-a59f-6c2f4ca2d24f_chunk_0005",
+        "fb4f9526-108b-4489-a59f-6c2f4ca2d24f_chunk_0006"
+      ]
+    }
+  ]
+}

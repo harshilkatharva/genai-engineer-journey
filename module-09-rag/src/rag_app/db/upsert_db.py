@@ -7,8 +7,8 @@ import psycopg
 from pgvector.psycopg import register_vector_async
 
 from rag_app.core import get_settings
-from rag_app.logger.db_operation_tracker import DBOperationTracker
 from rag_app.models.tracker.db_query_tracker import DBQueryTracker
+from rag_app.tracker.db_operation_tracker import DBOperationTracker
 
 
 class UpsertDBManager:
@@ -33,7 +33,7 @@ class UpsertDBManager:
         updated_embeddings: list[list[float]],
         document_ids: list,
         chunk_ids: list,
-    ) -> list[str]:
+    ) -> list[str] | None:
         """
         Update multiple existing chunks.
 
@@ -48,7 +48,7 @@ class UpsertDBManager:
             raise ValueError("Number of chunks must match number of embeddings")
 
         if not updated_chunks:
-            return 0
+            return None
 
         query = """
             UPDATE document_chunks

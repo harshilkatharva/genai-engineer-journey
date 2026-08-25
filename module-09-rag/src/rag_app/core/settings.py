@@ -1,4 +1,5 @@
 from functools import lru_cache
+from typing import Literal
 
 from dotenv import load_dotenv
 from pydantic import Field
@@ -12,7 +13,7 @@ class Settings(BaseSettings):
     # Application
     # ------------------------------------------------------------------
     app_name: str = "Semantic Search Engine"
-    app_version: str = "0.1.0"
+    app_version: str = "0.1.22"
     debug: bool = False
 
     # ------------------------------------------------------------------
@@ -71,11 +72,11 @@ class Settings(BaseSettings):
     # Query
     # ------------------------------------------------------------------
 
-    default_query_strategy: str | None = Field(
-        default=None,
+    default_query_strategy: Literal["query_expansion", "query_HyDE"] | None = Field(
+        default="query_expansion",
     )
 
-    default_hyde_strategy: str = Field(
+    default_query_strategy_llm_model: str = Field(
         default="Google",
     )
 
@@ -83,12 +84,15 @@ class Settings(BaseSettings):
     # Retrieval
     # ------------------------------------------------------------------
 
-    default_retrieval_strategy: str = Field(
-        default="vector_search",
+    default_retrieval_strategy: Literal["vector_search", "keyword_search", "hybrid_search"] = Field(
+        default="hybrid_search",
     )
 
+    default_vector_search_weight: float = 0.6
+    default_keyword_search_weight: float = 0.4
+
     canidate_default_top_k: int = Field(
-        default=5,
+        default=25,
         gt=0,
     )
 
@@ -102,12 +106,10 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------------
 
     re_ranker_availability: bool = Field(
-        default=False,
+        default=True,
     )
 
-    re_ranker_model: str = Field(
-        default="",
-    )
+    re_ranker_model_name: str = "cross-encoder/ms-marco-MiniLM-L6-v2"
 
     re_ranker_default_top_k: int = Field(
         default=5,
@@ -119,6 +121,10 @@ class Settings(BaseSettings):
         gt=0,
     )
 
+    re_ranker_batch_size: int = 16
+
+    re_ranker_max_length: int = 512
+
     # ------------------------------------------------------------------
     # LLM Providers
     # ------------------------------------------------------------------
@@ -128,10 +134,12 @@ class Settings(BaseSettings):
     default_fallback_provider: str = Field(default="google")
     default_fallback_model: str = Field(default="gemini-3.5-flash")
 
+    default_llm_temperature: float = Field(default=0.2)
+
     # ------------------------------------------------------------------
     # Latest Prompt file/version
     # ------------------------------------------------------------------
-    rag_prompt_running_version: str = Field(default="rag_v1.md")
+    rag_prompt_running_version: str = Field(default="rag_v2.md")
 
     # ------------------------------------------------------------------
     # Logging
@@ -144,7 +152,8 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------------
     # Evaluation
     # ------------------------------------------------------------------
-    evaluation_file_path: str = "src/rag_app/evaluation/evalution.json"
+    evalution_dataset: str = "evalution_results/evalution_dataset.json"
+    evaluation_file_path: str = "evalution_results"
 
     # ------------------------------------------------------------------
     # Pydantic Settings

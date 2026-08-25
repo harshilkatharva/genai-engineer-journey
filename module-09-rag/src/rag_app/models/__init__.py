@@ -11,6 +11,8 @@ from rag_app.models.llm.llm_response_model import LLMResponseModel
 # Prompt Models
 from rag_app.models.prompt.prompt_request import PromptRequest
 from rag_app.models.prompt.prompt_response import PromptResposne
+from rag_app.models.query.query_expansion import QueryExpansionModel
+from rag_app.models.query.query_HyDE import QueryHyDEModel
 from rag_app.models.query.query_manager_request import QueryManagerRequest
 
 # Query Models
@@ -21,8 +23,6 @@ from rag_app.models.query.query_response import QueryResponse
 from rag_app.models.rag.rag_endpoint_request import RAGEndpointRequest
 from rag_app.models.rag.rag_request import RAGRequest
 from rag_app.models.rag.rag_response import RAGResposne
-
-
 from rag_app.models.retrive.candidate_request import CandidateRequest
 from rag_app.models.retrive.candidate_response import CandidateResponse
 from rag_app.models.retrive.re_ranker_request import ReRankerRequest
@@ -37,6 +37,7 @@ from rag_app.models.tracker.chunking_tracker import ChunkingTracker
 from rag_app.models.tracker.db_query_tracker import DBQueryTracker
 from rag_app.models.tracker.embedding_tracker import EmbeddingTracker
 from rag_app.models.tracker.index_batch_tracker import IndexBatchTracker
+from rag_app.models.tracker.query_performance_tracker import QueryPerformanceTracker
 from rag_app.models.tracker.query_tracker import QueryTracker
 from rag_app.models.tracker.retrive_tracker import RetriveTracker
 
@@ -57,10 +58,14 @@ __all__ = [
     "ProcessRequest",
     "PromptRequest",
     "PromptResposne",
+    "QueryExpansionModel",
+    "QueryHyDEModel",
     "QueryManagerRequest",
+    "QueryPerformanceTracker",
     "QueryRequest",
     "QueryResponse",
     "QueryTracker",
+    "RAGEndpointRequest",
     "RAGRequest",
     "RAGResposne",
     "ReRankerRequest",
@@ -73,5 +78,4 @@ __all__ = [
     "RetriveTracker",
     "TrackerModel",
     "UpsertRequest",
-    "RAGEndpointRequest",
 ]

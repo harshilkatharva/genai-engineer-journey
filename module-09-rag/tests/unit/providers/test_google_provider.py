@@ -1,6 +1,7 @@
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
+from google.genai import types
 
 from rag_app.providers.google_provider import GoogleProvider
 
@@ -51,6 +52,7 @@ async def test_complete_returns_llm_response(provider):
     provider.client.aio.models.generate_content.assert_awaited_once_with(
         model=provider._get_model(),
         contents="Explain RAG in simple terms.",
+        config=types.GenerateContentConfig(temperature=1.0),
     )
 
 
@@ -80,6 +82,7 @@ async def test_complete_uses_configured_model(mock_settings):
     assert result.model == "gemini-custom-model"
 
     provider.client.aio.models.generate_content.assert_awaited_once_with(
+        config=types.GenerateContentConfig(temperature=1.0),
         model="gemini-custom-model",
         contents="Hello",
     )
@@ -101,7 +104,7 @@ async def test_complete_returns_empty_text_when_google_response_has_no_text(
 
     result = await provider.complete("Hello")
 
-    assert result.text == ""
+    assert result.text is None
 
 
 # def make_client_error(code: int) -> ClientError:

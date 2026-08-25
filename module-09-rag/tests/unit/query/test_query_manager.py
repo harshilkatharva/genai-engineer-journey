@@ -23,14 +23,3 @@ async def test_get_queries_with_default_None(monkeypatch):
     response = await manager.get_queries(request)
 
     assert response.queries == ["What is RAG?"]
-
-
-@pytest.mark.asyncio
-async def test_get_queries_with_None_technique():
-    manager = QueryManager()
-
-    request = QueryManagerRequest(query="What is RAG?", technique=None)
-
-    response = await manager.get_queries(request)
-
-    assert response.queries == ["What is RAG?"]

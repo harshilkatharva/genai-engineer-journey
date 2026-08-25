@@ -7,11 +7,11 @@ from uuid import UUID
 import tiktoken
 
 from rag_app.core import get_settings
-from rag_app.logger.chunking_tracker import (
-    ChunkingTrackerLogger,
-)
 from rag_app.models.chunk.chunk import Chunk
 from rag_app.models.tracker.chunking_tracker import ChunkingTracker
+from rag_app.tracker.chunking_tracker import (
+    ChunkingTrackerLogger,
+)
 
 TOKEN_ENCODER = tiktoken.get_encoding("cl100k_base")
 
@@ -34,7 +34,7 @@ class ChunkingManager:
     def chunk_documents(
         self,
         tenant_id: UUID,
-        documents: dict[str, str],
+        documents: dict[UUID, str],
         document_type: list[str],
         metadata: list[dict],
     ) -> list[Chunk]:

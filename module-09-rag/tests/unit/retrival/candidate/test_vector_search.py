@@ -4,8 +4,8 @@ from uuid import uuid4
 import pytest
 from pgvector import Vector
 
-from rag_app.retrieval.candidate.vector_search import VectorSearch
 from rag_app.models import RetriveResult
+from rag_app.retrieval.candidate.vector_search import VectorSearch
 
 
 @pytest.mark.asyncio
@@ -18,12 +18,12 @@ async def test_retrive_returns_results_for_each_query():
     query_embedding_2 = [0.4, 0.5, 0.6]
 
     db_result_1 = [
-        RetriveResult(chunk_text="Chunk - 1", similarity_score=0.95),
-        RetriveResult(chunk_text="Chunk - 2", similarity_score=0.55),
+        RetriveResult(chunk_id="chunk_test_01", chunk_text="Chunk - 1", similarity_score=0.95),
+        RetriveResult(chunk_id="chunk_test_02", chunk_text="Chunk - 2", similarity_score=0.55),
     ]
     db_result_2 = [
-        RetriveResult(chunk_text="Chunk - 3", similarity_score=0.75),
-        RetriveResult(chunk_text="Chunk - 4", similarity_score=0.65),
+        RetriveResult(chunk_id="chunk_test_03", chunk_text="Chunk - 3", similarity_score=0.75),
+        RetriveResult(chunk_id="chunk_test_04", chunk_text="Chunk - 4", similarity_score=0.65),
     ]
 
     with (
@@ -34,10 +34,12 @@ async def test_retrive_returns_results_for_each_query():
     ):
         # Mock embedding manager
         embedding_manager = mock_embedding_manager.return_value
-        embedding_manager.embed_query.side_effect = [
-            query_embedding_1,
-            query_embedding_2,
-        ]
+        embedding_manager.embed_query = AsyncMock(
+            side_effect=[
+                (query_embedding_1, 10, 0.001),
+                (query_embedding_2, 12, 0.0012),
+            ]
+        )
 
         # Mock DB manager
         db_manager = mock_db_manager.return_value
@@ -56,7 +58,7 @@ async def test_retrive_returns_results_for_each_query():
             top_k_candidates=top_k_candidates,
         )
 
-    assert results == [*db_result_1, *db_result_2]
+    assert results == [db_result_1[0], db_result_2[0], db_result_2[1], db_result_1[1]]
 
     # Embedding generated once per query
     assert embedding_manager.embed_query.call_count == 2

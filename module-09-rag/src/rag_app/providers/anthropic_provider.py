@@ -9,6 +9,7 @@ from anthropic import (
     AuthenticationError,
     RateLimitError,
 )
+from pydantic import BaseModel
 
 from rag_app.core.config import ANTHROPIC_API_KEY
 from rag_app.core.settings import get_settings
@@ -20,9 +21,10 @@ from rag_app.exceptions.llm_exceptions import (
     LLMTimeoutError,
 )
 from rag_app.models.llm.llm_response_model import LLMResponseModel
+from rag_app.providers.llm_provider import LLMProvider
 
 
-class AnthropicProvider:
+class AnthropicProvider(LLMProvider):
     """
     Communicate with Anthropic.
     """
@@ -31,7 +33,11 @@ class AnthropicProvider:
         self.client = AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
         self.setting = get_settings()
 
-    async def complete(self, prompt: str) -> LLMResponseModel:
+    async def complete(
+        self,
+        prompt: str,
+        response_schema: type[BaseModel] | None = None,
+    ) -> LLMResponseModel:
         try:
             start = time.perf_counter()
 

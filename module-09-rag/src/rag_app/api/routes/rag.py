@@ -1,9 +1,10 @@
-from fastapi import APIRouter
 import time
-from rag_app.features.naive_rag_chat import RAGChat
-from rag_app.models import RAGRequest, RAGEndpointRequest
-from rag_app.observability.logger import logger
 
+from fastapi import APIRouter
+
+from rag_app.features.rag_chat import RAGChat
+from rag_app.models import RAGEndpointRequest, RAGRequest
+from rag_app.observability.logger import logger
 
 rag_chat = RAGChat()
 

@@ -1,14 +1,15 @@
 import asyncio
 from collections.abc import AsyncIterator
-from rag_app.observability.events import EventName
+
 from rag_app.exceptions.llm_exceptions import LLMError
 from rag_app.models import LLMManagerRequest, LLMManagerResponse, LLMResponseModel
+from rag_app.observability.events import EventName
+from rag_app.observability.logger import logger
 from rag_app.providers import (
     AnthropicProvider,
     GoogleProvider,
     OpenAIProvider,
 )
-from rag_app.observability.logger import logger
 from rag_app.providers.llm_provider import LLMProvider
 
 
@@ -34,8 +35,9 @@ class LLMServicemanager:
             raise ValueError(f"Unsupported provider {provider}")
 
         try:
-            response = await self.providers[provider].complete(request.prompt)
-
+            response = await self.providers[provider].complete(
+                prompt=request.prompt, response_schema=request.response_schema
+            )
             logger.info(
                 "LLM Response Genrated",
                 event="llm_response_generated",
@@ -46,7 +48,7 @@ class LLMServicemanager:
                 output_tokens=response.output_tokens,
             )
 
-            return LLMManagerResponse(text=response.text)
+            return LLMManagerResponse(text=response.text or "", data=response.data)
 
         except LLMError as e:
             logger.exception(
