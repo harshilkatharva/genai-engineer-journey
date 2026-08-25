@@ -3,6 +3,9 @@ from __future__ import annotations
 from rag_app.core import get_settings
 from rag_app.models import RetriveRequest, RetriveResponse
 
+from .candidate.base import RetrievalStrategy
+from .candidate.hybrid_search import HybridSearch
+from .candidate.keyword_search import KeywordSearch
 from .candidate.vector_search import VectorSearch
 
 
@@ -19,7 +22,11 @@ class RetriverManager:
 
     def __init__(self) -> None:
         self.settings = get_settings()
-        self.strategies = {"vector_search": VectorSearch()}
+        self.strategies: dict[str, RetrievalStrategy] = {
+            "vector_search": VectorSearch(),
+            "keyword_search": KeywordSearch(),
+            "hybrid_search": HybridSearch(),
+        }
 
     async def retrieve(
         self,

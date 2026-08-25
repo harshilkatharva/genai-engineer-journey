@@ -4,7 +4,6 @@ from uuid import UUID
 from rag_app.db.retrive_db import RetriveDBManager
 from rag_app.models import RetriveResult
 from rag_app.observability.logger import logger
-
 from rag_app.utils.unique_results import fetch_unique_results
 
 

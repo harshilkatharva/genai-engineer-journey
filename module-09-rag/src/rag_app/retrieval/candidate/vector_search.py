@@ -1,6 +1,6 @@
+from time import perf_counter
 from uuid import UUID
 
-from time import perf_counter
 from pgvector import Vector
 
 from rag_app.db.retrive_db import RetriveDBManager
@@ -8,9 +8,7 @@ from rag_app.embedding.embedding_manager import (
     EmbeddingManager,
 )
 from rag_app.models import RetriveResult
-
 from rag_app.observability.logger import logger
-
 from rag_app.utils.unique_results import fetch_unique_results
 
 

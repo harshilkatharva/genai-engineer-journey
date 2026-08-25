@@ -4,8 +4,8 @@ from uuid import uuid4
 import pytest
 from pgvector import Vector
 
-from rag_app.retrieval.candidate.vector_search import VectorSearch
 from rag_app.models import RetriveResult
+from rag_app.retrieval.candidate.vector_search import VectorSearch
 
 
 @pytest.mark.asyncio
