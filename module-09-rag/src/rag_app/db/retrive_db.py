@@ -168,7 +168,7 @@ class RetriveDBManager:
             )
 
             rows = await cur.fetchall()
-
+        print("=" * 50, "\nKeyword Result\n\n", rows)
         query_latency_ms = (perf_counter() - query_start) * 1000
 
         results = [

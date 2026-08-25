@@ -60,7 +60,7 @@ class CrossEncoderReranker:
 
             chunk_scores[result.chunk_id] = max(query_scores)
 
-        reranked_results = []
+        reranked_results: list[RetriveResult] = []
 
         for result in results:
             reranked_results.append(
