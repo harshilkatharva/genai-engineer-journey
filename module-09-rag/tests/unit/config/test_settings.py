@@ -7,7 +7,7 @@ def test_settings_default_values() -> None:
     settings = Settings()
 
     assert settings.app_name == "Semantic Search Engine"
-    assert settings.app_version == "0.1.12"
+    assert settings.app_version == "0.1.21"
     assert settings.debug is False
     assert settings.api_host == "0.0.0.0"
     assert settings.api_port == 8000

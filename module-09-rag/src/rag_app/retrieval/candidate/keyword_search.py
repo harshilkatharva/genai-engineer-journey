@@ -31,7 +31,7 @@ class KeywordSearch:
             results.extend(result)
 
         retrieval_latency_ms = (perf_counter() - retrieval_start_time) * 1000
-
+        print("=" * 50, "\nKeyword Result\n\n", result)
         final_results = fetch_unique_results(results=results, top_k_candidates=top_k_candidates)
 
         logger.info(

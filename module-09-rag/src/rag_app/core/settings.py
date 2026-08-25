@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     # Application
     # ------------------------------------------------------------------
     app_name: str = "Semantic Search Engine"
-    app_version: str = "0.1.21"
+    app_version: str = "0.1.22"
     debug: bool = False
 
     # ------------------------------------------------------------------
@@ -73,7 +73,7 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------------
 
     default_query_strategy: Literal["query_expansion", "query_HyDE"] | None = Field(
-        default="query_HyDE",
+        default="query_expansion",
     )
 
     default_query_strategy_llm_model: str = Field(
@@ -84,15 +84,15 @@ class Settings(BaseSettings):
     # Retrieval
     # ------------------------------------------------------------------
 
-    default_retrieval_strategy: str = Field(
-        default="vector_search",
+    default_retrieval_strategy: Literal["vector_search", "keyword_search", "hybrid_search"] = Field(
+        default="hybrid_search",
     )
 
     default_vector_search_weight: float = 0.6
     default_keyword_search_weight: float = 0.4
 
     canidate_default_top_k: int = Field(
-        default=5,
+        default=25,
         gt=0,
     )
 
@@ -106,12 +106,10 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------------
 
     re_ranker_availability: bool = Field(
-        default=False,
+        default=True,
     )
 
-    re_ranker_model: str = Field(
-        default="",
-    )
+    re_ranker_model_name: str = "cross-encoder/ms-marco-MiniLM-L6-v2"
 
     re_ranker_default_top_k: int = Field(
         default=5,
@@ -122,8 +120,6 @@ class Settings(BaseSettings):
         default=20,
         gt=0,
     )
-
-    re_ranker_model_name: str = "cross-encoder/ms-marco-MiniLM-L6-v2"
 
     re_ranker_batch_size: int = 16
 
