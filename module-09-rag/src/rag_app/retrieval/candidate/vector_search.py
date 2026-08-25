@@ -11,13 +11,17 @@ from rag_app.models import RetriveResult
 
 from rag_app.observability.logger import logger
 
+from rag_app.utils.unique_results import fetch_unique_results
+
 
 class VectorSearch:
     def __init__(self):
         self.retrive_db_manager = RetriveDBManager()
         self.embedding_manager = EmbeddingManager()
 
-    async def retrive(self, tenant_id: UUID, queries: list[str], top_k_candidates: int):
+    async def retrive(
+        self, tenant_id: UUID, queries: list[str], top_k_candidates: int
+    ) -> list[RetriveResult]:
         embedding_start_time = perf_counter()
         query_embeddings = []
         token_count = 0
@@ -59,23 +63,10 @@ class VectorSearch:
 
         retrieval_latency_ms = (perf_counter() - retrieval_start_time) * 1000
 
-        unique_results: dict[str, RetriveResult] = {}
-
-        for result in results:
-            existing = unique_results.get(result.chunk_id)
-
-            if existing is None or result.similarity_score > existing.similarity_score:
-                unique_results[result.chunk_id] = result
-
-        # Sort by highest similarity score first
-        final_results = sorted(
-            unique_results.values(),
-            key=lambda x: x.similarity_score,
-            reverse=True,
-        )[:top_k_candidates]
+        final_results = fetch_unique_results(results=results, top_k_candidates=top_k_candidates)
 
         logger.info(
-            "Candidate Chunks retrieved successfully",
+            "Candidate Chunks retrieved successfully using Vector Search",
             event="candidate_retrival_completed",
             component="vector_search",
             latency_ms=retrieval_latency_ms,
