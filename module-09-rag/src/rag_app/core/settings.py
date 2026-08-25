@@ -123,6 +123,12 @@ class Settings(BaseSettings):
         gt=0,
     )
 
+    re_ranker_model_name: str = "cross-encoder/ms-marco-MiniLM-L6-v2"
+
+    re_ranker_batch_size: int = 16
+
+    re_ranker_max_length: int = 512
+
     # ------------------------------------------------------------------
     # LLM Providers
     # ------------------------------------------------------------------
