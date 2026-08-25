@@ -1,14 +1,15 @@
 import asyncio
 from collections.abc import AsyncIterator
-from rag_app.observability.events import EventName
+
 from rag_app.exceptions.llm_exceptions import LLMError
 from rag_app.models import LLMManagerRequest, LLMManagerResponse, LLMResponseModel
+from rag_app.observability.events import EventName
+from rag_app.observability.logger import logger
 from rag_app.providers import (
     AnthropicProvider,
     GoogleProvider,
     OpenAIProvider,
 )
-from rag_app.observability.logger import logger
 from rag_app.providers.llm_provider import LLMProvider
 
 

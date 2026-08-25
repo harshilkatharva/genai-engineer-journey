@@ -3,12 +3,11 @@ from __future__ import annotations
 import json
 import logging
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
 from rag_app.observability.context import get_request_id
-
 
 # ---------------------------------------------------------
 # Log file location
@@ -50,6 +49,11 @@ class JsonFormatter(logging.Formatter):
         # Retrieval
         "top_k",
         "no_of_chunks",
+        "vector_weight",
+        "keyword_weight",
+        "vector_results_count",
+        "keyword_results_count",
+        "final_results_count",
         # Prompt
         "prompt_version",
         "prompt_name",
@@ -64,7 +68,7 @@ class JsonFormatter(logging.Formatter):
     )
 
     def format(self, record: logging.LogRecord) -> str:
-        timestamp = datetime.now(timezone.utc).isoformat()
+        timestamp = datetime.now(UTC).isoformat()
         request_id = getattr(record, "request_id", None)
 
         log_data: dict[str, Any] = {

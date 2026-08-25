@@ -1,7 +1,7 @@
-import pytest
 from unittest.mock import AsyncMock, MagicMock
-
 from uuid import uuid4
+
+import pytest
 
 from rag_app.features.rag_chat import RAGChat
 from rag_app.models import (

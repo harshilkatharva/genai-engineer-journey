@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 from contextvars import ContextVar, Token
-
 from uuid import UUID
-
 
 # Current request ID for the active async execution context.
 _request_id: ContextVar[UUID | None] = ContextVar(

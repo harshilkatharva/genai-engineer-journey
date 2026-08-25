@@ -1,8 +1,8 @@
+from uuid import UUID
+
 from rag_app.chunking.chunking_manager import (
     ChunkingManager,
 )
-from uuid import UUID
-
 from rag_app.db.index_db import IndexDBManager
 from rag_app.embedding.embedding_manager import (
     EmbeddingManager,

@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 
 from rag_app.models import UpsertRequest
-from rag_app.services.upsert_services import UpsertServiceManager
 from rag_app.observability.logger import logger
+from rag_app.services.upsert_services import UpsertServiceManager
 
 router = APIRouter()
 

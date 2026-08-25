@@ -1,9 +1,9 @@
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
+from google.genai import types
 
 from rag_app.providers.google_provider import GoogleProvider
-from google.genai import types
 
 
 @pytest.fixture

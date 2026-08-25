@@ -1,11 +1,12 @@
+import uuid
 from types import SimpleNamespace
 from uuid import UUID
-import uuid
+
 import pytest
 
 from rag_app.observability.context import (
-    set_request_id,
     reset_request_id,
+    set_request_id,
 )
 
 

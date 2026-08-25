@@ -1,8 +1,6 @@
 import time
 from collections.abc import AsyncIterator
 
-from pydantic import BaseModel
-
 from anthropic import (
     APIConnectionError,
     APIError,
@@ -11,6 +9,7 @@ from anthropic import (
     AuthenticationError,
     RateLimitError,
 )
+from pydantic import BaseModel
 
 from rag_app.core.config import ANTHROPIC_API_KEY
 from rag_app.core.settings import get_settings

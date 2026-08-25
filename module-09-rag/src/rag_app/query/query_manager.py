@@ -1,8 +1,8 @@
 from rag_app.core import get_settings
 from rag_app.models import QueryManagerRequest, QueryResponse
+from rag_app.observability.logger import logger
 from rag_app.query.techniques.query_expansion import QueryExpansion
 from rag_app.query.techniques.query_hyde import QueryHyDE
-from rag_app.observability.logger import logger
 
 
 class QueryManager:

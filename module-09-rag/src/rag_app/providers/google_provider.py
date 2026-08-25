@@ -1,11 +1,10 @@
+import json
 import time
 from collections.abc import AsyncIterator
-import json
 
 from google import genai
 from google.genai import types
 from google.genai.errors import APIError, ClientError, ServerError
-
 from pydantic import BaseModel
 
 from rag_app.core.config import GOOGLE_API_KEY
