@@ -410,3 +410,158 @@ async def test_retrive_chunks_executes_query_with_expected_parameters(
         sample_query_embedding,
         7,
     )
+
+
+@pytest.mark.asyncio
+async def test_retrive_keyword_chunks_returns_results(
+    retrive_db_manager,
+    mock_db,
+):
+    manager, tracker = retrive_db_manager
+    mock_conn, mock_cursor = mock_db
+
+    mock_cursor.fetchall.return_value = [
+        (
+            "chunk_1",
+            "Employee leave policy",
+            0.92,
+        ),
+        (
+            "chunk_2",
+            "HR leave approval process",
+            0.81,
+        ),
+        (
+            "chunk_3",
+            "Annual vacation policy",
+            0.65,
+        ),
+    ]
+
+    tenant_id = UUID("550e8400-e29b-41d4-a716-446655440001")
+
+    with patch(
+        "rag_app.db.retrive_db.psycopg.AsyncConnection.connect",
+        new=AsyncMock(return_value=mock_conn),
+    ):
+        results = await manager.retrive_keyword_chunks(
+            tenant_id=tenant_id,
+            query="employee leave policy",
+            top_k=3,
+        )
+
+    assert len(results) == 3
+
+    assert isinstance(results[0], RetriveResult)
+    assert results[0].chunk_id == "chunk_1"
+    assert results[0].chunk_text == "Employee leave policy"
+    assert results[0].similarity_score == 0.92
+
+    assert results[2].chunk_id == "chunk_3"
+    assert results[2].chunk_text == "Annual vacation policy"
+    assert results[2].similarity_score == 0.65
+
+    tracker.track_query.assert_called_once()
+
+    tracker_call = tracker.track_query.call_args.args[0]
+
+    assert tracker_call.tenant_id == str(tenant_id)
+    assert tracker_call.top_k == 3
+    assert tracker_call.results_count == 3
+    assert tracker_call.chunk_ids == [
+        "chunk_1",
+        "chunk_2",
+        "chunk_3",
+    ]
+
+
+@pytest.mark.asyncio
+async def test_retrive_keyword_chunks_uses_full_text_search(
+    retrive_db_manager,
+    mock_db,
+):
+    manager, _ = retrive_db_manager
+    mock_conn, mock_cursor = mock_db
+
+    mock_cursor.fetchall.return_value = []
+
+    tenant_id = UUID("550e8400-e29b-41d4-a716-446655440001")
+
+    with patch(
+        "rag_app.db.retrive_db.psycopg.AsyncConnection.connect",
+        new=AsyncMock(return_value=mock_conn),
+    ):
+        await manager.retrive_keyword_chunks(
+            tenant_id=tenant_id,
+            query="employee leave policy",
+            top_k=5,
+        )
+
+    mock_cursor.execute.assert_awaited_once()
+
+    query, params = mock_cursor.execute.await_args.args
+
+    assert "search_vector" in query
+    assert "websearch_to_tsquery" in query
+    assert "ts_rank_cd" in query
+
+    assert "search_vector @@" in query
+
+    assert "FROM document_chunks" in query
+    assert "WHERE tenant_id = %s" in query
+    assert "ORDER BY keyword_score DESC" in query
+    assert "LIMIT %s" in query
+
+    assert params == (
+        "employee leave policy",
+        tenant_id,
+        "employee leave policy",
+        5,
+    )
+
+
+@pytest.mark.asyncio
+async def test_retrive_keyword_chunks_tracks_query(
+    retrive_db_manager,
+    mock_db,
+):
+    manager, tracker = retrive_db_manager
+    mock_conn, mock_cursor = mock_db
+
+    mock_cursor.fetchall.return_value = [
+        (
+            "chunk_1",
+            "Employee leave policy",
+            0.91,
+        ),
+        (
+            "chunk_2",
+            "HR policy",
+            0.75,
+        ),
+    ]
+
+    tenant_id = UUID("550e8400-e29b-41d4-a716-446655440001")
+
+    with patch(
+        "rag_app.db.retrive_db.psycopg.AsyncConnection.connect",
+        new=AsyncMock(return_value=mock_conn),
+    ):
+        await manager.retrive_keyword_chunks(
+            tenant_id=tenant_id,
+            query="employee leave",
+            top_k=2,
+        )
+
+    tracker.track_query.assert_called_once()
+
+    call_args = tracker.track_query.call_args.args[0]
+
+    assert call_args.tenant_id == str(tenant_id)
+    assert call_args.top_k == 2
+    assert call_args.results_count == 2
+    assert call_args.chunk_ids == [
+        "chunk_1",
+        "chunk_2",
+    ]
+    assert call_args.query_latency_ms >= 0
