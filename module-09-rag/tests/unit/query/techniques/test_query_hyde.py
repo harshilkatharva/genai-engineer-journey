@@ -144,8 +144,8 @@ async def test_process_query_builds_prompt_and_calls_llm(
     answer = MagicMock()
     answer.data = {
         "hypothetical_document": [
-            "The cancellation policy allows customers to cancel "
-            "their subscription under certain conditions."
+            "The cancellation policy allows customers to cancel ",
+            "their subscription under certain conditions.",
         ],
     }
 
@@ -158,8 +158,8 @@ async def test_process_query_builds_prompt_and_calls_llm(
     )
 
     assert result == [
-        "The cancellation policy allows customers to cancel "
-        "their subscription under certain conditions."
+        "The cancellation policy allows customers to cancel ",
+        "their subscription under certain conditions.",
     ]
 
     prompt_manager.build_query_HyDE_prompt.assert_called_once_with(

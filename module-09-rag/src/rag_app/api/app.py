@@ -2,15 +2,15 @@ import uuid
 
 from fastapi import FastAPI, Request
 
+from rag_app.api.routes.evalution import router as evalution_router
 from rag_app.api.routes.index import router as index_router
 from rag_app.api.routes.rag import router as rag_router
 from rag_app.api.routes.retrive import router as retrive_router
 from rag_app.api.routes.upsert import router as upsert_router
-from rag_app.api.routes.evalution import router as evalution_router
 from rag_app.core import get_settings
 from rag_app.observability.context import (
-    set_request_id,
     reset_request_id,
+    set_request_id,
 )
 from rag_app.observability.logger import logger
 

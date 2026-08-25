@@ -1,19 +1,19 @@
 from __future__ import annotations
-from functools import lru_cache
 
 import asyncio
+from functools import lru_cache
 from time import perf_counter
 from uuid import UUID
 
 from sentence_transformers import SentenceTransformer
 
 from rag_app.core import get_settings
-from rag_app.tracker.embedding_tracker import (
-    EmbeddingTrackerLogger,
-)
 from rag_app.models.chunk.chunk import Chunk
 from rag_app.models.tracker.embedding_tracker import (
     EmbeddingTracker,
+)
+from rag_app.tracker.embedding_tracker import (
+    EmbeddingTrackerLogger,
 )
 from rag_app.user_data.data_manager import DataManager
 

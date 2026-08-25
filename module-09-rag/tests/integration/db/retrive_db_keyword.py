@@ -1,10 +1,10 @@
 from uuid import uuid4
 
-import pytest
 import psycopg
+import pytest
 
-from rag_app.db.retrive_db import RetriveDBManager
 from rag_app.core.config import DATABASE_CONNECTION_CONVERSATION_URL
+from rag_app.db.retrive_db import RetriveDBManager
 
 
 @pytest.mark.asyncio

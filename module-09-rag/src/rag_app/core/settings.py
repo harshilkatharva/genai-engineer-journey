@@ -1,5 +1,6 @@
 from functools import lru_cache
 from typing import Literal
+
 from dotenv import load_dotenv
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -12,7 +13,7 @@ class Settings(BaseSettings):
     # Application
     # ------------------------------------------------------------------
     app_name: str = "Semantic Search Engine"
-    app_version: str = "0.1.12"
+    app_version: str = "0.1.21"
     debug: bool = False
 
     # ------------------------------------------------------------------
@@ -86,6 +87,9 @@ class Settings(BaseSettings):
     default_retrieval_strategy: str = Field(
         default="vector_search",
     )
+
+    default_vector_search_weight: float = 0.6
+    default_keyword_search_weight: float = 0.4
 
     canidate_default_top_k: int = Field(
         default=5,

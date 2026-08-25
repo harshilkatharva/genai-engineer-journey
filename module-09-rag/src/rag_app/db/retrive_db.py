@@ -5,10 +5,10 @@ import psycopg
 from pgvector.psycopg import register_vector_async
 
 from rag_app.core import get_settings
-from rag_app.tracker.db_operation_tracker import DBOperationTracker
+from rag_app.core.config import DATABASE_CONNECTION_CONVERSATION_URL
 from rag_app.models import RetriveResult
 from rag_app.models.tracker.db_query_tracker import DBQueryTracker
-from rag_app.core.config import DATABASE_CONNECTION_CONVERSATION_URL
+from rag_app.tracker.db_operation_tracker import DBOperationTracker
 
 
 class RetriveDBManager:
@@ -158,16 +158,16 @@ class RetriveDBManager:
 
         query_start = perf_counter()
 
-        async with await psycopg.AsyncConnection.connect(
-            DATABASE_CONNECTION_CONVERSATION_URL
-        ) as conn:
-            async with conn.cursor() as cur:
-                await cur.execute(
-                    db_query,
-                    query_params,
-                )
+        async with (
+            await psycopg.AsyncConnection.connect(DATABASE_CONNECTION_CONVERSATION_URL) as conn,
+            conn.cursor() as cur,
+        ):
+            await cur.execute(
+                db_query,
+                query_params,
+            )
 
-                rows = await cur.fetchall()
+            rows = await cur.fetchall()
 
         query_latency_ms = (perf_counter() - query_start) * 1000
 

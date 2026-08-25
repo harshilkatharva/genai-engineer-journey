@@ -46,7 +46,7 @@ class Span:
 
         return self.finish(status="error")
 
-    def __enter__(self) -> "Span":
+    def __enter__(self) -> Span:
         return self
 
     def __exit__(

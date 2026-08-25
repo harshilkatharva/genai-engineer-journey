@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from rag_app.evalution.report import EvalutionReport
 
+from rag_app.evalution.report import EvalutionReport
 
 router = APIRouter()
 
