@@ -159,6 +159,66 @@ class EvalutionReport:
 
         return groups
 
+    def _normalize_answer_text(self, answer: Any) -> str:
+        if not isinstance(answer, str):
+            return ""
+
+        punctuation = str.maketrans(
+            {
+                "’": "'",
+                "‘": "'",
+                "“": '"',
+                "”": '"',
+                "–": "-",
+                "—": "-",
+            }
+        )
+
+        return " ".join(answer.translate(punctuation).casefold().split())
+
+    def _calculate_answer_accuracy(
+        self,
+        evaluation_item: dict[str, Any],
+        generated_answer: Any,
+    ) -> dict[str, Any]:
+        expected_answer = evaluation_item.get("expected_answer", {})
+        if not isinstance(expected_answer, dict):
+            expected_answer = {}
+
+        required_answers = self._normalize_chunk_ids(expected_answer.get("required", []))
+        any_of_answers = self._normalize_chunk_ids(expected_answer.get("any_of", []))
+        normalized_generated_answer = self._normalize_answer_text(generated_answer)
+
+        matched_required_answers = {
+            answer
+            for answer in required_answers
+            if self._normalize_answer_text(answer) in normalized_generated_answer
+        }
+        matched_any_of_answers = {
+            answer
+            for answer in any_of_answers
+            if self._normalize_answer_text(answer) in normalized_generated_answer
+        }
+
+        total_requirements = len(required_answers) + (1 if any_of_answers else 0)
+        satisfied_requirements = len(matched_required_answers) + bool(matched_any_of_answers)
+        accuracy = satisfied_requirements / total_requirements if total_requirements > 0 else 0.0
+
+        return {
+            "generated_answer": generated_answer,
+            "expected_answers": {
+                "required": sorted(required_answers),
+                "any_of": sorted(any_of_answers),
+            },
+            "matched_required_answers": sorted(matched_required_answers),
+            "missing_required_answers": sorted(required_answers - matched_required_answers),
+            "matched_any_of_answers": sorted(matched_any_of_answers),
+            "any_of_satisfied": bool(matched_any_of_answers) if any_of_answers else None,
+            "total_answer_requirements": total_requirements,
+            "satisfied_answer_requirements": satisfied_requirements,
+            "accuracy": accuracy,
+        }
+
     # ============================================================
     # QUESTION EVALUATION
     # ============================================================
@@ -307,6 +367,10 @@ class EvalutionReport:
                 evaluation_item=evaluation_item,
                 retrieved_chunk_ids=retrieved_chunk_ids,
             )
+            answer_result = self._calculate_answer_accuracy(
+                evaluation_item=evaluation_item,
+                generated_answer=record.get("llm_answer"),
+            )
 
             question_reports.append(
                 {
@@ -314,6 +378,7 @@ class EvalutionReport:
                     "query": query,
                     "app_version": record["app_version"],
                     **question_result,
+                    **answer_result,
                     "logged_at": record.get("logged_at"),
                 }
             )
@@ -323,20 +388,31 @@ class EvalutionReport:
         # ========================================================
 
         recalls = [item["recall"] for item in question_reports]
+        accuracies = [item["accuracy"] for item in question_reports]
 
         average_recall = sum(recalls) / len(recalls) if recalls else 0.0
+        average_accuracy = sum(accuracies) / len(accuracies) if accuracies else 0.0
 
         perfect_recall_questions = sum(1 for item in question_reports if item["recall"] == 1.0)
 
         zero_recall_questions = sum(1 for item in question_reports if item["recall"] == 0.0)
 
+        perfect_accuracy_questions = sum(1 for item in question_reports if item["accuracy"] == 1.0)
+
+        zero_accuracy_questions = sum(1 for item in question_reports if item["accuracy"] == 0.0)
+
         return {
             "app_version": self.settings.app_version,
             "metric": "evidence_recall",
             "formula": ("satisfied_evidence_requirements / total_evidence_requirements"),
+            "answer_metric": "answer_accuracy",
+            "answer_formula": ("satisfied_answer_requirements / total_answer_requirements"),
             "total_questions": len(question_reports),
             "average_recall": average_recall,
+            "average_accuracy": average_accuracy,
             "perfect_recall_questions": (perfect_recall_questions),
             "zero_recall_questions": (zero_recall_questions),
+            "perfect_accuracy_questions": perfect_accuracy_questions,
+            "zero_accuracy_questions": zero_accuracy_questions,
             "questions": question_reports,
         }
