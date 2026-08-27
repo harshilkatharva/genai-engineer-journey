@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     # Application
     # ------------------------------------------------------------------
     app_name: str = "Semantic Search Engine"
-    app_version: str = "0.1.22"
+    app_version: str = "0.1.23"
     debug: bool = False
 
     # ------------------------------------------------------------------
