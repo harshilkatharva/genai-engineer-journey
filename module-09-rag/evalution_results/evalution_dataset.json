@@ -2,89 +2,220 @@
   "version": "0.1.0",
   "metric": {
     "name": "chunk_recall",
-    "formula": "len(retrieved_chunk_ids ∩ expected_chunk_ids) / len(expected_chunk_ids)"
+    "formula": "satisfied_required_chunks / total_required_chunks"
   },
   "questions": [
     {
       "id": 1,
-      "query": "What is the product code, processor, RAM, storage, demo price, and warranty of the HP ProBook 440 G11?",
-      "chunk_ids": [
-        "55b20ba0-62c0-4a2b-b7e5-21594ccca2a0_chunk_0000"
-      ]
+      "query": "What was the name of the ship arriving at Marseilles on February 24, 1815?",
+      "expected": {
+        "required": [
+        ],
+        "any_of": [
+          "188745a8-683d-4229-9183-18a28735094a_chunk_0002",
+          "188745a8-683d-4229-9183-18a28735094a_chunk_0003"
+        ]
+      }
     },
     {
       "id": 2,
-      "query": "Which laptop has the highest listed price in the synthetic laptop catalog, and what is its product code?",
-      "chunk_ids": [
-        "55b20ba0-62c0-4a2b-b7e5-21594ccca2a0_chunk_0000",
-        "55b20ba0-62c0-4a2b-b7e5-21594ccca2a0_chunk_0001",
-        "55b20ba0-62c0-4a2b-b7e5-21594ccca2a0_chunk_0002"
-      ]
+      "query": "How Captain Leclere died?",
+      "expected": {
+        "required": [
+          "188745a8-683d-4229-9183-18a28735094a_chunk_0005"
+        ],
+        "any_of": []
+      }
     },
     {
       "id": 3,
-      "query": "Which two phones have 512 GB storage, and how do their memory and prices differ?",
-      "chunk_ids": [
-        "3341cae1-3f65-437d-9940-18abb9a73ff2_chunk_0001",
-        "3341cae1-3f65-437d-9940-18abb9a73ff2_chunk_0002"
-      ]
+      "query": "What is the name of the fortress prison where Edmond Dantès is imprisoned?",
+      "expected": {
+        "required": [
+          "188745a8-683d-4229-9183-18a28735094a_chunk_1265"
+        ],
+        "any_of": []
+      }
     },
     {
       "id": 4,
-      "query": "Which 55-inch televisions are priced below ₹75,000?",
-      "chunk_ids": [
-        "401c66ed-07d6-4d21-a930-a95119ec3a23_chunk_0000",
-        "401c66ed-07d6-4d21-a930-a95119ec3a23_chunk_0001"
-      ]
+      "query": "Who was the Bishop of D in 1815?",
+      "expected": {
+        "required": [
+          "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0014"
+        ],
+        "any_of": []
+      }
     },
     {
       "id": 5,
-      "query": "What is the 2.0-ton AC in the catalog, and what installation path does it require?",
-      "chunk_ids": [
-        "64a76b67-0703-4f0c-939b-4a5d3030fd59_chunk_0001",
-        "64a76b67-0703-4f0c-939b-4a5d3030fd59_chunk_0002"
-      ]
+      "query": "What affectionate nickname did the poor people give to Bishop Myriel?",
+      "expected": {
+        "required": [
+          "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0024"
+        ],
+        "any_of": []
+      }
     },
     {
       "id": 6,
-      "query": "Which HR policy clause deals specifically with correcting an attendance record?",
-      "chunk_ids": [
-        "c038cd20-743e-4737-b05f-d99ae06478c2_chunk_0016",
-        "c038cd20-743e-4737-b05f-d99ae06478c2_chunk_0017",
-        "c038cd20-743e-4737-b05f-d99ae06478c2_chunk_0018"
-      ]
+      "query": "For what initial crime was Jean Valjean originally sentenced to five years in the galleys?",
+      "expected": {
+        "required": [
+          "c038cd20-743e-4737-b05f-d99ae06478c2_chunk_0017"
+        ],
+        "any_of": [
+          "c038cd20-743e-4737-b05f-d99ae06478c2_chunk_0016",
+          "c038cd20-743e-4737-b05f-d99ae06478c2_chunk_0018"
+
+        ]
+      }
     },
     {
       "id": 7,
-      "query": "Which clause specifically discusses a joining-date exception?",
-      "chunk_ids": [
-        "f9ec8635-8887-452e-bb26-59c0a4bb772c_chunk_0018",
-        "f9ec8635-8887-452e-bb26-59c0a4bb772c_chunk_0019"
-      ]
+      "query": "What are the opening words spoken by Anna Pavlovna Scherer at her St. Petersburg salon in 1805?",
+      "expected": {
+        "required": [
+        ],
+        "any_of": [
+          "22685eef-f672-4b94-81ed-7d17029257f9_chunk_0002",
+          "22685eef-f672-4b94-81ed-7d17029257f9_chunk_0003"
+        ]
+      }
     },
     {
       "id": 8,
-      "query": "Which client-policy clause deals with quotation validity?",
-      "chunk_ids": [
-        "d22a367f-d34d-4d41-958f-79b2047740ec_chunk_0002",
-        "d22a367f-d34d-4d41-958f-79b2047740ec_chunk_0003"
-      ]
+      "query": "What name did Don Quixote choose for his horse?",
+      "expected": {
+        "required": [
+          "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0094"
+        ],
+        "any_of": []
+      }
     },
     {
       "id": 9,
-      "query": "Which client-policy clause deals specifically with activated phones?",
-      "chunk_ids": [
-        "46021bdf-0aa8-4cc8-a555-4de431c98c98_chunk_0004",
-        "46021bdf-0aa8-4cc8-a555-4de431c98c98_chunk_0005"
-      ]
+      "query": "In which London street does Lady Carbury live at the beginning of the novel?",
+      "expected": {
+        "required": [
+          "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0005"
+        ],
+        "any_of": []
+      }
     },
     {
       "id": 10,
-      "query": "Which security clause should be retrieved for a request to obtain production-system access?",
-      "chunk_ids": [
-        "fb4f9526-108b-4489-a59f-6c2f4ca2d24f_chunk_0005",
-        "fb4f9526-108b-4489-a59f-6c2f4ca2d24f_chunk_0006"
-      ]
+      "query": "What was the title of Lady Carbury’s historical book that she sought favorable reviews for?",
+      "expected": {
+        "required": [
+          "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0123"
+        ],
+        "any_of": []
+      }
+    },
+    {
+      "id": 11,
+      "query": "Who is Clarissa Harlowe's primary female friend and confidante who writes to her in Letter 1?",
+      "expected": {
+        "required": [
+          "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0013"
+        ],
+        "any_of": []
+      }
+    },
+    {
+      "id": 12,
+      "query": "Which suitor does Clarissa's family attempt to force her to marry?",
+      "expected": {
+        "required": [
+          "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0074"
+        ],
+        "any_of": []
+      }
+    },
+    {
+      "id": 13,
+      "query": "According to the preamble of her grandfather’s will in Clarissa Harlowe, why did Clarissa’s grandfather choose to devise his estate specifically in her favor?",
+      "expected": {
+        "required": [
+          "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0045"
+        ],
+        "any_of": []
+      }
+    },
+    {
+      "id": 14,
+      "query": "What was the real name of the country girl whom Don Quixote renamed Dulcinea del Toboso?",
+      "expected": {
+        "required": [
+          "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0096"
+        ],
+        "any_of": []
+      }
+    },
+    {
+      "id": 15,
+      "query": "what did Don Quixote mistake for thirty or forty monstrous giants?",
+      "expected": {
+        "required": [
+          "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0149"
+        ],
+        "any_of": []
+      }
+    },
+    {
+      "id": 16,
+      "query": "Where was Javert born, and what was his family background?",
+      "expected": {
+        "required": [
+          "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0249"
+        ],
+        "any_of": []
+      }
+    },
+    {
+      "id": 17,
+      "query": "What additional items did Bishop Myriel give to Jean Valjean when the gendarmes brought him back after the theft of the silver?",
+      "expected": {
+        "required": [
+          "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0161"
+        ],
+        "any_of": []
+      }
+    },
+    {
+      "id": 18,
+      "query": "In Clarissa Harlowe (Letter XII), what habits and characteristics of Mr. Lovelace did Mrs. Fortescue recount to Miss Howe?",
+      "expected": {
+        "required": [
+        ],
+        "any_of": [
+          "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0088",
+          "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0089"
+
+        ]
+      }
+    },
+    {
+      "id": 19,
+      "query": "What name did the stranger assume when he arrived at M—— sur M—— and established the jet-glass manufacturing business?",
+      "expected": {
+        "required": [
+          "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0235"
+        ],
+        "any_of": []
+      }
+    },
+    {
+      "id": 20,
+      "query": "Who was primary correspondent and trusted confidante throughout her family conflicts?",
+      "expected": {
+        "required": [
+          "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0005",
+          "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0013"
+        ],
+        "any_of": []
+      }
     }
   ]
 }
