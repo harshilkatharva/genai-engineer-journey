@@ -2,10 +2,15 @@
   "app_version": "0.1.23",
   "metric": "evidence_recall",
   "formula": "satisfied_evidence_requirements / total_evidence_requirements",
+  "answer_metric": "answer_accuracy",
+  "answer_formula": "satisfied_answer_requirements / total_answer_requirements",
   "total_questions": 20,
   "average_recall": 0.775,
+  "average_accuracy": 0.75,
   "perfect_recall_questions": 15,
   "zero_recall_questions": 4,
+  "perfect_accuracy_questions": 15,
+  "zero_accuracy_questions": 5,
   "questions": [
     {
       "question_id": 1,
@@ -58,6 +63,22 @@
       "total_evidence_requirements": 1,
       "satisfied_evidence_requirements": 1,
       "recall": 1.0,
+      "generated_answer": "The name of the ship arriving at Marseilles on February 24, 1815, was the _Pharaon_.",
+      "expected_answers": {
+        "required": [
+          "Pharaon"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [
+        "Pharaon"
+      ],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
       "logged_at": "2026-08-27T07:53:57.650143+00:00"
     },
     {
@@ -99,6 +120,22 @@
       "total_evidence_requirements": 1,
       "satisfied_evidence_requirements": 1,
       "recall": 1.0,
+      "generated_answer": "Based on the provided context, Captain Leclere died of a brain fever.",
+      "expected_answers": {
+        "required": [
+          "brain fever"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [
+        "brain fever"
+      ],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
       "logged_at": "2026-08-27T08:19:31.645254+00:00"
     },
     {
@@ -140,6 +177,22 @@
       "total_evidence_requirements": 1,
       "satisfied_evidence_requirements": 1,
       "recall": 1.0,
+      "generated_answer": "The name of the fortress prison where Edmond Dantès is imprisoned is the Château d’If.",
+      "expected_answers": {
+        "required": [
+          "Château d’If"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [
+        "Château d’If"
+      ],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
       "logged_at": "2026-08-27T09:04:46.953328+00:00"
     },
     {
@@ -181,6 +234,22 @@
       "total_evidence_requirements": 1,
       "satisfied_evidence_requirements": 1,
       "recall": 1.0,
+      "generated_answer": "In 1815, the Bishop of D—— was M. Charles-François-Bienvenu Myriel.",
+      "expected_answers": {
+        "required": [
+          "Charles-François-Bienvenu"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [
+        "Charles-François-Bienvenu"
+      ],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
       "logged_at": "2026-08-27T09:07:33.241360+00:00"
     },
     {
@@ -222,6 +291,22 @@
       "total_evidence_requirements": 1,
       "satisfied_evidence_requirements": 1,
       "recall": 1.0,
+      "generated_answer": "The poor people gave Bishop Myriel the affectionate nickname **Monseigneur Bienvenu** (which means \"Welcome\").",
+      "expected_answers": {
+        "required": [
+          "Monseigneur Bienvenu"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [
+        "Monseigneur Bienvenu"
+      ],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
       "logged_at": "2026-08-27T09:08:39.646003+00:00"
     },
     {
@@ -278,6 +363,22 @@
       "total_evidence_requirements": 2,
       "satisfied_evidence_requirements": 0,
       "recall": 0.0,
+      "generated_answer": "Based on the provided context, Jean Valjean was taken before the tribunals for theft and breaking and entering an inhabited house at night, having also used a gun better than anyone else and being a bit of a poacher. For this crime, he was condemned to five years in the galleys.",
+      "expected_answers": {
+        "required": [
+          "Breaking a pane of glass and stealing a loaf"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [],
+      "missing_required_answers": [
+        "Breaking a pane of glass and stealing a loaf"
+      ],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 0,
+      "accuracy": 0.0,
       "logged_at": "2026-08-27T09:09:32.470427+00:00"
     },
     {
@@ -331,6 +432,24 @@
       "total_evidence_requirements": 1,
       "satisfied_evidence_requirements": 1,
       "recall": 1.0,
+      "generated_answer": "Based on the retrieved context, when Anna Pávlovna Schérer greeted Prince Vasíli Kurágin as the first to arrive at her reception in July 1805, she said:\n\n“If you have nothing better to do, Count (or Prince), and if the prospect of spending an evening with a poor invalid is not too terrible, I shall be very charmed to see you tonight between 7 and 10—Annette Schérer.”",
+      "expected_answers": {
+        "required": [
+          "Buonapartes",
+          "Genoa and Lucca"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [],
+      "missing_required_answers": [
+        "Buonapartes",
+        "Genoa and Lucca"
+      ],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 2,
+      "satisfied_answer_requirements": 0,
+      "accuracy": 0.0,
       "logged_at": "2026-08-27T09:10:39.106411+00:00"
     },
     {
@@ -372,6 +491,22 @@
       "total_evidence_requirements": 1,
       "satisfied_evidence_requirements": 1,
       "recall": 1.0,
+      "generated_answer": "Don Quixote chose to call his horse **Rocinante**.",
+      "expected_answers": {
+        "required": [
+          "Rocinante"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [
+        "Rocinante"
+      ],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
       "logged_at": "2026-08-27T09:11:11.573669+00:00"
     },
     {
@@ -412,6 +547,22 @@
       "total_evidence_requirements": 1,
       "satisfied_evidence_requirements": 0,
       "recall": 0.0,
+      "generated_answer": "Lady Carbury lives in Welbeck Street.",
+      "expected_answers": {
+        "required": [
+          "Welbeck Street"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [
+        "Welbeck Street"
+      ],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
       "logged_at": "2026-08-27T09:11:34.329680+00:00"
     },
     {
@@ -453,6 +604,22 @@
       "total_evidence_requirements": 1,
       "satisfied_evidence_requirements": 1,
       "recall": 1.0,
+      "generated_answer": "Based on the provided context, the title of Lady Carbury’s historical book is \"Criminal Queens\".",
+      "expected_answers": {
+        "required": [
+          "Criminal Queens"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [
+        "Criminal Queens"
+      ],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
       "logged_at": "2026-08-27T09:12:23.890827+00:00"
     },
     {
@@ -494,6 +661,22 @@
       "total_evidence_requirements": 1,
       "satisfied_evidence_requirements": 1,
       "recall": 1.0,
+      "generated_answer": "Based on the provided context, Clarissa Harlowe's friend who writes to her in Letter 1 is MISS ANNA HOWE.",
+      "expected_answers": {
+        "required": [
+          "ANNA HOWE"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [
+        "ANNA HOWE"
+      ],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
       "logged_at": "2026-08-27T09:16:19.720440+00:00"
     },
     {
@@ -535,6 +718,26 @@
       "total_evidence_requirements": 1,
       "satisfied_evidence_requirements": 1,
       "recall": 1.0,
+      "generated_answer": "Based on the retrieved context, Clarissa's family attempts to force her to marry Mr. Roger Solmes.",
+      "expected_answers": {
+        "required": [],
+        "any_of": [
+          "Mr. Roger",
+          "Roger",
+          "Roger Solmes"
+        ]
+      },
+      "matched_required_answers": [],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [
+        "Mr. Roger",
+        "Roger",
+        "Roger Solmes"
+      ],
+      "any_of_satisfied": true,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
       "logged_at": "2026-08-27T09:16:42.063463+00:00"
     },
     {
@@ -576,6 +779,26 @@
       "total_evidence_requirements": 1,
       "satisfied_evidence_requirements": 1,
       "recall": 1.0,
+      "generated_answer": "Based on the provided retrieved context, the grandfather's will does not state that he chose to devise his estate specifically in Clarissa's favor. Instead, the context mentions the following provisions for other family members:\n* The estate is described as being \"principally of my own raising.\"\n* His eldest son is rich through new found mines.\n* His second son received unexpected wealth from the deaths of his wife's relations, along with a large marriage portion.\n* His son Antony is wealthy from East-India traffic and successful voyages.\n* His grandson James will be provided for by his grandmother Lovell's kindness, who has left him both her Scottish and English estates.\n* His grand-daughter Arabella is mentioned as a hopeful and dutiful child, with the expectation that son James will \"make it up to\" her, as the grandfather intends no disrespect and has no reason to, and because sons John and Antony are not inclined to a married life, making James the only son with or likely to have children.\n\nThe available context does not contain sufficient information explaining why the grandfather chose to devise his estate in favor of Clarissa (or if he even did so).",
+      "expected_answers": {
+        "required": [
+          "East-India commerce",
+          "marriage portions",
+          "wealthy and prosperous through mines"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [],
+      "missing_required_answers": [
+        "East-India commerce",
+        "marriage portions",
+        "wealthy and prosperous through mines"
+      ],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 3,
+      "satisfied_answer_requirements": 0,
+      "accuracy": 0.0,
       "logged_at": "2026-08-27T09:17:49.040833+00:00"
     },
     {
@@ -617,6 +840,22 @@
       "total_evidence_requirements": 1,
       "satisfied_evidence_requirements": 1,
       "recall": 1.0,
+      "generated_answer": "Based on the retrieved context, the real name of the country girl whom Don Quixote renamed Dulcinea del Toboso was Aldonza Lorenzo.",
+      "expected_answers": {
+        "required": [
+          "Aldonza Lorenzo"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [
+        "Aldonza Lorenzo"
+      ],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
       "logged_at": "2026-08-27T09:18:14.514629+00:00"
     },
     {
@@ -658,6 +897,22 @@
       "total_evidence_requirements": 1,
       "satisfied_evidence_requirements": 1,
       "recall": 1.0,
+      "generated_answer": "Based on the retrieved context, Don Quixote mistook thirty or forty windmills for monstrous giants.",
+      "expected_answers": {
+        "required": [
+          "windmills"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [
+        "windmills"
+      ],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
       "logged_at": "2026-08-27T09:18:43.665680+00:00"
     },
     {
@@ -698,6 +953,25 @@
       "total_evidence_requirements": 1,
       "satisfied_evidence_requirements": 0,
       "recall": 0.0,
+      "generated_answer": "Based on the provided retrieved context, there is no information about where Javert was born or what his family background was. Therefore, the available context does not contain sufficient information to answer the question.",
+      "expected_answers": {
+        "required": [
+          "prison"
+        ],
+        "any_of": [
+          "fortune-teller",
+          "galleys"
+        ]
+      },
+      "matched_required_answers": [],
+      "missing_required_answers": [
+        "prison"
+      ],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": false,
+      "total_answer_requirements": 2,
+      "satisfied_answer_requirements": 0,
+      "accuracy": 0.0,
       "logged_at": "2026-08-27T09:19:15.666127+00:00"
     },
     {
@@ -739,6 +1013,22 @@
       "total_evidence_requirements": 1,
       "satisfied_evidence_requirements": 1,
       "recall": 1.0,
+      "generated_answer": "Based on the provided context, the Bishop (referred to as Monseigneur Bienvenu) gave Jean Valjean the two silver candlesticks, reminding him that they were of silver like the rest and could certainly be sold for two hundred francs.",
+      "expected_answers": {
+        "required": [
+          "two silver candlesticks"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [
+        "two silver candlesticks"
+      ],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
       "logged_at": "2026-08-27T09:19:40.861260+00:00"
     },
     {
@@ -790,6 +1080,22 @@
       "total_evidence_requirements": 1,
       "satisfied_evidence_requirements": 0,
       "recall": 0.0,
+      "generated_answer": "Based on the provided context, Mrs. Fortescue gives Mr. Lovelace's character to Miss Howe (as mentioned in Letter XII and discussed in subsequent text), allowing that he is \"the best of landlords\" and noting his benevolence to his own tenants and his little gift to the uncle's tenants. However, the text also indicates that Mrs. Fortescue's reports, along with what a discharged steward reported, contribute to the view of him as a libertine and give room to think him still worse, noting that he may \"break half-a-dozen hearts\" before reaching the other side of fifty. \n\nAside from these points, the retrieved context does not contain a more detailed list of specific habits and characteristics recounted by Mrs. Fortescue.",
+      "expected_answers": {
+        "required": [
+          "brain fever"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [],
+      "missing_required_answers": [
+        "brain fever"
+      ],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 0,
+      "accuracy": 0.0,
       "logged_at": "2026-08-27T09:20:05.447051+00:00"
     },
     {
@@ -831,6 +1137,26 @@
       "total_evidence_requirements": 1,
       "satisfied_evidence_requirements": 1,
       "recall": 1.0,
+      "generated_answer": "Based on the provided retrieved context, the man who arrived at M. sur M. and established the industry for the manufacture of jet and black glass trinkets was known by the names **Father Madeleine** (or **Monsieur Madeleine** / **M. Madeleine**) and was later discovered to be **Jean Valjean**.",
+      "expected_answers": {
+        "required": [],
+        "any_of": [
+          "Father Madeleine",
+          "M. Madeleine",
+          "Monsieur Madeleine"
+        ]
+      },
+      "matched_required_answers": [],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [
+        "Father Madeleine",
+        "M. Madeleine",
+        "Monsieur Madeleine"
+      ],
+      "any_of_satisfied": true,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
       "logged_at": "2026-08-27T09:20:29.090097+00:00"
     },
     {
@@ -876,6 +1202,24 @@
       "total_evidence_requirements": 2,
       "satisfied_evidence_requirements": 1,
       "recall": 0.5,
+      "generated_answer": "Based on the provided retrieved context, Miss Howe is identified as the \"most intimate friend, companion, and correspondent of Clarissa\" and is the person with whom Clarissa maintains a private correspondence during her family conflicts regarding Roger Solmes. However, the retrieved context does not explicitly use the term \"trusted confidante\" for her.",
+      "expected_answers": {
+        "required": [],
+        "any_of": [
+          "Anna Howe",
+          "Miss Anna Howe",
+          "Miss Howe"
+        ]
+      },
+      "matched_required_answers": [],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [
+        "Miss Howe"
+      ],
+      "any_of_satisfied": true,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
       "logged_at": "2026-08-27T09:20:52.527206+00:00"
     }
   ]
