@@ -1,220 +1,1213 @@
 {
   "app_version": "0.1.11",
-  "metric": "chunk_recall",
-  "formula": "matched_expected_chunk_ids / expected_chunk_ids",
-  "total_questions": 10,
-  "average_recall": 0.0,
+  "metric": "evidence_recall",
+  "formula": "satisfied_evidence_requirements / total_evidence_requirements",
+  "answer_metric": "answer_accuracy",
+  "answer_formula": "satisfied_answer_requirements / total_answer_requirements",
+  "total_questions": 20,
+  "average_recall": 0.55,
+  "average_accuracy": 0.5,
+  "perfect_recall_questions": 11,
+  "zero_recall_questions": 9,
+  "perfect_accuracy_questions": 10,
+  "zero_accuracy_questions": 10,
   "questions": [
     {
       "question_id": 1,
-      "query": "What is the product code, processor, RAM, storage, demo price, and warranty of the HP ProBook 440 G11?",
+      "query": "What was the name of the ship arriving at Marseilles on February 24, 1815?",
       "app_version": "0.1.11",
+      "evaluation_type": "required_and_any_of",
       "expected_chunk_ids": [
-        "55b20ba0-62c0-4a2b-b7e5-21594ccca2a0_chunk_0000"
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0002",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0003"
+      ],
+      "required_chunk_ids": [],
+      "matched_required_chunk_ids": [],
+      "missing_required_chunk_ids": [],
+      "any_of": [
+        {
+          "group": 1,
+          "expected_chunk_ids": [
+            "188745a8-683d-4229-9183-18a28735094a_chunk_0002",
+            "188745a8-683d-4229-9183-18a28735094a_chunk_0003"
+          ],
+          "matched_chunk_ids": [
+            "188745a8-683d-4229-9183-18a28735094a_chunk_0003"
+          ],
+          "missing_chunk_ids": [
+            "188745a8-683d-4229-9183-18a28735094a_chunk_0002"
+          ],
+          "satisfied": true
+        }
       ],
       "retrieved_chunk_ids": [
-        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_0326",
-        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_0614",
-        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_0641",
-        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1460",
-        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1856"
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0003",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0014",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0254",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0298",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0302"
       ],
-      "matched_chunk_ids": [],
-      "expected_count": 1,
-      "matched_count": 0,
-      "recall": 0.0,
-      "logged_at": "2026-08-24T07:04:42.383070+00:00"
+      "matched_chunk_ids": [
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0003"
+      ],
+      "unexpected_chunk_ids": [
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0014",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0254",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0298",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0302"
+      ],
+      "required_count": 0,
+      "matched_required_count": 0,
+      "any_of_group_count": 1,
+      "satisfied_any_of_count": 1,
+      "total_evidence_requirements": 1,
+      "satisfied_evidence_requirements": 1,
+      "recall": 1.0,
+      "generated_answer": "The name of the ship arriving at Marseilles on February 24, 1815, was the _Pharaon_.",
+      "expected_answers": {
+        "required": [
+          "Pharaon"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [
+        "Pharaon"
+      ],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
+      "logged_at": "2026-08-30T13:26:10.581300+00:00"
     },
     {
       "question_id": 2,
-      "query": "Which laptop has the highest listed price in the synthetic laptop catalog, and what is its product code?",
+      "query": "How Captain Leclere died?",
       "app_version": "0.1.11",
+      "evaluation_type": "required_and_any_of",
       "expected_chunk_ids": [
-        "55b20ba0-62c0-4a2b-b7e5-21594ccca2a0_chunk_0000",
-        "55b20ba0-62c0-4a2b-b7e5-21594ccca2a0_chunk_0001",
-        "55b20ba0-62c0-4a2b-b7e5-21594ccca2a0_chunk_0002"
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0005"
       ],
+      "required_chunk_ids": [
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0005"
+      ],
+      "matched_required_chunk_ids": [
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0005"
+      ],
+      "missing_required_chunk_ids": [],
+      "any_of": [],
       "retrieved_chunk_ids": [
-        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_0262",
-        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1234",
-        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1432",
-        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1444",
-        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1657"
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0005",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0087",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0088",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0196",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_1088"
       ],
-      "matched_chunk_ids": [],
-      "expected_count": 3,
-      "matched_count": 0,
-      "recall": 0.0,
-      "logged_at": "2026-08-24T07:05:30.894159+00:00"
+      "matched_chunk_ids": [
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0005"
+      ],
+      "unexpected_chunk_ids": [
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0087",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0088",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0196",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_1088"
+      ],
+      "required_count": 1,
+      "matched_required_count": 1,
+      "any_of_group_count": 0,
+      "satisfied_any_of_count": 0,
+      "total_evidence_requirements": 1,
+      "satisfied_evidence_requirements": 1,
+      "recall": 1.0,
+      "generated_answer": "Based on the retrieved context, after Captain Leclere left Naples greatly disturbed in mind, he was attacked by a fever (specifically described as a brain fever) and died three days afterwards.",
+      "expected_answers": {
+        "required": [
+          "brain fever"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [
+        "brain fever"
+      ],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
+      "logged_at": "2026-08-30T13:26:28.656608+00:00"
     },
     {
       "question_id": 3,
-      "query": "Which two phones have 512 GB storage, and how do their memory and prices differ?",
+      "query": "What is the name of the fortress prison where Edmond Dantès is imprisoned?",
       "app_version": "0.1.11",
+      "evaluation_type": "required_and_any_of",
       "expected_chunk_ids": [
-        "3341cae1-3f65-437d-9940-18abb9a73ff2_chunk_0001",
-        "3341cae1-3f65-437d-9940-18abb9a73ff2_chunk_0002"
+        "188745a8-683d-4229-9183-18a28735094a_chunk_1265"
       ],
+      "required_chunk_ids": [
+        "188745a8-683d-4229-9183-18a28735094a_chunk_1265"
+      ],
+      "matched_required_chunk_ids": [],
+      "missing_required_chunk_ids": [
+        "188745a8-683d-4229-9183-18a28735094a_chunk_1265"
+      ],
+      "any_of": [],
       "retrieved_chunk_ids": [
-        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_0254",
-        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1082",
-        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1307",
-        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1532",
-        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1604"
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0039",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0099",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0156",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0163",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0166"
       ],
       "matched_chunk_ids": [],
-      "expected_count": 2,
-      "matched_count": 0,
+      "unexpected_chunk_ids": [
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0039",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0099",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0156",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0163",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0166"
+      ],
+      "required_count": 1,
+      "matched_required_count": 0,
+      "any_of_group_count": 0,
+      "satisfied_any_of_count": 0,
+      "total_evidence_requirements": 1,
+      "satisfied_evidence_requirements": 0,
       "recall": 0.0,
-      "logged_at": "2026-08-24T07:05:54.247031+00:00"
+      "generated_answer": "Based on the provided retrieved context, the specific name of the fortress prison where Edmond Dantès is imprisoned is not mentioned. The text mentions that the governor was transferred and \"obtained charge of the fortress at Ham,\" but it does not provide the name of the fortress prison where Edmond Dantès himself is held (he is only identified by his cell number, number 34). \n\nTherefore, the available context does not contain sufficient information to answer the question.",
+      "expected_answers": {
+        "required": [
+          "Château d’If"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [],
+      "missing_required_answers": [
+        "Château d’If"
+      ],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 0,
+      "accuracy": 0.0,
+      "logged_at": "2026-08-30T13:26:43.339305+00:00"
     },
     {
       "question_id": 4,
-      "query": "Which 55-inch televisions are priced below ₹75,000?",
+      "query": "Who was the Bishop of D in 1815?",
       "app_version": "0.1.11",
+      "evaluation_type": "required_and_any_of",
       "expected_chunk_ids": [
-        "401c66ed-07d6-4d21-a930-a95119ec3a23_chunk_0000",
-        "401c66ed-07d6-4d21-a930-a95119ec3a23_chunk_0001"
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0014"
       ],
+      "required_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0014"
+      ],
+      "matched_required_chunk_ids": [],
+      "missing_required_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0014"
+      ],
+      "any_of": [],
       "retrieved_chunk_ids": [
-        "4f4ae906-69d3-4a22-9d18-a5154a86497e_chunk_0144",
-        "4f4ae906-69d3-4a22-9d18-a5154a86497e_chunk_0504",
-        "4f4ae906-69d3-4a22-9d18-a5154a86497e_chunk_0856",
-        "4f4ae906-69d3-4a22-9d18-a5154a86497e_chunk_1216",
-        "4f4ae906-69d3-4a22-9d18-a5154a86497e_chunk_1224"
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0016",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0052",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0078",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0083",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0119"
       ],
       "matched_chunk_ids": [],
-      "expected_count": 2,
-      "matched_count": 0,
+      "unexpected_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0016",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0052",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0078",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0083",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0119"
+      ],
+      "required_count": 1,
+      "matched_required_count": 0,
+      "any_of_group_count": 0,
+      "satisfied_any_of_count": 0,
+      "total_evidence_requirements": 1,
+      "satisfied_evidence_requirements": 0,
       "recall": 0.0,
-      "logged_at": "2026-08-24T07:06:16.066914+00:00"
+      "generated_answer": "Based on the provided retrieved context, there is no mention of the Bishop of D—— in the year 1815. Therefore, the available context does not contain sufficient information to answer the question.",
+      "expected_answers": {
+        "required": [
+          "Charles-François-Bienvenu"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [],
+      "missing_required_answers": [
+        "Charles-François-Bienvenu"
+      ],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 0,
+      "accuracy": 0.0,
+      "logged_at": "2026-08-30T13:26:57.355267+00:00"
     },
     {
       "question_id": 5,
-      "query": "What is the 2.0-ton AC in the catalog, and what installation path does it require?",
+      "query": "What affectionate nickname did the poor people give to Bishop Myriel?",
       "app_version": "0.1.11",
+      "evaluation_type": "required_and_any_of",
       "expected_chunk_ids": [
-        "64a76b67-0703-4f0c-939b-4a5d3030fd59_chunk_0001",
-        "64a76b67-0703-4f0c-939b-4a5d3030fd59_chunk_0002"
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0024"
       ],
+      "required_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0024"
+      ],
+      "matched_required_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0024"
+      ],
+      "missing_required_chunk_ids": [],
+      "any_of": [],
       "retrieved_chunk_ids": [
-        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_0019",
-        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_0112",
-        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1117",
-        "26a866ac-0d0c-4a1d-84f4-da52b8597d37_chunk_1147",
-        "39952edc-5d47-492f-9741-617bc5ca86fc_chunk_0001"
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0016",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0024",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0071",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0119",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0188"
       ],
-      "matched_chunk_ids": [],
-      "expected_count": 2,
-      "matched_count": 0,
-      "recall": 0.0,
-      "logged_at": "2026-08-24T07:06:37.273544+00:00"
+      "matched_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0024"
+      ],
+      "unexpected_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0016",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0071",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0119",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0188"
+      ],
+      "required_count": 1,
+      "matched_required_count": 1,
+      "any_of_group_count": 0,
+      "satisfied_any_of_count": 0,
+      "total_evidence_requirements": 1,
+      "satisfied_evidence_requirements": 1,
+      "recall": 1.0,
+      "generated_answer": "The poor people of the country-side gave Bishop Myriel the affectionate nickname **Monseigneur Bienvenu**.",
+      "expected_answers": {
+        "required": [
+          "Monseigneur Bienvenu"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [
+        "Monseigneur Bienvenu"
+      ],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
+      "logged_at": "2026-08-30T13:27:10.623082+00:00"
     },
     {
       "question_id": 6,
-      "query": "Which HR policy clause deals specifically with correcting an attendance record?",
+      "query": "For what initial crime was Jean Valjean originally sentenced to five years in the galleys?",
       "app_version": "0.1.11",
+      "evaluation_type": "required_and_any_of",
       "expected_chunk_ids": [
         "c038cd20-743e-4737-b05f-d99ae06478c2_chunk_0016",
         "c038cd20-743e-4737-b05f-d99ae06478c2_chunk_0017",
         "c038cd20-743e-4737-b05f-d99ae06478c2_chunk_0018"
       ],
+      "required_chunk_ids": [
+        "c038cd20-743e-4737-b05f-d99ae06478c2_chunk_0017"
+      ],
+      "matched_required_chunk_ids": [],
+      "missing_required_chunk_ids": [
+        "c038cd20-743e-4737-b05f-d99ae06478c2_chunk_0017"
+      ],
+      "any_of": [
+        {
+          "group": 1,
+          "expected_chunk_ids": [
+            "c038cd20-743e-4737-b05f-d99ae06478c2_chunk_0016",
+            "c038cd20-743e-4737-b05f-d99ae06478c2_chunk_0018"
+          ],
+          "matched_chunk_ids": [],
+          "missing_chunk_ids": [
+            "c038cd20-743e-4737-b05f-d99ae06478c2_chunk_0016",
+            "c038cd20-743e-4737-b05f-d99ae06478c2_chunk_0018"
+          ],
+          "satisfied": false
+        }
+      ],
       "retrieved_chunk_ids": [
-        "5e831d6d-13e2-486d-8d3a-b79889dca18f_chunk_0051",
-        "5e831d6d-13e2-486d-8d3a-b79889dca18f_chunk_0571",
-        "5e831d6d-13e2-486d-8d3a-b79889dca18f_chunk_1096",
-        "5e831d6d-13e2-486d-8d3a-b79889dca18f_chunk_1179",
-        "5e831d6d-13e2-486d-8d3a-b79889dca18f_chunk_1544"
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0131",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0296",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0383",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0508",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0509"
       ],
       "matched_chunk_ids": [],
-      "expected_count": 3,
-      "matched_count": 0,
+      "unexpected_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0131",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0296",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0383",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0508",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0509"
+      ],
+      "required_count": 1,
+      "matched_required_count": 0,
+      "any_of_group_count": 1,
+      "satisfied_any_of_count": 0,
+      "total_evidence_requirements": 2,
+      "satisfied_evidence_requirements": 0,
       "recall": 0.0,
-      "logged_at": "2026-08-24T07:07:13.021333+00:00"
+      "generated_answer": "Based on the provided retrieved context, Jean Valjean was originally sentenced to five years in the galleys for theft and breaking and entering an inhabited house at night (while also noting that he had a gun and was a bit of a poacher).",
+      "expected_answers": {
+        "required": [
+          "Breaking a pane of glass and stealing a loaf"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [],
+      "missing_required_answers": [
+        "Breaking a pane of glass and stealing a loaf"
+      ],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 0,
+      "accuracy": 0.0,
+      "logged_at": "2026-08-30T13:27:25.490544+00:00"
     },
     {
       "question_id": 7,
-      "query": "Which clause specifically discusses a joining-date exception?",
+      "query": "What are the opening words spoken by Anna Pavlovna Scherer at her St. Petersburg salon in 1805?",
       "app_version": "0.1.11",
+      "evaluation_type": "required_and_any_of",
       "expected_chunk_ids": [
-        "f9ec8635-8887-452e-bb26-59c0a4bb772c_chunk_0018",
-        "f9ec8635-8887-452e-bb26-59c0a4bb772c_chunk_0019"
+        "22685eef-f672-4b94-81ed-7d17029257f9_chunk_0002",
+        "22685eef-f672-4b94-81ed-7d17029257f9_chunk_0003"
+      ],
+      "required_chunk_ids": [],
+      "matched_required_chunk_ids": [],
+      "missing_required_chunk_ids": [],
+      "any_of": [
+        {
+          "group": 1,
+          "expected_chunk_ids": [
+            "22685eef-f672-4b94-81ed-7d17029257f9_chunk_0002",
+            "22685eef-f672-4b94-81ed-7d17029257f9_chunk_0003"
+          ],
+          "matched_chunk_ids": [
+            "22685eef-f672-4b94-81ed-7d17029257f9_chunk_0003"
+          ],
+          "missing_chunk_ids": [
+            "22685eef-f672-4b94-81ed-7d17029257f9_chunk_0002"
+          ],
+          "satisfied": true
+        }
       ],
       "retrieved_chunk_ids": [
-        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_13609",
-        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_14511",
-        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_16756",
-        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_5766",
-        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_5923"
+        "22685eef-f672-4b94-81ed-7d17029257f9_chunk_0003",
+        "22685eef-f672-4b94-81ed-7d17029257f9_chunk_0010",
+        "22685eef-f672-4b94-81ed-7d17029257f9_chunk_0014",
+        "22685eef-f672-4b94-81ed-7d17029257f9_chunk_0088",
+        "22685eef-f672-4b94-81ed-7d17029257f9_chunk_0307"
       ],
-      "matched_chunk_ids": [],
-      "expected_count": 2,
-      "matched_count": 0,
-      "recall": 0.0,
-      "logged_at": "2026-08-24T07:07:31.759454+00:00"
+      "matched_chunk_ids": [
+        "22685eef-f672-4b94-81ed-7d17029257f9_chunk_0003"
+      ],
+      "unexpected_chunk_ids": [
+        "22685eef-f672-4b94-81ed-7d17029257f9_chunk_0010",
+        "22685eef-f672-4b94-81ed-7d17029257f9_chunk_0014",
+        "22685eef-f672-4b94-81ed-7d17029257f9_chunk_0088",
+        "22685eef-f672-4b94-81ed-7d17029257f9_chunk_0307"
+      ],
+      "required_count": 0,
+      "matched_required_count": 0,
+      "any_of_group_count": 1,
+      "satisfied_any_of_count": 1,
+      "total_evidence_requirements": 1,
+      "satisfied_evidence_requirements": 1,
+      "recall": 1.0,
+      "generated_answer": "The opening words spoken by Anna Pávlovna Schérer when greeting Prince Vasíli Kurágin at her reception in July, 1805, were: \n\n“If you have nothing better to do, Count (or Prince), and if the prospect of spending an evening with a poor invalid is not too terrible, I shall be very charmed to see you tonight between 7 and 10—Annette Schérer.”",
+      "expected_answers": {
+        "required": [
+          "Buonapartes",
+          "Genoa and Lucca"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [],
+      "missing_required_answers": [
+        "Buonapartes",
+        "Genoa and Lucca"
+      ],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 2,
+      "satisfied_answer_requirements": 0,
+      "accuracy": 0.0,
+      "logged_at": "2026-08-30T13:27:43.507660+00:00"
     },
     {
       "question_id": 8,
-      "query": "Which client-policy clause deals with quotation validity?",
+      "query": "What name did Don Quixote choose for his horse?",
       "app_version": "0.1.11",
+      "evaluation_type": "required_and_any_of",
       "expected_chunk_ids": [
-        "d22a367f-d34d-4d41-958f-79b2047740ec_chunk_0002",
-        "d22a367f-d34d-4d41-958f-79b2047740ec_chunk_0003"
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0094"
       ],
+      "required_chunk_ids": [
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0094"
+      ],
+      "matched_required_chunk_ids": [],
+      "missing_required_chunk_ids": [
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0094"
+      ],
+      "any_of": [],
       "retrieved_chunk_ids": [
-        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_0352",
-        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_17406",
-        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_8271",
-        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_8546",
-        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_8664"
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0995",
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_1034",
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_1490",
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_1508",
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_1514"
       ],
       "matched_chunk_ids": [],
-      "expected_count": 2,
-      "matched_count": 0,
+      "unexpected_chunk_ids": [
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0995",
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_1034",
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_1490",
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_1508",
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_1514"
+      ],
+      "required_count": 1,
+      "matched_required_count": 0,
+      "any_of_group_count": 0,
+      "satisfied_any_of_count": 0,
+      "total_evidence_requirements": 1,
+      "satisfied_evidence_requirements": 0,
       "recall": 0.0,
-      "logged_at": "2026-08-24T07:07:48.050743+00:00"
+      "generated_answer": "The available context does not contain sufficient information to answer what name Don Quixote chose for his horse.",
+      "expected_answers": {
+        "required": [
+          "Rocinante"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [],
+      "missing_required_answers": [
+        "Rocinante"
+      ],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 0,
+      "accuracy": 0.0,
+      "logged_at": "2026-08-30T13:27:58.315088+00:00"
     },
     {
       "question_id": 9,
-      "query": "Which client-policy clause deals specifically with activated phones?",
+      "query": "In which London street does Lady Carbury live at the beginning of the novel?",
       "app_version": "0.1.11",
+      "evaluation_type": "required_and_any_of",
       "expected_chunk_ids": [
-        "46021bdf-0aa8-4cc8-a555-4de431c98c98_chunk_0004",
-        "46021bdf-0aa8-4cc8-a555-4de431c98c98_chunk_0005"
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0005"
       ],
+      "required_chunk_ids": [
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0005"
+      ],
+      "matched_required_chunk_ids": [],
+      "missing_required_chunk_ids": [
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0005"
+      ],
+      "any_of": [],
       "retrieved_chunk_ids": [
-        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_0080",
-        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_10783",
-        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_17056",
-        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_18466",
-        "a042f2c1-2ed8-43cc-83f4-cb615ac0aeb0_chunk_4273"
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0030",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0076",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0123",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0161",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0808"
       ],
       "matched_chunk_ids": [],
-      "expected_count": 2,
-      "matched_count": 0,
+      "unexpected_chunk_ids": [
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0030",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0076",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0123",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0161",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0808"
+      ],
+      "required_count": 1,
+      "matched_required_count": 0,
+      "any_of_group_count": 0,
+      "satisfied_any_of_count": 0,
+      "total_evidence_requirements": 1,
+      "satisfied_evidence_requirements": 0,
       "recall": 0.0,
-      "logged_at": "2026-08-24T07:08:32.009327+00:00"
+      "generated_answer": "Lady Carbury lives in Welbeck Street.",
+      "expected_answers": {
+        "required": [
+          "Welbeck Street"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [
+        "Welbeck Street"
+      ],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
+      "logged_at": "2026-08-30T13:28:12.422702+00:00"
     },
     {
       "question_id": 10,
-      "query": "Which security clause should be retrieved for a request to obtain production-system access?",
+      "query": "What was the title of Lady Carbury’s historical book that she sought favorable reviews for?",
       "app_version": "0.1.11",
+      "evaluation_type": "required_and_any_of",
       "expected_chunk_ids": [
-        "fb4f9526-108b-4489-a59f-6c2f4ca2d24f_chunk_0005",
-        "fb4f9526-108b-4489-a59f-6c2f4ca2d24f_chunk_0006"
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0123"
       ],
+      "required_chunk_ids": [
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0123"
+      ],
+      "matched_required_chunk_ids": [
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0123"
+      ],
+      "missing_required_chunk_ids": [],
+      "any_of": [],
       "retrieved_chunk_ids": [
-        "7d883691-2aec-40ab-be84-b27743e14254_chunk_0007",
-        "7d883691-2aec-40ab-be84-b27743e14254_chunk_0376",
-        "7d883691-2aec-40ab-be84-b27743e14254_chunk_1021",
-        "7d883691-2aec-40ab-be84-b27743e14254_chunk_1236",
-        "7d883691-2aec-40ab-be84-b27743e14254_chunk_1351"
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0030",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0121",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0123",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0808",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0991"
+      ],
+      "matched_chunk_ids": [
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0123"
+      ],
+      "unexpected_chunk_ids": [
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0030",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0121",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0808",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0991"
+      ],
+      "required_count": 1,
+      "matched_required_count": 1,
+      "any_of_group_count": 0,
+      "satisfied_any_of_count": 0,
+      "total_evidence_requirements": 1,
+      "satisfied_evidence_requirements": 1,
+      "recall": 1.0,
+      "generated_answer": "Based on the provided context, the title of Lady Carbury's book that received a favorable review in the \"Morning Breakfast Table\" is **Criminal Queens**. However, the retrieved context does not explicitly state that it was a \"historical\" book; rather, it mentions that the review described it as \"a work of infinite research and brilliant imagination combined,\" and notes elsewhere that Mr. Loiter instructed her, \"whatever you do, Lady Carbury, don't be historical.\"",
+      "expected_answers": {
+        "required": [
+          "Criminal Queens"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [
+        "Criminal Queens"
+      ],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
+      "logged_at": "2026-08-30T13:28:27.857253+00:00"
+    },
+    {
+      "question_id": 11,
+      "query": "Who is Clarissa Harlowe's primary female friend and confidante who writes to her in Letter 1?",
+      "app_version": "0.1.11",
+      "evaluation_type": "required_and_any_of",
+      "expected_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0013"
+      ],
+      "required_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0013"
+      ],
+      "matched_required_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0013"
+      ],
+      "missing_required_chunk_ids": [],
+      "any_of": [],
+      "retrieved_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0000",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0005",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0009",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0011",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0013"
+      ],
+      "matched_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0013"
+      ],
+      "unexpected_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0000",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0005",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0009",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0011"
+      ],
+      "required_count": 1,
+      "matched_required_count": 1,
+      "any_of_group_count": 0,
+      "satisfied_any_of_count": 0,
+      "total_evidence_requirements": 1,
+      "satisfied_evidence_requirements": 1,
+      "recall": 1.0,
+      "generated_answer": "Based on the provided retrieved context, Clarissa Harlowe's primary friend, companion, and correspondent is MISS HOWE (also referred to as MISS ANNA HOWE, who writes Letter I).",
+      "expected_answers": {
+        "required": [
+          "ANNA HOWE"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [
+        "ANNA HOWE"
+      ],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
+      "logged_at": "2026-08-30T13:28:41.827424+00:00"
+    },
+    {
+      "question_id": 12,
+      "query": "Which suitor does Clarissa's family attempt to force her to marry?",
+      "app_version": "0.1.11",
+      "evaluation_type": "required_and_any_of",
+      "expected_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0074"
+      ],
+      "required_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0074"
+      ],
+      "matched_required_chunk_ids": [],
+      "missing_required_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0074"
+      ],
+      "any_of": [],
+      "retrieved_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0009",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0010",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0011",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0012",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0111"
       ],
       "matched_chunk_ids": [],
-      "expected_count": 2,
-      "matched_count": 0,
+      "unexpected_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0009",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0010",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0011",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0012",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0111"
+      ],
+      "required_count": 1,
+      "matched_required_count": 0,
+      "any_of_group_count": 0,
+      "satisfied_any_of_count": 0,
+      "total_evidence_requirements": 1,
+      "satisfied_evidence_requirements": 0,
       "recall": 0.0,
-      "logged_at": "2026-08-24T07:08:47.375806+00:00"
+      "generated_answer": "Based on the retrieved context, Clarissa's family attempts to force her to marry Mr. Solmes.",
+      "expected_answers": {
+        "required": [],
+        "any_of": [
+          "Mr. Roger",
+          "Roger",
+          "Roger Solmes"
+        ]
+      },
+      "matched_required_answers": [],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": false,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 0,
+      "accuracy": 0.0,
+      "logged_at": "2026-08-30T13:28:56.219075+00:00"
+    },
+    {
+      "question_id": 13,
+      "query": "According to the preamble of her grandfather’s will in Clarissa Harlowe, why did Clarissa’s grandfather choose to devise his estate specifically in her favor?",
+      "app_version": "0.1.11",
+      "evaluation_type": "required_and_any_of",
+      "expected_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0045"
+      ],
+      "required_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0045"
+      ],
+      "matched_required_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0045"
+      ],
+      "missing_required_chunk_ids": [],
+      "any_of": [],
+      "retrieved_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0000",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0005",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0011",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0045",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0047"
+      ],
+      "matched_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0045"
+      ],
+      "unexpected_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0000",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0005",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0011",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0047"
+      ],
+      "required_count": 1,
+      "matched_required_count": 1,
+      "any_of_group_count": 0,
+      "satisfied_any_of_count": 0,
+      "total_evidence_requirements": 1,
+      "satisfied_evidence_requirements": 1,
+      "recall": 1.0,
+      "generated_answer": "According to the preamble of her grandfather's will, he chose to dispose of the estate in Clarissa's favor for the following reasons:\n\n* The estate is principally of his own raising.\n* His three sons have been uncommonly prosperous and are very rich (the eldest through new found mines, the second through deaths of several relations of his present wife and her marriage portion, and son Antony through East-India traffic and successful voyages).\n* His grandson James will be sufficiently provided for by his grandmother Lovell's kindness, as she has assured him she has left him both her Scottish and English estates by deed of gift and by will.\n* His son James will very probably make it up to his grand-daughter Arabella, to whom he intends no disrespect and has no reason to, as she is a very hopeful and dutiful child.\n* His sons John and Antony seem not inclined to a married life, making son James the only one who has children or is likely to have any.\n* Clarissa is the delight of his old age, and he verily thinks she has contributed, by her amiable duty and kind and tender regards, to prolong his life.",
+      "expected_answers": {
+        "required": [
+          "East-India commerce",
+          "marriage portions",
+          "wealthy and prosperous through mines"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [],
+      "missing_required_answers": [
+        "East-India commerce",
+        "marriage portions",
+        "wealthy and prosperous through mines"
+      ],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 3,
+      "satisfied_answer_requirements": 0,
+      "accuracy": 0.0,
+      "logged_at": "2026-08-30T13:29:12.278545+00:00"
+    },
+    {
+      "question_id": 14,
+      "query": "What was the real name of the country girl whom Don Quixote renamed Dulcinea del Toboso?",
+      "app_version": "0.1.11",
+      "evaluation_type": "required_and_any_of",
+      "expected_chunk_ids": [
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0096"
+      ],
+      "required_chunk_ids": [
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0096"
+      ],
+      "matched_required_chunk_ids": [
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0096"
+      ],
+      "missing_required_chunk_ids": [],
+      "any_of": [],
+      "retrieved_chunk_ids": [
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0096",
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0115",
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0412",
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0863",
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_1480"
+      ],
+      "matched_chunk_ids": [
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0096"
+      ],
+      "unexpected_chunk_ids": [
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0115",
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0412",
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0863",
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_1480"
+      ],
+      "required_count": 1,
+      "matched_required_count": 1,
+      "any_of_group_count": 0,
+      "satisfied_any_of_count": 0,
+      "total_evidence_requirements": 1,
+      "satisfied_evidence_requirements": 1,
+      "recall": 1.0,
+      "generated_answer": "The real name of the country girl whom Don Quixote renamed Dulcinea del Toboso was Aldonza Lorenzo.",
+      "expected_answers": {
+        "required": [
+          "Aldonza Lorenzo"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [
+        "Aldonza Lorenzo"
+      ],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
+      "logged_at": "2026-08-30T13:29:26.229979+00:00"
+    },
+    {
+      "question_id": 15,
+      "query": "what did Don Quixote mistake for thirty or forty monstrous giants?",
+      "app_version": "0.1.11",
+      "evaluation_type": "required_and_any_of",
+      "expected_chunk_ids": [
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0149"
+      ],
+      "required_chunk_ids": [
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0149"
+      ],
+      "matched_required_chunk_ids": [
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0149"
+      ],
+      "missing_required_chunk_ids": [],
+      "any_of": [],
+      "retrieved_chunk_ids": [
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0047",
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0131",
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0149",
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0151",
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0221"
+      ],
+      "matched_chunk_ids": [
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0149"
+      ],
+      "unexpected_chunk_ids": [
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0047",
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0131",
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0151",
+        "4737656a-dd65-4026-bc0f-bc1552e485d7_chunk_0221"
+      ],
+      "required_count": 1,
+      "matched_required_count": 1,
+      "any_of_group_count": 0,
+      "satisfied_any_of_count": 0,
+      "total_evidence_requirements": 1,
+      "satisfied_evidence_requirements": 1,
+      "recall": 1.0,
+      "generated_answer": "Based on the provided context, Don Quixote mistook thirty or forty windmills for monstrous giants.",
+      "expected_answers": {
+        "required": [
+          "windmills"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [
+        "windmills"
+      ],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
+      "logged_at": "2026-08-30T13:29:39.700009+00:00"
+    },
+    {
+      "question_id": 16,
+      "query": "Where was Javert born, and what was his family background?",
+      "app_version": "0.1.11",
+      "evaluation_type": "required_and_any_of",
+      "expected_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0249"
+      ],
+      "required_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0249"
+      ],
+      "matched_required_chunk_ids": [],
+      "missing_required_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0249"
+      ],
+      "any_of": [],
+      "retrieved_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0252",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0411",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0662",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_1783",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_1791"
+      ],
+      "matched_chunk_ids": [],
+      "unexpected_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0252",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0411",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0662",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_1783",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_1791"
+      ],
+      "required_count": 1,
+      "matched_required_count": 0,
+      "any_of_group_count": 0,
+      "satisfied_any_of_count": 0,
+      "total_evidence_requirements": 1,
+      "satisfied_evidence_requirements": 0,
+      "recall": 0.0,
+      "generated_answer": "Based on the provided retrieved context, there is no information about where Javert was born or what his family background was. Therefore, the available context does not contain sufficient information to answer the question.",
+      "expected_answers": {
+        "required": [
+          "prison"
+        ],
+        "any_of": [
+          "fortune-teller",
+          "galleys"
+        ]
+      },
+      "matched_required_answers": [],
+      "missing_required_answers": [
+        "prison"
+      ],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": false,
+      "total_answer_requirements": 2,
+      "satisfied_answer_requirements": 0,
+      "accuracy": 0.0,
+      "logged_at": "2026-08-30T13:29:54.285996+00:00"
+    },
+    {
+      "question_id": 17,
+      "query": "What additional items did Bishop Myriel give to Jean Valjean when the gendarmes brought him back after the theft of the silver?",
+      "app_version": "0.1.11",
+      "evaluation_type": "required_and_any_of",
+      "expected_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0161"
+      ],
+      "required_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0161"
+      ],
+      "matched_required_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0161"
+      ],
+      "missing_required_chunk_ids": [],
+      "any_of": [],
+      "retrieved_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0158",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0161",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0162",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0296",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0334"
+      ],
+      "matched_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0161"
+      ],
+      "unexpected_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0158",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0162",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0296",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0334"
+      ],
+      "required_count": 1,
+      "matched_required_count": 1,
+      "any_of_group_count": 0,
+      "satisfied_any_of_count": 0,
+      "total_evidence_requirements": 1,
+      "satisfied_evidence_requirements": 1,
+      "recall": 1.0,
+      "generated_answer": "Based on the retrieved context, when the gendarmes brought Jean Valjean back, the Bishop gave him the two silver candlesticks, which he had also given him along with the forks and spoons.",
+      "expected_answers": {
+        "required": [
+          "two silver candlesticks"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [
+        "two silver candlesticks"
+      ],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
+      "logged_at": "2026-08-30T13:30:08.524793+00:00"
+    },
+    {
+      "question_id": 18,
+      "query": "In Clarissa Harlowe (Letter XII), what habits and characteristics of Mr. Lovelace did Mrs. Fortescue recount to Miss Howe?",
+      "app_version": "0.1.11",
+      "evaluation_type": "required_and_any_of",
+      "expected_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0088",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0089"
+      ],
+      "required_chunk_ids": [],
+      "matched_required_chunk_ids": [],
+      "missing_required_chunk_ids": [],
+      "any_of": [
+        {
+          "group": 1,
+          "expected_chunk_ids": [
+            "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0088",
+            "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0089"
+          ],
+          "matched_chunk_ids": [],
+          "missing_chunk_ids": [
+            "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0088",
+            "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0089"
+          ],
+          "satisfied": false
+        }
+      ],
+      "retrieved_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0005",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0006",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0007",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0008",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0011"
+      ],
+      "matched_chunk_ids": [],
+      "unexpected_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0005",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0006",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0007",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0008",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0011"
+      ],
+      "required_count": 0,
+      "matched_required_count": 0,
+      "any_of_group_count": 1,
+      "satisfied_any_of_count": 0,
+      "total_evidence_requirements": 1,
+      "satisfied_evidence_requirements": 0,
+      "recall": 0.0,
+      "generated_answer": "Based on the provided retrieved context, the available text mentions that Miss Howe gives Mr. Lovelace's character from Mrs. Fortescue in Letter XIII (and referenced in Letter XII), but it does not detail the specific habits and characteristics recounted by Mrs. Fortescue. Therefore, the available context does not contain sufficient information to answer what specific habits and characteristics were recounted.",
+      "expected_answers": {
+        "required": [
+          "brain fever"
+        ],
+        "any_of": []
+      },
+      "matched_required_answers": [],
+      "missing_required_answers": [
+        "brain fever"
+      ],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": null,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 0,
+      "accuracy": 0.0,
+      "logged_at": "2026-08-30T13:30:22.094310+00:00"
+    },
+    {
+      "question_id": 19,
+      "query": "What name did the stranger assume when he arrived at M—— sur M—— and established the jet-glass manufacturing business?",
+      "app_version": "0.1.11",
+      "evaluation_type": "required_and_any_of",
+      "expected_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0235"
+      ],
+      "required_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0235"
+      ],
+      "matched_required_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0235"
+      ],
+      "missing_required_chunk_ids": [],
+      "any_of": [],
+      "retrieved_chunk_ids": [
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0349",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_1565",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0235",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0239",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_1494"
+      ],
+      "matched_chunk_ids": [
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0235"
+      ],
+      "unexpected_chunk_ids": [
+        "188745a8-683d-4229-9183-18a28735094a_chunk_0349",
+        "188745a8-683d-4229-9183-18a28735094a_chunk_1565",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_0239",
+        "8ebdaea8-2566-4266-a05f-2fd90edabaf3_chunk_1494"
+      ],
+      "required_count": 1,
+      "matched_required_count": 1,
+      "any_of_group_count": 0,
+      "satisfied_any_of_count": 0,
+      "total_evidence_requirements": 1,
+      "satisfied_evidence_requirements": 1,
+      "recall": 1.0,
+      "generated_answer": "Based on the provided context, the stranger was called Father Madeleine (and later became known as Monsieur Madeleine and Monsieur le Maire) after he arrived at M. sur M.",
+      "expected_answers": {
+        "required": [],
+        "any_of": [
+          "Father Madeleine",
+          "M. Madeleine",
+          "Monsieur Madeleine"
+        ]
+      },
+      "matched_required_answers": [],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [
+        "Father Madeleine",
+        "Monsieur Madeleine"
+      ],
+      "any_of_satisfied": true,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 1,
+      "accuracy": 1.0,
+      "logged_at": "2026-08-30T13:30:37.620165+00:00"
+    },
+    {
+      "question_id": 20,
+      "query": "Who was primary correspondent and trusted confidante throughout her family conflicts?",
+      "app_version": "0.1.11",
+      "evaluation_type": "required_and_any_of",
+      "expected_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0005",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0013"
+      ],
+      "required_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0005",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0013"
+      ],
+      "matched_required_chunk_ids": [],
+      "missing_required_chunk_ids": [
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0005",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0013"
+      ],
+      "any_of": [],
+      "retrieved_chunk_ids": [
+        "22685eef-f672-4b94-81ed-7d17029257f9_chunk_0352",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0009",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0884",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_1013",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_1058"
+      ],
+      "matched_chunk_ids": [],
+      "unexpected_chunk_ids": [
+        "22685eef-f672-4b94-81ed-7d17029257f9_chunk_0352",
+        "89066699-ab10-4cce-b470-a7a3a8e54b0d_chunk_0009",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_0884",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_1013",
+        "8f5d80e3-fff7-4a14-af59-976d27f7ff9f_chunk_1058"
+      ],
+      "required_count": 2,
+      "matched_required_count": 0,
+      "any_of_group_count": 0,
+      "satisfied_any_of_count": 0,
+      "total_evidence_requirements": 2,
+      "satisfied_evidence_requirements": 0,
+      "recall": 0.0,
+      "generated_answer": "Based on the provided retrieved context, there is no mention of a primary correspondent and trusted confidante throughout her family conflicts. Therefore, the available context does not contain sufficient information to answer the question.",
+      "expected_answers": {
+        "required": [],
+        "any_of": [
+          "Anna Howe",
+          "Miss Anna Howe",
+          "Miss Howe"
+        ]
+      },
+      "matched_required_answers": [],
+      "missing_required_answers": [],
+      "matched_any_of_answers": [],
+      "any_of_satisfied": false,
+      "total_answer_requirements": 1,
+      "satisfied_answer_requirements": 0,
+      "accuracy": 0.0,
+      "logged_at": "2026-08-30T13:30:51.302808+00:00"
     }
   ]
 }
