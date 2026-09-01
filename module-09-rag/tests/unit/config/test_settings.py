@@ -18,7 +18,7 @@ def test_settings_default_values() -> None:
     assert settings.default_embedding_model == "all-MiniLM-L6-v2"
     assert settings.embedding_batch_size == 100
     assert settings.embedding_cost_per_million_tokens == 0.0
-    assert settings.canidate_default_top_k == 5
+    assert settings.canidate_default_top_k == 25
     assert settings.canidate_max_top_k == 100
     assert settings.re_ranker_default_top_k == 5
     assert settings.re_ranker_max_top_k == 20
