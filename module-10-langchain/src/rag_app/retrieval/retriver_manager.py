@@ -1,7 +1,12 @@
 from __future__ import annotations
+from uuid import UUID
 
 from rag_app.core import get_settings
 from rag_app.models import RetriveRequest, RetriveResponse
+
+
+from langchain_core.documents import Document
+from langchain_core.retrievers import BaseRetriever
 
 from .candidate.base import RetrievalStrategy
 from .candidate.hybrid_search import HybridSearch
@@ -60,3 +65,40 @@ class RetriverManager:
             )
 
         return RetriveResponse(tenant_id=tenant_id, queries=queries, results=results)
+
+
+class LangchainRetriever(BaseRetriever):
+    retriever_manager: RetriverManager
+
+    async def _aget_relevant_documents(
+        self,
+        tenant_id: UUID,
+        queries: list[str],
+        *,
+        run_manager=None,
+    ) -> list[Document]:
+        response = await self.retriever_manager.retrieve(
+            RetriveRequest(
+                tenant_id=tenant_id,
+                queries=queries,
+            )
+        )
+
+        return [
+            Document(
+                page_content=result.chunk_text,
+                metadata={
+                    "chunk_id": str(result.chunk_id),
+                    "similarity_score": result.similarity_score,
+                },
+            )
+            for result in response.results
+        ]
+
+    def _get_relevant_documents(
+        self,
+        query: str,
+        *,
+        run_manager=None,
+    ) -> list[Document]:
+        raise NotImplementedError("This retriever supports async retrieval. Use ainvoke().")

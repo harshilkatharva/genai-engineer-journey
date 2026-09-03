@@ -2,9 +2,10 @@ from unittest.mock import AsyncMock, MagicMock, patch
 from uuid import uuid4
 
 import pytest
+from langchain_core.documents import Document
 
-from rag_app.models import RetriveRequest, RetriveResult
-from rag_app.retrieval.retriver_manager import RetriverManager
+from rag_app.models import RetriveRequest, RetriveResponse, RetriveResult
+from rag_app.retrieval.retriver_manager import LangchainRetriever, RetriverManager
 
 
 @pytest.mark.asyncio
@@ -264,3 +265,70 @@ async def test_retrieve_uses_hybrid_search_strategy():
 
     vector_search.retrive.assert_not_called()
     keyword_search.retrive.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_langchain_retriever_aget_relevant_documents():
+    tenant_id = uuid4()
+    queries = ["What is the refund policy?"]
+    chunk_id_1 = str(uuid4())
+    chunk_id_2 = str(uuid4())
+
+    mock_retrive_results = [
+        RetriveResult(
+            chunk_id=chunk_id_1,
+            chunk_text="Customers can request a refund within 30 days.",
+            similarity_score=0.92,
+        ),
+        RetriveResult(
+            chunk_id=chunk_id_2,
+            chunk_text="Refund requests must include original receipt.",
+            similarity_score=0.85,
+        ),
+    ]
+
+    mock_response = RetriveResponse(
+        tenant_id=tenant_id,
+        queries=queries,
+        results=mock_retrive_results,
+    )
+
+    mock_manager = MagicMock(spec=RetriverManager)
+    mock_manager.retrieve = AsyncMock(return_value=mock_response)
+
+    retriever = LangchainRetriever(retriever_manager=mock_manager)
+
+    docs = await retriever._aget_relevant_documents(
+        tenant_id=tenant_id,
+        queries=queries,
+    )
+
+    mock_manager.retrieve.assert_awaited_once()
+    called_request = mock_manager.retrieve.call_args[0][0]
+    assert isinstance(called_request, RetriveRequest)
+    assert called_request.tenant_id == tenant_id
+    assert called_request.queries == queries
+
+    assert len(docs) == 2
+    assert isinstance(docs[0], Document)
+    assert docs[0].page_content == "Customers can request a refund within 30 days."
+    assert docs[0].metadata == {
+        "chunk_id": chunk_id_1,
+        "similarity_score": 0.92,
+    }
+    assert isinstance(docs[1], Document)
+    assert docs[1].page_content == "Refund requests must include original receipt."
+    assert docs[1].metadata == {
+        "chunk_id": chunk_id_2,
+        "similarity_score": 0.85,
+    }
+
+
+def test_langchain_retriever_get_relevant_documents_raises_not_implemented():
+    mock_manager = MagicMock(spec=RetriverManager)
+    retriever = LangchainRetriever(retriever_manager=mock_manager)
+
+    with pytest.raises(NotImplementedError) as exc_info:
+        retriever._get_relevant_documents("test query")
+
+    assert "This retriever supports async retrieval. Use ainvoke()." in str(exc_info.value)
