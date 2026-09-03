@@ -1,7 +1,7 @@
 from time import perf_counter
 from uuid import UUID
 
-from pgvector import Vector
+from pgvector.sqlalchemy import Vector
 
 from rag_app.db.retrive_db import RetriveDBManager
 from rag_app.embedding.embedding_manager import (
