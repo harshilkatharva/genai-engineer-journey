@@ -25,6 +25,12 @@ class LLMServicemanager:
             "google": GoogleProvider(),
         }
 
+    def get_chat_model(self, provider: str) -> LLMProvider:
+        if provider not in self.providers:
+            raise ValueError(f"Unsupported provider {provider}")
+
+        return self.providers[provider].get_llm()
+
     async def complete(self, request: LLMManagerRequest) -> LLMManagerResponse:
         """
         Provide respose from specific provider
