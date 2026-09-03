@@ -12,3 +12,26 @@ dependencies = [
     "pytest-asyncio>=1.4.0",
     "uvicorn>=0.52.1",
 ]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = [
+    "integration : marks tests that call external services"
+]
+addopts = "-m 'not integration'"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+
+
