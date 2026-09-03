@@ -1,5 +1,7 @@
 from unittest.mock import MagicMock, patch
 
+from langchain_core.prompts import ChatPromptTemplate
+
 from rag_app.models.prompt.prompt_request import PromptRequest
 from rag_app.models.retrive.retrive_response import RetriveResult
 from rag_app.prompts.prompt_manager import PromptManager
@@ -64,3 +66,31 @@ User Question:
     # Similarity scores should NOT appear in the prompt.
     assert "0.95" not in result
     assert "0.87" not in result
+
+
+def test_build_rag_prompt_langchain(tmp_path):
+    prompt_file = tmp_path / "rag_v3.md"
+    prompt_file.write_text("Context:\n{context}\nUser Question:\n{query}")
+
+    settings = MagicMock()
+    settings.rag_prompt_running_version = "rag_v3.md"
+
+    with patch(
+        "rag_app.prompts.prompt_manager.get_settings",
+        return_value=settings,
+    ):
+        manager = PromptManager()
+
+        with patch(
+            "rag_app.prompts.prompt_manager.Path",
+            return_value=prompt_file,
+        ):
+            chat_prompt = manager.build_rag_prompt_langchain()
+
+    assert isinstance(chat_prompt, ChatPromptTemplate)
+    formatted = chat_prompt.format(
+        context="Sample context chunk",
+        query="Sample question?",
+    )
+    assert "Sample context chunk" in formatted
+    assert "Sample question?" in formatted

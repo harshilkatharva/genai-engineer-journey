@@ -139,7 +139,7 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------------
     # Latest Prompt file/version
     # ------------------------------------------------------------------
-    rag_prompt_running_version: str = Field(default="rag_v2.md")
+    rag_prompt_running_version: str = Field(default="rag_v3.md")
 
     # ------------------------------------------------------------------
     # Logging
