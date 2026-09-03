@@ -3,7 +3,6 @@ import time
 from rag_app.core.settings import get_settings
 from rag_app.models import (
     LLMManagerRequest,
-    PromptRequest,
     QueryManagerRequest,
     QueryPerformanceTracker,
     RAGRequest,
@@ -13,7 +12,7 @@ from rag_app.observability.events import EventName
 from rag_app.observability.logger import logger
 from rag_app.prompts.prompt_manager import PromptManager
 from rag_app.query.query_manager import QueryManager
-from rag_app.retrieval.retriver_manager import RetriverManager, LangchainRetriever
+from rag_app.retrieval.retriver_manager import LangchainRetriever
 from rag_app.services.llm_services import LLMServicemanager
 from rag_app.tracker.query_performance_tracker import QueryPerformanceTrackerLogger
 
@@ -22,7 +21,6 @@ class RAGChat:
     def __init__(self):
         self.settings = get_settings()
         self.query_manager = QueryManager()
-        self.retriver_manager = RetriverManager()
         self.langchain_retriver = LangchainRetriever()
         self.prompt_manager = PromptManager()
         self.llm_manager = LLMServicemanager()
@@ -77,12 +75,7 @@ class RAGChat:
 
         prompt_start = time.perf_counter()
 
-        prompt, prompt_version = self.prompt_manager.build_rag_prompt(
-            request=PromptRequest(
-                query=request.query,
-                chunks=documents,
-            )
-        )
+        prompt = self.prompt_manager.build_rag_prompt_langchain()
 
         prompt_latency_ms = (time.perf_counter() - prompt_start) * 1000
 
@@ -91,7 +84,7 @@ class RAGChat:
             event=EventName.PROMPT_COMPLETED,
             component="rag_feature",
             latency_ms=prompt_latency_ms,
-            prompt_version=prompt_version,
+            prompt_version=self.settings.rag_prompt_running_version,
         )
 
         # =====================================================
