@@ -1,0 +1,153 @@
+Operations — Cross-Policy Edge Cases
+====================================
+This file intentionally contains cases that require careful source selection. Some cases require combining evidence from two documents; others are designed as distractors.
+
+CASE-01 — Employee laptop reimbursement vs customer return
+----------------------------------------------------------
+Rhea purchases a VLT-DE-5450-16 from Virelia for a field project using an approved personal-expense route. Two separate questions then arise. Whether the employee can be reimbursed is controlled by HR-SAL expense rules. Whether the device can be returned is controlled by CX-RET, assuming the transaction qualifies as a customer order. A model that uses the customer return policy to answer reimbursement eligibility is retrieving the wrong policy even though the words 'purchase' and 'laptop' appear in both.
+
+CASE-02 — Quotation expiry
+--------------------------
+A quote is created on 3 October with a seven-day validity period. On 11 October the customer asks whether the quoted amount still applies. The safe answer is not to count the seven-day window from the date of the follow-up request. The relevant date is the quote's stated validity period.
+
+CASE-03 — 55-inch television ambiguity
+--------------------------------------
+A user searches for '55-inch 4K TV under ₹75,000'. The corpus contains Sony Bravia CoreView 55 at ₹73,500, TCL Cinema Pro 55 at ₹61,990, and Panasonic Viera Business 55 at ₹69,800. A generic answer such as 'the cheapest 55-inch TV is TCL' requires a price comparison, but 'which 55-inch model supports voice remote?' requires reading the individual records. Retrieval should not stop after finding one matching brand.
+
+CASE-04 — 512 GB phones
+-----------------------
+The Motorola Edge 60 Enterprise has 512 GB storage and 12 GB memory. The Xiaomi 15 Pro Commerce has 512 GB storage and 16 GB memory. A question asking only for a 512 GB phone is ambiguous. If the user adds 'with 16 GB memory', the correct record becomes the Xiaomi entry.
+
+CASE-05 — Air-conditioner installation
+--------------------------------------
+The Blue Star Edge Inverter 2.0T is the only 2.0-ton AC in the synthetic catalog and requires an enhanced survey. A response that says all 1.5-ton and 2.0-ton split ACs follow the same installation path ignores the product-specific rule.
+
+CASE-06 — Attendance grace period
+---------------------------------
+An office employee starts work at 09:09 when their scheduled shift begins at 09:00. The ten-minute general office grace period covers the arrival. The same answer should not be copied to a warehouse employee whose roster has a shift-specific handover requirement.
+
+CASE-07 — Late attendance correction
+------------------------------------
+An employee notices an incorrect entry eight working days later. The default correction window is five working days after noticing. If a documented attendance-system outage prevented the correction, the later request can be evaluated with that evidence. The mere passage of time does not automatically approve the correction.
+
+CASE-08 — Joining date versus payroll date
+------------------------------------------
+An employee joins on 19 August, one day before the payroll closing checkpoint of 20 August. Whether the employee appears in that cycle depends on the actual payroll cut-off and record completion. The joining date itself is not synonymous with the processing date.
+
+CASE-09 — Probation versus salary revision
+------------------------------------------
+An employee completes six months and asks for a raise because probation is complete. The joining policy says probation completion is not an automatic salary increase. Compensation is handled under HR-SAL and can follow annual review, promotion or another approved mechanism.
+
+CASE-10 — Lost laptop and return
+--------------------------------
+An employee loses a company laptop. The first action is security incident reporting, not a customer-return request. The device is an internal asset even if the exact hardware model also appears in the public product catalog.
+
+CASE-11 — Supplier substitution
+-------------------------------
+A vendor ships a VLT-HP-640G11-32-equivalent configuration when the purchase order requested VLT-HP-440G11-16. Similar processor family or brand is not enough to treat the substitution as approved. Procurement policy requires product-code alignment or an authorized change.
+
+CASE-12 — Damaged TV
+--------------------
+A customer reports a cracked television panel 36 hours after delivery. That timing fits the preferred damaged-shipment reporting window. The customer still needs to follow the inspection path; the report is not itself a final refund decision.
+
+CASE-13 — Refund initiation
+---------------------------
+Customer service tells a buyer that the refund was initiated Monday. On Tuesday the buyer sees no credit in the bank account. The correct explanation distinguishes Virelia's refund-initiation event from the payment provider's posting time.
+
+CASE-14 — Security access by seniority
+--------------------------------------
+A director asks for production database access for an analyst and says that their senior role is enough approval. The security policy rejects that shortcut. Production access can require a named business reason, manager approval and additional system-owner or Security approval.
+
+CASE-15 — AI upload
+-------------------
+An employee wants to paste a customer-support export into a public chatbot to summarize complaints. The security policy requires the data classification and approved workflow to be considered first. The purpose is legitimate, but legitimate purpose alone does not authorize an unsafe data path.
+
+CASE-16 — Regional holiday
+--------------------------
+A person working in Gujarat and an employee mapped to Karnataka can have different holiday calendars. The word 'holiday' in a search result is not enough; the employee's regional assignment matters.
+
+CASE-17 — Installation versus delivery
+--------------------------------------
+A television arrives on Friday and the installer is booked for Monday. The delivery event is complete while installation is still pending. A support answer should not claim that the television has been installed merely because the parcel was delivered.
+
+CASE-18 — Product code versus serial number
+-------------------------------------------
+Two identical VLT-HP-440G11-16 units exist in inventory with different serial numbers. The product code identifies their configuration; the serial number identifies the individual device. Warranty handling may require the serial even though pricing uses the product code.
+
+CASE-19 — Customer contract override
+------------------------------------
+A large enterprise customer has a signed agreement with a fourteen-day commercial return window for a specific eligible class. The default seven-day rule remains the general policy, but the customer-specific agreement can govern that account and order when the recorded contract clearly says so.
+
+CASE-20 — Same word, different policy
+-------------------------------------
+The word 'approval' can refer to a joining-date change, a payroll adjustment, a customer discount, supplier purchasing, employee leave, or privileged security access. The correct source is determined by the object of the approval. Retrieval should use surrounding nouns and identifiers instead of matching the word alone.
+
+CASE-21 — Similar model names
+-----------------------------
+A customer asks for a 'Dell business laptop, 16 GB, 512 GB'. Both VLT-DE-5450-16 and VLT-DE-7440-16 can match the high-level description. The Latitude has Business-24 warranty class while the Inspiron has Business-12. A correct answer must not silently combine the Latitude warranty with the Inspiron price.
+
+CASE-22 — Return versus warranty
+--------------------------------
+A laptop stops charging after three months. The customer asks for a return because the product is not working. The operational route is likely warranty/service rather than the seven-day standard return window because the timing is far beyond the general return period.
+
+CASE-23 — Procurement versus inventory
+--------------------------------------
+A receiving record says ten units arrived, but only nine serial numbers were captured. The quantity check can be correct while the serial-control requirement remains incomplete. Good retrieval should preserve both facts rather than collapsing them into 'inventory received successfully.'
+
+CASE-24 — Data retention
+------------------------
+A customer requests deletion of a support ticket immediately after case closure. The privacy process must consider retention requirements and any financial or contractual obligations. The frontline agent should not promise immediate deletion merely because the ticket is closed.
+
+CASE-25 — Exact-code challenge
+------------------------------
+Question: Which record contains VLT-PH-MOTO-E60E? The answer must point to Motorola Edge 60 Enterprise, 12 GB memory, 512 GB storage, ₹47,200 and Mobile-24 service class. The Xiaomi record is a deliberate semantic distractor because it also has 512 GB storage.
+
+
+RETR-01 — Exact identifier precedence
+-------------------------------------
+If a question contains a product code, retrieve the exact product record before using a generic brand/model result. VLT-HP-440G11-16 is stronger evidence than the phrase 'HP business laptop'.
+
+
+RETR-02 — Numeric ambiguity
+---------------------------
+The number 24 occurs as a warranty class, while 24 hours can occur in operational timing contexts. Numeric tokens should be interpreted with nearby units and headings.
+
+
+RETR-03 — Seven-day ambiguity
+-----------------------------
+Seven calendar days is used for the default quotation validity and customer return request window, but the objects are completely different. Retrieval should use 'quote' versus 'return' context.
+
+
+RETR-04 — Five-day ambiguity
+----------------------------
+Five working days is associated with attendance-correction timing in this corpus. It should not be generalized to customer returns or payroll.
+
+
+RETR-05 — Same brand, different warranty
+----------------------------------------
+Dell Latitude 5450 and Dell Inspiron 14 7440 carry different demonstration warranty classes. Brand retrieval alone is insufficient.
+
+
+RETR-06 — Same storage, different memory
+----------------------------------------
+Motorola Edge 60 Enterprise and Xiaomi 15 Pro Commerce both list 512 GB storage, but they differ in memory, price and product code.
+
+
+RETR-07 — Same screen size, different panel
+-------------------------------------------
+The 55-inch Sony and TCL televisions do not have identical panel descriptions, even though both are 55-inch 4K class products.
+
+
+RETR-08 — Same tonnage, different efficiency
+--------------------------------------------
+Several 1.5-ton air conditioners have different efficiency classes and prices. Tonnage is therefore not a unique product key.
+
+
+RETR-09 — Policy owner as metadata
+----------------------------------
+HR policy questions should rank People Operations documents above customer-policy documents even when phrases such as 'approval' or 'return' overlap.
+
+
+RETR-10 — Cross-document reasoning
+----------------------------------
+Some questions intentionally require catalog evidence plus customer-policy evidence. A model should answer with both facts rather than treating one source as a substitute for the other.

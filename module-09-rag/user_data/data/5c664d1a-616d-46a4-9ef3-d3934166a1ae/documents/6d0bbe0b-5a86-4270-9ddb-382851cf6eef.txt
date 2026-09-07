@@ -1,0 +1,83 @@
+Vendor & Procurement Policy
+===========================
+Synthetic supplier and internal procurement controls. Customer purchasing is governed elsewhere.
+
+PRC-001 — Supplier application
+------------------------------
+A prospective supplier submits legal identity information, tax registration, bank details, beneficial-ownership information where required, product categories, service contacts and agreed compliance statements. Procurement verifies the information before activating the supplier in the sourcing system.
+
+PRC-002 — Bank verification
+---------------------------
+Supplier bank-account changes receive enhanced verification because payment fraud is a known control risk. A supplier email alone is not sufficient evidence for a bank-detail change.
+
+PRC-003 — Spend thresholds
+--------------------------
+Purchase approvals use spend thresholds, but value is not the only factor. Technology, security, legal and regulated categories can require specialist approval even when the amount is modest.
+
+PRC-004 — Three-way match
+-------------------------
+For applicable purchases, Finance may compare the purchase order, goods receipt and supplier invoice. A matching product code alone does not prove that quantity and receipt status are correct.
+
+PRC-005 — Serial-controlled goods
+---------------------------------
+Serial-controlled products require serial capture at receiving. A warehouse associate who checks only box quantity has not completed the serial-control step.
+
+PRC-006 — Damaged inbound goods
+-------------------------------
+Inbound damage should be photographed and linked to the receiving transaction. Procurement may open a supplier-quality case where damage or packaging defects indicate a broader problem.
+
+PRC-007 — Supplier quality score
+--------------------------------
+Supplier performance can include defect rate, delivery reliability, documentation accuracy and response time. A low price does not automatically compensate for repeated quality failures.
+
+PRC-008 — Purchase-order amendments
+-----------------------------------
+Changes to quantity or price after a purchase order is approved may require an amendment. A supplier should not rely on a phone conversation as evidence that the original commercial order has changed.
+
+PRC-009 — Emergency buying
+--------------------------
+An emergency purchase route can be used when delay creates material operational risk. It still requires a retrospective record of what was bought, why normal procurement could not be used and who authorized the exception.
+
+PRC-010 — Supplier access
+-------------------------
+A supplier technician needing temporary system access requires the relevant security workflow. A purchase order does not grant application access.
+
+PRC-011 — Product substitutions
+-------------------------------
+A supplier cannot substitute a different product code without approval. A similar-looking model may have a different warranty, connector set or service class.
+
+PRC-012 — Sample units
+----------------------
+Supplier samples are tracked separately from sellable inventory. A sample unit should not be dispatched to a customer merely because a matching product code exists in the catalog.
+
+PRC-013 — Returns to supplier
+-----------------------------
+A supplier return is distinct from a customer return. The warehouse should retain the evidence connecting the returned unit to the purchase order or receiving record.
+
+PRC-014 — Invoice disputes
+--------------------------
+An invoice dispute should identify the purchase order, received quantity, invoice line and nature of the mismatch. Procurement should avoid asking Finance to reject an entire invoice when only one line is disputed.
+
+PRC-015 — Contract renewal
+--------------------------
+A supplier agreement approaching expiry should be reviewed before a new purchase assumes the old commercial terms. Renewal is not automatic because historical pricing is still visible in the system.
+
+PRC-016 — Conflict of interest
+------------------------------
+Employees involved in supplier selection must disclose relevant personal relationships or financial interests. A disclosed conflict may be managed through recusal or another approved control.
+
+PRC-017 — Gifts from vendors
+----------------------------
+Gift handling follows employee conduct rules, but procurement decisions require special care during live sourcing events. A gift offered while a tender is under evaluation should be escalated rather than accepted casually.
+
+PRC-018 — Supplier documentation
+--------------------------------
+Supplier certificates, test reports or product compliance declarations should be stored against the supplier or product record. A marketing brochure is not automatically equivalent to a formal compliance certificate.
+
+PRC-019 — Audit trail
+---------------------
+Procurement actions should be attributable to the person and workflow that created them. Manual edits to shared documents can make audit reconstruction difficult and should be minimized.
+
+PRC-020 — Procurement versus customer sale
+------------------------------------------
+A supplier purchase can involve the same laptop model that later appears in a customer order, but the two transactions have different owners, controls, terms and evidence. Retrieval must distinguish PRC content from CX-PUR content.

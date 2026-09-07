@@ -1,0 +1,123 @@
+HR — Attendance, Leave & Scheduling
+===================================
+Synthetic attendance policy with several boundary conditions designed for retrieval testing.
+
+HR-ATT-01 — Attendance record
+-----------------------------
+The official attendance record comes from the approved attendance platform or its documented fallback procedure. Managers may use spreadsheets for planning, but a private spreadsheet is not the authoritative attendance ledger. When a discrepancy exists, the employee should use the correction workflow.
+
+HR-ATT-02 — General office grace period
+---------------------------------------
+Employees on the general office shift receive a ten-minute arrival grace period measured from the scheduled start time. The grace period is not a bank. An employee who arrives five minutes late on Monday does not obtain an additional five minutes on Tuesday.
+
+HR-ATT-03 — Shift workers
+-------------------------
+Warehouse and installation teams can have shift-specific start controls. A person scheduled for a 07:00 warehouse shift cannot rely on the general office grace rule without checking the shift assignment. Shift rosters can impose stricter handover requirements because late arrival may affect the outgoing team.
+
+HR-ATT-04 — Remote workdays
+---------------------------
+A remote workday requires the employee to remain available during the assigned work window and follow the remote-attendance workflow. Working from home after missing an office shift does not automatically convert an absence into an approved remote day.
+
+HR-ATT-05 — Leave request
+-------------------------
+Submitting a leave request records intent; it does not create approval. Employees should wait for the system or documented approver response before treating the leave as approved, except where an emergency rule explicitly allows later documentation.
+
+HR-ATT-06 — Sick leave
+----------------------
+A short sick leave can be recorded through the normal leave process. Longer absence may require additional documentation under the applicable employee category. The requirement is driven by the duration and policy category rather than an employee's subjective description of the illness.
+
+HR-ATT-07 — Attendance correction window
+----------------------------------------
+A correction request should normally be submitted within five working days after the employee notices the error. If the attendance platform was unavailable for that period, the employee should cite the outage or service ticket. A manager can support the request, but the underlying reason should still be recorded.
+
+HR-ATT-08 — Holiday calendars
+-----------------------------
+The corporate holiday calendar is not universal. Certain operations follow a regional calendar based on the employee's assigned location or business function. Customer installation teams can also have working schedules that differ from office teams.
+
+HR-ATT-09 — Comp-off
+--------------------
+A compensatory-off request is tied to eligible work that has been documented and approved. An employee cannot create a compensatory-off balance simply by working longer hours without an eligible basis. The underlying work date and approver should be recorded.
+
+HR-ATT-10 — Half-day leave
+--------------------------
+A half-day leave consumes the policy-defined half-day unit rather than an arbitrary number of hours selected by the employee. Start-time and end-time treatments can differ depending on the roster, so the attendance application should be used as the source for the exact entry format.
+
+HR-ATT-11 — Client-site attendance
+----------------------------------
+An employee visiting a customer site should use the assigned client-site attendance mechanism. Location sharing or a customer email can support a verification, but neither replaces the attendance record where the workflow requires one.
+
+HR-ATT-12 — Late arrival and access
+-----------------------------------
+Being late and being unable to access an application are different events. A user who reaches the office on time but faces a sign-in outage should record the technical issue. The issue should not be disguised as a timekeeping correction.
+
+HR-ATT-13 — Early departure
+---------------------------
+Leaving early requires the applicable manager approval or an approved leave arrangement. A manager's informal verbal statement can be captured in the approved system where the workflow permits, but it should not be assumed to update attendance automatically.
+
+HR-ATT-14 — Unplanned absence
+-----------------------------
+An unplanned absence should be communicated through the designated channel as soon as reasonably possible. The later leave record should reflect the actual reason category. Managers should avoid guessing the category when the employee has not provided enough information.
+
+HR-ATT-15 — Time-zone travel
+----------------------------
+Travel can create a difference between the employee's physical local time and the business schedule. Employees remain responsible for the approved schedule communicated for the assignment. Travel approval does not automatically change attendance expectations unless the travel plan or temporary assignment says so.
+
+HR-ATT-16 — Repeated corrections
+--------------------------------
+Repeated attendance corrections may prompt a manager review when the pattern suggests a process problem or misuse. A high count alone is not proof of wrongdoing; the company should consider whether there is a recurring technical issue or an incorrect roster configuration.
+
+HR-ATT-17 — Leave carry-forward
+-------------------------------
+Carry-forward depends on leave category. An employee should not assume that unused casual leave, earned leave, sick leave and special leave all share one balance or one expiry rule.
+
+HR-ATT-18 — Manager dashboard
+-----------------------------
+The manager dashboard is intended for oversight and approval, not as a replacement for employee self-service. Managers should review unusual patterns and pending approvals rather than editing records without evidence.
+
+HR-ATT-19 — Correction evidence
+-------------------------------
+Supporting evidence can include a system incident number, travel record, approved schedule, or manager confirmation. Personal explanations without any system trace may be insufficient for a disputed record, depending on the case.
+
+HR-ATT-20 — Attendance versus performance
+-----------------------------------------
+Attendance records are not a substitute for performance measurement. A technically perfect attendance record does not establish productivity, and an occasional approved absence does not imply poor performance.
+
+
+HR-ATT-21 — Example: 09:11 arrival
+----------------------------------
+A general office employee scheduled for 09:00 and arriving at 09:11 has exceeded the ten-minute grace period by one minute. The outcome should not be inferred from the fact that another employee arrived at 09:09.
+
+
+HR-ATT-22 — Example: roster mismatch
+------------------------------------
+A warehouse worker is scheduled for 07:00, while the employee profile still displays an old 09:00 office schedule. The roster correction should be resolved before treating a 07:05 arrival as a simple attendance violation.
+
+
+HR-ATT-23 — Example: emergency leave
+------------------------------------
+An employee experiences an emergency and cannot submit leave before the workday begins. The emergency communication process can permit later formalization, but the leave entry still needs the proper category.
+
+
+HR-ATT-24 — Example: regional holiday confusion
+-----------------------------------------------
+A team member sees that another state's public holiday appears in a calendar app. The app does not override the employee's assigned corporate holiday calendar.
+
+
+HR-ATT-25 — Example: client visit
+---------------------------------
+An employee attends a client office for a full day and travels directly home. The client visit should be captured through the client-site attendance mechanism instead of being marked as remote work without evidence.
+
+
+HR-ATT-26 — Example: system outage
+----------------------------------
+The attendance portal is unavailable from 08:45 to 11:30. Employees should use the announced fallback instruction. When correcting entries later, the outage reference helps explain why the normal workflow was unavailable.
+
+
+HR-ATT-27 — Example: repeated late arrival
+------------------------------------------
+Repeated arrivals at 09:09 are technically inside the general ten-minute grace period but may still prompt a manager conversation about schedules and team impact. The grace rule does not prevent management discussion.
+
+
+HR-ATT-28 — Example: half-day and travel
+----------------------------------------
+A half-day leave followed by an approved customer visit must be represented using the applicable systems. Employees should not use a single generic attendance note to hide two different status events.

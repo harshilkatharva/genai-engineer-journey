@@ -1,0 +1,103 @@
+Product Catalog — Phones
+========================
+
+All prices and configurations are synthetic demonstration values.
+
+Catalog record 1: Samsung Galaxy A95 Business
+Product code: VLT-PHO-SAM-A95B
+Display: 6.6-inch
+Memory: 12 GB
+Storage: 256 GB
+Demo price: ₹42,999
+Warranty class: 24 months
+Business support: priority
+SIM profile: eSIM + physical SIM
+
+Identity rule: Product code is stronger evidence than a broad phrase such as '256 GB business phone'. Multiple phones can share the same storage size while differing in memory, price and support tier.
+
+Return note: Activated-device treatment is controlled by the return policy. Catalog data alone does not establish whether a customer is eligible for a return.
+
+Catalog record 2: Apple iPhone 16 Pro Business
+Product code: VLT-PHO-APL-16PB
+Display: 6.3-inch
+Memory: not separately specified
+Storage: 256 GB
+Demo price: ₹119,900
+Warranty class: 24 months
+Business support: premium
+SIM profile: eSIM-first
+
+Identity rule: Product code is stronger evidence than a broad phrase such as '256 GB business phone'. Multiple phones can share the same storage size while differing in memory, price and support tier.
+
+Return note: Activated-device treatment is controlled by the return policy. Catalog data alone does not establish whether a customer is eligible for a return.
+
+Catalog record 3: OnePlus 13R Enterprise
+Product code: VLT-PHO-OP-13R-E
+Display: 6.78-inch
+Memory: 12 GB
+Storage: 256 GB
+Demo price: ₹49,499
+Warranty class: 18 months
+Business support: standard
+SIM profile: dual-SIM
+
+Identity rule: Product code is stronger evidence than a broad phrase such as '256 GB business phone'. Multiple phones can share the same storage size while differing in memory, price and support tier.
+
+Return note: Activated-device treatment is controlled by the return policy. Catalog data alone does not establish whether a customer is eligible for a return.
+
+Catalog record 4: Google Pixel 10 Business
+Product code: VLT-PHO-GGL-P10B
+Display: 6.3-inch
+Memory: 12 GB
+Storage: 256 GB
+Demo price: ₹67,900
+Warranty class: 24 months
+Business support: priority
+SIM profile: eSIM + physical SIM
+
+Identity rule: Product code is stronger evidence than a broad phrase such as '256 GB business phone'. Multiple phones can share the same storage size while differing in memory, price and support tier.
+
+Return note: Activated-device treatment is controlled by the return policy. Catalog data alone does not establish whether a customer is eligible for a return.
+
+Catalog record 5: Nothing Phone 3 Business Edition
+Product code: VLT-PHO-NT-3BE
+Display: 6.7-inch
+Memory: 12 GB
+Storage: 256 GB
+Demo price: ₹54,800
+Warranty class: 18 months
+Business support: premium
+SIM profile: eSIM-first
+
+Identity rule: Product code is stronger evidence than a broad phrase such as '256 GB business phone'. Multiple phones can share the same storage size while differing in memory, price and support tier.
+
+Return note: Activated-device treatment is controlled by the return policy. Catalog data alone does not establish whether a customer is eligible for a return.
+
+Catalog record 6: Motorola Edge 60 Enterprise
+Product code: VLT-PHO-MOTO-E60E
+Display: 6.67-inch
+Memory: 12 GB
+Storage: 512 GB
+Demo price: ₹47,200
+Warranty class: 24 months
+Business support: standard
+SIM profile: dual-SIM
+
+Identity rule: Product code is stronger evidence than a broad phrase such as '512 GB business phone'. Multiple phones can share the same storage size while differing in memory, price and support tier.
+
+Return note: Activated-device treatment is controlled by the return policy. Catalog data alone does not establish whether a customer is eligible for a return.
+
+Catalog record 7: Xiaomi 15 Pro Commerce
+Product code: VLT-PHO-XIA-15PC
+Display: 6.73-inch
+Memory: 16 GB
+Storage: 512 GB
+Demo price: ₹69,500
+Warranty class: 24 months
+Business support: priority
+SIM profile: eSIM + physical SIM
+
+Identity rule: Product code is stronger evidence than a broad phrase such as '512 GB business phone'. Multiple phones can share the same storage size while differing in memory, price and support tier.
+
+Return note: Activated-device treatment is controlled by the return policy. Catalog data alone does not establish whether a customer is eligible for a return.
+

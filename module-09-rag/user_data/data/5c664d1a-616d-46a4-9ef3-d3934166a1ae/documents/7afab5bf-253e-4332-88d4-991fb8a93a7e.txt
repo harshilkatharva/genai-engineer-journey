@@ -1,0 +1,123 @@
+HR — Salary, Payroll & Benefits
+===============================
+Synthetic payroll and compensation policy. Product prices in the catalog do not belong to payroll policy.
+
+HR-SAL-01 — Monthly payroll
+---------------------------
+Payroll is processed monthly. Finance publishes a cut-off calendar because records such as new joiners, unpaid leave, approved variable pay and certain reimbursements must arrive before a defined checkpoint. A transaction submitted after close may be processed in the next cycle unless Finance authorizes a correction.
+
+HR-SAL-02 — Fixed and variable pay
+----------------------------------
+Fixed salary is the recurring compensation defined by the employee's compensation statement. Variable pay may depend on an incentive plan, achievement, eligibility and approval. A target amount printed in a plan is not necessarily the same as a guaranteed payment.
+
+HR-SAL-03 — Salary revision
+---------------------------
+Annual compensation review is separate from probation confirmation. Employees can receive a promotion adjustment or market correction outside the annual cycle if approved under the compensation framework.
+
+HR-SAL-04 — Payroll discrepancy
+-------------------------------
+An employee disputing a payslip should identify the specific month and pay component. 'My salary is wrong' is not enough to diagnose the issue. Useful evidence includes the payslip, approved attendance or leave data, and the relevant compensation communication.
+
+HR-SAL-05 — Unpaid leave
+------------------------
+Unpaid leave can affect monthly pay depending on the employee's schedule and the payroll calendar. The payroll result follows approved HR records rather than the employee's personal calculation.
+
+HR-SAL-06 — Reimbursements
+--------------------------
+Expense reimbursements are claims against eligible business spending. A reimbursement does not become salary merely because it appears on a payslip. Receipts, business purpose and required approval can all matter.
+
+HR-SAL-07 — Salary advance
+--------------------------
+A salary advance is a temporary financial arrangement governed by Finance rules. It should not be confused with a performance bonus or reimbursement. Repayment treatment is defined in the approved advance record.
+
+HR-SAL-08 — Promotion
+---------------------
+A promotion can trigger a compensation change, but the effective date is determined by the approved promotion record. The date of a manager's conversation with the employee is not automatically the payroll effective date.
+
+HR-SAL-09 — Benefits
+--------------------
+Benefits are linked to eligibility categories and enrollment records. A benefit enrollment confirmation is not proof that every claim will be reimbursed; the separate benefit terms apply to the claim.
+
+HR-SAL-10 — Exit payroll
+------------------------
+Final settlement can include unpaid salary, eligible reimbursements, recoveries and other components. An employee should not assume that the normal monthly payroll cycle and final settlement follow identical timing.
+
+HR-SAL-11 — Bank-account changes
+--------------------------------
+Bank details must be updated through the approved employee workflow. Finance will not accept a change solely through a casual message because payroll fraud risk makes bank-account changes sensitive.
+
+HR-SAL-12 — Tax declarations
+----------------------------
+Employees provide tax-related declarations through the designated process. Finance calculates payroll treatment according to the submitted and verified record. A declaration is not a payment guarantee.
+
+HR-SAL-13 — Variable incentives
+-------------------------------
+Sales and delivery incentives can have different eligibility rules. The employee must use the plan attached to their role rather than assuming another team's incentive formula applies.
+
+HR-SAL-14 — Payroll correction after close
+------------------------------------------
+When a verified payroll error is discovered after payroll close, Finance may make an adjustment in a subsequent cycle or issue a separate correction, depending on materiality and processing constraints.
+
+HR-SAL-15 — Compensation confidentiality
+----------------------------------------
+Employees should handle compensation statements through approved channels. Compensation data is confidential HR information and should not be posted into shared team channels.
+
+HR-SAL-16 — Effective dates
+---------------------------
+The effective date on an HR action and the processing date in payroll can differ. This distinction matters for promotions, role changes and approved salary adjustments.
+
+HR-SAL-17 — Manager access
+--------------------------
+Managers may see compensation data only to the extent permitted by their role. Access to a compensation dashboard is not blanket authorization to export salary information.
+
+HR-SAL-18 — Expense timing
+--------------------------
+An expense submitted before a reimbursement deadline can still miss the current payment cycle if approval arrives after Finance's closing checkpoint. Submission date and payment date should not be conflated.
+
+HR-SAL-19 — Payroll records
+---------------------------
+Payroll records are retained according to Finance and legal retention requirements. Deletion requests from an employee do not automatically override mandatory retention periods.
+
+HR-SAL-20 — No automatic raise
+------------------------------
+Neither joining a company nor completing probation automatically creates a fixed raise unless the employee's written compensation terms explicitly state such an entitlement. This rule is intentionally distinct from the annual compensation-review process.
+
+
+HR-SAL-21 — Example: promotion on the 21st
+------------------------------------------
+An employee is promoted effective 21 August after the payroll closing checkpoint. The approved effective date and payroll processing date are distinct; Finance determines how and when the adjustment is paid.
+
+
+HR-SAL-22 — Example: late reimbursement approval
+------------------------------------------------
+An employee submits an expense on 17 August, but manager approval occurs on 24 August. The claim was submitted before one deadline but approved after another. Payment timing must follow the finance calendar, not the submission timestamp alone.
+
+
+HR-SAL-23 — Example: bonus target
+---------------------------------
+A sales employee has a quarterly incentive target of ₹80,000. The existence of an ₹80,000 target does not mean the employee is automatically owed ₹80,000; the plan's eligibility and achievement rules determine the payment.
+
+
+HR-SAL-24 — Example: bank change request
+----------------------------------------
+An employee emails Finance saying that a bank account has changed and includes a screenshot. Finance should route the employee through the controlled bank-detail update process rather than changing payroll from the email.
+
+
+HR-SAL-25 — Example: reimbursement vs salary
+--------------------------------------------
+A ₹4,000 approved travel reimbursement appears on a payslip. It remains an expense reimbursement for policy interpretation even though it is visible in the payroll statement.
+
+
+HR-SAL-26 — Example: annual review vs probation
+-----------------------------------------------
+An employee completes probation in March and receives the annual review in July. These are separate HR events. The March confirmation does not establish the July rating.
+
+
+HR-SAL-27 — Example: exit payroll
+---------------------------------
+An employee leaves on 28 February and asks why the normal February payroll and final settlement show different timing. Final settlement follows its own processing sequence and may include additional reconciliations.
+
+
+HR-SAL-28 — Example: payroll evidence
+-------------------------------------
+When disputing a deduction, the employee should identify the pay component and month. A screenshot of an informal message about expected salary is weaker evidence than the approved compensation record.

@@ -1,0 +1,140 @@
+Product Catalog — Laptops
+=========================
+Synthetic catalog. Product codes and specifications are deliberately unique within the demo corpus. Prices are fictional test values, not live quotations.
+
+CAT-LAP-001 — HP ProBook 440 G11
+--------------------------------
+Brand: HP
+Model: ProBook 440 G11 Business
+Product code: VLT-HP-440G11-16
+Display: 14-inch anti-glare class
+Processor: Core Ultra 5 class
+Memory: 16 GB
+Storage: 512 GB SSD
+Demo price: ₹78,900
+Warranty class: Business-24
+Docking: compatible with Virelia Dock D450
+Battery replacement: service-center managed
+Best fit: general office productivity and field administration
+Special note: standard corporate image supports Windows-based deployment.
+
+CAT-LAP-002 — HP EliteBook 640 G11
+----------------------------------
+Brand: HP
+Model: EliteBook 640 G11 Enterprise
+Product code: VLT-HP-640G11-32
+Display: 14-inch business panel
+Processor: Core Ultra 7 class
+Memory: 32 GB
+Storage: 1 TB SSD
+Demo price: ₹1,18,500
+Warranty class: Business-36
+Docking: supported
+Security class: Enhanced enterprise
+Best fit: engineering management and data-heavy office roles
+Special note: configuration is not interchangeable with VLT-HP-440G11-16 despite the shared brand.
+
+CAT-LAP-003 — Dell Latitude 5450
+--------------------------------
+Brand: Dell
+Model: Latitude 5450
+Product code: VLT-DE-5450-16
+Display: 14-inch business panel
+Processor: Core Ultra 5 class
+Memory: 16 GB
+Storage: 512 GB SSD
+Demo price: ₹84,700
+Warranty class: Business-24
+Docking: supported
+Security class: Standard enterprise
+Best fit: enterprise account teams
+Weight class: light business
+
+CAT-LAP-004 — Dell Inspiron 14 7440
+-----------------------------------
+Brand: Dell
+Model: Inspiron 14 7440 Productivity
+Product code: VLT-DE-7440-16
+Display: 14-inch consumer-business hybrid
+Processor: Core Ultra 5 class
+Memory: 16 GB
+Storage: 512 GB SSD
+Demo price: ₹72,400
+Warranty class: Business-12
+Docking: optional
+Security class: Standard
+Best fit: small-business office use
+Special note: do not inherit Latitude service terms from the brand name alone.
+
+CAT-LAP-005 — Lenovo ThinkPad E14 Gen 6
+---------------------------------------
+Brand: Lenovo
+Model: ThinkPad E14 Gen 6
+Product code: VLT-LN-E14G6-16
+Display: 14-inch business display
+Processor: Ryzen 5 class
+Memory: 16 GB
+Storage: 512 GB SSD
+Demo price: ₹75,800
+Warranty class: Business-24
+Docking: supported through selected docks
+Keyboard class: business
+Best fit: mixed office and field work
+
+CAT-LAP-006 — Acer TravelMate P214
+----------------------------------
+Brand: Acer
+Model: TravelMate P214 Commercial
+Product code: VLT-AC-P214-16
+Display: 14-inch matte panel
+Processor: Core i5 class
+Memory: 16 GB
+Storage: 512 GB SSD
+Demo price: ₹64,900
+Warranty class: Business-12
+Docking: optional
+Best fit: cost-conscious branch deployments
+
+CAT-LAP-007 — ASUS ExpertBook B3
+--------------------------------
+Brand: ASUS
+Model: ExpertBook B3
+Product code: VLT-AS-B3404-16
+Display: 14-inch business panel
+Processor: Core i5 class
+Memory: 16 GB
+Storage: 512 GB SSD
+Demo price: ₹69,300
+Warranty class: Business-24
+Docking: optional
+Best fit: customer-service workstations
+
+CAT-LAP-008 — Apple MacBook Air 13
+----------------------------------
+Brand: Apple
+Model: MacBook Air 13 Business
+Product code: VLT-AP-MA13-M3-16
+Display: 13-inch
+Processor: Apple silicon class
+Memory: 16 GB
+Storage: 512 GB SSD
+Demo price: ₹1,09,900
+Warranty class: Premium-24
+Docking: USB-C dock compatible
+Operating system: macOS
+Best fit: design, management and approved macOS roles
+Special note: Windows corporate-image assumptions do not apply.
+
+Laptop selection rules
+----------------------
+Product code controls the exact purchasable configuration. A customer who asks for 'an HP 14-inch laptop' has not specified enough information to uniquely identify VLT-HP-440G11-16 versus VLT-HP-640G11-32. Likewise, a request for 'Dell 16 GB' could match more than one record. The catalog should be queried using product code, exact model, or additional attributes before an exact specification is stated.
+
+Warranty classes are also model-specific. Business-24 and Business-36 indicate different demonstration coverage periods. A support agent must retrieve the exact item record rather than assume that all business laptops carry the same warranty.
+
+Laptop accessory notes
+----------------------
+Virelia Dock D450 is listed as a compatibility reference for selected business laptops. It is an accessory record, not a warranty extension. A laptop's docking support does not mean a dock is included in the demo price. Customers should distinguish included configuration from compatible add-ons.
+
+Catalog ambiguity examples
+--------------------------
+'HP 16GB laptop' matches at least two catalog entries. 'Dell 14-inch 512GB' also matches more than one. 'Business-24 laptop' is not a unique identifier because several brands carry that class. These are useful retrieval tests because an answer that returns the first semantic match can be wrong even when every individual attribute sounds reasonable.

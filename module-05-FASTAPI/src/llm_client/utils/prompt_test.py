@@ -45,11 +45,13 @@ class PromptTest:
                     wait_time = (int(float(match.group(1))) + 1 if match else 60) + 5
 
                     print(f"Rate limit hit. Retrying in {wait_time} seconds...")
+                    await asyncio.sleep(wait_time)
                     asyncio.sleep(wait_time)
                     print(f"{wait_time} completed Retrying...")
                     continue
             except ServerError:
                 print("Model busy. Retrying in 10 seconds...")
+                await asyncio.sleep(10)
                 asyncio.sleep(10)
                 continue
             except Exception:
