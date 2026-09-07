@@ -1,8 +1,13 @@
 from __future__ import annotations
-from uuid import UUID
+import time
 
 from rag_app.core import get_settings
-from rag_app.models import RetriveRequest, RetriveResponse
+from rag_app.models import RetriveRequest, RetriveResponse, QueryManagerRequest
+from rag_app.query.query_manager import QueryManager
+
+from pydantic import Field
+from rag_app.observability.logger import logger
+from rag_app.observability.events import EventName
 
 
 from langchain_core.documents import Document
@@ -29,6 +34,7 @@ class RetriverManager:
 
     def __init__(self) -> None:
         self.settings = get_settings()
+        self.query_manager = QueryManager()
         self.strategies: dict[str, RetrievalStrategy] = {
             "vector_search": VectorSearch(),
             "keyword_search": KeywordSearch(),
@@ -42,7 +48,7 @@ class RetriverManager:
         request: RetriveRequest,
     ) -> RetriveResponse:
         tenant_id = request.tenant_id
-        queries = request.queries
+        queries = await self._get_quries(request.query)
         top_k_candidate = request.top_k_candidate
         top_k_re_ranker = request.top_k_re_ranker
 
@@ -66,21 +72,43 @@ class RetriverManager:
 
         return RetriveResponse(tenant_id=tenant_id, queries=queries, results=results)
 
+    async def _get_quries(self, query: str) -> list[str]:
+        query_start = time.perf_counter()
+
+        queries = await self.query_manager.get_queries(request=QueryManagerRequest(query=query))
+
+        query_latency_ms = (time.perf_counter() - query_start) * 1000
+
+        logger.info(
+            "Query processing completed",
+            event=EventName.QUERY_COMPLETED,
+            component="retrive_manager",
+            latency_ms=query_latency_ms,
+            no_of_queries=len(queries.queries),
+        )
+
+        return queries.queries
+
 
 class LangchainRetriever(BaseRetriever):
-    retriever_manager: RetriverManager
+    retriever_manager: RetriverManager = Field(default_factory=RetriverManager)
 
     async def _aget_relevant_documents(
         self,
-        tenant_id: UUID,
-        queries: list[str],
+        query: str,
         *,
         run_manager=None,
     ) -> list[Document]:
+        metadata = run_manager.metadata or {}
+
+        tenant_id = metadata.get("tenant_id")
+
+        if tenant_id is None:
+            raise ValueError("tenant_id is required for retrieval.")
         response = await self.retriever_manager.retrieve(
             RetriveRequest(
                 tenant_id=tenant_id,
-                queries=queries,
+                query=query,
             )
         )
 

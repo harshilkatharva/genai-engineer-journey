@@ -29,4 +29,4 @@ logs/
 .ruff_cache/
 
 # User data
-user_data/
+user_data/data

@@ -3,6 +3,7 @@ from collections.abc import AsyncIterator
 
 from rag_app.exceptions.llm_exceptions import LLMError
 from rag_app.models import LLMManagerRequest, LLMManagerResponse, LLMResponseModel
+from rag_app.core.settings import get_settings
 from rag_app.observability.events import EventName
 from rag_app.observability.logger import logger
 from rag_app.providers import (
@@ -12,6 +13,8 @@ from rag_app.providers import (
 )
 from rag_app.providers.llm_provider import LLMProvider
 
+from langchain_core.language_models.chat_models import BaseChatModel
+
 
 class LLMServicemanager:
     """
@@ -19,13 +22,18 @@ class LLMServicemanager:
     """
 
     def __init__(self) -> None:
+        self.settings = get_settings()
         self.providers: dict[str, LLMProvider] = {
             "openai": OpenAIProvider(),
             "anthropic": AnthropicProvider(),
             "google": GoogleProvider(),
         }
 
-    def get_chat_model(self, provider: str) -> LLMProvider:
+    # For langchain use
+    def get_chat_model(self, provider: str | None = None) -> BaseChatModel:
+        if provider is None:
+            provider = self.settings.default_llm_provider
+
         if provider not in self.providers:
             raise ValueError(f"Unsupported provider {provider}")
 

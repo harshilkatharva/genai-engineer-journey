@@ -4,7 +4,6 @@ from rag_app.core.settings import get_settings
 from rag_app.models import (
     LLMManagerRequest,
     PromptRequest,
-    QueryManagerRequest,
     QueryPerformanceTracker,
     RAGRequest,
     RAGResposne,
@@ -33,26 +32,6 @@ class RAGChat:
         request: RAGRequest,
     ) -> RAGResposne:
         # =====================================================
-        # Query processing
-        # =====================================================
-
-        query_start = time.perf_counter()
-
-        queries = await self.query_manager.get_queries(
-            request=QueryManagerRequest(query=request.query)
-        )
-
-        query_latency_ms = (time.perf_counter() - query_start) * 1000
-
-        logger.info(
-            "Query processing completed",
-            event=EventName.QUERY_COMPLETED,
-            component="rag_feature",
-            latency_ms=query_latency_ms,
-            no_of_queries=len(queries.queries),
-        )
-
-        # =====================================================
         # Retrieval
         # =====================================================
 
@@ -61,7 +40,7 @@ class RAGChat:
         context = await self.retriver_manager.retrieve(
             request=RetriveRequest(
                 tenant_id=request.tenant_id,
-                queries=queries.queries,
+                query=request.query,
             )
         )
 
@@ -119,7 +98,6 @@ class RAGChat:
         tracker = QueryPerformanceTracker(
             app_version=self.settings.app_version,
             query=request.query,
-            no_of_queries=len(queries.queries),
             chunk_ids=[chunk.chunk_id for chunk in context.results],
             llm_answer=answer.text,
         )

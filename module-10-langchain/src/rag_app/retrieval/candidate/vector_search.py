@@ -1,7 +1,7 @@
 from time import perf_counter
 from uuid import UUID
 
-from pgvector.sqlalchemy import Vector
+import numpy as np
 
 from rag_app.db.retrive_db import RetriveDBManager
 from rag_app.embedding.embedding_manager import (
@@ -47,8 +47,9 @@ class VectorSearch:
         results: list[RetriveResult] = []
 
         for query_embedding in query_embeddings:
+            query_embedding = np.array(query_embedding, dtype=np.float32)
             result = await self.retrive_db_manager.retrive_chunks(
-                tenant_id, Vector(query_embedding), top_k_candidates
+                tenant_id, query_embedding, top_k_candidates
             )
             for val in result:
                 results.append(

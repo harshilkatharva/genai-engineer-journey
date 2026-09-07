@@ -2,12 +2,12 @@ import time
 
 from fastapi import APIRouter
 
-from rag_app.features.rag_chat import RAGChat
+from rag_app.features.rag_chat_langchain import RAGChatLangchain
 from rag_app.models import RAGEndpointRequest, RAGRequest
 from rag_app.observability.logger import logger
 
-rag_chat = RAGChat()
-
+rag_chat = RAGChatLangchain()
+# rag_chat = RAGChat()
 router = APIRouter()
 
 

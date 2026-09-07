@@ -1,9 +1,8 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class QueryPerformanceTracker(BaseModel):
     app_version: str
     query: str
-    no_of_queries: int = Field(ge=1)
-    chunk_ids: list[str]
+    chunk_ids: list[str] | None
     llm_answer: str

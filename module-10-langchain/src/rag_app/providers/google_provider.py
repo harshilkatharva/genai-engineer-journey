@@ -32,38 +32,33 @@ class GoogleProvider(LLMProvider):
     ) -> LLMResponseModel:
         start = time.perf_counter()
 
-        llm = self.llm
-
         if response_schema:
             llm = self.llm.with_structured_output(response_schema)
 
-        response = await llm.ainvoke(prompt)
+            response = await llm.ainvoke(prompt)
 
-        latency = (time.perf_counter() - start) * 1000
-        usage = response.usage_metadata or {}
-        input_tokens = (
-            usage.prompt_token_count if usage and usage.prompt_token_count is not None else 0
-        )
-        output_tokens = (
-            usage.candidates_token_count
-            if usage and usage.candidates_token_count is not None
-            else 0
-        )
+            latency = (time.perf_counter() - start) * 1000
 
-        # Structured output response
-        if response_schema:
             return LLMResponseModel(
                 text=None,
                 data=response.model_dump(),
                 model=self._get_model(),
                 latency_ms=latency,
-                input_tokens=input_tokens,
-                output_tokens=output_tokens,
+                input_tokens=0,
+                output_tokens=0,
             )
 
-        # Normal response
+        response = await self.llm.ainvoke(prompt)
+        print(response)
+        latency = (time.perf_counter() - start) * 1000
+
+        usage = response.usage_metadata or {}
+
+        input_tokens = usage.get("input_tokens", 0)
+        output_tokens = usage.get("output_tokens", 0)
+
         return LLMResponseModel(
-            text=response.content,
+            text=response.content[0]["text"] if response.content else None,
             data=None,
             model=self._get_model(),
             latency_ms=latency,

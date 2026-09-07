@@ -23,6 +23,8 @@ from rag_app.exceptions.llm_exceptions import (
 from rag_app.models.llm.llm_response_model import LLMResponseModel
 from rag_app.providers.llm_provider import LLMProvider
 
+from langchain_anthropic import ChatAnthropic
+
 
 class AnthropicProvider(LLMProvider):
     """
@@ -32,6 +34,11 @@ class AnthropicProvider(LLMProvider):
     def __init__(self) -> None:
         self.client = AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
         self.setting = get_settings()
+        self.llm = ChatAnthropic(
+            model=self._get_model(),
+            anthropic_api_key=ANTHROPIC_API_KEY,
+            temperature=self.setting.default_llm_temperature,
+        )
 
     async def complete(
         self,
@@ -96,3 +103,6 @@ class AnthropicProvider(LLMProvider):
             if self.setting.default_llm_provider == "anthropic"
             else "claude-sonnet-4-6"
         )
+
+    def get_llm(self):
+        return self.llm

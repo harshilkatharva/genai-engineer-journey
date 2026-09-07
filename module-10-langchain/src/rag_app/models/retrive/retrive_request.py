@@ -9,7 +9,7 @@ settings = get_settings()
 
 class RetriveRequest(BaseModel):
     tenant_id: UUID
-    queries: list[str] = Field(min_length=1)
+    query: str = Field(description="The query to retrieve relevant documents for.")
     top_k_candidate: int = Field(
         default=settings.canidate_default_top_k, ge=1, le=settings.canidate_max_top_k
     )
