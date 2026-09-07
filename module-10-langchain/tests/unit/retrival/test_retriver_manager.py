@@ -1,3 +1,4 @@
+from types import SimpleNamespace
 from unittest.mock import AsyncMock, MagicMock, patch
 from uuid import uuid4
 
@@ -6,6 +7,11 @@ from langchain_core.documents import Document
 
 from rag_app.models import RetriveRequest, RetriveResponse, RetriveResult
 from rag_app.retrieval.retriver_manager import LangchainRetriever, RetriverManager
+
+
+def stub_query_manager(manager, queries):
+    manager.query_manager = MagicMock()
+    manager.query_manager.get_queries = AsyncMock(return_value=MagicMock(queries=queries))
 
 
 @pytest.mark.asyncio
@@ -40,10 +46,11 @@ async def test_retrieve_returns_results():
         vector_search.retrive = AsyncMock(return_value=expected_results)
 
         manager = RetriverManager()
+        stub_query_manager(manager, queries)
 
         request = RetriveRequest(
             tenant_id=tenant_id,
-            queries=queries,
+            query=queries[0],
             top_k_candidate=top_k_candidate,
         )
 
@@ -86,11 +93,11 @@ async def test_retrieve_uses_configured_retrieval_strategy():
         vector_search.retrive = AsyncMock(return_value=expected_results)
 
         manager = RetriverManager()
+        stub_query_manager(manager, queries)
 
         request = RetriveRequest(
             tenant_id=tenant_id,
-            queries=queries,
-            document_type=["pdf"],
+            query=queries[0],
             top_k_candidate=5,
         )
 
@@ -136,10 +143,11 @@ async def test_retrieve_uses_vector_search_strategy():
         hybrid_search = mock_hybrid_search.return_value
 
         manager = RetriverManager()
+        stub_query_manager(manager, queries)
 
         request = RetriveRequest(
             tenant_id=tenant_id,
-            queries=queries,
+            query=queries[0],
             top_k_candidate=5,
         )
 
@@ -189,10 +197,11 @@ async def test_retrieve_uses_keyword_search_strategy():
         hybrid_search = mock_hybrid_search.return_value
 
         manager = RetriverManager()
+        stub_query_manager(manager, queries)
 
         request = RetriveRequest(
             tenant_id=tenant_id,
-            queries=queries,
+            query=queries[0],
             top_k_candidate=5,
         )
 
@@ -246,10 +255,11 @@ async def test_retrieve_uses_hybrid_search_strategy():
         hybrid_search.retrive = AsyncMock(return_value=expected_results)
 
         manager = RetriverManager()
+        stub_query_manager(manager, queries)
 
         request = RetriveRequest(
             tenant_id=tenant_id,
-            queries=queries,
+            query=queries[0],
             top_k_candidate=5,
         )
 
@@ -299,29 +309,68 @@ async def test_langchain_retriever_aget_relevant_documents():
     retriever = LangchainRetriever(retriever_manager=mock_manager)
 
     docs = await retriever._aget_relevant_documents(
-        tenant_id=tenant_id,
-        queries=queries,
+        query=queries[0],
+        run_manager=SimpleNamespace(metadata={"tenant_id": tenant_id}),
     )
 
     mock_manager.retrieve.assert_awaited_once()
     called_request = mock_manager.retrieve.call_args[0][0]
     assert isinstance(called_request, RetriveRequest)
     assert called_request.tenant_id == tenant_id
-    assert called_request.queries == queries
+    assert called_request.query == queries[0]
 
     assert len(docs) == 2
     assert isinstance(docs[0], Document)
     assert docs[0].page_content == "Customers can request a refund within 30 days."
     assert docs[0].metadata == {
         "chunk_id": chunk_id_1,
+        "document_name": None,
         "similarity_score": 0.92,
     }
     assert isinstance(docs[1], Document)
     assert docs[1].page_content == "Refund requests must include original receipt."
     assert docs[1].metadata == {
         "chunk_id": chunk_id_2,
+        "document_name": None,
         "similarity_score": 0.85,
     }
+
+
+@pytest.mark.asyncio
+async def test_langchain_retriever_preserves_document_name_in_metadata():
+    tenant_id = uuid4()
+    result = RetriveResult(
+        chunk_id="chunk_1",
+        chunk_text="Refund policy content",
+        document_name="refund-policy.pdf",
+        similarity_score=0.92,
+    )
+    response = RetriveResponse(
+        tenant_id=tenant_id,
+        queries=["refund policy"],
+        results=[result],
+    )
+    mock_manager = MagicMock(spec=RetriverManager)
+    mock_manager.retrieve = AsyncMock(return_value=response)
+
+    retriever = LangchainRetriever(retriever_manager=mock_manager)
+    docs = await retriever._aget_relevant_documents(
+        query="refund policy",
+        run_manager=SimpleNamespace(metadata={"tenant_id": tenant_id}),
+    )
+
+    assert docs[0].metadata["document_name"] == "refund-policy.pdf"
+
+
+@pytest.mark.asyncio
+async def test_langchain_retriever_requires_tenant_id():
+    retriever = LangchainRetriever(retriever_manager=MagicMock(spec=RetriverManager))
+
+    with pytest.raises(ValueError, match="tenant_id is required for retrieval"):
+        await retriever._aget_relevant_documents(
+            query="refund policy",
+            run_manager=SimpleNamespace(metadata={}),
+        )
 
 
 def test_langchain_retriever_get_relevant_documents_raises_not_implemented():

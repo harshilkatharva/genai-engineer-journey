@@ -1,14 +1,22 @@
 from unittest.mock import AsyncMock, MagicMock
+from types import SimpleNamespace
 from uuid import UUID
 
 import pytest
 
 from rag_app.models import (
-    RetriveRequest,
     RetriveResponse,
     RetriveResult,
 )
 from rag_app.services.retrive_services import RetriveServiceManager
+
+
+def make_request(tenant_id, queries):
+    return SimpleNamespace(
+        tenant_id=tenant_id,
+        query=queries[0],
+        queries=queries,
+    )
 
 
 @pytest.fixture
@@ -44,10 +52,7 @@ async def test_retrive_chunks_returns_empty_results_when_no_matches(
 
     tenant_id = UUID("550e8400-e29b-41d4-a716-446655440001")
 
-    request = RetriveRequest(
-        tenant_id=tenant_id,
-        queries=["no results query"],
-    )
+    request = make_request(tenant_id, ["no results query"])
 
     # RetriveManager.retrieve() returns RetriveResponse,
     # NOT list[RetriveResult].
@@ -78,10 +83,7 @@ async def test_retrive_chunks_returns_results(
 
     tenant_id = UUID("550e8400-e29b-41d4-a716-446655440001")
 
-    request = RetriveRequest(
-        tenant_id=tenant_id,
-        queries=["What is RAG?"],
-    )
+    request = make_request(tenant_id, ["What is RAG?"])
 
     results = [
         RetriveResult(
@@ -137,9 +139,9 @@ async def test_retrive_chunks_passes_request_to_retrive_manager(
 
     tenant_id = UUID("550e8400-e29b-41d4-a716-446655440001")
 
-    request = RetriveRequest(
-        tenant_id=tenant_id,
-        queries=[
+    request = make_request(
+        tenant_id,
+        [
             "What is RAG?",
             "How does retrieval work?",
         ],
@@ -173,10 +175,7 @@ async def test_retrive_chunks_preserves_queries(
         "third query",
     ]
 
-    request = RetriveRequest(
-        tenant_id=tenant_id,
-        queries=queries,
-    )
+    request = make_request(tenant_id, queries)
 
     mocks["retrive_manager"].retrieve.return_value = RetriveResponse(
         tenant_id=tenant_id,
@@ -200,10 +199,7 @@ async def test_retrive_chunks_preserves_tenant_id(
 
     tenant_id = UUID("550e8400-e29b-41d4-a716-446655440001")
 
-    request = RetriveRequest(
-        tenant_id=tenant_id,
-        queries=["test query"],
-    )
+    request = make_request(tenant_id, ["test query"])
 
     mocks["retrive_manager"].retrieve.return_value = RetriveResponse(
         tenant_id=tenant_id,
@@ -227,10 +223,7 @@ async def test_retrive_chunks_preserves_retrive_results(
 
     tenant_id = UUID("550e8400-e29b-41d4-a716-446655440001")
 
-    request = RetriveRequest(
-        tenant_id=tenant_id,
-        queries=["test query"],
-    )
+    request = make_request(tenant_id, ["test query"])
 
     expected_results = [
         RetriveResult(

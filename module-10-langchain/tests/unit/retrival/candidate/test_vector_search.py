@@ -2,7 +2,7 @@ from unittest.mock import AsyncMock, patch
 from uuid import uuid4
 
 import pytest
-from pgvector import Vector
+import numpy as np
 
 from rag_app.models import RetriveResult
 from rag_app.retrieval.candidate.vector_search import VectorSearch
@@ -68,14 +68,12 @@ async def test_retrive_returns_results_for_each_query():
     # DB called once per query
     assert db_manager.retrive_chunks.call_count == 2
 
-    db_manager.retrive_chunks.assert_any_await(
-        tenant_id,
-        Vector(query_embedding_1),
-        top_k_candidates,
-    )
-
-    db_manager.retrive_chunks.assert_any_await(
-        tenant_id,
-        Vector(query_embedding_2),
-        top_k_candidates,
-    )
+    calls = db_manager.retrive_chunks.await_args_list
+    assert calls[0].args[0] == tenant_id
+    assert calls[0].args[1].dtype == np.float32
+    np.testing.assert_allclose(calls[0].args[1], query_embedding_1)
+    assert calls[0].args[2] == top_k_candidates
+    assert calls[1].args[0] == tenant_id
+    assert calls[1].args[1].dtype == np.float32
+    np.testing.assert_allclose(calls[1].args[1], query_embedding_2)
+    assert calls[1].args[2] == top_k_candidates

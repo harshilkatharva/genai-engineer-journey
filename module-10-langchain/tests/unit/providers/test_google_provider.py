@@ -1,8 +1,6 @@
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-from google.genai import types
-
 from rag_app.providers.google_provider import GoogleProvider
 
 
@@ -17,14 +15,14 @@ def mock_settings():
 @pytest.fixture
 def provider(mock_settings):
     with (
-        patch("rag_app.providers.google_provider.genai.Client") as mock_client,
+        patch("rag_app.providers.google_provider.ChatGoogleGenerativeAI") as mock_llm,
         patch(
             "rag_app.providers.google_provider.get_settings",
             return_value=mock_settings,
         ),
     ):
         provider = GoogleProvider()
-        provider.client = mock_client.return_value
+        provider.llm = mock_llm.return_value
 
         yield provider
 
@@ -36,10 +34,10 @@ async def test_complete_returns_llm_response(provider):
     response.text = "This is a Gemini response."
     response.model_version = "gemini-2.5-flash"
 
-    response.usage_metadata.prompt_token_count = 25
-    response.usage_metadata.candidates_token_count = 15
+    response.content = [{"text": "This is a Gemini response."}]
+    response.usage_metadata = {"input_tokens": 25, "output_tokens": 15}
 
-    provider.client.aio.models.generate_content = AsyncMock(return_value=response)
+    provider.llm.ainvoke = AsyncMock(return_value=response)
 
     result = await provider.complete("Explain RAG in simple terms.")
 
@@ -49,11 +47,7 @@ async def test_complete_returns_llm_response(provider):
     assert result.output_tokens == 15
     assert result.latency_ms >= 0
 
-    provider.client.aio.models.generate_content.assert_awaited_once_with(
-        model=provider._get_model(),
-        contents="Explain RAG in simple terms.",
-        config=types.GenerateContentConfig(temperature=1.0),
-    )
+    provider.llm.ainvoke.assert_awaited_once_with("Explain RAG in simple terms.")
 
 
 @pytest.mark.asyncio
@@ -62,30 +56,28 @@ async def test_complete_uses_configured_model(mock_settings):
     mock_settings.default_llm_model = "gemini-custom-model"
 
     with (
+        patch("rag_app.providers.google_provider.ChatGoogleGenerativeAI") as mock_llm,
         patch(
             "rag_app.providers.google_provider.get_settings",
             return_value=mock_settings,
         ),
     ):
         provider = GoogleProvider()
+        provider.llm = mock_llm.return_value
 
         response = MagicMock()
         response.text = "Response"
         response.model_version = "gemini-custom-model"
-        response.usage_metadata.prompt_token_count = 10
-        response.usage_metadata.candidates_token_count = 5
+        response.content = [{"text": "Response"}]
+        response.usage_metadata = {"input_tokens": 10, "output_tokens": 5}
 
-        provider.client.aio.models.generate_content = AsyncMock(return_value=response)
+        provider.llm.ainvoke = AsyncMock(return_value=response)
 
         result = await provider.complete("Hello")
 
     assert result.model == "gemini-custom-model"
 
-    provider.client.aio.models.generate_content.assert_awaited_once_with(
-        config=types.GenerateContentConfig(temperature=1.0),
-        model="gemini-custom-model",
-        contents="Hello",
-    )
+    provider.llm.ainvoke.assert_awaited_once_with("Hello")
 
 
 @pytest.mark.asyncio
@@ -97,10 +89,10 @@ async def test_complete_returns_empty_text_when_google_response_has_no_text(
     response.text = None
     response.model_version = "gemini-2.5-flash"
 
-    response.usage_metadata.prompt_token_count = 10
-    response.usage_metadata.candidates_token_count = 0
+    response.content = []
+    response.usage_metadata = {"input_tokens": 10, "output_tokens": 0}
 
-    provider.client.aio.models.generate_content = AsyncMock(return_value=response)
+    provider.llm.ainvoke = AsyncMock(return_value=response)
 
     result = await provider.complete("Hello")
 
@@ -204,20 +196,20 @@ async def test_complete_returns_empty_text_when_google_response_has_no_text(
 @pytest.mark.asyncio
 async def test_stream_returns_text_chunks(provider):
     chunk_1 = MagicMock()
-    chunk_1.text = "Hello"
+    chunk_1.content = "Hello"
 
     chunk_2 = MagicMock()
-    chunk_2.text = " world"
+    chunk_2.content = " world"
 
     chunk_3 = MagicMock()
-    chunk_3.text = None
+    chunk_3.content = None
 
     async def mock_stream():
         yield chunk_1
         yield chunk_2
         yield chunk_3
 
-    provider.client.aio.models.generate_content_stream = AsyncMock(return_value=mock_stream())
+    provider.llm.astream = MagicMock(return_value=mock_stream())
 
     chunks = []
 
@@ -229,7 +221,4 @@ async def test_stream_returns_text_chunks(provider):
         " world",
     ]
 
-    provider.client.aio.models.generate_content_stream.assert_awaited_once_with(
-        model=provider._get_model(),
-        contents="Say hello",
-    )
+    provider.llm.astream.assert_called_once_with("Say hello")

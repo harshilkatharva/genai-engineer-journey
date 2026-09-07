@@ -7,7 +7,6 @@ from rag_app.features.rag_chat import RAGChat
 from rag_app.models import (
     LLMManagerRequest,
     PromptRequest,
-    QueryManagerRequest,
     RAGRequest,
     RAGResposne,
     RetriveRequest,
@@ -20,9 +19,6 @@ async def test_get_chat_answer():
     # Arrange
     rag_chat = RAGChat()
 
-    rag_chat.query_manager = MagicMock()
-    rag_chat.query_manager.get_queries = AsyncMock()
-
     rag_chat.retriver_manager = MagicMock()
     rag_chat.retriver_manager.retrieve = AsyncMock()
 
@@ -32,9 +28,6 @@ async def test_get_chat_answer():
     rag_chat.llm_manager.complete = AsyncMock()
 
     request = RAGRequest(query="What is RAG?", tenant_id=uuid4())
-
-    queries = MagicMock()
-    queries.queries = ["What is retrieval augmented generation?"]
 
     context = MagicMock()
     context.results = [
@@ -51,7 +44,6 @@ async def test_get_chat_answer():
     answer = MagicMock()
     answer.text = "RAG stands for Retrieval-Augmented Generation."
 
-    rag_chat.query_manager.get_queries.return_value = queries
     rag_chat.retriver_manager.retrieve.return_value = context
     rag_chat.prompt_manager.build_rag_prompt.return_value = prompt, prompt_version
     rag_chat.llm_manager.complete.return_value = answer
@@ -63,16 +55,10 @@ async def test_get_chat_answer():
     assert isinstance(result, RAGResposne)
     assert result.text == "RAG stands for Retrieval-Augmented Generation."
 
-    rag_chat.query_manager.get_queries.assert_awaited_once_with(
-        request=QueryManagerRequest(
-            query="What is RAG?",
-        )
-    )
-
     rag_chat.retriver_manager.retrieve.assert_awaited_once_with(
         request=RetriveRequest(
             tenant_id=request.tenant_id,
-            queries=["What is retrieval augmented generation?"],
+            query=request.query,
         )
     )
 

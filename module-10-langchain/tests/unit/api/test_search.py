@@ -97,7 +97,7 @@ def test_retrieve_empty_query_validation(client):
 
     response = client.post("/retrive/", json=payload)
 
-    assert response.status_code == 422
+    assert response.status_code == 400
 
 
 def test_retrieve_missing_query(client):
@@ -118,7 +118,7 @@ def test_retrieve_invalid_top_k(client):
     payload = {
         "tenant_id": "550e8400-e29b-41d4-a716-446655440001",
         "query": "test query",
-        "top_k": 0,  # Must be >= 1
+        "top_k_candidate": 0,  # Must be >= 1
     }
 
     response = client.post("/retrive/", json=payload)
