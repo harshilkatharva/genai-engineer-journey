@@ -1,10 +1,10 @@
-from typing import Protocol
 from collections.abc import AsyncIterator
+from typing import Protocol
 
-from llm_client.models.response_model import CompletionResult
+from llm_client.models.llm_response_model import LLMResponseModel
 
 
 class LLMProvider(Protocol):
-    async def complete(self, prompt: str) -> CompletionResult: ...
+    async def complete(self, prompt: str) -> LLMResponseModel: ...
 
     def stream(self, prompt: str) -> AsyncIterator[str]: ...

@@ -1,0 +1,109 @@
+Product Catalog — Phones
+========================
+Synthetic smartphone catalog with unique product codes and intentionally varied configurations.
+
+CAT-PHO-001 — Samsung Galaxy A95 Business
+-----------------------------------------
+Brand: Samsung
+Model: Galaxy A95 Business
+Product code: VLT-PH-SAM-A95B
+Display: 6.6-inch
+Memory: 12 GB
+Storage: 256 GB
+Demo price: ₹42,999
+SIM profile: dual physical/eSIM class
+Service class: Mobile-24
+Business support: Priority
+Use case: sales and field-service staff
+Unique note: the 12 GB/256 GB configuration is tied to this code.
+
+CAT-PHO-002 — Apple iPhone 16 Pro Business
+------------------------------------------
+Brand: Apple
+Model: iPhone 16 Pro Business
+Product code: VLT-PH-APL-16PB
+Display: 6.3-inch class
+Storage: 256 GB
+Demo price: ₹1,19,900
+SIM profile: physical + eSIM class
+Service class: Mobile-24 Premium
+Business support: Priority
+Use case: executives and approved enterprise mobility programs
+Unique note: there is no 512 GB variant under this synthetic code.
+
+CAT-PHO-003 — OnePlus 13R Enterprise
+------------------------------------
+Brand: OnePlus
+Model: OnePlus 13R Enterprise
+Product code: VLT-PH-OP-13R-E
+Display: 6.78-inch class
+Memory: 12 GB
+Storage: 256 GB
+Demo price: ₹49,499
+SIM profile: dual SIM class
+Service class: Mobile-18
+Use case: sales teams
+Special note: support entitlement is different from the Samsung record even though both have 12 GB RAM.
+
+CAT-PHO-004 — Google Pixel 10 Business
+--------------------------------------
+Brand: Google
+Model: Pixel 10 Business
+Product code: VLT-PH-GGL-P10B
+Display: 6.3-inch class
+Memory: 12 GB
+Storage: 256 GB
+Demo price: ₹67,900
+SIM profile: eSIM + physical SIM class
+Service class: Mobile-24
+Security class: Enhanced
+Use case: security-sensitive mobile programs
+
+CAT-PHO-005 — Nothing Phone 3 Business Edition
+----------------------------------------------
+Brand: Nothing
+Model: Phone 3 Business Edition
+Product code: VLT-PH-NT-3BE
+Display: 6.7-inch class
+Memory: 12 GB
+Storage: 256 GB
+Demo price: ₹54,800
+SIM profile: dual SIM class
+Service class: Mobile-18
+Use case: customer-experience teams
+
+CAT-PHO-006 — Motorola Edge 60 Enterprise
+-----------------------------------------
+Brand: Motorola
+Model: Edge 60 Enterprise
+Product code: VLT-PH-MOTO-E60E
+Display: 6.67-inch class
+Memory: 12 GB
+Storage: 512 GB
+Demo price: ₹47,200
+SIM profile: dual SIM class
+Service class: Mobile-24
+Use case: mobile-heavy field work
+Special note: this is the only synthetic phone record with 512 GB storage in this file.
+
+CAT-PHO-007 — Xiaomi 15 Pro Commerce
+------------------------------------
+Brand: Xiaomi
+Model: Xiaomi 15 Pro Commerce
+Product code: VLT-PH-XIA-15PC
+Display: 6.73-inch class
+Memory: 16 GB
+Storage: 512 GB
+Demo price: ₹69,500
+SIM profile: dual SIM class
+Service class: Mobile-24
+Use case: high-performance mobile workflows
+Special note: storage and memory should not be confused.
+
+Phone accessories
+-----------------
+Virelia offers synthetic accessory codes such as VLT-PHA-USBC-65 and VLT-PHA-CAR-45. These accessories are not automatically bundled with the phone price. An accessory return can follow a different path from an activated device return.
+
+Phone catalog retrieval traps
+-----------------------------
+'512 GB business phone' is not enough to uniquely identify a device because the Motorola and Xiaomi records both contain 512 GB storage, while their memory, price, brand and code differ. '12 GB Samsung' points toward one model in this file, whereas '12 GB Android phone' matches several models. Exact product answers should include evidence from the specific product record.

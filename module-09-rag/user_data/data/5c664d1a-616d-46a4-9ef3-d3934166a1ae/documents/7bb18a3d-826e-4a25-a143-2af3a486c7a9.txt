@@ -1,0 +1,459 @@
+VIRELIA OPERATIONS CASEBOOK
+============================
+This synthetic appendix contains deliberately distinct real-world-style cases. Each case has facts that overlap with other policy domains, but the correct answer depends on exact identifiers, status, dates, region, transaction direction, or policy specificity.
+
+CASEBOOK-001 — HP laptop and annual review
+------------------------------------------
+Neel is an account executive whose assigned device is VLT-HP-440G11-16. In March, he completes six months and receives a probation-confirmation note. In July, his manager conducts the annual performance review. Neel believes the March confirmation should have changed the laptop allowance and salary immediately. The joining policy does not create an automatic raise at probation completion, and the laptop catalog does not define employee compensation. Compensation must be evaluated under HR-SAL, while the device record remains an asset/catalog matter. The useful retrieval evidence is therefore split across HR-JOI, HR-SAL and CAT-LAP. A response that says 'probation completed, therefore salary increased' is unsupported.
+
+CASEBOOK-002 — Dell model confusion
+-----------------------------------
+A customer tells sales, 'Send me the Dell 16 GB, 512 GB model we discussed.' The order notes contain no product code. Two records satisfy that broad description: VLT-DE-5450-16 is a Latitude with Business-24 service, while VLT-DE-7440-16 is an Inspiron with Business-12 service. The customer also mentioned a corporate dock in the previous conversation, which points toward the Latitude record but does not prove a selection. Sales should ask for the exact model or confirm the intended specification before entering the order. Retrieval should return both plausible matches rather than invent certainty. This case is intentionally designed as a top-k retrieval test where the correct answer is ambiguity, not a single product.
+
+CASEBOOK-003 — Phone storage trap
+---------------------------------
+A procurement analyst searches for '512 GB enterprise phone under ₹50,000.' The catalog returns Motorola VLT-PH-MOTO-E60E at ₹47,200 and Xiaomi VLT-PH-XIA-15PC at ₹69,500. The first satisfies both the storage and budget condition. If the analyst then asks for a 16 GB phone, the Xiaomi becomes the candidate because it has 16 GB memory, while Motorola has 12 GB. The values must be evaluated together. A reranker that prioritizes the phrase '512 GB' without considering the price and memory constraints could put the wrong phone at rank one.
+
+CASEBOOK-004 — Quotation versus return window
+---------------------------------------------
+A support agent sees a customer note that says 'seven-day policy' and retrieves the first result containing seven days. One source defines the normal customer quotation validity as seven calendar days; another defines the standard product return request window as seven calendar days from delivery. These rules use the same number but different starting events and different business objects. A quote expires based on its quote date and stated validity, while a return request is measured from recorded delivery. When the user asks about an expired quotation, the return policy is a distractor even though the number matches exactly.
+
+CASEBOOK-005 — Warehouse shift
+------------------------------
+Ravi works at the Pune fulfillment node and is assigned a 07:00 warehouse shift. He arrives at 07:08 and says the general office grace period covers him because ten minutes is allowed. The attendance policy distinguishes warehouse shifts from the general office schedule because handover timing matters. The general ten-minute rule should not be blindly applied without checking the employee's roster. The right retrieval path starts with the employee's shift-specific rule, then checks whether a local exception exists. This case is useful for evaluating whether metadata such as employee type or shift can improve retrieval over a generic attendance query.
+
+CASEBOOK-006 — Attendance outage
+--------------------------------
+The attendance service stops responding at 08:40 and is restored at 11:20. Several employees cannot record their start event. One person creates a private spreadsheet, another sends an email to the manager, and a third waits until the portal returns. The policy says the approved fallback procedure should be used during a documented system outage, with the outage reference preserved for later correction. The private spreadsheet can be supporting evidence but should not replace the system record. A high-quality answer must distinguish technical unavailability from ordinary forgetfulness and should not accuse employees of failing attendance controls merely because their timestamp is missing.
+
+CASEBOOK-007 — Remote employee and office visit
+-----------------------------------------------
+A Bengaluru employee is classified as remote-eligible but attends the office on Wednesday for a team workshop. On Thursday the employee works from home. The office visit does not permanently convert the work arrangement to office-based, and the home day is not an absence. Each day is governed by the scheduled mode and approved activity recorded for that date. This case is designed to catch systems that infer work mode from physical location alone. The key distinction is employee classification versus daily activity. A location-only retrieval strategy may bring back office attendance guidance without finding the remote-work rule that actually explains Thursday.
+
+CASEBOOK-008 — Salary processing after cut-off
+----------------------------------------------
+A promotion becomes effective on 21 August, while Finance's regular payroll closing checkpoint is the 20th. The employee expects the new salary on the next day's payroll because the promotion was approved before month-end. The policy separates the effective date from the processing date. Finance may need to process the change in a subsequent cycle or apply a correction according to the payroll procedure. Retrieval should return the effective-date rule and the payroll cut-off rule together. A single paragraph about promotions is insufficient if it omits the distinction between HR action timing and payroll processing.
+
+CASEBOOK-009 — Reimbursement approval delay
+-------------------------------------------
+Maya submits a travel reimbursement on 17 August. Her manager approves it on 24 August. She asks why the expense has not arrived in the payment cycle she expected. The policy states that submission timing and approval timing are distinct events, and Finance's payment schedule depends on the approved record. The correct answer must avoid promising a payment date based only on the employee's submission timestamp. This scenario also distinguishes reimbursement from salary: the amount can appear alongside payroll outputs while still being classified as an expense reimbursement for policy purposes.
+
+CASEBOOK-010 — Customer order with installation
+-----------------------------------------------
+A customer buys VLT-TV-SAM-Q65V and adds VLT-SVC-TV-STD. The television product code identifies the hardware configuration, while the service code identifies the installation activity. The order team should not claim that installation is included in the television's base catalog price simply because both lines occur in one transaction. After delivery, support should track installation separately. This case tests whether the model preserves line-item distinctions and whether it can answer a multi-document question without flattening product and service concepts into one object.
+
+CASEBOOK-011 — Damaged television evidence
+------------------------------------------
+A Samsung Vision QLED 65 arrives with an intact outer box but a visible cracked panel. The customer reports the issue 30 hours after delivery and uploads four photographs. The return policy treats transit damage differently from ordinary change-of-mind requests, and the timing falls inside the preferred reporting window. The photographs support the case but do not by themselves decide the final refund. Inspection or other evidence may still be required. A response that says 'seven-day return applies, refund guaranteed' misses the product-condition distinction and fails to use the transit-damage section.
+
+CASEBOOK-012 — Activated phone case
+-----------------------------------
+A buyer activates the Motorola Edge 60 Enterprise, signs in, installs applications and uses it for four days before deciding they no longer want it. The customer cites the normal seven-day window. The return policy warns that activation changes the treatment of phones and requires product-specific evaluation. The system should retrieve the activated-phone rule rather than only the generic seven-day clause. This is a semantic-reranking test because the generic return window has a strong lexical match, but the activated-device section contains the more specific and therefore more useful evidence.
+
+CASEBOOK-013 — AC survey
+------------------------
+A facilities coordinator orders VLT-AC-BS-20EI for a training room. The product catalog identifies the unit as 2.0-ton and says an enhanced site survey is required. The coordinator asks whether standard split installation can be booked immediately. The answer should mention the survey requirement because capacity alone does not determine readiness. This case tests retrieval from a product-specific note rather than a generic AC installation description. A model that retrieves only the common 'standard split installation' wording from another AC record can produce a plausible but incorrect answer.
+
+CASEBOOK-014 — Same tonnage, different warranty
+-----------------------------------------------
+A buyer compares VLT-AC-DAI-15IC and VLT-AC-LG-15DP. Both are 1.5-ton class units, but their efficiency and service classes differ. Daikin is listed as 5-star class with HVAC-24, while the LG model is 4-star class with HVAC-12. The buyer asks which has the longer service class. The answer requires exact item-level retrieval. Generic retrieval on '1.5-ton warranty' can pull several records and may lose the distinction if the reranker ignores the brand or code.
+
+CASEBOOK-015 — Supplier substitution
+------------------------------------
+A purchase order requests VLT-HP-440G11-16. The supplier proposes VLT-HP-640G11-32 at a discounted rate, saying both are fourteen-inch HP business laptops. Procurement must not assume equivalence. The two codes have different memory, storage, warranty and price records. A substitution changes the ordered product and requires an authorized amendment. This case is useful because semantic similarity is extremely high: same brand, same screen class and same category. Exact-code matching should therefore be heavily weighted.
+
+CASEBOOK-016 — Serial number mismatch
+-------------------------------------
+Warehouse receives a VLT-DE-5450-16 with serial number SN-D5450-88731, but the receiving record was accidentally entered with SN-D5450-88713. The quantity is correct and the product code matches. Serial identity is still wrong and must be corrected. The receiving record should not be treated as fully complete merely because quantity and product code agree. This case distinguishes catalog identity from physical-unit identity and is useful for testing structured metadata filters.
+
+CASEBOOK-017 — Customer contract override
+-----------------------------------------
+A large enterprise customer has a recorded agreement that grants fourteen days for a specific eligible return class. The public policy states seven days as the normal consumer return request window. A support agent answering for that customer must check the recorded contract because customer-specific terms can govern the transaction. The generic seven-day policy remains useful context but is not the final answer for this account. This case tests whether retrieval can prioritize account-specific evidence over broadly applicable policy text.
+
+CASEBOOK-018 — Public holiday confusion
+---------------------------------------
+An employee in Ahmedabad sees that a public holiday is listed for another Indian state and assumes the company is closed everywhere. The attendance policy explains that regional calendars can differ. The employee's assigned calendar determines the applicable holiday status. The general corporate holiday document is therefore a weaker source than the employee's regional rule. This is a metadata-aware retrieval test: the user identity or region can materially change which passage is correct.
+
+CASEBOOK-019 — Lost company laptop
+----------------------------------
+A field employee loses a VLT-DE-5450-16 that was assigned as a company asset. The public catalog contains the same product code, but the incident is not a customer return. Security and employee asset procedures are the relevant sources. Immediate reporting matters because Security may lock the device or revoke sessions. This case demonstrates why a product code alone does not determine the business context; the ownership state of the physical device is essential.
+
+CASEBOOK-020 — Public AI upload
+-------------------------------
+A support lead wants to paste a spreadsheet containing customer names, addresses, order numbers and complaint summaries into a public AI service for categorization. The purpose is business legitimate, but the security policy says confidential customer information cannot be sent to an unapproved public AI workflow. The correct action is to use an approved tool or a de-identified workflow if permitted. A retrieval system that searches only for 'AI summary' may miss the relevant information-security section.
+
+CASEBOOK-021 — Manager approval versus security approval
+--------------------------------------------------------
+A manager approves an analyst's access request for a production application. The analyst assumes that manager approval is sufficient. The security policy distinguishes ordinary application access from privileged production access and can require system-owner or Security approval. The word 'approved' appears in both HR and security contexts, so lexical matching alone is weak. The answer must identify the requested privilege level before deciding which approval chain applies.
+
+CASEBOOK-022 — Return to supplier versus customer return
+--------------------------------------------------------
+Warehouse receives a damaged carton from a vendor and sends the unit back. This is a supplier return under procurement, not a customer return under CX-RET. The evidence should link the physical unit to the purchase order and receiving record. The same product code may later appear in a customer transaction, but that does not change the supplier case's ownership or policy domain. This case tests whether retrieval is sensitive to transaction direction.
+
+CASEBOOK-023 — Incorrect bank information
+-----------------------------------------
+A supplier emails procurement asking Virelia to pay future invoices into a new account. The email includes a PDF on company letterhead. Procurement must use the enhanced bank-detail verification process because supplier bank changes are fraud-sensitive. The presence of official branding is not enough. This rule is deliberately different from ordinary purchase-order approval and should be retrieved from the supplier controls section.
+
+CASEBOOK-024 — Customer asks for deletion
+-----------------------------------------
+A customer asks Support to delete a closed ticket immediately because the complaint has been resolved. The privacy policy says deletion may be limited by financial, legal or contractual retention requirements. Support should route the request into the privacy process rather than promise immediate deletion. The case remains a useful retrieval test because words such as 'delete' and 'closed ticket' may also appear in operational cleanup procedures with different meanings.
+
+CASEBOOK-025 — Product price versus reimbursement
+-------------------------------------------------
+The catalog lists VLT-HP-440G11-16 at ₹78,900. An employee submits an expense claim for ₹78,900 after buying a company laptop through an approved procurement path. The catalog price alone does not establish reimbursement eligibility. HR-SAL governs expense claims, while procurement or asset policy governs how the company purchased and assigned the hardware. Retrieval should prevent a product-price record from being treated as compensation evidence.
+
+CASEBOOK-026 — Partial delivery
+-------------------------------
+An order contains four laptops and two phones. The laptops are available from Pune while the phones are delayed in Ahmedabad. The customer agrees to receive two consignments. Delivery status must therefore be tracked per shipment or line as applicable. The first delivery does not close the entire order. This tests whether the model understands partial fulfillment rather than equating a single delivery event with complete order fulfillment.
+
+CASEBOOK-027 — Address change after dispatch
+--------------------------------------------
+A buyer moves offices after a TV shipment has already entered carrier handling and requests a new address. The purchase policy says post-dispatch changes can require carrier coordination and may incur a charge. The agent should not promise an address edit without checking shipment state. This case separates an order amendment from a pre-dispatch customer preference change.
+
+CASEBOOK-028 — Quote reservation confusion
+------------------------------------------
+A sales representative writes 'please hold five Dell units for Client X' in a team chat after sending a quotation. The customer has not accepted the quote and no reservation record exists. Inventory is not necessarily reserved. The purchase policy requires the reservation state to exist in the commercial system. This case is designed to test whether conversational text is incorrectly treated as authoritative transaction state.
+
+CASEBOOK-029 — Support identity verification
+--------------------------------------------
+A caller provides an order number and asks Support to change the shipping address on an enterprise order. The order number is useful context but may not be sufficient for a sensitive change. Support should perform the approved verification process before modifying protected information. This scenario tests whether the model distinguishes 'identifying the order' from 'authorizing a protected account change.'
+
+CASEBOOK-030 — Warranty after return window
+-------------------------------------------
+A customer reports that a VLT-LN-E14G6-16 laptop stopped charging three months after delivery. The seven-day standard return period is no longer relevant to a normal change-of-mind return. The product's warranty class and serial number become more important. A model that answers only with the generic return deadline is choosing the wrong policy path.
+
+CASEBOOK-031 — Installation fee
+-------------------------------
+A customer orders VLT-TV-BRK-M2 and asks why the wall bracket price does not include VLT-SVC-TV-STD installation. The accessory and service catalog list separate codes and prices. Compatibility does not imply installation inclusion. This case checks whether the system can distinguish a compatible accessory from a bundled service.
+
+CASEBOOK-032 — AC extension kit
+-------------------------------
+A technician determines that an AC installation needs VLT-AC-EXT-3M because the approved piping route exceeds the standard included length. The accessory is a separate catalog item requiring technician confirmation. The customer should not be told that every AC purchase automatically includes the extension kit.
+
+CASEBOOK-033 — TV mounting ambiguity
+------------------------------------
+A customer asks whether every 65-inch TV can use the same wall bracket. The catalog says different models can have different installation requirements, and one 65-inch record explicitly calls for a site check. The safe response must avoid inferring compatibility solely from screen size.
+
+CASEBOOK-034 — Compensation confidentiality
+-------------------------------------------
+A manager wants to paste an employee's salary statement into a team chat to explain budget allocation. HR conduct rules classify compensation data as confidential HR information. A generic collaboration policy may discuss document sharing, but the more specific HR confidentiality rule should govern the salary statement. This case tests policy specificity.
+
+CASEBOOK-035 — Executive hire access
+------------------------------------
+An executive assistant is joining with a role that will eventually require privileged access to a finance system. The joining process can start before all privileged access is complete. Identity verification and onboarding acknowledgement remain joining requirements, while privileged access follows the Security process. The two workflows should not be collapsed into a single 'access granted at joining' assumption.
+
+CASEBOOK-036 — Intern with prior contractor access
+--------------------------------------------------
+A contractor becomes an intern for a short training program. Existing contractor credentials should not be treated as automatic proof of appropriate intern access. The new role requires the access profile appropriate to the internship. This case tests whether the retrieval system distinguishes role transitions from simple account continuity.
+
+CASEBOOK-037 — Payroll bank account update
+------------------------------------------
+An employee sends Finance a screenshot of a new bank account and asks for immediate payroll use. Finance requires the controlled bank-detail process. The screenshot may be evidence for the request but is not itself the approved change. This tests procedural-state reasoning: a submitted request and an approved system change are different states.
+
+CASEBOOK-038 — Customer service fee
+-----------------------------------
+A customer asks why a diagnostic service fee appears after a support case. The terms document says some technical services are chargeable and should be confirmed against the service catalog or customer agreement. The existence of a free support channel does not make every technical service free. Retrieval must connect the support terms to the service-code catalog when answering the charge question.
+
+CASEBOOK-039 — Supplier sample unit
+-----------------------------------
+A vendor leaves a demo laptop at Virelia's office for evaluation. The unit is recorded as a sample and is not part of sellable inventory. A sales employee later asks whether it can be dispatched to a customer because the model appears in the product catalog. Procurement controls say sample units are tracked separately. This is a status-based retrieval test.
+
+CASEBOOK-040 — Emergency procurement
+------------------------------------
+A network device fails during a critical customer migration and the team needs a replacement immediately. Procurement permits an emergency route when delay creates material operational risk, but a retrospective record is still required. The emergency path changes the timing of approval, not the requirement for documentation.
+
+CASEBOOK-041 — Access review
+----------------------------
+An engineer changes teams but keeps a privileged role from the previous project. The account remains active, but the employee no longer needs the privileged permission. The security policy requires periodic access review and removal of unnecessary privilege. This case tests whether the model understands least privilege as a continuing control rather than a one-time approval.
+
+CASEBOOK-042 — Public computer restriction
+------------------------------------------
+A traveling employee forgets their managed laptop and considers using a public computer to access a sensitive internal dashboard. The remote-access policy does not treat convenience as sufficient reason to bypass managed-endpoint controls. The employee should use an approved alternative or seek help from IT/security.
+
+CASEBOOK-043 — Legal hold
+-------------------------
+Finance receives notice that records connected to a disputed supplier transaction are under legal hold. A routine retention cleanup job would normally delete records after the standard retention period. The hold suspends routine deletion for the relevant material. This scenario tests whether the model can recognize an exception that overrides normal retention behavior.
+
+CASEBOOK-044 — Service ticket closure
+-------------------------------------
+A customer confirms that an installation issue has been fixed and the service ticket is closed. The order and warranty records remain independent source records. Closing the ticket does not erase the order or reset the warranty period. This distinction matters for later support questions.
+
+CASEBOOK-045 — Wrong accessory
+------------------------------
+A customer orders VLT-DOCK-D450 but receives VLT-PHA-USBC-65. Both are USB-related accessories, but one is a docking station and the other is a power adapter. The fulfillment issue is determined by exact product code, not by broad accessory category. This is an exact-identifier retrieval test.
+
+CASEBOOK-046 — Employee holiday and customer support
+----------------------------------------------------
+A People Operations employee is off on a regional holiday, but Customer Experience staff continue operating from another region. The existence of a holiday in the HR attendance file does not mean customer support is closed. Different functions can use different schedules. The case tests whether cross-domain retrieval is handled carefully.
+
+CASEBOOK-047 — Order number and product code
+--------------------------------------------
+Customer support receives an order number but no product code. The order record can identify the purchased products, while the catalog is needed for specifications. The model should not fabricate a product code from a product name if the exact order has not been retrieved.
+
+CASEBOOK-048 — Multiple products in one return
+----------------------------------------------
+An order contains a phone, a laptop and a TV. The customer wants to return only the phone. Eligibility should be evaluated at the line or item level rather than applying one status to the entire order. The return request is not evidence that the laptop and TV are also being returned.
+
+CASEBOOK-049 — Refund route exception
+-------------------------------------
+A customer used an approved payment route but requests that the refund be sent to an unrelated bank account. The standard terms say refunds normally follow the original payment route. Any exception needs authorized handling. Support should not promise a new-bank refund simply because the customer asks for one.
+
+CASEBOOK-050 — Product-specific support class
+---------------------------------------------
+Two laptops both have Business-24 warranty class but belong to different brands. A customer asks whether their support queue is the same. The warranty class is relevant, but support routing can depend on product family and service configuration. The model should not infer every operational detail from one shared attribute.
+
+CASEBOOK-051 — Regional fulfillment
+-----------------------------------
+An Ahmedabad customer orders a product that is stocked in Pune but not locally. The purchase system can assign fulfillment from another warehouse. Warehouse location does not change the catalog identity or the customer's return policy. This case separates inventory location from commercial product identity.
+
+CASEBOOK-052 — Customer installation delay
+------------------------------------------
+A TV has been delivered, but the customer cannot accept installation until furniture is moved. The delivery record can remain complete while installation is rescheduled. Support should not mark the device as undelivered simply because the installation is pending.
+
+CASEBOOK-053 — Laptop dock compatibility
+----------------------------------------
+A buyer asks whether VLT-DOCK-D450 is included with VLT-HP-640G11-32. The catalog says the dock is compatible, while the laptop record does not list it as included. The answer is therefore 'compatible but not automatically bundled.' This is a classic distinction between compatibility and inclusion.
+
+CASEBOOK-054 — Employee conduct and customer data
+-------------------------------------------------
+An account executive prints a customer list to work offline during travel. The information remains confidential customer data even though it is on paper rather than in a database. The security policy applies to the information itself, not only to digital files. This case tests modality-independent data classification.
+
+CASEBOOK-055 — Product code in a complaint
+------------------------------------------
+A customer complaint refers to VLT-TV-HIS-U7O65 and says the installer should have skipped the site survey. The catalog explicitly says the model requires an enhanced survey. Product-specific evidence should override the customer's assumption about standard installation.
+
+CASEBOOK-056 — Joining date correction
+--------------------------------------
+A recruiter mistakenly sends 14 June as a start date instead of 24 June. The candidate notices the error before joining. People Operations should correct the authoritative offer record rather than asking the candidate to rely on an email correction alone. The case tests source-of-truth reasoning.
+
+CASEBOOK-057 — Leave approval and manager chat
+----------------------------------------------
+An employee sends a manager a chat saying, 'I'll take tomorrow off.' The manager replies with a thumbs-up reaction. The formal leave record still needs the applicable workflow state. The chat may provide context but should not automatically be treated as a structured approval event where the system requires one.
+
+CASEBOOK-058 — Supplier compliance certificate
+----------------------------------------------
+A vendor provides a marketing brochure claiming a product meets a standard. Procurement needs the formal compliance certificate when the category requires it. A brochure can be supporting material but should not automatically substitute for a required certificate.
+
+CASEBOOK-059 — Security log retention
+-------------------------------------
+A Security analyst wants to delete authentication logs after resolving an incident because the dashboard is crowded. The security-retention rules apply to the log category and can be longer than ordinary operational cleanup. Incident history should not be discarded for convenience.
+
+CASEBOOK-060 — RAG answer with two sources
+------------------------------------------
+A user asks, 'Can VLT-AC-BS-20EI be installed through standard service and what is its price?' The price and installation requirement are both in the AC catalog, while the service definition is in the accessory/service catalog. A complete answer can require two retrieved passages. The system should cite both rather than inventing a bundled service price.
+
+
+
+CASEBOOK-061 — Exact quote date
+-------------------------------
+A quote was created on 12 November and states seven calendar days of validity. The customer replies on 19 November at 15:30. The system must use the quote's recorded validity and timestamp rules rather than counting seven days from the reply. This case tests date anchoring and prevents a model from resetting the validity window when the customer re-engages.
+
+
+CASEBOOK-062 — Return clock starts at delivery
+----------------------------------------------
+A laptop is ordered on 1 December, dispatched on 2 December and delivered on 5 December. A customer asks about a return on 10 December. The standard return rule measures the request window from recorded delivery, not from order creation or dispatch. A retrieval system should therefore prefer the return section containing the delivery trigger.
+
+
+CASEBOOK-063 — Warehouse quantity versus serial completeness
+------------------------------------------------------------
+Pune warehouse receives six VLT-HP-440G11-16 units and correctly records quantity six. Only five serial numbers are captured. The receiving transaction is not fully complete for a serial-controlled product. This case should retrieve the procurement section about serial capture even though a search phrase such as 'six laptops received' may tempt a model to stop at quantity verification.
+
+
+CASEBOOK-064 — Customer sees wrong price
+----------------------------------------
+The public storefront shows ₹78,900 for VLT-HP-440G11-16 while a customer still holds a valid quotation at ₹76,500. The right next step is to check the quote's validity and terms rather than blindly using either number. This is a commercial precedence question, not a catalog-only price question.
+
+
+CASEBOOK-065 — Discount approval
+--------------------------------
+A sales representative wants to offer a 14% discount when the standard authority threshold is lower. The customer is strategic, but strategic status does not itself create discount authority. The order or quote must contain the approved discount record. Retrieval should distinguish commercial discount approval from customer acceptance.
+
+
+CASEBOOK-066 — Delivery versus carrier acceptance
+-------------------------------------------------
+A package is scanned into the carrier network but has not yet reached the customer. The order is in transit, not delivered. The carrier acceptance event should not be treated as proof of delivery. This case is useful for status-transition testing.
+
+
+CASEBOOK-067 — Installation after successful delivery
+-----------------------------------------------------
+A customer receives VLT-TV-HIS-U7O65 and the delivery status is marked complete. The site survey was never performed. Installation remains pending because the product record requires enhanced survey. The model should not infer installation from delivery.
+
+
+CASEBOOK-068 — Phone accessory bundle
+-------------------------------------
+A Samsung phone order contains the handset plus VLT-PHA-USBC-65 as a separate line. The customer later returns the phone but keeps the adapter. The return request should be evaluated per line and per applicable return class. The accessory is not automatically included in the phone's product configuration.
+
+
+CASEBOOK-069 — Asset serial after employee transfer
+---------------------------------------------------
+An employee transfers from Ahmedabad to Bengaluru but keeps the same company laptop. The employee location changes, while the laptop's serial and asset assignment remain the same unless a formal reassignment occurs. Attendance metadata and asset metadata should not be conflated.
+
+
+CASEBOOK-070 — Manager does not own payroll
+-------------------------------------------
+A manager tells an employee that a payroll adjustment will be visible tomorrow. The manager can request or approve certain HR actions, but Finance determines payroll processing. The statement should not be treated as evidence that a payroll transaction has already been processed.
+
+
+CASEBOOK-071 — Applicant asks to start early
+--------------------------------------------
+A candidate asks to start one week earlier than the confirmed joining date. The recruiter can discuss feasibility, but the employee's official start remains the confirmed date until the authoritative record is changed and approved. This case tests source-of-truth retrieval.
+
+
+CASEBOOK-072 — Security incident and HR conduct
+-----------------------------------------------
+An employee accidentally sends a customer spreadsheet to a personal account and immediately reports it. The event may require Security incident handling; it does not automatically prove misconduct. Security containment and HR conduct review are separate questions.
+
+
+CASEBOOK-073 — Employee gift from supplier
+------------------------------------------
+A procurement employee is offered a high-value gift while evaluating bids. The procurement conflict and gift controls are more relevant than a general workplace courtesy rule. The timing of the gift matters because a live sourcing decision is underway.
+
+
+CASEBOOK-074 — Customer contract and web return rule
+----------------------------------------------------
+An enterprise agreement expressly changes the return period for a particular product class. A support agent should verify that the current order is covered by the agreement before applying the contract term. Retrieval should therefore include both the customer-specific agreement and the generic return policy.
+
+
+CASEBOOK-075 — Phone warranty and activated device
+--------------------------------------------------
+A customer reports a fault after 40 days of use on VLT-PH-GGL-P10B. The activated-device return logic is not the only source. The warranty terms may be the more relevant path because the complaint is a product-performance issue outside the standard return window.
+
+
+CASEBOOK-076 — TV size and bracket compatibility
+------------------------------------------------
+A 65-inch television can be wall-mount eligible while a particular 65-inch bracket is unavailable. Product eligibility and accessory inventory are different facts. A model should not infer accessory availability from mounting eligibility.
+
+
+CASEBOOK-077 — AC efficiency comparison
+---------------------------------------
+A user asks which 1.5-ton AC has the higher efficiency class between VLT-AC-LG-15DP and VLT-AC-DAI-15IC. Both have the same capacity, but their listed efficiency classes differ. This is a simple comparison only after the correct two records are retrieved.
+
+
+CASEBOOK-078 — Same customer, multiple orders
+---------------------------------------------
+An enterprise customer has one order for laptops and a separate order for televisions. A support agent receives only the customer account name. The account name is insufficient to select the correct order; the agent must establish which order number or product is in question.
+
+
+CASEBOOK-079 — Same serial, conflicting records
+-----------------------------------------------
+A support ticket contains a serial number that appears against two internal records because of a data-entry mistake. The case should be escalated rather than choosing whichever product record ranks higher semantically. Exact-identifier conflict is a data-quality issue.
+
+
+CASEBOOK-080 — Temporary security access
+----------------------------------------
+A consultant needs access to a reporting system for six hours during a migration. The request should specify duration and purpose, and the temporary privilege should be removed after the work. A request for permanent access because the consultant might need the system again is not automatically justified.
+
+
+CASEBOOK-081 — Customer asks for company holiday
+------------------------------------------------
+A customer asks whether Virelia will process an order on a public holiday. HR holiday calendars are not the same as customer-order processing schedules. The model should retrieve the operational support or fulfillment schedule rather than an employee attendance rule.
+
+
+CASEBOOK-082 — Procurement price versus customer quote
+------------------------------------------------------
+A supplier lowers the wholesale price of VLT-AC-BS-20EI after a customer's quotation has already been issued. The lower supplier cost does not automatically change the customer's quoted price. Supplier procurement and customer quotation are distinct commercial layers.
+
+
+CASEBOOK-083 — Product replacement but no inventory
+---------------------------------------------------
+A customer qualifies for a replacement of VLT-HP-640G11-32, but the unit is temporarily out of stock. The eligibility decision and the physical availability decision are separate. Support should not confuse approved replacement with immediate dispatch.
+
+
+CASEBOOK-084 — Remote employee time zone
+----------------------------------------
+A remote employee travels temporarily to a different time zone while remaining assigned to the same work schedule. Travel does not automatically change the employee's expected business hours. The temporary-location rule and approved schedule should be checked.
+
+
+CASEBOOK-085 — Leave correction after payroll
+---------------------------------------------
+An approved unpaid-leave day is entered after payroll close. HR may need to correct the attendance/leave record and Finance may process the pay impact in a later cycle. The late payroll effect does not mean the original leave was unapproved.
+
+
+CASEBOOK-086 — Service code confusion
+-------------------------------------
+A customer asks for the price of VLT-SVC-AC-SUR but the agent returns the price of VLT-AC-BS-20EI. One is a service code and one is a product code. Exact identifier type is essential to answer accurately.
+
+
+CASEBOOK-087 — Legal name mismatch on PO
+----------------------------------------
+The customer purchase order says 'Ardent Bio Labs' while the signed contract says 'Ardent Biosciences Pvt. Ltd.' The order team should not assume the names are interchangeable for billing. The legal-entity information needs reconciliation.
+
+
+CASEBOOK-088 — Return packaging discarded
+-----------------------------------------
+A customer throws away the TV packaging after opening the product and later reports transit damage. The loss of packaging can make investigation harder, but the policy does not say that discarded packaging automatically proves or disproves the damage claim. Evidence should be assessed case by case.
+
+
+CASEBOOK-089 — Employee salary statement shared
+-----------------------------------------------
+A manager prints an employee salary statement and leaves it in a shared printer tray. Compensation remains confidential HR information even though no electronic transfer occurred. The incident can be handled through the appropriate conduct/security channel.
+
+
+CASEBOOK-090 — RAG answer should refuse false precision
+-------------------------------------------------------
+A user asks for the number of HDMI ports on a Virelia laptop even though the catalog record does not specify ports. A strong RAG answer should say the corpus does not provide that fact rather than inventing a common specification. This is an answer-quality and hallucination test.
+
+
+CASEBOOK-091 — Duplicate product description
+--------------------------------------------
+A search for 'business laptop, 16 GB, 512 GB, Business-24' returns HP ProBook 440 G11, Dell Latitude 5450 and Lenovo ThinkPad E14 Gen 6. The shared attributes are useful filters but still do not identify one product. The model should either request another attribute or present the matching candidates instead of selecting the first result.
+
+
+CASEBOOK-092 — Office closure versus holiday
+--------------------------------------------
+The Ahmedabad office closes for building maintenance on a normal working day. Employees are instructed to work remotely if their role permits it. This is an operational closure, not a company holiday. An attendance answer that labels the date as a holiday would be incorrect.
+
+
+CASEBOOK-093 — Price without code
+---------------------------------
+A customer mentions 'the ₹69,500 Xiaomi phone' but does not know the product code. The catalog maps that price to VLT-PH-XIA-15PC. Retrieval can use price plus brand, but an answer should still expose the exact code so later support can identify the physical order.
+
+
+CASEBOOK-094 — Returned product after installation
+--------------------------------------------------
+A customer requests cancellation after a television has already been wall-mounted. The standard cancellation path no longer describes the physical state. The return policy's installation-specific handling should be checked, along with any de-installation requirements.
+
+
+CASEBOOK-095 — Payroll and attendance correction
+------------------------------------------------
+An employee's approved unpaid leave is missing from payroll because the attendance correction was entered after the payroll checkpoint. HR should first establish the correct attendance state, then Finance can determine the payroll correction. The two records must not be edited independently.
+
+
+CASEBOOK-096 — Supplier and customer pricing
+--------------------------------------------
+A supplier invoice lists VLT-HP-440G11-16 at a wholesale cost that is not the same as the customer catalog price. Procurement documents and customer-facing price records serve different transactions. A RAG system should not answer a customer price question from a supplier invoice chunk.
+
+
+CASEBOOK-097 — Support versus sales commitment
+----------------------------------------------
+A support agent tells a customer that a replacement will probably ship tomorrow based on an inventory screen. A final shipping commitment requires the appropriate order status. Support commentary is not automatically a commercial commitment unless recorded through the designated workflow.
+
+
+CASEBOOK-098 — Security approval versus data classification
+-----------------------------------------------------------
+A manager approves an employee's access to a confidential dataset, but the dataset requires restricted handling. Access approval does not eliminate data-classification requirements. The workflow must satisfy both identity/access controls and the handling rules for the data.
+
+
+CASEBOOK-099 — Missing fact should stay missing
+-----------------------------------------------
+A customer asks whether the VLT-TV-TCL-55CP supports a particular gaming refresh rate. The synthetic catalog does not specify that attribute. Retrieval should return the product record and answer that the corpus does not provide the requested refresh-rate fact instead of importing an unstated specification.
+
+
+CASEBOOK-100 — Two-source answer
+--------------------------------
+A user asks, 'What is the demo price of VLT-AC-BS-20EI and does standard installation apply?' The exact price and product-specific installation rule appear in the AC catalog, while the service catalog explains the enhanced survey service. A complete answer should preserve both sources and clearly separate product price from service requirements.
+
+
+CASEBOOK-101 — Customer account versus employee record
+------------------------------------------------------
+The same person can be an employee and also place a personal customer order. The employee HR record should not be used to answer the customer order's return question unless the transaction itself is identified. Identity overlap does not merge policy domains.
+
+
+CASEBOOK-102 — Catalog fact versus policy fact
+----------------------------------------------
+The laptop catalog states a demo price and warranty class, while the customer policy states return conditions. A question asking both price and return eligibility may require both sources. A single catalog chunk is not sufficient evidence for the policy conclusion.
+
+
+CASEBOOK-103 — Source authority
+-------------------------------
+When a structured order record and an informal chat disagree, the recorded order state controls unless a documented amendment exists.

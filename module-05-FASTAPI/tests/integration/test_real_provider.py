@@ -1,8 +1,8 @@
-import pytest
 import os
 
-from llm_client.services.llm_service import LLMClient
+import pytest
 
+from llm_client.services.llm_service import LLMClient
 
 pytestmark = [
     pytest.mark.integration,

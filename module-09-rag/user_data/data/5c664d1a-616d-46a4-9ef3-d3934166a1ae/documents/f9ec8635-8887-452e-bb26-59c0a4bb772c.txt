@@ -1,0 +1,1102 @@
+HR Policy — Joining, Onboarding & Probation
+===========================================
+
+HR-JOI-01 — Offer acceptance and date control
+
+---------------------------------------------
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Ahmedabad operation, Nikhil Rao from Product Operations raised a case connected to the West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-01-00018006-6222, and the review date was 16 January 2026.
+
+The control becomes relevant when a transaction belongs to the construction segment or when an employee moves between operational contexts. In the example reviewed for Nikhil Rao, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-01-00018006-6222, the approved action had a financial context of approximately ₹146,868. That amount is local to this record and must not be copied into another employee or customer case.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+The control becomes relevant when a transaction belongs to the healthcare segment or when an employee moves between operational contexts. In the example reviewed for Tara Malhotra, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-01-00019007-3259, the approved action had a financial context of approximately ₹155,208. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+Boundary condition: the amount ₹155,208 is evidence for this transaction only and does not establish a company-wide threshold.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Ahmedabad operation, Vivaan Shah from Quality Assurance raised a case connected to the West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-01-00020008-0296, and the review date was 13 May 2026.
+
+The control becomes relevant when a transaction belongs to the banking segment or when an employee moves between operational contexts. In the example reviewed for Vivaan Shah, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+Boundary condition: the case was logged on 13 May 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+In the Surat operation, Anaya Joshi from Warehouse Operations raised a case connected to the Central region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-01-00021009-7333, and the review date was 25 January 2026.
+
+The control becomes relevant when a transaction belongs to the logistics segment or when an employee moves between operational contexts. In the example reviewed for Anaya Joshi, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-01-00021009-7333, the approved action had a financial context of approximately ₹171,888. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Boundary condition: Surat belongs to the Central operating context; another location can follow a different local schedule or owner.
+
+HR-JOI-02 — Pre-joining documents
+
+---------------------------------
+
+The control becomes relevant when a transaction belongs to the banking segment or when an employee moves between operational contexts. In the example reviewed for Kiara Malhotra, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-02-00035011-5407, the approved action had a financial context of approximately ₹283,596. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+Boundary condition: the amount ₹283,596 is evidence for this transaction only and does not establish a company-wide threshold.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Ahmedabad operation, Dev Shah from Legal raised a case connected to the West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-02-00036012-2444, and the review date was 4 January 2026.
+
+The control becomes relevant when a transaction belongs to the logistics segment or when an employee moves between operational contexts. In the example reviewed for Dev Shah, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+Boundary condition: the case was logged on 4 January 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+In the Surat operation, Myra Joshi from Product Operations raised a case connected to the Central region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-02-00037013-9481, and the review date was 16 September 2026.
+
+The control becomes relevant when a transaction belongs to the construction segment or when an employee moves between operational contexts. In the example reviewed for Myra Joshi, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-02-00037013-9481, the approved action had a financial context of approximately ₹300,276. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Boundary condition: Surat belongs to the Central operating context; another location can follow a different local schedule or owner.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-02-00038014-6518, the approved action had a financial context of approximately ₹308,616. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Ahmedabad operation, Reyansh Rao from People Operations raised a case connected to the West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-02-00038014-6518, and the review date was 1 May 2026.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+HR-JOI-03 — Identity verification
+
+---------------------------------
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Ahmedabad operation, Yash Shah from Warehouse Operations raised a case connected to the West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-03-00052016-4592, and the review date was 22 September 2026.
+
+The control becomes relevant when a transaction belongs to the construction segment or when an employee moves between operational contexts. In the example reviewed for Yash Shah, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+Boundary condition: the case was logged on 22 September 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+In the Surat operation, Rhea Joshi from Procurement raised a case connected to the Central region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-03-00053017-1629, and the review date was 7 May 2026.
+
+The control becomes relevant when a transaction belongs to the healthcare segment or when an employee moves between operational contexts. In the example reviewed for Rhea Joshi, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-03-00053017-1629, the approved action had a financial context of approximately ₹53,664. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Boundary condition: Surat belongs to the Central operating context; another location can follow a different local schedule or owner.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-03-00054018-8666, the approved action had a financial context of approximately ₹62,004. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Ahmedabad operation, Neil Rao from Technical Support raised a case connected to the West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-03-00054018-8666, and the review date was 19 January 2026.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Surat operation, Sana Malhotra from Legal raised a case connected to the Central region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-03-00055019-5703, and the review date was 4 September 2026.
+
+The control becomes relevant when a transaction belongs to the logistics segment or when an employee moves between operational contexts. In the example reviewed for Sana Malhotra, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-03-00055019-5703, the approved action had a financial context of approximately ₹70,344. That amount is local to this record and must not be copied into another employee or customer case.
+
+Boundary condition: the amount ₹70,344 is evidence for this transaction only and does not establish a company-wide threshold.
+
+HR-JOI-04 — First working day
+
+-----------------------------
+
+In the Kochi operation, Diya Joshi from Quality Assurance raised a case connected to the North-West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-04-00069001-3037, and the review date was 5 May 2026.
+
+The control becomes relevant when a transaction belongs to the healthcare segment or when an employee moves between operational contexts. In the example reviewed for Diya Joshi, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-04-00069001-3037, the approved action had a financial context of approximately ₹173,632. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Boundary condition: Kochi belongs to the North-West operating context; another location can follow a different local schedule or owner.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-04-00070002-0074, the approved action had a financial context of approximately ₹181,972. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Jaipur operation, Kabir Rao from Warehouse Operations raised a case connected to the North region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-04-00070002-0074, and the review date was 17 January 2026.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Kochi operation, Meera Malhotra from Procurement raised a case connected to the North-West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-04-00071003-7111, and the review date was 2 September 2026.
+
+The control becomes relevant when a transaction belongs to the logistics segment or when an employee moves between operational contexts. In the example reviewed for Meera Malhotra, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-04-00071003-7111, the approved action had a financial context of approximately ₹190,312. That amount is local to this record and must not be copied into another employee or customer case.
+
+Boundary condition: the amount ₹190,312 is evidence for this transaction only and does not establish a company-wide threshold.
+
+The control becomes relevant when a transaction belongs to the construction segment or when an employee moves between operational contexts. In the example reviewed for Rohan Shah, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-04-00072004-4148, the approved action had a financial context of approximately ₹198,652. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+Boundary condition: the case was logged on 14 May 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+HR-JOI-05 — Equipment handover
+
+------------------------------
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-05-00086006-2222, the approved action had a financial context of approximately ₹310,360. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Jaipur operation, Nikhil Rao from Product Operations raised a case connected to the North region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-05-00086006-2222, and the review date was 8 September 2026.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Kochi operation, Tara Malhotra from People Operations raised a case connected to the North-West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-05-00087007-9259, and the review date was 20 May 2026.
+
+The control becomes relevant when a transaction belongs to the construction segment or when an employee moves between operational contexts. In the example reviewed for Tara Malhotra, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-05-00087007-9259, the approved action had a financial context of approximately ₹318,700. That amount is local to this record and must not be copied into another employee or customer case.
+
+Boundary condition: the amount ₹318,700 is evidence for this transaction only and does not establish a company-wide threshold.
+
+The control becomes relevant when a transaction belongs to the healthcare segment or when an employee moves between operational contexts. In the example reviewed for Vivaan Shah, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-05-00088008-6296, the approved action had a financial context of approximately ₹327,040. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+Boundary condition: the case was logged on 5 January 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Kochi operation, Anaya Joshi from Warehouse Operations raised a case connected to the North-West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-05-00089009-3333, and the review date was 17 September 2026.
+
+The control becomes relevant when a transaction belongs to the banking segment or when an employee moves between operational contexts. In the example reviewed for Anaya Joshi, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+Boundary condition: Kochi belongs to the North-West operating context; another location can follow a different local schedule or owner.
+
+HR-JOI-06 — Role changes before joining
+
+---------------------------------------
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Kochi operation, Kiara Malhotra from Technical Support raised a case connected to the North-West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-06-00103011-1407, and the review date was 11 January 2026.
+
+The control becomes relevant when a transaction belongs to the healthcare segment or when an employee moves between operational contexts. In the example reviewed for Kiara Malhotra, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-06-00103011-1407, the approved action had a financial context of approximately ₹72,088. That amount is local to this record and must not be copied into another employee or customer case.
+
+Boundary condition: the amount ₹72,088 is evidence for this transaction only and does not establish a company-wide threshold.
+
+The control becomes relevant when a transaction belongs to the banking segment or when an employee moves between operational contexts. In the example reviewed for Dev Shah, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-06-00104012-8444, the approved action had a financial context of approximately ₹80,428. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+Boundary condition: the case was logged on 23 September 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Kochi operation, Myra Joshi from Product Operations raised a case connected to the North-West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-06-00105013-5481, and the review date was 8 May 2026.
+
+The control becomes relevant when a transaction belongs to the logistics segment or when an employee moves between operational contexts. In the example reviewed for Myra Joshi, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+Boundary condition: Kochi belongs to the North-West operating context; another location can follow a different local schedule or owner.
+
+In the Jaipur operation, Reyansh Rao from People Operations raised a case connected to the North region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-06-00106014-2518, and the review date was 20 January 2026.
+
+The control becomes relevant when a transaction belongs to the construction segment or when an employee moves between operational contexts. In the example reviewed for Reyansh Rao, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-06-00106014-2518, the approved action had a financial context of approximately ₹97,108. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+HR-JOI-07 — Joining-date exceptions
+
+-----------------------------------
+
+The control becomes relevant when a transaction belongs to the logistics segment or when an employee moves between operational contexts. In the example reviewed for Yash Shah, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-07-00120016-0592, the approved action had a financial context of approximately ₹208,816. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+Boundary condition: the case was logged on 14 May 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Kochi operation, Rhea Joshi from Procurement raised a case connected to the North-West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-07-00121017-7629, and the review date was 26 January 2026.
+
+The control becomes relevant when a transaction belongs to the construction segment or when an employee moves between operational contexts. In the example reviewed for Rhea Joshi, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+Boundary condition: Kochi belongs to the North-West operating context; another location can follow a different local schedule or owner.
+
+In the Jaipur operation, Neil Rao from Technical Support raised a case connected to the North region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-07-00122018-4666, and the review date was 11 September 2026.
+
+The control becomes relevant when a transaction belongs to the healthcare segment or when an employee moves between operational contexts. In the example reviewed for Neil Rao, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-07-00122018-4666, the approved action had a financial context of approximately ₹225,496. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-07-00123019-1703, the approved action had a financial context of approximately ₹233,836. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Kochi operation, Sana Malhotra from Legal raised a case connected to the North-West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-07-00123019-1703, and the review date was 23 May 2026.
+
+Boundary condition: the amount ₹233,836 is evidence for this transaction only and does not establish a company-wide threshold.
+
+HR-JOI-08 — Probation review
+
+----------------------------
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Bengaluru operation, Diya Joshi from Quality Assurance raised a case connected to the South region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-08-00137001-9037, and the review date was 24 January 2026.
+
+The control becomes relevant when a transaction belongs to the construction segment or when an employee moves between operational contexts. In the example reviewed for Diya Joshi, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+Boundary condition: Bengaluru belongs to the South operating context; another location can follow a different local schedule or owner.
+
+In the Rajkot operation, Kabir Rao from Warehouse Operations raised a case connected to the East region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-08-00138002-6074, and the review date was 9 September 2026.
+
+The control becomes relevant when a transaction belongs to the healthcare segment or when an employee moves between operational contexts. In the example reviewed for Kabir Rao, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-08-00138002-6074, the approved action had a financial context of approximately ₹345,464. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-08-00139003-3111, the approved action had a financial context of approximately ₹353,804. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Bengaluru operation, Meera Malhotra from Procurement raised a case connected to the South region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-08-00139003-3111, and the review date was 21 May 2026.
+
+Boundary condition: the amount ₹353,804 is evidence for this transaction only and does not establish a company-wide threshold.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Rajkot operation, Rohan Shah from Technical Support raised a case connected to the East region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-08-00140004-0148, and the review date was 6 January 2026.
+
+The control becomes relevant when a transaction belongs to the logistics segment or when an employee moves between operational contexts. In the example reviewed for Rohan Shah, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-08-00140004-0148, the approved action had a financial context of approximately ₹362,144. That amount is local to this record and must not be copied into another employee or customer case.
+
+Boundary condition: the case was logged on 6 January 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+HR-JOI-09 — No-show handling
+
+----------------------------
+
+In the Rajkot operation, Nikhil Rao from Product Operations raised a case connected to the East region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-09-00154006-8222, and the review date was 27 May 2026.
+
+The control becomes relevant when a transaction belongs to the banking segment or when an employee moves between operational contexts. In the example reviewed for Nikhil Rao, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-09-00154006-8222, the approved action had a financial context of approximately ₹98,852. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-09-00155007-5259, the approved action had a financial context of approximately ₹107,192. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Bengaluru operation, Tara Malhotra from People Operations raised a case connected to the South region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-09-00155007-5259, and the review date was 12 January 2026.
+
+Boundary condition: the amount ₹107,192 is evidence for this transaction only and does not establish a company-wide threshold.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Rajkot operation, Vivaan Shah from Quality Assurance raised a case connected to the East region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-09-00156008-2296, and the review date was 24 September 2026.
+
+The control becomes relevant when a transaction belongs to the construction segment or when an employee moves between operational contexts. In the example reviewed for Vivaan Shah, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-09-00156008-2296, the approved action had a financial context of approximately ₹115,532. That amount is local to this record and must not be copied into another employee or customer case.
+
+Boundary condition: the case was logged on 24 September 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+The control becomes relevant when a transaction belongs to the healthcare segment or when an employee moves between operational contexts. In the example reviewed for Anaya Joshi, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-09-00157009-9333, the approved action had a financial context of approximately ₹123,872. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+Boundary condition: Bengaluru belongs to the South operating context; another location can follow a different local schedule or owner.
+
+HR-JOI-10 — Regional holiday conflict
+
+-------------------------------------
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-10-00171011-7407, the approved action had a financial context of approximately ₹235,580. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Bengaluru operation, Kiara Malhotra from Technical Support raised a case connected to the South region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-10-00171011-7407, and the review date was 3 September 2026.
+
+Boundary condition: the amount ₹235,580 is evidence for this transaction only and does not establish a company-wide threshold.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Rajkot operation, Dev Shah from Legal raised a case connected to the East region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-10-00172012-4444, and the review date was 15 May 2026.
+
+The control becomes relevant when a transaction belongs to the healthcare segment or when an employee moves between operational contexts. In the example reviewed for Dev Shah, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-10-00172012-4444, the approved action had a financial context of approximately ₹243,920. That amount is local to this record and must not be copied into another employee or customer case.
+
+Boundary condition: the case was logged on 15 May 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+The control becomes relevant when a transaction belongs to the banking segment or when an employee moves between operational contexts. In the example reviewed for Myra Joshi, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-10-00173013-1481, the approved action had a financial context of approximately ₹252,260. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+Boundary condition: Bengaluru belongs to the South operating context; another location can follow a different local schedule or owner.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Rajkot operation, Reyansh Rao from People Operations raised a case connected to the East region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-10-00174014-8518, and the review date was 12 September 2026.
+
+The control becomes relevant when a transaction belongs to the logistics segment or when an employee moves between operational contexts. In the example reviewed for Reyansh Rao, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+HR-JOI-11 — Remote joining
+
+--------------------------
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Rajkot operation, Yash Shah from Warehouse Operations raised a case connected to the East region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-11-00188016-6592, and the review date was 6 January 2026.
+
+The control becomes relevant when a transaction belongs to the banking segment or when an employee moves between operational contexts. In the example reviewed for Yash Shah, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-11-00188016-6592, the approved action had a financial context of approximately ₹372,308. That amount is local to this record and must not be copied into another employee or customer case.
+
+Boundary condition: the case was logged on 6 January 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+The control becomes relevant when a transaction belongs to the logistics segment or when an employee moves between operational contexts. In the example reviewed for Rhea Joshi, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-11-00189017-3629, the approved action had a financial context of approximately ₹5,648. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+Boundary condition: Bengaluru belongs to the South operating context; another location can follow a different local schedule or owner.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Rajkot operation, Neil Rao from Technical Support raised a case connected to the East region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-11-00190018-0666, and the review date was 3 May 2026.
+
+The control becomes relevant when a transaction belongs to the construction segment or when an employee moves between operational contexts. In the example reviewed for Neil Rao, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+In the Bengaluru operation, Sana Malhotra from Legal raised a case connected to the South region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-11-00191019-7703, and the review date was 15 January 2026.
+
+The control becomes relevant when a transaction belongs to the healthcare segment or when an employee moves between operational contexts. In the example reviewed for Sana Malhotra, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-11-00191019-7703, the approved action had a financial context of approximately ₹22,328. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Boundary condition: the amount ₹22,328 is evidence for this transaction only and does not establish a company-wide threshold.
+
+HR-JOI-12 — Intern and apprentice onboarding
+
+--------------------------------------------
+
+The control becomes relevant when a transaction belongs to the logistics segment or when an employee moves between operational contexts. In the example reviewed for Diya Joshi, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-12-00205001-5037, the approved action had a financial context of approximately ₹125,616. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+Boundary condition: Surat belongs to the Central operating context; another location can follow a different local schedule or owner.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Ahmedabad operation, Kabir Rao from Warehouse Operations raised a case connected to the West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-12-00206002-2074, and the review date was 1 May 2026.
+
+The control becomes relevant when a transaction belongs to the construction segment or when an employee moves between operational contexts. In the example reviewed for Kabir Rao, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+In the Surat operation, Meera Malhotra from Procurement raised a case connected to the Central region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-12-00207003-9111, and the review date was 13 January 2026.
+
+The control becomes relevant when a transaction belongs to the healthcare segment or when an employee moves between operational contexts. In the example reviewed for Meera Malhotra, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-12-00207003-9111, the approved action had a financial context of approximately ₹142,296. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Boundary condition: the amount ₹142,296 is evidence for this transaction only and does not establish a company-wide threshold.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-12-00208004-6148, the approved action had a financial context of approximately ₹150,636. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Ahmedabad operation, Rohan Shah from Technical Support raised a case connected to the West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-12-00208004-6148, and the review date was 25 September 2026.
+
+Boundary condition: the case was logged on 25 September 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+HR-JOI-13 — Privileged-role onboarding
+
+--------------------------------------
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Ahmedabad operation, Nikhil Rao from Product Operations raised a case connected to the West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-13-00222006-4222, and the review date was 19 January 2026.
+
+The control becomes relevant when a transaction belongs to the healthcare segment or when an employee moves between operational contexts. In the example reviewed for Nikhil Rao, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+In the Surat operation, Tara Malhotra from People Operations raised a case connected to the Central region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-13-00223007-1259, and the review date was 4 September 2026.
+
+The control becomes relevant when a transaction belongs to the banking segment or when an employee moves between operational contexts. In the example reviewed for Tara Malhotra, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-13-00223007-1259, the approved action had a financial context of approximately ₹270,684. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Boundary condition: the amount ₹270,684 is evidence for this transaction only and does not establish a company-wide threshold.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-13-00224008-8296, the approved action had a financial context of approximately ₹279,024. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Ahmedabad operation, Vivaan Shah from Quality Assurance raised a case connected to the West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-13-00224008-8296, and the review date was 16 May 2026.
+
+Boundary condition: the case was logged on 16 May 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Surat operation, Anaya Joshi from Warehouse Operations raised a case connected to the Central region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-13-00225009-5333, and the review date was 1 January 2026.
+
+The control becomes relevant when a transaction belongs to the construction segment or when an employee moves between operational contexts. In the example reviewed for Anaya Joshi, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-13-00225009-5333, the approved action had a financial context of approximately ₹287,364. That amount is local to this record and must not be copied into another employee or customer case.
+
+Boundary condition: Surat belongs to the Central operating context; another location can follow a different local schedule or owner.
+
+HR-JOI-14 — Data corrections
+
+----------------------------
+
+In the Surat operation, Kiara Malhotra from Technical Support raised a case connected to the Central region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-14-00239011-3407, and the review date was 22 May 2026.
+
+The control becomes relevant when a transaction belongs to the logistics segment or when an employee moves between operational contexts. In the example reviewed for Kiara Malhotra, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-14-00239011-3407, the approved action had a financial context of approximately ₹24,072. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Boundary condition: the amount ₹24,072 is evidence for this transaction only and does not establish a company-wide threshold.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-14-00240012-0444, the approved action had a financial context of approximately ₹32,412. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Ahmedabad operation, Dev Shah from Legal raised a case connected to the West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-14-00240012-0444, and the review date was 7 January 2026.
+
+Boundary condition: the case was logged on 7 January 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Surat operation, Myra Joshi from Product Operations raised a case connected to the Central region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-14-00241013-7481, and the review date was 19 September 2026.
+
+The control becomes relevant when a transaction belongs to the healthcare segment or when an employee moves between operational contexts. In the example reviewed for Myra Joshi, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-14-00241013-7481, the approved action had a financial context of approximately ₹40,752. That amount is local to this record and must not be copied into another employee or customer case.
+
+Boundary condition: Surat belongs to the Central operating context; another location can follow a different local schedule or owner.
+
+The control becomes relevant when a transaction belongs to the banking segment or when an employee moves between operational contexts. In the example reviewed for Reyansh Rao, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-14-00242014-4518, the approved action had a financial context of approximately ₹49,092. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+HR-JOI-15 — Contractor conversion
+
+---------------------------------
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-15-00256016-2592, the approved action had a financial context of approximately ₹160,800. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Ahmedabad operation, Yash Shah from Warehouse Operations raised a case connected to the West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-15-00256016-2592, and the review date was 25 September 2026.
+
+Boundary condition: the case was logged on 25 September 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Surat operation, Rhea Joshi from Procurement raised a case connected to the Central region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-15-00257017-9629, and the review date was 10 May 2026.
+
+The control becomes relevant when a transaction belongs to the banking segment or when an employee moves between operational contexts. In the example reviewed for Rhea Joshi, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-15-00257017-9629, the approved action had a financial context of approximately ₹169,140. That amount is local to this record and must not be copied into another employee or customer case.
+
+Boundary condition: Surat belongs to the Central operating context; another location can follow a different local schedule or owner.
+
+The control becomes relevant when a transaction belongs to the logistics segment or when an employee moves between operational contexts. In the example reviewed for Neil Rao, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-15-00258018-6666, the approved action had a financial context of approximately ₹177,480. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Surat operation, Sana Malhotra from Legal raised a case connected to the Central region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-15-00259019-3703, and the review date was 7 September 2026.
+
+The control becomes relevant when a transaction belongs to the construction segment or when an employee moves between operational contexts. In the example reviewed for Sana Malhotra, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+Boundary condition: the amount ₹185,820 is evidence for this transaction only and does not establish a company-wide threshold.
+
+HR-JOI-16 — First-week leave
+
+----------------------------
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Kochi operation, Diya Joshi from Quality Assurance raised a case connected to the North-West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-16-00273001-1037, and the review date was 8 May 2026.
+
+The control becomes relevant when a transaction belongs to the banking segment or when an employee moves between operational contexts. In the example reviewed for Diya Joshi, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-16-00273001-1037, the approved action had a financial context of approximately ₹289,108. That amount is local to this record and must not be copied into another employee or customer case.
+
+Boundary condition: Kochi belongs to the North-West operating context; another location can follow a different local schedule or owner.
+
+The control becomes relevant when a transaction belongs to the logistics segment or when an employee moves between operational contexts. In the example reviewed for Kabir Rao, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-16-00274002-8074, the approved action had a financial context of approximately ₹297,448. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Kochi operation, Meera Malhotra from Procurement raised a case connected to the North-West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-16-00275003-5111, and the review date was 5 September 2026.
+
+The control becomes relevant when a transaction belongs to the construction segment or when an employee moves between operational contexts. In the example reviewed for Meera Malhotra, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+Boundary condition: the amount ₹305,788 is evidence for this transaction only and does not establish a company-wide threshold.
+
+In the Jaipur operation, Rohan Shah from Technical Support raised a case connected to the North region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-16-00276004-2148, and the review date was 17 May 2026.
+
+The control becomes relevant when a transaction belongs to the healthcare segment or when an employee moves between operational contexts. In the example reviewed for Rohan Shah, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-16-00276004-2148, the approved action had a financial context of approximately ₹314,128. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Boundary condition: the case was logged on 17 May 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+HR-JOI-17 — Onboarding evidence
+
+-------------------------------
+
+The control becomes relevant when a transaction belongs to the construction segment or when an employee moves between operational contexts. In the example reviewed for Nikhil Rao, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-17-00290006-0222, the approved action had a financial context of approximately ₹50,836. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Kochi operation, Tara Malhotra from People Operations raised a case connected to the North-West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-17-00291007-7259, and the review date was 23 May 2026.
+
+The control becomes relevant when a transaction belongs to the healthcare segment or when an employee moves between operational contexts. In the example reviewed for Tara Malhotra, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+Boundary condition: the amount ₹59,176 is evidence for this transaction only and does not establish a company-wide threshold.
+
+In the Jaipur operation, Vivaan Shah from Quality Assurance raised a case connected to the North region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-17-00292008-4296, and the review date was 8 January 2026.
+
+The control becomes relevant when a transaction belongs to the banking segment or when an employee moves between operational contexts. In the example reviewed for Vivaan Shah, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-17-00292008-4296, the approved action had a financial context of approximately ₹67,516. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Boundary condition: the case was logged on 8 January 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-17-00293009-1333, the approved action had a financial context of approximately ₹75,856. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Kochi operation, Anaya Joshi from Warehouse Operations raised a case connected to the North-West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-17-00293009-1333, and the review date was 20 September 2026.
+
+Boundary condition: Kochi belongs to the North-West operating context; another location can follow a different local schedule or owner.
+
+HR-JOI-18 — Access dependency
+
+-----------------------------
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Kochi operation, Kiara Malhotra from Technical Support raised a case connected to the North-West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-18-00307011-9407, and the review date was 14 January 2026.
+
+The control becomes relevant when a transaction belongs to the banking segment or when an employee moves between operational contexts. In the example reviewed for Kiara Malhotra, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+Boundary condition: the amount ₹187,564 is evidence for this transaction only and does not establish a company-wide threshold.
+
+In the Jaipur operation, Dev Shah from Legal raised a case connected to the North region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-18-00308012-6444, and the review date was 26 September 2026.
+
+The control becomes relevant when a transaction belongs to the logistics segment or when an employee moves between operational contexts. In the example reviewed for Dev Shah, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-18-00308012-6444, the approved action had a financial context of approximately ₹195,904. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Boundary condition: the case was logged on 26 September 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-18-00309013-3481, the approved action had a financial context of approximately ₹204,244. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Kochi operation, Myra Joshi from Product Operations raised a case connected to the North-West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-18-00309013-3481, and the review date was 11 May 2026.
+
+Boundary condition: Kochi belongs to the North-West operating context; another location can follow a different local schedule or owner.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Jaipur operation, Reyansh Rao from People Operations raised a case connected to the North region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-18-00310014-0518, and the review date was 23 January 2026.
+
+The control becomes relevant when a transaction belongs to the healthcare segment or when an employee moves between operational contexts. In the example reviewed for Reyansh Rao, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-18-00310014-0518, the approved action had a financial context of approximately ₹212,584. That amount is local to this record and must not be copied into another employee or customer case.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+HR-JOI-19 — Payroll dependency
+
+------------------------------
+
+In the Jaipur operation, Yash Shah from Warehouse Operations raised a case connected to the North region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-19-00324016-8592, and the review date was 17 May 2026.
+
+The control becomes relevant when a transaction belongs to the construction segment or when an employee moves between operational contexts. In the example reviewed for Yash Shah, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-19-00324016-8592, the approved action had a financial context of approximately ₹324,292. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Boundary condition: the case was logged on 17 May 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-19-00325017-5629, the approved action had a financial context of approximately ₹332,632. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Kochi operation, Rhea Joshi from Procurement raised a case connected to the North-West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-19-00325017-5629, and the review date was 2 January 2026.
+
+Boundary condition: Kochi belongs to the North-West operating context; another location can follow a different local schedule or owner.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Jaipur operation, Neil Rao from Technical Support raised a case connected to the North region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-19-00326018-2666, and the review date was 14 September 2026.
+
+The control becomes relevant when a transaction belongs to the banking segment or when an employee moves between operational contexts. In the example reviewed for Neil Rao, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-19-00326018-2666, the approved action had a financial context of approximately ₹340,972. That amount is local to this record and must not be copied into another employee or customer case.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+The control becomes relevant when a transaction belongs to the logistics segment or when an employee moves between operational contexts. In the example reviewed for Sana Malhotra, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-19-00327019-9703, the approved action had a financial context of approximately ₹349,312. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+Boundary condition: the amount ₹349,312 is evidence for this transaction only and does not establish a company-wide threshold.
+
+HR-JOI-20 — Manager responsibilities
+
+------------------------------------
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-20-00341001-7037, the approved action had a financial context of approximately ₹77,600. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Bengaluru operation, Diya Joshi from Quality Assurance raised a case connected to the South region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-20-00341001-7037, and the review date was 27 January 2026.
+
+Boundary condition: Bengaluru belongs to the South operating context; another location can follow a different local schedule or owner.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Rajkot operation, Kabir Rao from Warehouse Operations raised a case connected to the East region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-20-00342002-4074, and the review date was 12 September 2026.
+
+The control becomes relevant when a transaction belongs to the banking segment or when an employee moves between operational contexts. In the example reviewed for Kabir Rao, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-20-00342002-4074, the approved action had a financial context of approximately ₹85,940. That amount is local to this record and must not be copied into another employee or customer case.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+The control becomes relevant when a transaction belongs to the logistics segment or when an employee moves between operational contexts. In the example reviewed for Meera Malhotra, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-20-00343003-1111, the approved action had a financial context of approximately ₹94,280. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+Boundary condition: the amount ₹94,280 is evidence for this transaction only and does not establish a company-wide threshold.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Rajkot operation, Rohan Shah from Technical Support raised a case connected to the East region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-20-00344004-8148, and the review date was 9 January 2026.
+
+The control becomes relevant when a transaction belongs to the construction segment or when an employee moves between operational contexts. In the example reviewed for Rohan Shah, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+Boundary condition: the case was logged on 9 January 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+HR-JOI-21 — Background verification
+
+-----------------------------------
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Rajkot operation, Nikhil Rao from Product Operations raised a case connected to the East region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-21-00358006-6222, and the review date was 3 May 2026.
+
+The control becomes relevant when a transaction belongs to the logistics segment or when an employee moves between operational contexts. In the example reviewed for Nikhil Rao, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-21-00358006-6222, the approved action had a financial context of approximately ₹214,328. That amount is local to this record and must not be copied into another employee or customer case.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+The control becomes relevant when a transaction belongs to the construction segment or when an employee moves between operational contexts. In the example reviewed for Tara Malhotra, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-21-00359007-3259, the approved action had a financial context of approximately ₹222,668. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+Boundary condition: the amount ₹222,668 is evidence for this transaction only and does not establish a company-wide threshold.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Rajkot operation, Vivaan Shah from Quality Assurance raised a case connected to the East region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-21-00360008-0296, and the review date was 27 September 2026.
+
+The control becomes relevant when a transaction belongs to the healthcare segment or when an employee moves between operational contexts. In the example reviewed for Vivaan Shah, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+Boundary condition: the case was logged on 27 September 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+In the Bengaluru operation, Anaya Joshi from Warehouse Operations raised a case connected to the South region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-21-00361009-7333, and the review date was 12 May 2026.
+
+The control becomes relevant when a transaction belongs to the banking segment or when an employee moves between operational contexts. In the example reviewed for Anaya Joshi, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-21-00361009-7333, the approved action had a financial context of approximately ₹239,348. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Boundary condition: Bengaluru belongs to the South operating context; another location can follow a different local schedule or owner.
+
+HR-JOI-22 — Joining-date change inside 48 hours
+
+-----------------------------------------------
+
+The control becomes relevant when a transaction belongs to the healthcare segment or when an employee moves between operational contexts. In the example reviewed for Kiara Malhotra, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-22-00375011-5407, the approved action had a financial context of approximately ₹351,056. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+Boundary condition: the amount ₹351,056 is evidence for this transaction only and does not establish a company-wide threshold.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Rajkot operation, Dev Shah from Legal raised a case connected to the East region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-22-00376012-2444, and the review date was 18 May 2026.
+
+The control becomes relevant when a transaction belongs to the banking segment or when an employee moves between operational contexts. In the example reviewed for Dev Shah, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+Boundary condition: the case was logged on 18 May 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+In the Bengaluru operation, Myra Joshi from Product Operations raised a case connected to the South region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-22-00377013-9481, and the review date was 3 January 2026.
+
+The control becomes relevant when a transaction belongs to the logistics segment or when an employee moves between operational contexts. In the example reviewed for Myra Joshi, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-22-00377013-9481, the approved action had a financial context of approximately ₹367,736. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Boundary condition: Bengaluru belongs to the South operating context; another location can follow a different local schedule or owner.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-22-00378014-6518, the approved action had a financial context of approximately ₹376,076. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Rajkot operation, Reyansh Rao from People Operations raised a case connected to the East region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-22-00378014-6518, and the review date was 15 September 2026.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+HR-JOI-23 — Early confirmation
+
+------------------------------
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Rajkot operation, Yash Shah from Warehouse Operations raised a case connected to the East region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-23-00392016-4592, and the review date was 9 January 2026.
+
+The control becomes relevant when a transaction belongs to the logistics segment or when an employee moves between operational contexts. In the example reviewed for Yash Shah, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+Boundary condition: the case was logged on 9 January 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+In the Bengaluru operation, Rhea Joshi from Procurement raised a case connected to the South region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-23-00393017-1629, and the review date was 21 September 2026.
+
+The control becomes relevant when a transaction belongs to the construction segment or when an employee moves between operational contexts. In the example reviewed for Rhea Joshi, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-23-00393017-1629, the approved action had a financial context of approximately ₹121,124. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Boundary condition: Bengaluru belongs to the South operating context; another location can follow a different local schedule or owner.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-23-00394018-8666, the approved action had a financial context of approximately ₹129,464. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Rajkot operation, Neil Rao from Technical Support raised a case connected to the East region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-23-00394018-8666, and the review date was 6 May 2026.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Bengaluru operation, Sana Malhotra from Legal raised a case connected to the South region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-23-00395019-5703, and the review date was 18 January 2026.
+
+The control becomes relevant when a transaction belongs to the banking segment or when an employee moves between operational contexts. In the example reviewed for Sana Malhotra, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-23-00395019-5703, the approved action had a financial context of approximately ₹137,804. That amount is local to this record and must not be copied into another employee or customer case.
+
+Boundary condition: the amount ₹137,804 is evidence for this transaction only and does not establish a company-wide threshold.
+
+HR-JOI-24 — Asset acknowledgement
+
+---------------------------------
+
+In the Surat operation, Diya Joshi from Quality Assurance raised a case connected to the Central region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-24-00409001-3037, and the review date was 19 September 2026.
+
+The control becomes relevant when a transaction belongs to the construction segment or when an employee moves between operational contexts. In the example reviewed for Diya Joshi, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-24-00409001-3037, the approved action had a financial context of approximately ₹241,092. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Boundary condition: Surat belongs to the Central operating context; another location can follow a different local schedule or owner.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-24-00410002-0074, the approved action had a financial context of approximately ₹249,432. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Ahmedabad operation, Kabir Rao from Warehouse Operations raised a case connected to the West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-24-00410002-0074, and the review date was 4 May 2026.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Surat operation, Meera Malhotra from Procurement raised a case connected to the Central region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-24-00411003-7111, and the review date was 16 January 2026.
+
+The control becomes relevant when a transaction belongs to the banking segment or when an employee moves between operational contexts. In the example reviewed for Meera Malhotra, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-24-00411003-7111, the approved action had a financial context of approximately ₹257,772. That amount is local to this record and must not be copied into another employee or customer case.
+
+Boundary condition: the amount ₹257,772 is evidence for this transaction only and does not establish a company-wide threshold.
+
+The control becomes relevant when a transaction belongs to the logistics segment or when an employee moves between operational contexts. In the example reviewed for Rohan Shah, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-24-00412004-4148, the approved action had a financial context of approximately ₹266,112. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+Boundary condition: the case was logged on 1 September 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+HR-JOI-25 — Source-of-truth rules
+
+---------------------------------
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-25-00426006-2222, the approved action had a financial context of approximately ₹2,820. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Ahmedabad operation, Nikhil Rao from Product Operations raised a case connected to the West region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-25-00426006-2222, and the review date was 22 January 2026.
+
+Boundary condition: the employee/customer identifier and the transaction reference should remain separate because the same person can appear in multiple workflows.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Surat operation, Tara Malhotra from People Operations raised a case connected to the Central region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-25-00427007-9259, and the review date was 7 September 2026.
+
+The control becomes relevant when a transaction belongs to the logistics segment or when an employee moves between operational contexts. In the example reviewed for Tara Malhotra, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-25-00427007-9259, the approved action had a financial context of approximately ₹11,160. That amount is local to this record and must not be copied into another employee or customer case.
+
+Boundary condition: the amount ₹11,160 is evidence for this transaction only and does not establish a company-wide threshold.
+
+The control becomes relevant when a transaction belongs to the construction segment or when an employee moves between operational contexts. In the example reviewed for Vivaan Shah, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+A practical distinction is required here: a request, an approval, an execution event, and a completed business outcome are four different states. For case HR-JOI-25-00428008-6296, the approved action had a financial context of approximately ₹19,500. That amount is local to this record and must not be copied into another employee or customer case.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+Boundary condition: the case was logged on 19 May 2026, so timing should be measured from that event rather than from the date of the later conversation.
+
+When evidence is incomplete, the case should remain in a review state rather than be resolved by guesswork. Acceptable evidence can include a system event, signed agreement, recorded approval, timestamped service report, or verified transaction reference. Unstructured recollection can support the investigation but is not automatically authoritative.
+
+Managers and specialist functions can have different responsibilities. A manager may confirm business necessity while Finance, Security, Procurement, or People Operations retains authority over the specialist control. The employee or customer should not be told that a specialist step is finished merely because the first approval has been recorded.
+
+In the Surat operation, Anaya Joshi from Warehouse Operations raised a case connected to the Central region. The question was whether the normal workflow could be used without modification. The reviewer checked the governing record, the effective date of the action, and whether a narrower rule covered this situation. The applicable reference was HR-JOI-25-00429009-3333, and the review date was 4 January 2026.
+
+The control becomes relevant when a transaction belongs to the healthcare segment or when an employee moves between operational contexts. In the example reviewed for Anaya Joshi, the source record—not a chat transcript—determined the baseline state. The team preserved the original request, the approving role, the decision timestamp and the resulting system state.
+
+Boundary condition: Surat belongs to the Central operating context; another location can follow a different local schedule or owner.

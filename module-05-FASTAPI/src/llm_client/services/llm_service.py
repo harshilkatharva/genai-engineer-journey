@@ -1,21 +1,17 @@
 import asyncio
 import json
-
-from llm_client.services.provider import LLMProvider
-
-from llm_client.models.response_model import CompletionResult
-from llm_client.services.providers import (
-    AnthropicProvider,
-    OpenAIProvider,
-    GoogleProvider,
-)
-
 from collections.abc import AsyncIterator
 
 from llm_client.exceptions import LLMError
-
-from llm_client.utils.llm_sucess_logger import llm_sucess_logger
+from llm_client.models.llm_response_model import LLMResponseModel
+from llm_client.services.provider import LLMProvider
+from llm_client.services.providers import (
+    AnthropicProvider,
+    GoogleProvider,
+    OpenAIProvider,
+)
 from llm_client.utils.llm_error_logger import llm_error_logger
+from llm_client.utils.llm_sucess_logger import llm_sucess_logger
 
 
 class LLMClient:
@@ -30,7 +26,7 @@ class LLMClient:
             "google": GoogleProvider(),
         }
 
-    async def complete(self, provider: str, prompt: str) -> CompletionResult:
+    async def complete(self, provider: str, prompt: str) -> LLMResponseModel:
         """
         Provide respose from specific provider
         """
@@ -43,9 +39,7 @@ class LLMClient:
             response = await self.providers[provider].complete(prompt)
 
             llm_sucess_logger.info(
-                json.dumps(
-                    {"provider": provider, "prompt": prompt, "response": str(response)}
-                )
+                json.dumps({"provider": provider, "prompt": prompt, "response": str(response)})
             )
 
             return response
@@ -60,14 +54,14 @@ class LLMClient:
                 }
             )
 
-            return CompletionResult(
+            return LLMResponseModel(
                 text=e.user_message, provider=provider, latency_ms=0.0, token_usage=0
             )
 
     async def complete_all(
         self,
         prompt: str,
-    ) -> list[CompletionResult | BaseException]:
+    ) -> list[LLMResponseModel | BaseException]:
         """
         Query every provider concurrently.
         If one provider fails, the others continue
