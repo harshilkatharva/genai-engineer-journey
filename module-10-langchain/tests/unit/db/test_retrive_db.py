@@ -69,16 +69,19 @@ async def test_retrive_chunks_returns_results(
         (
             "chunk_1",
             "Chunk 1 text",
+            "handbook.pdf",
             0.95,
         ),
         (
             "chunk_2",
             "Chunk 2 text",
+            "handbook.pdf",
             0.87,
         ),
         (
             "chunk_3",
             "Chunk 3 text",
+            "policy.pdf",
             0.65,
         ),
     ]
@@ -133,11 +136,13 @@ async def test_retrive_chunks_tracks_query(
         (
             "chunk_1",
             "Chunk 1",
+            "handbook.pdf",
             0.95,
         ),
         (
             "chunk_2",
             "Chunk 2",
+            "handbook.pdf",
             0.87,
         ),
     ]
@@ -271,7 +276,7 @@ async def test_retrive_chunks_with_default_top_k(
     manager.settings.default_top_k = 10
 
     mock_cursor.fetchall.return_value = [
-        ("chunk_1", "Chunk 1", 0.95),
+        ("chunk_1", "Chunk 1", "handbook.pdf", 0.95),
     ]
 
     tenant_id = UUID("550e8400-e29b-41d4-a716-446655440001")
@@ -424,16 +429,19 @@ async def test_retrive_keyword_chunks_returns_results(
         (
             "chunk_1",
             "Employee leave policy",
+            "leave-policy.pdf",
             0.92,
         ),
         (
             "chunk_2",
             "HR leave approval process",
+            "leave-policy.pdf",
             0.81,
         ),
         (
             "chunk_3",
             "Annual vacation policy",
+            "benefits.pdf",
             0.65,
         ),
     ]
@@ -532,11 +540,13 @@ async def test_retrive_keyword_chunks_tracks_query(
         (
             "chunk_1",
             "Employee leave policy",
+            "leave-policy.pdf",
             0.91,
         ),
         (
             "chunk_2",
             "HR policy",
+            "handbook.pdf",
             0.75,
         ),
     ]

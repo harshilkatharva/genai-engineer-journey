@@ -112,6 +112,7 @@ class HybridSearch:
                 RetriveResult(
                     chunk_id=result.chunk_id,
                     chunk_text=result.chunk_text,
+                    document_name=result.document_name,
                     similarity_score=normalized_score,
                 )
                 for result in results
@@ -126,6 +127,7 @@ class HybridSearch:
                 RetriveResult(
                     chunk_id=result.chunk_id,
                     chunk_text=result.chunk_text,
+                    document_name=result.document_name,
                     similarity_score=normalized_score,
                 )
             )
@@ -152,6 +154,7 @@ class HybridSearch:
             merged_results[result.chunk_id] = RetriveResult(
                 chunk_id=result.chunk_id,
                 chunk_text=result.chunk_text,
+                document_name=result.document_name,
                 similarity_score=hybrid_score,
             )
 
@@ -164,6 +167,7 @@ class HybridSearch:
                 merged_results[result.chunk_id] = RetriveResult(
                     chunk_id=result.chunk_id,
                     chunk_text=result.chunk_text,
+                    document_name=result.document_name,
                     similarity_score=keyword_score,
                 )
             else:

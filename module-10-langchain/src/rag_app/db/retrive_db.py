@@ -28,6 +28,7 @@ class RetriveDBManager:
                 SELECT
                     chunk_id,
                     chunk_text,
+                    metadata->>'document_name' AS document_name,
                     1 - (embedding <=> %s) AS similarity_score
                 FROM document_chunks
                 WHERE tenant_id = %s
@@ -47,6 +48,7 @@ class RetriveDBManager:
                 SELECT
                     chunk_id,
                     chunk_text,
+                    metadata->>'document_name' AS document_name,
                     1 - (embedding <=> %s) AS similarity_score
                 FROM document_chunks
                 WHERE tenant_id = %s
@@ -84,7 +86,8 @@ class RetriveDBManager:
             RetriveResult(
                 chunk_id=row[0],
                 chunk_text=row[1],
-                similarity_score=float(row[2]),
+                document_name=row[2],
+                similarity_score=float(row[3]),
             )
             for row in rows
         ]
@@ -113,6 +116,7 @@ class RetriveDBManager:
                     SELECT
                         chunk_id,
                         chunk_text,
+                        metadata->>'document_name' AS document_name,
                         ts_rank_cd(
                             search_vector,
                             websearch_to_tsquery('english', %s)
@@ -136,6 +140,7 @@ class RetriveDBManager:
                     SELECT
                         chunk_id,
                         chunk_text,
+                        metadata->>'document_name' AS document_name,
                         ts_rank_cd(
                             search_vector,
                             websearch_to_tsquery('english', %s)
@@ -175,7 +180,8 @@ class RetriveDBManager:
             RetriveResult(
                 chunk_id=row[0],
                 chunk_text=row[1],
-                similarity_score=float(row[2]),
+                document_name=row[2],
+                similarity_score=float(row[3]),
             )
             for row in rows
         ]

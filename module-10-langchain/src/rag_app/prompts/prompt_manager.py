@@ -1,11 +1,10 @@
 from pathlib import Path
 
 from jinja2 import Template
+from langchain_core.prompts import ChatPromptTemplate
 
 from rag_app.core.settings import get_settings
 from rag_app.models import PromptRequest
-
-from langchain_core.prompts import ChatPromptTemplate
 
 
 class PromptManager:
@@ -32,7 +31,7 @@ class PromptManager:
         prompt_template = Template(Path("src/rag_app/prompts/query/query_hyde.md").read_text())
         return prompt_template.render(query=query)
 
-    def build_rag_prompt_langchain(self) -> ChatPromptTemplate:
+    def build_rag_prompt_langchain(self, format_instructions: str = "") -> ChatPromptTemplate:
         prompt_path = Path(
             f"src/rag_app/prompts/services/{self.settings.rag_prompt_running_version}"
         )
@@ -44,4 +43,4 @@ class PromptManager:
                 ("system", template),
                 ("human", "{query}"),
             ]
-        )
+        ).partial(format_instructions=format_instructions)

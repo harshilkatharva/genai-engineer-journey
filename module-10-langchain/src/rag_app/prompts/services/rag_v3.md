@@ -84,6 +84,12 @@ The following are the retrieved chunks available for answering the user's questi
 
 Answer the user's question using ONLY the retrieved context above.
 
+### Output Schema
+
+Return the answer using exactly this output schema:
+
+{format_instructions}
+
 **Never generate an unrelated answer.**
 **Never invent information that is not present in the context.**
 **Never use outside knowledge to compensate for missing context.**

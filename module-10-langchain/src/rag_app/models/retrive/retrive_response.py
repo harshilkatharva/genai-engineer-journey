@@ -6,6 +6,7 @@ from pydantic import BaseModel
 class RetriveResult(BaseModel):
     chunk_id: str
     chunk_text: str
+    document_name: str | None = None
     similarity_score: float
 
 

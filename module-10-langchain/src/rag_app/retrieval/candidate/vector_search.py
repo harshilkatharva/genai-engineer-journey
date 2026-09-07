@@ -56,6 +56,7 @@ class VectorSearch:
                     RetriveResult(
                         chunk_id=val.chunk_id,
                         chunk_text=val.chunk_text,
+                        document_name=val.document_name,
                         similarity_score=val.similarity_score,
                     )
                 )

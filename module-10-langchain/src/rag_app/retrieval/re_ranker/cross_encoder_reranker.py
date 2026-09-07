@@ -67,6 +67,7 @@ class CrossEncoderReranker:
                 RetriveResult(
                     chunk_id=result.chunk_id,
                     chunk_text=result.chunk_text,
+                    document_name=result.document_name,
                     similarity_score=chunk_scores[result.chunk_id],
                 )
             )

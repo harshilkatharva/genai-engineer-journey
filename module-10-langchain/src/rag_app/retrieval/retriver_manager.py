@@ -117,6 +117,7 @@ class LangchainRetriever(BaseRetriever):
                 page_content=result.chunk_text,
                 metadata={
                     "chunk_id": str(result.chunk_id),
+                    "document_name": result.document_name,
                     "similarity_score": result.similarity_score,
                 },
             )
