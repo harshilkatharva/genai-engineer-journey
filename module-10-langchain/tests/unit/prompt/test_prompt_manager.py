@@ -42,7 +42,7 @@ User Question:
     )
 
     settings = MagicMock()
-    settings.rag_prompt_running_version = "rag_v1.md"
+    settings.rag_chat_prompt_running_version = "rag_v1.md"
 
     with patch(
         "rag_app.prompts.prompt_manager.get_settings",
@@ -73,7 +73,7 @@ def test_build_rag_prompt_langchain(tmp_path):
     prompt_file.write_text("Context:\n{context}\nUser Question:\n{query}")
 
     settings = MagicMock()
-    settings.rag_prompt_running_version = "rag_v3.md"
+    settings.rag_chat_prompt_running_version = "rag_v3.md"
 
     with patch(
         "rag_app.prompts.prompt_manager.get_settings",

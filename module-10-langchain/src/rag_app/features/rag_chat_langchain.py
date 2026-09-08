@@ -1,5 +1,9 @@
 from langchain_core.output_parsers import PydanticOutputParser
-from langchain_core.runnables import RunnableParallel
+from langchain_core.runnables import (
+    RunnableLambda,
+    RunnableParallel,
+    RunnableWithMessageHistory,
+)
 
 from rag_app.core.settings import get_settings
 from rag_app.models import (
@@ -7,10 +11,10 @@ from rag_app.models import (
     RAGRequest,
     RAGResposne,
 )
-
 from rag_app.prompts.prompt_manager import PromptManager
 from rag_app.retrieval.retriver_manager import LangchainRetriever
 from rag_app.services.llm_services import LLMServicemanager
+from rag_app.services.redis_history import get_redis_message_history
 from rag_app.tracker.query_performance_tracker import QueryPerformanceTrackerLogger
 
 
@@ -47,8 +51,8 @@ class RAGChatLangchain:
         # -----------------------------------------
 
         prompt_input = RunnableParallel(
-            query=lambda x: x,
-            context=retrieval | context,
+            query=lambda x: x["query"],
+            context=RunnableLambda(lambda x: x["query"]) | retrieval | context,
         )
 
         # -----------------------------------------
@@ -63,18 +67,28 @@ class RAGChatLangchain:
 
         llm = self.llm_manager.get_chat_model()
 
-        return prompt_input | prompt | llm | parser
+        history_chain = RunnableWithMessageHistory(
+            prompt_input | prompt | llm,
+            get_session_history=get_redis_message_history,
+            input_messages_key="query",
+            history_messages_key="history",
+        )
+
+        return history_chain | parser
 
     async def get_chat_answer(
         self,
         request: RAGRequest,
     ) -> RAGResposne:
         answer = await self.chain.ainvoke(
-            request.query,
+            {"query": request.query},
             config={
                 "metadata": {
                     "tenant_id": request.tenant_id,
-                }
+                },
+                "configurable": {
+                    "session_id": f"{request.tenant_id}:{request.session_id}",
+                },
             },
         )
 

@@ -26,7 +26,7 @@ class StubRetriever(BaseRetriever):
         return self.documents
 
 
-def test_build_chain_injects_schema_and_document_name_context():
+def test_build_chain_injects_schema_and_document_name_context(monkeypatch):
     document = Document(
         page_content="Refunds are available within 30 days.",
         metadata={"document_name": "refund-policy.pdf"},
@@ -50,9 +50,18 @@ def test_build_chain_injects_schema_and_document_name_context():
     rag_chat.prompt_manager = prompt_manager
     rag_chat.llm_manager = MagicMock()
     rag_chat.llm_manager.get_chat_model.return_value = llm
+    history = MagicMock()
+    history.messages = []
+    monkeypatch.setattr(
+        "rag_app.features.rag_chat_langchain.get_redis_message_history",
+        lambda session_id: history,
+    )
 
     chain = rag_chat._build_chain()
-    result = chain.invoke("What is the refund policy?")
+    result = chain.invoke(
+        {"query": "What is the refund policy?"},
+        config={"configurable": {"session_id": "tenant:session"}},
+    )
 
     format_instructions = prompt_manager.build_rag_prompt_langchain.call_args.kwargs[
         "format_instructions"
@@ -81,8 +90,11 @@ async def test_get_chat_answer_tracks_and_returns_parsed_response():
 
     assert result == answer
     rag_chat.chain.ainvoke.assert_awaited_once_with(
-        request.query,
-        config={"metadata": {"tenant_id": tenant_id}},
+        {"query": request.query},
+        config={
+            "metadata": {"tenant_id": tenant_id},
+            "configurable": {"session_id": f"{tenant_id}:{request.session_id}"},
+        },
     )
     rag_chat.query_performance_tracker.track.assert_called_once()
     tracker = rag_chat.query_performance_tracker.track.call_args.args[0]

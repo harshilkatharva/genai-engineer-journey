@@ -99,7 +99,7 @@ class LangchainRetriever(BaseRetriever):
         *,
         run_manager=None,
     ) -> list[Document]:
-        metadata = run_manager.metadata or {}
+        metadata = getattr(run_manager, "metadata", None) or {}
 
         tenant_id = metadata.get("tenant_id")
 

@@ -50,6 +50,7 @@ class Settings(BaseSettings):
     DATABASE_CONNECTION_CONVERSATION_URL: str = Field(
         default="postgresql://postgres:postgres@127.0.0.1:5432/ai_search"
     )
+    redis_url: str = Field(default="redis://default:redis_password@127.0.0.1:6379")
 
     embedding_model: str = "all-MiniLM-L6-v2"
     default_embedding_model: str = "all-MiniLM-L6-v2"
@@ -139,7 +140,9 @@ class Settings(BaseSettings):
     # ------------------------------------------------------------------
     # Latest Prompt file/version
     # ------------------------------------------------------------------
-    rag_prompt_running_version: str = Field(default="rag_v3.md")
+    rag_chat_prompt_running_version: str = Field(default="rag_v3.md")
+    rag_classification_prompt_running_version: str = Field(default="classification_v1.md")
+    rag_extraction_prompt_running_version: str = Field(default="extraction_v1.md")
 
     # ------------------------------------------------------------------
     # Logging

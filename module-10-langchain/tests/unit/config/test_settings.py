@@ -24,6 +24,9 @@ def test_settings_default_values() -> None:
     assert settings.re_ranker_max_top_k == 20
     assert settings.log_directory == "logs"
     assert settings.log_level == "INFO"
+    assert settings.rag_chat_prompt_running_version == "rag_v3.md"
+    assert settings.rag_classification_prompt_running_version == "classification_v1.md"
+    assert settings.rag_extraction_prompt_running_version == "extraction_v1.md"
 
 
 def test_settings_can_be_overridden(monkeypatch) -> None:

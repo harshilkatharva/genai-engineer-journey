@@ -10,8 +10,18 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis/redis-stack-server:latest
+    container_name: redis_db_framework
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-stack-server --appendonly yes --requirepass redis_password
     
 volumes:
-    postgres_data:
-      external: true
-      name: module-08-vectordb_postgres_data
+  postgres_data:
+    external: true
+    name: module-08-vectordb_postgres_data
+  redis_data:
