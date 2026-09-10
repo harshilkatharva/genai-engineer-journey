@@ -1,0 +1,19 @@
+import os
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
+GOOGLE_API_KEY = os.environ["GOOGLE_API_KEY"]
+ANTHROPIC_API_KEY = os.environ["ANTHROPIC_API_KEY"]
+OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
+
+DATABASE_CONNECTION_CONVERSATION_URL = os.environ["DATABASE_CONNECTION_CONVERSATION_URL"]
+
+X_API_KEY_Tenant_A = os.environ["X_API_KEY_Tenant_A"]
+X_API_KEY_Tenant_B = os.environ["X_API_KEY_Tenant_B"]
+
+LANGSMITH_API_KEY = os.environ["LANGSMITH_API_KEY"]
+LANGSMITH_PROJECT = os.environ["LANGSMITH_PROJECT"]
+LANGSMITH_TRACING = os.environ["LANGSMITH_TRACING"]
+LANGSMITH_ENDPOINT = os.environ["LANGSMITH_ENDPOINT"]
