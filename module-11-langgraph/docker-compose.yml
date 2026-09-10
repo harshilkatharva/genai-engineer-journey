@@ -1,0 +1,27 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg17
+    container_name: pgvector_db_framework
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ai_search
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis/redis-stack-server:latest
+    container_name: redis_db_framework
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-stack-server --appendonly yes --requirepass redis_password
+    
+volumes:
+  postgres_data:
+    external: true
+    name: module-08-vectordb_postgres_data
+  redis_data:
