@@ -26,5 +26,5 @@ class QueryHyDE:
         answer = await self.llm_service_manager.complete(
             LLMManagerRequest(prompt=prompt, response_schema=QueryHyDEModel)
         )
-        print(answer)
+
         return answer.data["hypothetical_document"]
