@@ -15,4 +15,6 @@ class ModelProvider:
 
     def configure(self) -> None:
         LlamaSettings.embed_model = HuggingFaceEmbedding(model_name=self.settings.embedding_model)
-        LlamaSettings.llm = GoogleGenAI(model=self.settings.llm_model)
+        LlamaSettings.llm = GoogleGenAI(
+            model=self.settings.llm_model, api_key=self.settings.google_api_key
+        )

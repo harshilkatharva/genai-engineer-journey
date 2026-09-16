@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock
+from unittest.mock import AsyncMock, MagicMock
 
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -16,7 +16,9 @@ def make_client(service: MagicMock) -> TestClient:
 
 def test_ingest_endpoint_delegates_to_service() -> None:
     service = MagicMock()
-    service.ingest.return_value = IngestResponse(source_dir="/data", documents=2, nodes=8)
+    service.ingest = AsyncMock(
+        return_value=IngestResponse(source_dir="/data", documents=2, nodes=8)
+    )
 
     response = make_client(service).post("/ingest", json={"data_dir": "/data"})
 
@@ -27,7 +29,7 @@ def test_ingest_endpoint_delegates_to_service() -> None:
 
 def test_ingest_endpoint_maps_service_errors() -> None:
     service = MagicMock()
-    service.ingest.side_effect = ValueError("No supported documents")
+    service.ingest = AsyncMock(side_effect=ValueError("No supported documents"))
 
     response = make_client(service).post("/ingest", json={})
 
@@ -37,10 +39,12 @@ def test_ingest_endpoint_maps_service_errors() -> None:
 
 def test_query_endpoint_supports_automatic_routing() -> None:
     service = MagicMock()
-    service.query.return_value = QueryResponse(
-        answer="answer",
-        route="summary",
-        sources=[SourceReference(source="report.txt", snippet="evidence")],
+    service.query = AsyncMock(
+        return_value=QueryResponse(
+            answer="answer",
+            route="summary",
+            sources=[SourceReference(source="report.txt", snippet="evidence")],
+        )
     )
 
     response = make_client(service).post("/query", json={"query": "summarize reports"})
@@ -52,7 +56,7 @@ def test_query_endpoint_supports_automatic_routing() -> None:
 
 def test_query_endpoint_maps_unready_service() -> None:
     service = MagicMock()
-    service.query.side_effect = RuntimeError("The indexes are not ready")
+    service.query = AsyncMock(side_effect=RuntimeError("The indexes are not ready"))
 
     response = make_client(service).post("/query", json={"query": "question"})
 

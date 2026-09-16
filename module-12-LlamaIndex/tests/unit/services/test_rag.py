@@ -1,5 +1,5 @@
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
@@ -21,7 +21,8 @@ def test_service_starts_unready_without_persisted_state(tmp_path) -> None:
     assert service.document_count == 0
 
 
-def test_ingest_configures_models_builds_indexes_and_persists_manifest(tmp_path) -> None:
+@pytest.mark.asyncio
+async def test_ingest_configures_models_builds_indexes_and_persists_manifest(tmp_path) -> None:
     settings = make_settings(tmp_path)
     service = RAGService(settings)
     document = MagicMock()
@@ -35,7 +36,7 @@ def test_ingest_configures_models_builds_indexes_and_persists_manifest(tmp_path)
         patch.object(service.index_factory, "persist_manifest") as persist_manifest,
         patch("rag_app.services.rag.ModelProvider") as provider_cls,
     ):
-        result = ingest_response("/corpus")
+        result = await ingest_response("/corpus")
 
     provider_cls.return_value.configure.assert_called_once()
     persist_manifest.assert_called_once_with(
@@ -48,7 +49,8 @@ def test_ingest_configures_models_builds_indexes_and_persists_manifest(tmp_path)
     assert service.ready is True
 
 
-def test_query_routes_to_vector_and_extracts_sources(tmp_path) -> None:
+@pytest.mark.asyncio
+async def test_query_routes_to_vector_and_extracts_sources(tmp_path) -> None:
     service = RAGService(make_settings(tmp_path))
     service.indexes = MagicMock()
     source_node = MagicMock()
@@ -56,28 +58,27 @@ def test_query_routes_to_vector_and_extracts_sources(tmp_path) -> None:
     source_node.node.get_content.return_value = "evidence" * 100
     response = MagicMock(source_nodes=[source_node])
     vector_engine = MagicMock()
-    vector_engine.query.return_value = response
+    vector_engine.aquery = AsyncMock(return_value=response)
 
     with patch("rag_app.services.rag.RetrievalEngineFactory") as engines_cls:
         engines_cls.return_value.vector.return_value = vector_engine
-        result = service.query("What happened?", route="vector")
+        result = await service.query("What happened?", route="vector")
 
-    vector_engine.query.assert_called_once_with("What happened?")
+    vector_engine.aquery.assert_awaited_once_with("What happened?")
     assert isinstance(result, QueryResponse)
     assert result.route == "vector"
     assert result.sources[0].source == "report.txt"
     assert len(result.sources[0].snippet) == 300
 
 
-def test_query_rejects_unready_service(tmp_path) -> None:
+@pytest.mark.asyncio
+async def test_query_rejects_unready_service(tmp_path) -> None:
     with pytest.raises(RuntimeError, match="Run POST /ingest"):
-        RAGService(make_settings(tmp_path)).query("question")
+        await RAGService(make_settings(tmp_path)).query("question")
 
 
 @pytest.mark.asyncio
 async def test_async_dependency_can_be_injected_for_async_callers() -> None:
-    from unittest.mock import AsyncMock
-
     dependency = AsyncMock(return_value="ready")
 
     result = await dependency()

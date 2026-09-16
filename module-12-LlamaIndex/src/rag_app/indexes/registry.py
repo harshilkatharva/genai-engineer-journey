@@ -35,6 +35,7 @@ class IndexFactory:
             raise RuntimeError("POSTGRES_URL must be configured before loading indexes.")
         return PGVectorStore(
             connection_string=self.settings.postgres_url,
+            async_connection_string=self.settings.postgres_url,
             table_name=self.settings.vector_table_name,
             schema_name=self.settings.vector_schema_name,
             embed_dim=self.settings.embedding_dimension,
@@ -44,11 +45,11 @@ class IndexFactory:
         vector_store = self._vector_store()
         storage_context = StorageContext.from_defaults(vector_store=vector_store)
         summary_storage = StorageContext.from_defaults()
-        summary_index = SummaryIndex(nodes, storage_context=summary_storage, show_progress=False)
+        summary_index = SummaryIndex(nodes, storage_context=summary_storage, show_progress=True)
         self.settings.index_storage_dir.mkdir(parents=True, exist_ok=True)
         summary_storage.persist(persist_dir=self.settings.index_storage_dir)
         return IndexRegistry(
-            vector=VectorStoreIndex(nodes, storage_context=storage_context, show_progress=False),
+            vector=VectorStoreIndex(nodes, storage_context=storage_context, show_progress=True),
             summary=summary_index,
         )
 

@@ -1,3 +1,4 @@
+import asyncio
 from pathlib import Path
 
 from ..core.config import Settings
@@ -31,31 +32,36 @@ class RAGService:
     def document_count(self) -> int:
         return self._document_count
 
-    def ingest(self, data_dir: str | Path | None = None) -> IngestResponse:
-        ModelProvider(self.settings).configure()
-        self.corpus = self.loader.load(data_dir)
-        self.indexes = self.index_factory.build(self.corpus.nodes)
-        self._document_count = len(self.corpus.documents)
-        self._node_count = len(self.corpus.nodes)
-        self.index_factory.persist_manifest(
-            source_dir=self.corpus.source_dir,
-            documents=len(self.corpus.documents),
-            nodes=len(self.corpus.nodes),
-        )
+    async def ingest(self, data_dir: str | Path | None = None) -> IngestResponse:
+        corpus, indexes = await asyncio.to_thread(self._ingest, data_dir)
+        self.corpus = corpus
+        self.indexes = indexes
+        self._document_count = len(corpus.documents)
+        self._node_count = len(corpus.nodes)
         return IngestResponse(
-            source_dir=str(self.corpus.source_dir),
-            documents=len(self.corpus.documents),
-            nodes=len(self.corpus.nodes),
+            source_dir=str(corpus.source_dir),
+            documents=len(corpus.documents),
+            nodes=len(corpus.nodes),
         )
 
-    def query(self, query: str, route: QueryRoute | None = None) -> QueryResponse:
+    def _ingest(self, data_dir: str | Path | None) -> tuple[IngestedCorpus, IndexRegistry]:
+        ModelProvider(self.settings).configure()
+        corpus = self.loader.load(data_dir)
+        indexes = self.index_factory.build(corpus.nodes)
+        self.index_factory.persist_manifest(
+            source_dir=corpus.source_dir,
+            documents=len(corpus.documents),
+            nodes=len(corpus.nodes),
+        )
+        return corpus, indexes
+
+    async def query(self, query: str, route: QueryRoute | None = None) -> QueryResponse:
         if self.indexes is None:
             raise RuntimeError("The indexes are not ready. Run POST /ingest first.")
         selected_route = route or self.router.classify(query)
         engines = RetrievalEngineFactory(self.settings, self.indexes)
-        response = (engines.vector() if selected_route == "vector" else engines.summary()).query(
-            query
-        )
+        engine = engines.vector() if selected_route == "vector" else engines.summary()
+        response = await engine.aquery(query)
         sources = [
             SourceReference(
                 source=str(

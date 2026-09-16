@@ -1,0 +1,7 @@
+{
+  "source_dir": "/home/harshilk/Downloads/gutenberg",
+  "documents": 318,
+  "nodes": 7729,
+  "vector_table_name": "rag_documents_LlmaIndex",
+  "vector_schema_name": "public"
+}
