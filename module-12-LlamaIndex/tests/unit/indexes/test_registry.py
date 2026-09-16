@@ -6,6 +6,8 @@ import pytest
 
 from rag_app.indexes.registry import IndexFactory, IndexRegistry
 
+from llama_index.core.schema import TextNode
+
 
 def make_settings(tmp_path, postgres_url="postgresql://db"):
     return MagicMock(
@@ -22,7 +24,7 @@ def test_build_creates_vector_and_summary_indexes(tmp_path) -> None:
     vector_store = MagicMock()
     vector_index = MagicMock()
     summary_index = MagicMock()
-    nodes = [MagicMock()]
+    nodes = [TextNode(text="test document")]
 
     with (
         patch("rag_app.indexes.registry.PGVectorStore", return_value=vector_store),

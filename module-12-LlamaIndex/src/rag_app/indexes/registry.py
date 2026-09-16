@@ -1,6 +1,7 @@
 import json
 from dataclasses import dataclass
 from pathlib import Path
+from typing import cast
 
 from llama_index.core import (
     StorageContext,
@@ -10,6 +11,8 @@ from llama_index.core import (
 )
 from llama_index.core.schema import BaseNode
 from llama_index.vector_stores.postgres import PGVectorStore
+
+from collections.abc import Sequence
 
 from ..core.config import Settings
 
@@ -41,7 +44,7 @@ class IndexFactory:
             embed_dim=self.settings.embedding_dimension,
         )
 
-    def build(self, nodes: list[BaseNode]) -> IndexRegistry:
+    def build(self, nodes: Sequence[BaseNode]) -> IndexRegistry:
         vector_store = self._vector_store()
         storage_context = StorageContext.from_defaults(vector_store=vector_store)
         summary_storage = StorageContext.from_defaults()
@@ -75,9 +78,12 @@ class IndexFactory:
         try:
             metadata = json.loads(self.manifest_path.read_text(encoding="utf-8"))
             storage_context = StorageContext.from_defaults(
-                persist_dir=self.settings.index_storage_dir,
+                persist_dir=str(self.settings.index_storage_dir),
             )
-            summary_index = load_index_from_storage(storage_context)
+            summary_index = cast(
+                SummaryIndex,
+                load_index_from_storage(storage_context),
+            )
             vector_index = VectorStoreIndex.from_vector_store(self._vector_store())
         except (OSError, RuntimeError, ValueError, KeyError) as exc:
             raise RuntimeError(

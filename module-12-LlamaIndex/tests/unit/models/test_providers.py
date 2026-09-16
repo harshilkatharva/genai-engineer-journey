@@ -7,7 +7,11 @@ def test_configure_registers_local_embedding_and_llm() -> None:
     settings = type(
         "SettingsStub",
         (),
-        {"embedding_model": "local-embedding", "llm_model": "test-llm"},
+        {
+            "embedding_model": "local-embedding",
+            "llm_model": "test-llm",
+            "google_api_key": "test-api-key",
+        },
     )()
     embedding = object()
     llm = object()
@@ -20,6 +24,6 @@ def test_configure_registers_local_embedding_and_llm() -> None:
         ModelProvider(settings).configure()
 
     embed_cls.assert_called_once_with(model_name="local-embedding")
-    llm_cls.assert_called_once_with(model="test-llm")
+    llm_cls.assert_called_once_with(model="test-llm", api_key="test-api-key")
     assert llama_settings.embed_model is embedding
     assert llama_settings.llm is llm
