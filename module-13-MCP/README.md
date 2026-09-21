@@ -1,0 +1,173 @@
+# Internal Tools MCP
+
+An MCP server that exposes read-only internal capabilities through Module 8 vector retrieval and Module 9 RAG chat. The server supports local stdio execution and remote-style SSE or streamable HTTP transports.
+
+## Capabilities
+
+### Tools
+
+| Tool | Purpose | Backend |
+| --- | --- | --- |
+| `module9_chat_answer` | Answer a question for a tenant | Module 9 `RAGChat` |
+| `module8_retrieve_documents` | Retrieve matching documents | Module 8 `RetriveServiceManager` |
+
+All tool inputs are validated before the underlying service is called. Tool invocations are logged with the tool name, arguments, and caller. The tools are read-only and do not accept arbitrary SQL or write operations.
+
+`module9_chat_answer` accepts:
+
+```json
+{
+	"query": "What was the name of the ship arriving at Marseilles on February 24, 1815?",
+	"tenant_id": "06f197fb-3b03-469f-b3ba-461dae52cf7a"
+}
+```
+
+`module8_retrieve_documents` accepts:
+
+```json
+{
+	"tenant_id": "06f197fb-3b03-469f-b3ba-461dae52cf7a",
+	"query": "vector retrieval",
+	"document_type": null,
+	"top_k": 5
+}
+```
+
+### Resources
+
+The resources are independent, read-only in-memory records owned by this MCP project. They do not import Module 8 or Module 9 later we can add with our database.
+
+- `internal://company/profile`
+- `internal://catalog/services`
+- `internal://policies/access`
+- `internal://records/handbook-001`
+- `internal://status/health`
+
+## Project Layout
+
+```text
+src/internal_tools_mcp/
+	server.py                         MCP composition root and transport startup
+	integrations.py                   Lazy sibling-module imports
+	rag_service/rag_service.py        Module 9 adapter
+	retrive_service/retrive_service.py Module 8 adapter
+	mcp/tools/tools.py                Tool registration and validation
+	mcp/resources/resource_catalog.py Standalone resource registration
+client.py                            Stdio capability-discovery client
+tests/unit/                           Unit tests with injected service doubles
+```
+
+## Requirements
+
+- Python 3.12 or newer
+- `uv`
+- The sibling projects in the handbook repository:
+	- `../module-08-VectorDB`
+	- `../module-09-rag`
+- Runtime configuration required by those projects, including their database and LLM provider settings
+
+The MCP server itself uses the MCP 2.x API:
+
+```python
+from mcp.server.mcpserver import MCPServer
+```
+
+## Setup
+
+From this project directory:
+
+```bash
+uv sync
+```
+
+The adapters resolve the sibling source directories from the repository layout. Keep this project beside `module-08-VectorDB` and `module-09-rag` as shown:
+
+```text
+genai-engineer-journey/
+	module-08-VectorDB/
+	module-09-rag/
+	module-13-MCP/
+```
+
+## Run Locally With Stdio
+
+Start the server manually:
+
+```bash
+uv run python -m internal_tools_mcp.server --transport stdio
+```
+
+For a complete local demonstration, run the client in another terminal:
+
+```bash
+uv run python client.py
+```
+
+The client initializes a session, discovers tools and resources, reads every resource, and invokes both tools.
+
+Do not write ordinary diagnostic output to server stdout when using stdio. stdout is reserved for MCP JSON-RPC messages; diagnostics must go to stderr or through logging.
+
+## Run With SSE
+
+Start the server:
+
+```bash
+uv run python -m internal_tools_mcp.server \
+	--transport sse \
+	--host 127.0.0.1 \
+	--port 8000
+```
+
+The SSE endpoint is:
+
+```text
+http://127.0.0.1:8000/sse
+```
+
+## Run With Streamable HTTP
+
+Start the server:
+
+```bash
+uv run python -m internal_tools_mcp.server \
+	--transport streamable-http \
+	--host 127.0.0.1 \
+	--port 8000
+```
+
+The MCP endpoint is:
+
+```text
+http://127.0.0.1:8000/mcp
+```
+
+## Tests
+
+Run the maintained MCP test suite:
+
+```bash
+uv run pytest -q
+```
+
+The tests use injected fake services for Module 8 and Module 9, so unit tests do not require PostgreSQL, an LLM API key, downloaded embedding models, or network access.
+
+## Architecture
+
+```mermaid
+flowchart LR
+		Client[MCP client] --> Transport[stdio / SSE / streamable HTTP]
+		Transport --> Server[MCP server]
+		Server --> Tools[Registered tools]
+		Server --> Resources[Standalone resources]
+		Tools --> RAG[Module 9 RAGChat adapter]
+		Tools --> Vector[Module 8 retrieval adapter]
+		RAG --> RAGApp[Module 9 application]
+		Vector --> VectorApp[Module 8 application]
+```
+
+## Notes
+
+- The adapters preserve the existing Module 8 and Module 9 service APIs rather than copying their implementations.
+- The Module 9 adapter creates an observability request context and redirects legacy stdout diagnostics to stderr for stdio protocol safety.
+- The Module 8 adapter also redirects legacy stdout diagnostics to stderr.
+- Resource data is intentionally local and deterministic for capability discovery and testing.
