@@ -1,6 +1,10 @@
 import asyncio
 
-from internal_tools_mcp.server import mcp
+from starlette.testclient import TestClient
+
+from internal_tools_mcp import server as server_module
+
+mcp = server_module.mcp
 
 
 def test_server_registers_tools_and_resources():
@@ -13,3 +17,13 @@ def test_server_registers_tools_and_resources():
     }
     assert len(resources) == 5
     assert all(str(resource.uri).startswith("internal://") for resource in resources)
+
+
+def test_sse_http_requires_bearer_token():
+    app = server_module.build_http_app("sse", host="127.0.0.1", api_token="test-token")
+
+    with TestClient(app) as client:
+        response = client.get("/sse")
+
+    assert response.status_code == 401
+    assert "www-authenticate" in response.headers

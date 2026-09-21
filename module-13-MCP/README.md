@@ -109,13 +109,21 @@ Do not write ordinary diagnostic output to server stdout when using stdio. stdou
 
 ## Run With SSE
 
-Start the server:
+HTTP and SSE transports require a shared bearer token. Set it with an environment variable or CLI flag:
 
 ```bash
+export MCP_API_TOKEN="replace-with-long-random-secret"
+
 uv run python -m internal_tools_mcp.server \
 	--transport sse \
 	--host 127.0.0.1 \
 	--port 8000
+```
+
+Clients send:
+
+```http
+Authorization: Bearer replace-with-long-random-secret
 ```
 
 The SSE endpoint is:
@@ -126,9 +134,11 @@ http://127.0.0.1:8000/sse
 
 ## Run With Streamable HTTP
 
-Start the server:
+Start the server with the same token requirement:
 
 ```bash
+export MCP_API_TOKEN="replace-with-long-random-secret"
+
 uv run python -m internal_tools_mcp.server \
 	--transport streamable-http \
 	--host 127.0.0.1 \
@@ -140,6 +150,23 @@ The MCP endpoint is:
 ```text
 http://127.0.0.1:8000/mcp
 ```
+
+Unauthenticated requests receive a `401` response with a `WWW-Authenticate: Bearer` header, and the server rejects invalid tokens before any MCP request is processed.
+
+## Additional Security Before External Exposure
+
+This server is intentionally read-only and token-protected, but before exposing it beyond a trusted internal network, add the following controls from the module basics:
+
+- TLS termination at a reverse proxy or ingress, so traffic is encrypted in transit and the server is not directly internet-facing.
+- Mutual TLS (mTLS) or a trusted identity gateway if the deployment is multi-service or crosses network boundaries.
+- A proper OAuth or signed JWT flow instead of a shared static secret when clients are not all fully trusted internal processes.
+- IP allowlisting, VPC/private-network boundaries, and firewall rules to restrict access to known internal subnets or a bastion path.
+- Rate limiting, request-size caps, and request logging/monitoring to detect abuse, token leakage, and anomalous traffic.
+- DNS rebinding protection and host allowlisting for the transport security options, especially when the service is behind a browser-facing proxy.
+- Rotation and secret management for the API token via environment injection or a secret manager, rather than hard-coded values in source control.
+- Least-privilege network design: keep the server on a private segment, restrict outbound access to only required dependencies, and avoid exposing admin or debugging routes.
+
+These layers are the minimum needed before moving from a trusted internal MCP endpoint to a broader network or internet exposure.
 
 ## Tests
 
