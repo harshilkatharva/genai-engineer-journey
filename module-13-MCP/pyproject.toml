@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "module-13-mcp"
 version = "0.1.0"
@@ -5,9 +9,35 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "dotenv>=0.9.9",
     "ipykernel>=7.3.0",
     "mcp>=2.2.0",
+    "asyncpg>=0.31.0",
+    "fastapi>=0.141.1",
+    "httpx2>=2.10.0",
+    "pgvector>=0.5.0",
+    "psycopg[binary]>=3.3.4",
+    "pydantic-settings>=2.15.0",
+    "pytest-asyncio>=1.4.0",
+    "sentence-transformers>=5.7.0",
+    "tiktoken>=0.13.0",
+    "uuid>=1.30",
+    "uvicorn>=0.52.3",
+    "anthropic>=0.125.0",
+    "google>=3.0.0",
+    "google-genai>=2.19.0",
+    "openai>=3.3.1",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [dependency-groups]
 dev = [

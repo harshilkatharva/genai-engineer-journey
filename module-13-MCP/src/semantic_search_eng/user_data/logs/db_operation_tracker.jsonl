@@ -1,0 +1,3 @@
+{"tenant_id": "06f197fb-3b03-469f-b3ba-461dae52cf7a", "top_k": 5, "results_count": 0, "query_latency_ms": 106.82215300039388, "chunk_ids": [], "operation_type": "query", "logged_at": "2026-09-21T08:15:09.805594+00:00"}
+{"tenant_id": "06f197fb-3b03-469f-b3ba-461dae52cf7a", "top_k": 5, "results_count": 0, "query_latency_ms": 95.34856699974625, "chunk_ids": [], "operation_type": "query", "logged_at": "2026-09-21T08:55:40.571395+00:00"}
+{"tenant_id": "06f197fb-3b03-469f-b3ba-461dae52cf7a", "top_k": 5, "results_count": 0, "query_latency_ms": 31.151168999713263, "chunk_ids": [], "operation_type": "query", "logged_at": "2026-09-21T08:58:12.906788+00:00"}
