@@ -1,0 +1,32 @@
+# API Keys
+.env
+.env.*
+!.env.example
+
+# Python Libraries
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Logs
+logs/
+*.log
+
+# Packages
+*.egg-info/
+
+# Type checking
+.mypy_cache/
+
+# Testing
+.pytest_cache/
+.hypothesis/
+
+# Ruff
+.ruff_cache/
+
+# User data
+user_data/data
