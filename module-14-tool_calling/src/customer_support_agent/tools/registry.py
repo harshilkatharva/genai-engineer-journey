@@ -70,10 +70,6 @@ def build_default_registry(context: ToolContext) -> ToolRegistry:
             "order": order.model_dump(mode="json") if order else None,
         }
 
-    async def cancellation_policy() -> dict[str, Any]:
-        policy = await db.get_cancellation_policy()
-        return {"found": policy is not None, "policy": policy.model_dump() if policy else None}
-
     async def product_search(
         query: str, max_price: float | None = None, limit: int = 10
     ) -> dict[str, Any]:
@@ -103,14 +99,6 @@ def build_default_registry(context: ToolContext) -> ToolRegistry:
             "required": ["order_id"],
         },
         lookup_order,
-    )
-    registry.register(
-        "cancellation_policy",
-        "What it does: retrieves the current order cancellation policy. "
-        "Use when: the customer asks whether or how an order can be cancelled. "
-        "Do not use when: the question is about another policy or a specific order status or status about cancelled orders.",
-        {"type": "object", "properties": {}},
-        cancellation_policy,
     )
     registry.register(
         "product_search",

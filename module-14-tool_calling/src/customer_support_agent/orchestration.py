@@ -4,12 +4,12 @@ import json
 
 from pydantic import BaseModel
 
+from customer_support_agent.mcp_client import MCPClientError, MCPToolClient
 from customer_support_agent.models import ChatMessage, LLMResponseModel
 from customer_support_agent.observability.events import EventName
 from customer_support_agent.observability.logger import logger
 from customer_support_agent.observability.tool_logger import ToolInvocationLogger
 from customer_support_agent.providers.llm_provider import LLMProvider
-from customer_support_agent.tools import ToolRegistry
 
 
 class ToolChatResult(BaseModel):
@@ -23,19 +23,31 @@ class ToolChatResult(BaseModel):
 async def run_tool_chat(
     messages: list[ChatMessage],
     provider: LLMProvider,
-    registry: ToolRegistry,
+    mcp_client: MCPToolClient,
     max_iterations: int = 5,
+    cancellation_policy: str | None = None,
 ) -> ToolChatResult:
     """Run the model/tool loop with a hard bound and user-safe error messages."""
     if max_iterations < 1:
         raise ValueError("max_iterations must be at least 1")
     conversation = list(messages)
+    if cancellation_policy:
+        conversation.insert(
+            0,
+            ChatMessage(
+                role="system",
+                content=(
+                    "The following MCP resource is the complete current cancellation policy. "
+                    "Use it directly when relevant; do not invent or request a cancellation-policy tool.\n\n"
+                    + cancellation_policy
+                ),
+            ),
+        )
+    tools = await mcp_client.list_tools()
     tool_logger = ToolInvocationLogger()
     for iteration in range(1, max_iterations + 1):
         try:
-            response: LLMResponseModel = await provider.complete(
-                conversation, registry.definitions()
-            )
+            response: LLMResponseModel = await provider.complete(conversation, tools)
         except Exception:  # noqa: BLE001 - provider SDK errors are intentionally normalized
             logger.exception(
                 "LLM call failed",
@@ -75,9 +87,9 @@ async def run_tool_chat(
         for call in response.tool_calls:
             started = tool_logger.start(call.name, call.arguments, iteration)
             try:
-                value = await registry.execute(call.name, call.arguments)
+                value = await mcp_client.call_tool(call.name, call.arguments)
                 content = json.dumps(value, default=str)
-            except (KeyError, TypeError, ValueError, RuntimeError):
+            except (MCPClientError, KeyError, TypeError, ValueError, RuntimeError):
                 # Tool failures are returned to the model without exposing internals.
                 # Do not expose database/provider details to the model or caller.
                 content = json.dumps({"error": "The requested support tool failed."})

@@ -64,3 +64,17 @@ class SequencedProvider:
 class FailingDB(FakeDB):
     async def get_order(self, order_id: str):
         raise RuntimeError("database password leaked")
+
+
+class FakeMCPClient:
+    def __init__(self, registry):
+        self.registry = registry
+
+    async def list_tools(self):
+        return self.registry.definitions()
+
+    async def call_tool(self, name, arguments):
+        return await self.registry.execute(name, arguments)
+
+    async def read_resource(self, uri):
+        return "Contact support."

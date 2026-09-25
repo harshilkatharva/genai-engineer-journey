@@ -8,12 +8,12 @@ from pydantic import BaseModel, Field
 
 from customer_support_agent.core import get_settings
 from customer_support_agent.db import CustomerSupportDB
+from customer_support_agent.mcp_client import MCPClient
 from customer_support_agent.models import ChatMessage
 from customer_support_agent.observability.context import reset_request_id, set_request_id
 from customer_support_agent.orchestration import run_tool_chat
 from customer_support_agent.providers import AnthropicProvider, GoogleProvider, OpenAIProvider
 from customer_support_agent.providers.llm_provider import LLMProvider
-from customer_support_agent.tools import ToolContext, build_default_registry
 
 
 class ChatToolRequest(BaseModel):
@@ -56,10 +56,15 @@ async def chat_tool(
 ) -> ChatToolResponse:
     request_token = set_request_id(uuid4())
     try:
-        registry = build_default_registry(ToolContext(db=db, customer_id=request.customer_id))
-        result = await run_tool_chat(
-            request.messages, provider, registry, get_settings().max_tool_iterations
-        )
+        async with MCPClient(customer_id=request.customer_id) as mcp_client:
+            policy = await mcp_client.read_resource("support://cancellation-policy")
+            result = await run_tool_chat(
+                request.messages,
+                provider,
+                mcp_client,
+                get_settings().max_tool_iterations,
+                cancellation_policy=policy,
+            )
         return ChatToolResponse(
             text=result.text,
             iterations=result.iterations,

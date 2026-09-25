@@ -37,7 +37,6 @@ def test_registry_definitions_explain_use_and_non_use_for_every_tool():
     definitions = build_default_registry(ToolContext(db=FakeDB())).definitions()
     assert {definition.name for definition in definitions} == {
         "lookup_order",
-        "cancellation_policy",
         "product_search",
         "product_details",
         "escalation",
@@ -53,7 +52,6 @@ async def test_registry_executes_each_default_tool_and_applies_constraints():
     db = FakeDB()
     registry = build_default_registry(ToolContext(db=db, customer_id="customer-1"))
     assert (await registry.execute("lookup_order", {"order_id": "order-1"}))["found"]
-    assert (await registry.execute("cancellation_policy", {}))["found"]
     products = await registry.execute(
         "product_search", {"query": "widget", "max_price": 20, "limit": 100}
     )
