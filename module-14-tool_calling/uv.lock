@@ -1382,7 +1382,7 @@ wheels = [
 [[package]]
 name = "module-14-tool-calling"
 version = "0.1.0"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "anthropic" },
     { name = "asyncpg" },
