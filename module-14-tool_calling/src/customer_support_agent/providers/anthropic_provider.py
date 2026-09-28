@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import time
 from collections.abc import AsyncIterator
+from typing import cast
 
-from anthropic import AsyncAnthropic
+from anthropic import AsyncAnthropic, Omit
+from anthropic.types import MessageParam
 
 from customer_support_agent.core import get_settings
 from customer_support_agent.models import ChatMessage, LLMResponseModel, ToolCall, ToolDefinition
@@ -21,16 +23,19 @@ class AnthropicProvider(LLMProvider):
         self, messages: list[ChatMessage], tools: list[ToolDefinition] | None = None
     ) -> LLMResponseModel:
         system = "\n".join(message.content for message in messages if message.role == "system")
-        request_messages = [
-            {"role": message.role, "content": message.content}
-            for message in messages
-            if message.role != "system"
-        ]
+        request_messages = cast(
+            list[MessageParam],
+            [
+                {"role": message.role, "content": message.content}
+                for message in messages
+                if message.role != "system"
+            ],
+        )
         start = time.perf_counter()
         response = await self.client.messages.create(
             model=self.model,
             max_tokens=2048,
-            system=system or None,
+            system=system if system else Omit(),
             messages=request_messages,
             tools=[
                 {

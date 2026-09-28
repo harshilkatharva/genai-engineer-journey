@@ -1,9 +1,13 @@
 from __future__ import annotations
 
+import json
 import time
 from collections.abc import AsyncIterator
+from typing import cast
 
 from openai import AsyncOpenAI
+from openai.types.responses import FunctionToolParam, ResponseInputParam
+from openai.types.responses.response_text_delta_event import ResponseTextDeltaEvent
 
 from customer_support_agent.core import get_settings
 from customer_support_agent.models import ChatMessage, LLMResponseModel, ToolCall, ToolDefinition
@@ -20,26 +24,33 @@ class OpenAIProvider(LLMProvider):
     async def complete(
         self, messages: list[ChatMessage], tools: list[ToolDefinition] | None = None
     ) -> LLMResponseModel:
-        request_tools = [
+        request_tools: list[FunctionToolParam] = [
             {
                 "type": "function",
                 "name": tool.name,
                 "description": tool.description,
                 "parameters": tool.parameters,
+                "strict": False,
             }
             for tool in tools or []
         ]
         start = time.perf_counter()
         response = await self.client.responses.create(
             model=self.model,
-            input=[message.model_dump(exclude_none=True) for message in messages],
+            input=cast(
+                ResponseInputParam,
+                [message.model_dump(exclude_none=True) for message in messages],
+            ),
             tools=request_tools,
         )
-        calls = [
-            ToolCall(id=item.call_id, name=item.name, arguments=item.arguments)
-            for item in response.output
-            if item.type == "function_call"
-        ]
+        calls: list[ToolCall] = []
+        for item in response.output:
+            if item.type != "function_call":
+                continue
+            arguments = json.loads(item.arguments)
+            if not isinstance(arguments, dict):
+                raise TypeError("OpenAI returned non-object tool arguments")
+            calls.append(ToolCall(id=item.call_id, name=item.name, arguments=arguments))
         usage = response.usage
         return LLMResponseModel(
             text=response.output_text if not calls else None,
@@ -52,11 +63,13 @@ class OpenAIProvider(LLMProvider):
         )
 
     async def stream(self, messages: list[ChatMessage]) -> AsyncIterator[str]:
-        response = await self.client.responses.create(
+        async with self.client.responses.stream(
             model=self.model,
-            input=[message.model_dump(exclude_none=True) for message in messages],
-            stream=True,
-        )
-        async for event in response:
-            if event.type == "response.output_text.delta":
-                yield event.delta
+            input=cast(
+                ResponseInputParam,
+                [message.model_dump(exclude_none=True) for message in messages],
+            ),
+        ) as stream:
+            async for event in stream:
+                if isinstance(event, ResponseTextDeltaEvent):
+                    yield event.delta

@@ -88,7 +88,7 @@ class MCPClient:
             )
         except Exception as exc:
             raise MCPClientError(f"MCP tool call failed: {name}") from exc
-        if result.isError:
+        if result.is_error:
             raise MCPClientError(f"MCP tool call failed: {name}")
         if result.structured_content:
             return result.structured_content

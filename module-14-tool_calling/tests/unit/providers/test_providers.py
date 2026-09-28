@@ -14,7 +14,9 @@ async def test_openai_adapter_maps_text_and_tool_call():
         model="gpt",
         output_text="",
         output=[
-            SimpleNamespace(type="function_call", call_id="c", name="lookup", arguments={"id": "1"})
+            SimpleNamespace(
+                type="function_call", call_id="c", name="lookup", arguments='{"id": "1"}'
+            )
         ],
         usage=SimpleNamespace(input_tokens=1, output_tokens=2),
     )

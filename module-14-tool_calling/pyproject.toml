@@ -51,12 +51,10 @@ line-length = 100
 
 [tool.pytest.ini_options]
 testpaths = ["tests/unit", "tests/integration"]
-pythonpath = ["tests"]
+pythonpath = [".", "tests"]
 
 asyncio_mode = "auto"
 markers = [
     "integration : marks tests that call external services"
 ]
-
-
 

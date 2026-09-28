@@ -26,7 +26,7 @@ class GoogleProvider(LLMProvider):
             types.FunctionDeclaration(
                 name=tool.name,
                 description=tool.description,
-                parameters=tool.parameters,
+                parameters=types.Schema.model_validate(tool.parameters),
             )
             for tool in tools or []
         ]
@@ -47,13 +47,15 @@ class GoogleProvider(LLMProvider):
         )
         calls: list[ToolCall] = []
         for candidate in response.candidates or []:
-            for part in candidate.content.parts if candidate.content else []:
-                if part.function_call:
+            parts = candidate.content.parts if candidate.content else None
+            for part in parts or []:
+                function_call = part.function_call
+                if function_call and function_call.name:
                     calls.append(
                         ToolCall(
                             id=f"google-{len(calls) + 1}",
-                            name=part.function_call.name,
-                            arguments=dict(part.function_call.args or {}),
+                            name=function_call.name,
+                            arguments=dict(function_call.args or {}),
                         )
                     )
         usage = response.usage_metadata

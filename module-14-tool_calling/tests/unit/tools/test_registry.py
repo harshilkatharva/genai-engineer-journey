@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import pytest
-from fakes import FakeDB
 from pydantic import BaseModel
 
 from customer_support_agent.tools import (
@@ -10,6 +9,7 @@ from customer_support_agent.tools import (
     ToolRegistry,
     build_default_registry,
 )
+from tests.fakes import FakeDB
 
 
 def test_tool_context_and_registered_tool_are_pydantic_models():

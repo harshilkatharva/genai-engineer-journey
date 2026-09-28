@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 import pytest
-from fakes import FailingDB, FakeDB, FakeMCPClient, FakeProvider, SequencedProvider
 from pydantic import BaseModel
 
 from customer_support_agent.models import ChatMessage, LLMResponseModel, ToolCall
 from customer_support_agent.orchestration import ToolChatResult, run_tool_chat
 from customer_support_agent.tools import ToolContext, build_default_registry
+from tests.fakes import FailingDB, FakeDB, FakeMCPClient, FakeProvider, SequencedProvider
 
 
 async def test_tool_loop_executes_tool_and_returns_final_text():
