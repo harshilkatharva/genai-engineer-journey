@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import time
 from collections.abc import AsyncIterator
 
@@ -32,9 +33,13 @@ class GoogleProvider(LLMProvider):
             types.FunctionDeclaration(**tool.to_google_function_declaration())
             for tool in tools or []
         ]
+        system_instruction = "\n\n".join(
+            message.content for message in messages if message.role == "system"
+        )
         tool_choice_config = tool_choice.to_google() if tool_choice and declarations else None
         config = types.GenerateContentConfig(
             temperature=self.temperature,
+            system_instruction=system_instruction or None,
             tools=[types.Tool(function_declarations=declarations)] if declarations else None,
             tool_config=(
                 types.ToolConfig(
@@ -44,13 +49,37 @@ class GoogleProvider(LLMProvider):
                 else None
             ),
         )
-        contents = [
-            types.Content(
-                role="model" if message.role == "assistant" else "user",
-                parts=[types.Part(text=message.content)],
+        contents: list[types.Content] = []
+        for message in messages:
+            if message.role == "system":
+                continue
+            if message.role == "tool":
+                if not message.tool_name:
+                    raise ValueError("Google tool-result messages require tool_name")
+                try:
+                    result = json.loads(message.content)
+                except json.JSONDecodeError:
+                    result = message.content
+                if not isinstance(result, dict):
+                    result = {"result": result}
+                function_response = types.FunctionResponse(
+                    id=message.tool_call_id,
+                    name=message.tool_name,
+                    response=result,
+                )
+                contents.append(
+                    types.Content(
+                        role="user",
+                        parts=[types.Part(function_response=function_response)],
+                    )
+                )
+                continue
+            contents.append(
+                types.Content(
+                    role="model" if message.role == "assistant" else "user",
+                    parts=[types.Part(text=message.content)],
+                )
             )
-            for message in messages
-        ]
         start = time.perf_counter()
         response = await self.client.aio.models.generate_content(
             model=self.model, contents=contents, config=config
