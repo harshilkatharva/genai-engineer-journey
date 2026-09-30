@@ -30,3 +30,6 @@ logs/
 
 # User data
 user_data/data
+
+# agent files
+.github/
