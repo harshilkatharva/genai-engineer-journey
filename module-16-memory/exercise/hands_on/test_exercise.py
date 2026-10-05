@@ -75,7 +75,7 @@ def relevance_recency_retrieval(
 
 @pytest.fixture
 def test_data():
-    now = datetime(2026, 10, 5)
+    now = datetime(2026, 10, 5)  # noqa: DTZ001
 
     query_embedding = np.array([1.0, 0.0, 0.0])
 
@@ -108,7 +108,7 @@ def test_data():
 def test_pure_similarity_returns_old_memory_first(
     test_data,
 ):
-    memories, query_embedding, now = test_data
+    memories, query_embedding, _ = test_data
 
     results = similarity_retrieval(
         memories,
@@ -162,7 +162,7 @@ def test_old_memory_is_demoted(
 def test_recency_score_is_between_zero_and_one(
     test_data,
 ):
-    memories, query_embedding, now = test_data
+    memories, _, now = test_data
 
     for memory in memories:
         days_old = (now - memory.created_at).days
@@ -173,7 +173,7 @@ def test_recency_score_is_between_zero_and_one(
 
 
 if __name__ == "__main__":
-    now = datetime(2026, 10, 5)
+    now = datetime.tzinfo(2026, 10, 5)
 
     query_embedding = np.array([1.0, 0.0, 0.0])
 
