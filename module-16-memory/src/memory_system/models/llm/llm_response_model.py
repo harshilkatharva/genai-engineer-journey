@@ -1,0 +1,36 @@
+from __future__ import annotations
+
+from typing import Any, Literal
+
+from pydantic import BaseModel, Field
+
+
+class ChatMessage(BaseModel):
+    role: Literal["system", "user", "assistant", "tool"]
+    content: str
+    tool_call_id: str | None = None
+    tool_name: str | None = None
+
+
+class ToolCall(BaseModel):
+    id: str
+    name: str
+    arguments: Any = Field(default_factory=dict)
+
+
+class LLMError(BaseModel):
+    provider: str
+    code: str
+    message: str
+    status_code: int | None = None
+    retryable: bool = False
+
+
+class LLMResponseModel(BaseModel):
+    text: str | None = None
+    tool_calls: list[ToolCall] = Field(default_factory=list)
+    model: str
+    latency_ms: float
+    input_tokens: int = 0
+    output_tokens: int = 0
+    raw_response: Any | None = None
