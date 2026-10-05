@@ -1,4 +1,4 @@
-from ..models.memory import (
+from ..models import (
     ActionCheck,
     ActionEpisode,
     ConversationMessage,

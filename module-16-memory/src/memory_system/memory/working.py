@@ -7,7 +7,7 @@ from uuid import UUID
 import tiktoken
 
 from ..core import get_settings
-from ..models.memory import ConversationMessage, PinnedGoal, WorkingContext, utc_now
+from ..models import ConversationMessage, PinnedGoal, WorkingContext, utc_now
 
 
 class TokenCounter(Protocol):

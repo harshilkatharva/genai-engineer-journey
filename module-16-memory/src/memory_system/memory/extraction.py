@@ -6,8 +6,7 @@ from typing import Protocol
 
 from pydantic import TypeAdapter, ValidationError
 
-from ..models import ChatMessage
-from ..models.memory import ConversationMessage, LongTermMemoryRecord, MemoryCandidate
+from ..models import ChatMessage, ConversationMessage, LongTermMemoryRecord, MemoryCandidate
 from ..providers.llm_provider import LLMProvider
 
 

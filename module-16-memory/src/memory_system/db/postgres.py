@@ -6,7 +6,7 @@ from uuid import UUID
 import asyncpg
 from pgvector.asyncpg import register_vector
 
-from ..models.memory import (
+from ..models import (
     ActionEpisode,
     LongTermMemoryRecord,
     MemorySearchResult,

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from ..models.memory import LongTermMemoryRecord
+from ..models import LongTermMemoryRecord
 from .episodic import EpisodicMemory
 from .long_term import LongTermMemory
 from .working import WorkingMemoryRegistry

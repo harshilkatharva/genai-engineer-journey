@@ -6,7 +6,7 @@ from datetime import timedelta
 
 from ..core import Settings, get_settings
 from ..db.repository import MemoryRepository
-from ..models.memory import ActionCheck, ActionEpisode, ActionStatus, utc_now
+from ..models import ActionCheck, ActionEpisode, ActionStatus, utc_now
 
 
 class EpisodicMemory:

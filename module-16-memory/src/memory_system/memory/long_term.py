@@ -6,7 +6,7 @@ from uuid import UUID
 from ..core import Settings, get_settings
 from ..db.repository import MemoryRepository
 from ..embedding.provider import EmbeddingProvider, SentenceTransformerEmbeddings
-from ..models.memory import (
+from ..models import (
     ConversationMessage,
     LongTermMemoryRecord,
     MemoryCandidate,

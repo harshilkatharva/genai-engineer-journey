@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Protocol
 from uuid import UUID
 
-from ..models.memory import ActionEpisode, LongTermMemoryRecord, MemorySearchResult
+from ..models import ActionEpisode, LongTermMemoryRecord, MemorySearchResult
 
 
 class MemoryRepository(Protocol):
