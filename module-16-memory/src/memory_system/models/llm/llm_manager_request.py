@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 
-from ..tool.tool_spec import ToolChoice, ToolSpec
+from ..tool import ToolChoice, ToolSpec
 from .llm_response_model import ChatMessage
 
 
