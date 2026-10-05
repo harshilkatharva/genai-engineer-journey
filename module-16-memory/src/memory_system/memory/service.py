@@ -1,0 +1,42 @@
+from __future__ import annotations
+
+from uuid import UUID
+
+from ..models.memory import LongTermMemoryRecord
+from .episodic import EpisodicMemory
+from .long_term import LongTermMemory
+from .working import WorkingMemoryRegistry
+
+
+class MemoryService:
+    def __init__(
+        self,
+        long_term: LongTermMemory,
+        episodic: EpisodicMemory,
+        working: WorkingMemoryRegistry | None = None,
+    ) -> None:
+        if long_term.repository is not episodic.repository:
+            raise ValueError("Long-term and episodic memory must share a deletion-capable store")
+        self.long_term = long_term
+        self.episodic = episodic
+        self.working = working or WorkingMemoryRegistry()
+
+    async def view_memories(self, user_id: str, limit: int = 100) -> list[LongTermMemoryRecord]:
+        return await self.long_term.view(user_id, limit)
+
+    async def delete_memory(self, user_id: str, memory_id: UUID) -> bool:
+        return await self.long_term.delete(user_id, memory_id)
+
+    async def delete_all_memories(self, user_id: str) -> dict[str, int]:
+        if not user_id:
+            raise ValueError("user_id is required")
+        self.working.clear_user(user_id)
+        memory_count, episode_count = await self.long_term.repository.delete_all_user_data(user_id)
+        return {"long_term": memory_count, "episodic": episode_count}
+
+    async def purge_expired(self) -> dict[str, int]:
+        memory_count, episode_count = await self.long_term.repository.purge_expired()
+        return {"long_term": memory_count, "episodic": episode_count}
+
+
+__all__ = ["MemoryService"]
