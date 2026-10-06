@@ -17,6 +17,7 @@ from .extraction import MemoryExtractor, validate_memory_content
 
 
 class LongTermMemory:
+    # Combines persistence, embeddings, extraction, and semantic retrieval services.
     def __init__(
         self,
         repository: MemoryRepository,
@@ -33,6 +34,7 @@ class LongTermMemory:
         self.extractor = extractor
         self.retrieval = MemoryRetrievalManager(repository, self.embedder, self.settings)
 
+    # Embeds and persists a validated memory for the specified user.
     async def store(self, user_id: str, candidate: MemoryCandidate) -> LongTermMemoryRecord:
         if not user_id:
             raise ValueError("user_id is required")
@@ -52,6 +54,7 @@ class LongTermMemory:
         vector = await self._embed(record.content)
         return await self.repository.save_memory(record, vector)
 
+    # Extracts durable memory candidates from messages and stores each one.
     async def remember_conversation(
         self, user_id: str, messages: list[ConversationMessage]
     ) -> list[LongTermMemoryRecord]:
@@ -73,11 +76,13 @@ class LongTermMemory:
             records.append(await self.store(user_id, candidate))
         return records
 
+    # Retrieves relevant user memories using semantic and recency ranking.
     async def retrieve(
         self, user_id: str, query: str, limit: int | None = None
     ) -> list[MemorySearchResult]:
         return await self.retrieval.retrieve(user_id, query, limit)
 
+    # Lists a user's active long-term memories for review.
     async def view(self, user_id: str, limit: int = 100) -> list[LongTermMemoryRecord]:
         if not user_id:
             raise ValueError("user_id is required")
@@ -85,11 +90,13 @@ class LongTermMemory:
             raise ValueError("limit must be between 1 and 500")
         return await self.repository.list_memories(user_id, limit)
 
+    # Deletes a specific long-term memory owned by the user.
     async def delete(self, user_id: str, memory_id: UUID) -> bool:
         if not user_id:
             raise ValueError("user_id is required")
         return await self.repository.delete_memory(user_id, memory_id)
 
+    # Embeds text and validates that the returned vector matches configuration.
     async def _embed(self, text: str) -> list[float]:
         vector = await self.embedder.embed(text)
         if len(vector) != self.settings.memory_embedding_dimension:

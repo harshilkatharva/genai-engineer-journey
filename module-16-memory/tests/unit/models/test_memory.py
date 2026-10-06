@@ -14,6 +14,7 @@ from memory_system.models import (
 )
 
 
+# Verifies memory data models validate and serialize their values.
 def test_memory_models_validate_and_dump() -> None:
     message = ConversationMessage(role="user", content="hello")
     goal = PinnedGoal(content="Finish the task")
@@ -23,9 +24,10 @@ def test_memory_models_validate_and_dump() -> None:
     assert goal.model_dump()["content"] == "Finish the task"
     assert memory.model_dump()["category"] == "fact"
     with pytest.raises(ValidationError):
-        ConversationMessage(role="invalid", content="hello")
+        ConversationMessage.model_validate({"role": "invalid", "content": "hello"})
 
 
+# Verifies naive datetimes are rejected by memory and episode models.
 def test_memory_timestamps_require_timezone() -> None:
     naive = datetime.fromisoformat("2030-01-01")
 

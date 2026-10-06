@@ -5,7 +5,7 @@ import time
 from collections.abc import AsyncIterator
 from typing import cast
 
-from openai import AsyncOpenAI
+from openai import AsyncOpenAI, Omit
 from openai.types.responses import FunctionToolParam, ResponseInputParam
 from openai.types.responses.response_text_delta_event import ResponseTextDeltaEvent
 
@@ -15,6 +15,7 @@ from .llm_provider import LLMProvider
 
 
 class OpenAIProvider(LLMProvider):
+    # Configures the OpenAI client and selected model.
     def __init__(self, client: AsyncOpenAI | None = None) -> None:
         settings = get_settings()
         self.client = client or AsyncOpenAI(api_key=settings.openai_api_key)
@@ -22,6 +23,7 @@ class OpenAIProvider(LLMProvider):
             settings.default_llm_model if "gpt" in settings.default_llm_model else "gpt-4o-mini"
         )
 
+    # Sends messages to OpenAI and maps text, tool calls, and usage.
     async def complete(
         self,
         messages: list[ChatMessage],
@@ -32,16 +34,14 @@ class OpenAIProvider(LLMProvider):
         for tool in tools or []:
             request_tools.append(tool.to_openai_tool())
         start = time.perf_counter()
-        request_options = {"tools": request_tools} if request_tools else {}
-        if request_tools:
-            request_options["tool_choice"] = (tool_choice or ToolChoice()).to_openai()
         response = await self.client.responses.create(
             model=self.model,
             input=cast(
                 ResponseInputParam,
                 [message.model_dump(exclude_none=True) for message in messages],
             ),
-            **request_options,
+            tools=request_tools if request_tools else Omit(),
+            tool_choice=((tool_choice or ToolChoice()).to_openai() if request_tools else Omit()),
         )
         calls: list[ToolCall] = []
         for item in response.output:
@@ -63,6 +63,7 @@ class OpenAIProvider(LLMProvider):
             raw_response=response,
         )
 
+    # Streams generated text from OpenAI.
     async def stream(self, messages: list[ChatMessage]) -> AsyncIterator[str]:
         async with self.client.responses.stream(
             model=self.model,

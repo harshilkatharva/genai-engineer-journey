@@ -9,6 +9,7 @@ from ..models import MemorySearchResult
 
 
 class MemoryRetrievalManager:
+    # Sets up storage, embedding, and retrieval configuration dependencies.
     def __init__(
         self,
         repository: MemoryRepository,
@@ -22,6 +23,7 @@ class MemoryRetrievalManager:
             self.settings.memory_embedding_dimension,
         )
 
+    # Embeds a query and retrieves the user's best-ranked matching memories.
     async def retrieve(
         self, user_id: str, query: str, limit: int | None = None
     ) -> list[MemorySearchResult]:

@@ -15,9 +15,11 @@ from .repository import MemoryRepository
 
 
 class PostgresMemoryStore(MemoryRepository):
+    # Initializes the PostgreSQL memory store with a shared connection pool.
     def __init__(self, pool: asyncpg.Pool) -> None:
         self.pool = pool
 
+    # Opens a PostgreSQL pool and registers pgvector support for its connections.
     @classmethod
     async def connect(
         cls, database_url: str, min_size: int = 1, max_size: int = 10
@@ -34,9 +36,11 @@ class PostgresMemoryStore(MemoryRepository):
             raise RuntimeError("PostgreSQL pool initialization failed")
         return cls(pool)
 
+    # Closes the store's PostgreSQL connection pool.
     async def close(self) -> None:
         await self.pool.close()
 
+    # Persists a user's long-term memory and its embedding.
     async def save_memory(
         self, memory: LongTermMemoryRecord, embedding: list[float]
     ) -> LongTermMemoryRecord:
@@ -58,6 +62,7 @@ class PostgresMemoryStore(MemoryRepository):
             )
         return memory
 
+    # Lists a user's unexpired long-term memories from newest to oldest.
     async def list_memories(self, user_id: str, limit: int) -> list[LongTermMemoryRecord]:
         async with self.pool.acquire() as connection:
             rows = await connection.fetch(
@@ -73,6 +78,7 @@ class PostgresMemoryStore(MemoryRepository):
             )
         return [_memory_from_row(row) for row in rows]
 
+    # Finds semantically similar memories ranked by recency and supersession.
     async def search_memories(
         self, user_id: str, embedding: list[float], limit: int, half_life_days: int
     ) -> list[MemorySearchResult]:
@@ -125,6 +131,7 @@ class PostgresMemoryStore(MemoryRepository):
             for row in rows
         ]
 
+    # Deletes one memory owned by the specified user.
     async def delete_memory(self, user_id: str, memory_id: UUID) -> bool:
         async with self.pool.acquire() as connection:
             status = await connection.execute(
@@ -134,6 +141,7 @@ class PostgresMemoryStore(MemoryRepository):
             )
         return status.endswith("1")
 
+    # Transactionally deletes a user's long-term and episodic memory records.
     async def delete_all_user_data(self, user_id: str) -> tuple[int, int]:
         async with self.pool.acquire() as connection, connection.transaction():
             memories = await connection.fetchval(
@@ -148,6 +156,7 @@ class PostgresMemoryStore(MemoryRepository):
             )
         return int(memories), int(episodes)
 
+    # Physically removes all expired long-term and episodic records.
     async def purge_expired(self) -> tuple[int, int]:
         async with self.pool.acquire() as connection, connection.transaction():
             memories = await connection.fetchval(
@@ -160,6 +169,7 @@ class PostgresMemoryStore(MemoryRepository):
             )
         return int(memories), int(episodes)
 
+    # Persists a structured attempted action for duplicate-action checks.
     async def record_episode(self, episode: ActionEpisode, fingerprint: str) -> ActionEpisode:
         try:
             parameters_json = json.dumps(episode.parameters, allow_nan=False)
@@ -187,6 +197,7 @@ class PostgresMemoryStore(MemoryRepository):
             )
         return episode
 
+    # Finds the most recent matching unexpired episode for a user and task.
     async def find_episode(
         self, user_id: str, task_id: str, fingerprint: str
     ) -> ActionEpisode | None:
@@ -207,6 +218,7 @@ class PostgresMemoryStore(MemoryRepository):
             )
         return _episode_from_row(row) if row else None
 
+    # Deletes all episodic records belonging to a user.
     async def delete_episodes(self, user_id: str) -> int:
         async with self.pool.acquire() as connection:
             status = await connection.execute(
@@ -215,6 +227,7 @@ class PostgresMemoryStore(MemoryRepository):
         return int(status.rsplit(" ", 1)[-1])
 
 
+# Converts a database row into a validated long-term memory record.
 def _memory_from_row(row: asyncpg.Record) -> LongTermMemoryRecord:
     return LongTermMemoryRecord(
         id=row["id"],
@@ -227,6 +240,7 @@ def _memory_from_row(row: asyncpg.Record) -> LongTermMemoryRecord:
     )
 
 
+# Converts a database row into a validated structured action episode.
 def _episode_from_row(row: asyncpg.Record) -> ActionEpisode:
     parameters = row["parameters"]
     if isinstance(parameters, str):

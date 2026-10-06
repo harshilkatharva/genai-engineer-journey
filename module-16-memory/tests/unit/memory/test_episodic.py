@@ -9,12 +9,14 @@ from memory_system.core import Settings
 from tests.fakes import MemoryFakeRepository
 
 
+# Creates episodic memory with an isolated in-memory repository.
 def create_episodic() -> tuple[MemoryFakeRepository, EpisodicMemory]:
     repository = MemoryFakeRepository()
     settings = Settings(memory_embedding_dimension=2)
     return repository, EpisodicMemory(repository, settings)
 
 
+# Verifies duplicate actions are flagged to avoid repeating them.
 @pytest.mark.asyncio
 async def test_check_recommends_against_repeating_action() -> None:
     _, episodic = create_episodic()
@@ -36,6 +38,7 @@ async def test_check_recommends_against_repeating_action() -> None:
     assert after.episode is not None
 
 
+# Verifies equivalent action parameters produce the same fingerprint.
 def test_fingerprint_is_stable_for_mapping_order() -> None:
     left = EpisodicMemory._fingerprint("write", "record", {"a": 1, "b": 2})
     right = EpisodicMemory._fingerprint(" WRITE ", " RECORD ", {"b": 2, "a": 1})

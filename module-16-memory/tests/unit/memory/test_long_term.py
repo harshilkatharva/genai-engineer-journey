@@ -16,12 +16,14 @@ from memory_system.models import LongTermMemoryRecord
 from tests.fakes import FakeLLMProvider, FixedEmbedder, MemoryFakeRepository
 
 
+# Creates a long-term memory service with deterministic test dependencies.
 def create_long_term() -> tuple[MemoryFakeRepository, LongTermMemory]:
     repository = MemoryFakeRepository()
     settings = Settings(memory_embedding_dimension=2)
     return repository, LongTermMemory(repository, FixedEmbedder(), settings=settings)
 
 
+# Verifies a newer contradictory memory ranks ahead of the superseded record.
 @pytest.mark.asyncio
 async def test_newer_superseding_memory_ranks_above_old_memory() -> None:
     _, long_term = create_long_term()
@@ -45,6 +47,7 @@ async def test_newer_superseding_memory_ranks_above_old_memory() -> None:
     assert results[1].superseded is True
 
 
+# Verifies extraction parses safe memories and rejects credential content.
 @pytest.mark.asyncio
 async def test_extractor_parses_memories_and_rejects_secrets() -> None:
     extractor = LLMMemoryExtractor(
@@ -71,6 +74,7 @@ async def test_extractor_parses_memories_and_rejects_secrets() -> None:
         )
 
 
+# Verifies direct memory writes reject content containing credentials.
 @pytest.mark.asyncio
 async def test_direct_storage_rejects_credential_content() -> None:
     _, long_term = create_long_term()
@@ -79,6 +83,7 @@ async def test_direct_storage_rejects_credential_content() -> None:
         await long_term.store("user-1", MemoryCandidate(content="The password is hunter2"))
 
 
+# Verifies memory expiration timestamps must specify a timezone.
 def test_memory_expiration_requires_timezone() -> None:
     with pytest.raises(ValueError, match="timezone"):
         MemoryCandidate(
@@ -86,6 +91,7 @@ def test_memory_expiration_requires_timezone() -> None:
         )
 
 
+# Verifies stored memory creation timestamps must specify a timezone.
 def test_long_term_record_requires_timezone_for_creation_timestamp() -> None:
     with pytest.raises(ValueError, match="timezone"):
         LongTermMemoryRecord(

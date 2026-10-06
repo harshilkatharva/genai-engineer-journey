@@ -10,10 +10,12 @@ from ..models import ActionCheck, ActionEpisode, ActionStatus, utc_now
 
 
 class EpisodicMemory:
+    # Configures persistent action history with the selected retention settings.
     def __init__(self, repository: MemoryRepository, settings: Settings | None = None) -> None:
         self.repository = repository
         self.settings = settings or get_settings()
 
+    # Records an attempted or completed action with its automatic expiration time.
     async def record(
         self,
         user_id: str,
@@ -42,6 +44,7 @@ class EpisodicMemory:
         )
         return await self.repository.record_episode(episode, fingerprint)
 
+    # Checks whether an equivalent action was already recorded for the task.
     async def check(
         self,
         user_id: str,
@@ -61,11 +64,13 @@ class EpisodicMemory:
             episode=episode,
         )
 
+    # Removes all episodic history belonging to a user.
     async def delete_all(self, user_id: str) -> int:
         if not user_id:
             raise ValueError("user_id is required")
         return await self.repository.delete_episodes(user_id)
 
+    # Creates a stable digest for matching equivalent actions and parameters.
     @staticmethod
     def _fingerprint(action_type: str, target: str, parameters: dict[str, object]) -> str:
         try:

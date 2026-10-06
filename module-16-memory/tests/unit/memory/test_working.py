@@ -8,6 +8,7 @@ from memory_system.memory.working import WorkingMemory
 from tests.fakes import CharacterCounter
 
 
+# Verifies pinned goals survive truncation even when no tokens are available.
 def test_aggressive_truncation_preserves_pinned_goals() -> None:
     working = WorkingMemory("user-1", "conversation-1", token_counter=CharacterCounter())
     pinned = working.pin_goal("Finish the migration")
@@ -20,6 +21,7 @@ def test_aggressive_truncation_preserves_pinned_goals() -> None:
     assert context.token_count > context.token_budget
 
 
+# Verifies idle conversations are removed from the working-memory registry.
 async def test_registry_expires_idle_conversations() -> None:
     registry = WorkingMemoryRegistry(max_age=timedelta(milliseconds=10))
     active = registry.get("user-1", "conversation-1")

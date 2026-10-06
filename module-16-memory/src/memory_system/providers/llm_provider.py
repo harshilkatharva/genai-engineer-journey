@@ -10,6 +10,7 @@ from ..models import (
 
 
 class LLMProvider(Protocol):
+    # Requests a complete model response with optional function tools.
     async def complete(
         self,
         messages: list[ChatMessage],
@@ -17,4 +18,5 @@ class LLMProvider(Protocol):
         tool_choice: ToolChoice | None = None,
     ) -> LLMResponseModel: ...
 
+    # Streams response text incrementally from the selected model.
     def stream(self, messages: list[ChatMessage]) -> AsyncIterator[str]: ...

@@ -11,6 +11,7 @@ MemoryCategory = Literal["fact", "preference", "goal", "constraint", "other"]
 ActionStatus = Literal["attempted", "completed", "failed"]
 
 
+# Returns the current time in UTC for memory timestamps.
 def utc_now() -> datetime:
     return datetime.now(UTC)
 
@@ -39,6 +40,7 @@ class MemoryCandidate(BaseModel):
     supersedes_ids: list[UUID] = Field(default_factory=list)
     expires_at: datetime | None = None
 
+    # Validates that the memory expiration timestamp is timezone-aware.
     @field_validator("expires_at")
     @classmethod
     def validate_expiration_timezone(cls, value: datetime | None) -> datetime | None:
@@ -52,6 +54,7 @@ class LongTermMemoryRecord(MemoryCandidate):
     user_id: str = Field(min_length=1, max_length=255)
     created_at: datetime = Field(default_factory=utc_now)
 
+    # Validates that the memory creation timestamp is timezone-aware.
     @field_validator("created_at")
     @classmethod
     def validate_creation_timezone(cls, value: datetime) -> datetime:
@@ -79,6 +82,7 @@ class ActionEpisode(BaseModel):
     occurred_at: datetime = Field(default_factory=utc_now)
     expires_at: datetime
 
+    # Validates that the episode event and expiration times are timezone-aware.
     @field_validator("occurred_at", "expires_at")
     @classmethod
     def validate_timestamp_timezone(cls, value: datetime) -> datetime:

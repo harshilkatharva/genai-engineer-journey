@@ -4,6 +4,8 @@ import json
 from collections.abc import Callable, Mapping
 from typing import Any, Literal
 
+from anthropic.types import ToolChoiceAnyParam, ToolChoiceAutoParam, ToolChoiceToolParam, ToolParam
+from openai.types.responses import FunctionToolParam, ToolChoiceFunctionParam
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
 
 
@@ -17,26 +19,30 @@ class ToolChoice(BaseModel):
     mode: Literal["auto", "any", "specific"] = "auto"
     tool_name: str | None = None
 
+    # Ensures a specific tool name is supplied only for specific-tool selection.
     @model_validator(mode="after")
     def validate_tool_name(self) -> ToolChoice:
         if (self.mode == "specific") != (self.tool_name is not None):
             raise ValueError("tool_name is required only when mode is 'specific'")
         return self
 
-    def to_openai(self) -> str | dict[str, str]:
+    # Converts the tool-selection mode to the OpenAI API format.
+    def to_openai(self) -> Literal["auto", "required"] | ToolChoiceFunctionParam:
         if self.mode == "auto":
             return "auto"
         if self.mode == "any":
             return "required"
         return {"type": "function", "name": self.tool_name or ""}
 
-    def to_anthropic(self) -> dict[str, str]:
+    # Converts the tool-selection mode to the Anthropic API format.
+    def to_anthropic(self) -> ToolChoiceAutoParam | ToolChoiceAnyParam | ToolChoiceToolParam:
         if self.mode == "auto":
             return {"type": "auto"}
         if self.mode == "any":
             return {"type": "any"}
         return {"type": "tool", "name": self.tool_name or ""}
 
+    # Converts the tool-selection mode to the Google API format.
     def to_google(self) -> dict[str, Any]:
         config: dict[str, Any] = {"mode": "AUTO" if self.mode == "auto" else "ANY"}
         if self.mode == "specific" and self.tool_name:
@@ -52,11 +58,13 @@ class ToolSpec(BaseModel):
     argument_model: type[BaseModel]
     handler: Callable[..., Any] | None = Field(default=None, exclude=True)
 
+    # Returns the JSON schema for this tool's argument model.
     @property
     def parameters(self) -> dict[str, Any]:
         return self.argument_model.model_json_schema()
 
-    def to_openai_tool(self) -> dict[str, Any]:
+    # Serializes the tool definition for OpenAI function calling.
+    def to_openai_tool(self) -> FunctionToolParam:
         return {
             "type": "function",
             "name": self.name,
@@ -65,13 +73,15 @@ class ToolSpec(BaseModel):
             "strict": False,
         }
 
-    def to_anthropic_tool(self) -> dict[str, Any]:
+    # Serializes the tool definition for Anthropic tool use.
+    def to_anthropic_tool(self) -> ToolParam:
         return {
             "name": self.name,
             "description": self.description,
             "input_schema": self.parameters,
         }
 
+    # Serializes the tool definition for Google function calling.
     def to_google_function_declaration(self) -> dict[str, Any]:
         return {
             "name": self.name,
@@ -79,6 +89,7 @@ class ToolSpec(BaseModel):
             "parameters": self.parameters,
         }
 
+    # Parses and validates raw arguments against this tool's argument model.
     def parse_arguments(
         self, raw_arguments: str | Mapping[str, Any] | BaseModel
     ) -> tuple[BaseModel | None, ToolArgumentError | None]:

@@ -13,6 +13,7 @@ from memory_system.core import Settings
 from tests.fakes import FixedEmbedder, MemoryFakeRepository
 
 
+# Verifies deletion removes memory from retrieval, storage, and user working context.
 @pytest.mark.asyncio
 async def test_delete_one_and_delete_all_remove_all_user_data() -> None:
     repository = MemoryFakeRepository()

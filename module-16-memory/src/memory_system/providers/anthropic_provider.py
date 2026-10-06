@@ -13,6 +13,7 @@ from .llm_provider import LLMProvider
 
 
 class AnthropicProvider(LLMProvider):
+    # Configures the Anthropic client and selected model.
     def __init__(self, client: AsyncAnthropic | None = None) -> None:
         settings = get_settings()
         self.client = client or AsyncAnthropic(api_key=settings.anthropic_api_key)
@@ -22,6 +23,7 @@ class AnthropicProvider(LLMProvider):
             else "claude-3-5-sonnet-20241022"
         )
 
+    # Sends messages to Anthropic and maps text, tool calls, and usage.
     async def complete(
         self,
         messages: list[ChatMessage],
@@ -38,15 +40,13 @@ class AnthropicProvider(LLMProvider):
             ],
         )
         start = time.perf_counter()
-        request_options = {"tools": [tool.to_anthropic_tool() for tool in tools or []]}
-        if tools:
-            request_options["tool_choice"] = (tool_choice or ToolChoice()).to_anthropic()
         response = await self.client.messages.create(
             model=self.model,
             max_tokens=2048,
             system=system if system else Omit(),
             messages=request_messages,
-            **request_options,
+            tools=([tool.to_anthropic_tool() for tool in tools] if tools else Omit()),
+            tool_choice=((tool_choice or ToolChoice()).to_anthropic() if tools else Omit()),
         )
         calls = [
             ToolCall(id=block.id, name=block.name, arguments=block.input)
@@ -64,6 +64,7 @@ class AnthropicProvider(LLMProvider):
             raw_response=response,
         )
 
+    # Streams generated text from Anthropic.
     async def stream(self, messages: list[ChatMessage]) -> AsyncIterator[str]:
         async with self.client.messages.stream(
             model=self.model,

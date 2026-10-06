@@ -13,9 +13,11 @@ class UserMemory:
 
 
 class UserMemoryStore:
+    # Creates an empty in-memory collection of user memories.
     def __init__(self):
         self.memories: list[UserMemory] = []
 
+    # Adds a memory record to the in-memory collection.
     def add(self, memory: UserMemory):
         self.memories.append(memory)
 
@@ -23,6 +25,7 @@ class UserMemoryStore:
     # Delete Memory
     # --------------------------------------------------------
 
+    # Deletes a memory only when its ID and owner both match.
     def delete_user_memory(
         self,
         memory_id: int,
@@ -35,6 +38,7 @@ class UserMemoryStore:
 
         return False
 
+    # Retrieves a user's memories ranked by vector similarity.
     def retrieve(
         self,
         user_id: str,
@@ -44,6 +48,7 @@ class UserMemoryStore:
         user_memories = [memory for memory in self.memories if memory.user_id == user_id]
 
         # Mock similarity search
+        # Calculates the similarity of one candidate memory to the query.
         def similarity(memory):
             return np.dot(
                 query_embedding,
@@ -57,6 +62,7 @@ class UserMemoryStore:
         )[:limit]
 
 
+# Provides a sample store containing several memories for one user.
 @pytest.fixture
 def memory_store():
     store = UserMemoryStore()
@@ -91,6 +97,7 @@ def memory_store():
     return store
 
 
+# Verifies a deleted memory is absent from later retrieval results.
 def test_deleted_memory_never_appears_in_retrieval(
     memory_store,
 ):
@@ -122,6 +129,7 @@ def test_deleted_memory_never_appears_in_retrieval(
     assert not any(memory.id == 1 for memory in after_delete)
 
 
+# Verifies users cannot delete memories owned by another user.
 def test_user_cannot_delete_another_users_memory(
     memory_store,
 ):
@@ -140,6 +148,7 @@ def test_user_cannot_delete_another_users_memory(
     assert any(memory.id == 1 for memory in memories)
 
 
+# Verifies deleting an unknown memory ID reports no deletion.
 def test_delete_non_existing_memory(
     memory_store,
 ):

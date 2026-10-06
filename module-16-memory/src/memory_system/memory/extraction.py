@@ -15,6 +15,7 @@ class MemoryExtractionError(ValueError):
 
 
 class MemoryExtractor(Protocol):
+    # Extracts safe durable facts and updates from conversation messages.
     async def extract(
         self,
         messages: list[ConversationMessage],
@@ -33,6 +34,7 @@ _SENSITIVE_PATTERNS = (
 )
 
 
+# Rejects credential and identifier patterns from long-term memory content.
 def validate_memory_content(text: str) -> None:
     if any(pattern.search(text) for pattern in _SENSITIVE_PATTERNS):
         raise MemoryExtractionError(
@@ -41,10 +43,12 @@ def validate_memory_content(text: str) -> None:
 
 
 class LLMMemoryExtractor:
+    # Associates an LLM provider with typed memory extraction validation.
     def __init__(self, provider: LLMProvider) -> None:
         self.provider = provider
         self._adapter = TypeAdapter(list[MemoryCandidate])
 
+    # Extracts typed memory candidates and validates safety and supersession links.
     async def extract(
         self,
         messages: list[ConversationMessage],

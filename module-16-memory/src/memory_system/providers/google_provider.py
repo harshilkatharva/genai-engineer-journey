@@ -12,6 +12,7 @@ from .llm_provider import LLMProvider
 
 
 class GoogleProvider(LLMProvider):
+    # Configures the Google client, model, and generation temperature.
     def __init__(self, client: genai.Client | None = None) -> None:
         settings = get_settings()
         self.client = client or genai.Client(api_key=settings.google_api_key)
@@ -22,6 +23,7 @@ class GoogleProvider(LLMProvider):
         )
         self.temperature = settings.default_llm_temperature or 0.2
 
+    # Sends messages to Google and maps text, tool calls, and usage.
     async def complete(
         self,
         messages: list[ChatMessage],
@@ -79,6 +81,7 @@ class GoogleProvider(LLMProvider):
             raw_response=response,
         )
 
+    # Streams generated text from Google.
     async def stream(self, messages: list[ChatMessage]) -> AsyncIterator[str]:
         response = await self.client.aio.models.generate_content_stream(
             model=self.model,

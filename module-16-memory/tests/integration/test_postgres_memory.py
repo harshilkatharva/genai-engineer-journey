@@ -24,10 +24,12 @@ pytestmark = [
 
 
 class FixedEmbedder:
+    # Supplies a stable pgvector-compatible embedding during the database test.
     async def embed(self, text: str) -> list[float]:
         return [1.0] + [0.0] * 383
 
 
+# Verifies PostgreSQL memory ranking and user deletion end to end.
 @pytest.mark.asyncio
 async def test_postgres_supersession_and_user_deletion() -> None:
     parsed_url = urlsplit(TEST_DATABASE_URL)

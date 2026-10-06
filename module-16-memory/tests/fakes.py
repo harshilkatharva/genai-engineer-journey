@@ -1,42 +1,61 @@
 from __future__ import annotations
 
 import math
+from collections.abc import AsyncIterator
 from datetime import UTC, datetime
-from typing import Any
 from uuid import UUID
 
 from memory_system.models import (
     ActionEpisode,
+    ChatMessage,
     LLMResponseModel,
     LongTermMemoryRecord,
     MemorySearchResult,
+    ToolChoice,
+    ToolSpec,
 )
 
 
 class CharacterCounter:
+    # Counts characters as a predictable stand-in for a tokenizer.
     def count(self, text: str) -> int:
         return len(text)
 
 
 class FixedEmbedder:
+    # Returns a fixed vector for deterministic memory tests.
     async def embed(self, text: str) -> list[float]:
         return [1.0, 0.0]
 
 
 class FakeLLMProvider:
+    # Stores the response text that the fake provider should return.
     def __init__(self, response_text: str) -> None:
         self.response_text = response_text
 
-    async def complete(self, messages: list[Any], **kwargs: Any) -> LLMResponseModel:
+    # Returns a deterministic LLM response for extraction tests.
+    async def complete(
+        self,
+        messages: list[ChatMessage],
+        tools: list[ToolSpec] | None = None,
+        tool_choice: ToolChoice | None = None,
+    ) -> LLMResponseModel:
         return LLMResponseModel(text=self.response_text, model="test", latency_ms=0)
+
+    # Supplies an empty text stream to satisfy the provider protocol.
+    async def stream(self, messages: list[ChatMessage]) -> AsyncIterator[str]:
+        if False:
+            yield ""
 
 
 class MemoryFakeRepository:
+    # Initializes in-memory tables used by memory service tests.
     def __init__(self) -> None:
         self.memories: dict[UUID, LongTermMemoryRecord] = {}
         self.embeddings: dict[UUID, list[float]] = {}
         self.episodes: list[tuple[ActionEpisode, str]] = []
 
+    # Saves a memory and its embedding in the in-memory store.
     async def save_memory(
         self, memory: LongTermMemoryRecord, embedding: list[float]
     ) -> LongTermMemoryRecord:
@@ -44,10 +63,12 @@ class MemoryFakeRepository:
         self.embeddings[memory.id] = embedding
         return memory
 
+    # Returns the newest memories owned by the requested user.
     async def list_memories(self, user_id: str, limit: int) -> list[LongTermMemoryRecord]:
         records = [memory for memory in self.memories.values() if memory.user_id == user_id]
         return sorted(records, key=lambda record: record.created_at, reverse=True)[:limit]
 
+    # Ranks a user's active memories by semantic match, recency, and supersession.
     async def search_memories(
         self, user_id: str, embedding: list[float], limit: int, half_life_days: int
     ) -> list[MemorySearchResult]:
@@ -75,6 +96,7 @@ class MemoryFakeRepository:
             )
         return sorted(results, key=lambda result: result.rank_score, reverse=True)[:limit]
 
+    # Deletes a memory only when it belongs to the specified user.
     async def delete_memory(self, user_id: str, memory_id: UUID) -> bool:
         memory = self.memories.get(memory_id)
         if memory is None or memory.user_id != user_id:
@@ -83,6 +105,7 @@ class MemoryFakeRepository:
         del self.embeddings[memory_id]
         return True
 
+    # Removes all persistent memory and episode records for a user.
     async def delete_all_user_data(self, user_id: str) -> tuple[int, int]:
         memory_ids = [key for key, value in self.memories.items() if value.user_id == user_id]
         episode_ids = [
@@ -95,10 +118,12 @@ class MemoryFakeRepository:
             del self.episodes[index]
         return len(memory_ids), len(episode_ids)
 
+    # Adds an episode and its action fingerprint to the fake store.
     async def record_episode(self, episode: ActionEpisode, fingerprint: str) -> ActionEpisode:
         self.episodes.append((episode, fingerprint))
         return episode
 
+    # Finds the newest unexpired episode matching the requested action.
     async def find_episode(
         self, user_id: str, task_id: str, fingerprint: str
     ) -> ActionEpisode | None:
@@ -113,11 +138,13 @@ class MemoryFakeRepository:
         ]
         return max(matches, key=lambda episode: episode.occurred_at) if matches else None
 
+    # Deletes all episodes belonging to a user and returns the count removed.
     async def delete_episodes(self, user_id: str) -> int:
         before = len(self.episodes)
         self.episodes = [pair for pair in self.episodes if pair[0].user_id != user_id]
         return before - len(self.episodes)
 
+    # Physically removes expired records and returns each layer's deletion count.
     async def purge_expired(self) -> tuple[int, int]:
         now = datetime.now(UTC)
         expired_memory_ids = [

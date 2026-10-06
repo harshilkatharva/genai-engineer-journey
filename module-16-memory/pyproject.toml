@@ -59,3 +59,10 @@ asyncio_mode = "auto"
 markers = [
     "integration : marks tests that call external services"
 ]
+
+[tool.mypy]
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = ["asyncpg", "asyncpg.*"]
+ignore_missing_imports = true

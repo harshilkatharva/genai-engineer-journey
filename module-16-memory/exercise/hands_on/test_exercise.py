@@ -1,6 +1,6 @@
 import math
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 
 import numpy as np
 import pytest
@@ -17,6 +17,7 @@ class Memory:
     created_at: datetime
 
 
+# Calculates cosine similarity between two embedding vectors.
 def cosine_similarity(
     a: np.ndarray,
     b: np.ndarray,
@@ -24,6 +25,7 @@ def cosine_similarity(
     return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
 
 
+# Combines semantic similarity and recency into a memory relevance score.
 def score_memory(
     memory: Memory,
     query_embedding: np.ndarray,
@@ -41,6 +43,7 @@ def score_memory(
     return 0.7 * similarity + 0.3 * recency_score
 
 
+# Returns memories ranked only by their semantic similarity to a query.
 def similarity_retrieval(
     memories: list[Memory],
     query_embedding: np.ndarray,
@@ -56,6 +59,7 @@ def similarity_retrieval(
     )[:top_k]
 
 
+# Returns memories ranked by combined relevance and recency.
 def relevance_recency_retrieval(
     memories: list[Memory],
     query_embedding: np.ndarray,
@@ -73,6 +77,7 @@ def relevance_recency_retrieval(
     )[:top_k]
 
 
+# Provides sample memories, a query embedding, and a reference time.
 @pytest.fixture
 def test_data():
     now = datetime(2026, 10, 5)  # noqa: DTZ001
@@ -105,6 +110,7 @@ def test_data():
     return memories, query_embedding, now
 
 
+# Verifies pure semantic ranking can place an older matching memory first.
 def test_pure_similarity_returns_old_memory_first(
     test_data,
 ):
@@ -118,6 +124,7 @@ def test_pure_similarity_returns_old_memory_first(
     assert results[0].content == "User prefers Python for backend development."
 
 
+# Verifies recency can make a newer relevant memory rank first.
 def test_relevance_recency_prioritizes_recent_memory(
     test_data,
 ):
@@ -132,6 +139,7 @@ def test_relevance_recency_prioritizes_recent_memory(
     assert results[0].content == ("User recently started preferring FastAPI for backend projects.")
 
 
+# Verifies the recency-aware ranking demotes an older superseded-style memory.
 def test_old_memory_is_demoted(
     test_data,
 ):
@@ -159,6 +167,7 @@ def test_old_memory_is_demoted(
     assert recency_results[0].content == recent_memory
 
 
+# Verifies computed recency weights remain within their valid range.
 def test_recency_score_is_between_zero_and_one(
     test_data,
 ):
@@ -173,7 +182,7 @@ def test_recency_score_is_between_zero_and_one(
 
 
 if __name__ == "__main__":
-    now = datetime.tzinfo(2026, 10, 5)
+    now = datetime(2026, 10, 5, tzinfo=UTC)
 
     query_embedding = np.array([1.0, 0.0, 0.0])
 
