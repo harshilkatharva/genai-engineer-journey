@@ -9,14 +9,20 @@ from .memory import (
     LongTermMemoryRecord,
     MemoryCandidate,
     MemorySearchResult,
-    MemoryService,
     PinnedGoal,
     WorkingContext,
     WorkingMemory,
     WorkingMemoryRegistry,
 )
-from .memory.extraction import LLMMemoryExtractor, MemoryExtractionError, MemoryExtractor
+from .memory.extraction import (
+    LLMMemoryExtractor,
+    LLMServices,
+    MemoryExtractionError,
+    MemoryExtractor,
+)
 from .retrieval import MemoryRetrievalManager
+from .services import LLMService
+from .services.memory_service import MemoryService
 
 __all__ = [
     "ActionCheck",
@@ -25,6 +31,8 @@ __all__ = [
     "EmbeddingProvider",
     "EpisodicMemory",
     "LLMMemoryExtractor",
+    "LLMService",
+    "LLMServices",
     "LongTermMemory",
     "LongTermMemoryRecord",
     "MemoryCandidate",

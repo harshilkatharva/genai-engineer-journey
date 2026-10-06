@@ -44,6 +44,7 @@ class Settings(BaseSettings):
     memory_recency_half_life_days: int = Field(
         default=30, gt=0, validation_alias="MEMORY_RECENCY_HALF_LIFE_DAYS"
     )
+    integration_test: bool = Field(default=False, validation_alias="INTEGRATION_TEST")
 
     model_config = SettingsConfigDict(
         env_file=".env",
