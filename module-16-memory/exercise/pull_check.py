@@ -1,0 +1,3 @@
+check = True
+
+print(check)
