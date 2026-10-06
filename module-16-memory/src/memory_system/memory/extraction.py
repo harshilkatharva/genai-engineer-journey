@@ -6,8 +6,14 @@ from typing import Protocol
 
 from pydantic import TypeAdapter, ValidationError
 
-from ..models import ChatMessage, ConversationMessage, LongTermMemoryRecord, MemoryCandidate
-from ..providers.llm_provider import LLMProvider
+from ..models import (
+    ChatMessage,
+    ConversationMessage,
+    LLMManagerRequest,
+    LLMManagerResponse,
+    LongTermMemoryRecord,
+    MemoryCandidate,
+)
 
 
 class MemoryExtractionError(ValueError):
@@ -21,6 +27,11 @@ class MemoryExtractor(Protocol):
         messages: list[ConversationMessage],
         existing_memories: list[LongTermMemoryRecord],
     ) -> list[MemoryCandidate]: ...
+
+
+class LLMServices(Protocol):
+    # Sends a typed completion request through the configured LLM service.
+    async def complete(self, request: LLMManagerRequest) -> LLMManagerResponse: ...
 
 
 _SENSITIVE_PATTERNS = (
@@ -43,9 +54,9 @@ def validate_memory_content(text: str) -> None:
 
 
 class LLMMemoryExtractor:
-    # Associates an LLM provider with typed memory extraction validation.
-    def __init__(self, provider: LLMProvider) -> None:
-        self.provider = provider
+    # Associates the LLM services interface with typed memory extraction validation.
+    def __init__(self, llm_service: LLMServices) -> None:
+        self.llm_service = llm_service
         self._adapter = TypeAdapter(list[MemoryCandidate])
 
     # Extracts typed memory candidates and validates safety and supersession links.
@@ -63,28 +74,34 @@ class LLMMemoryExtractor:
             for memory in existing_memories
         ]
         conversation = [{"role": message.role, "content": message.content} for message in messages]
-        response = await self.provider.complete(
-            [
-                ChatMessage(
-                    role="system",
-                    content=(
-                        "Extract only durable user facts, preferences, goals, and constraints. "
-                        "Return a JSON array of objects with content, category, supersedes_ids, "
-                        "and expires_at (ISO-8601 or null). For a correction, include the IDs of "
-                        "the old memories it replaces in supersedes_ids. Do not extract secrets, "
-                        "passwords, financial account details, or sensitive health information. "
-                        "Return [] when there is nothing safe and useful to remember."
+        response: LLMManagerResponse = await self.llm_service.complete(
+            LLMManagerRequest(
+                messages=[
+                    ChatMessage(
+                        role="system",
+                        content=(
+                            "Extract only durable user facts, preferences, goals, and constraints. "
+                            "Return a JSON array of objects with content, category, supersedes_ids, "
+                            "and expires_at (ISO-8601 or null). For a correction, include the IDs of "
+                            "the old memories it replaces in supersedes_ids. Do not extract secrets, "
+                            "passwords, financial account details, or sensitive health information. "
+                            "Return [] when there is nothing safe and useful to remember."
+                        ),
                     ),
-                ),
-                ChatMessage(
-                    role="user",
-                    content=json.dumps(
-                        {"existing_memories": existing, "conversation": conversation},
-                        ensure_ascii=True,
+                    ChatMessage(
+                        role="user",
+                        content=json.dumps(
+                            {"existing_memories": existing, "conversation": conversation},
+                            ensure_ascii=True,
+                        ),
                     ),
-                ),
-            ]
+                ],
+            )
         )
+        if response.error is not None:
+            raise MemoryExtractionError(
+                f"LLM memory extraction failed ({response.error.code}): {response.error.message}"
+            )
         if not response.text:
             raise MemoryExtractionError("Memory extractor returned no text")
         try:

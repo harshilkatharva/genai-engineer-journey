@@ -12,8 +12,8 @@ the package does not define HTTP routes.
   first, then retains the newest contiguous suffix of messages that fits. If pinned
   goals alone exceed the budget, they remain present and the result reports the
   actual token count (which can exceed the requested budget).
-- **Long-term memory** extracts durable memories through the existing `LLMProvider`
-  contract, embeds them through an injectable interface (Sentence Transformers by
+- **Long-term memory** extracts durable memories through the shared `LLMService`,
+  embeds them through an injectable interface (Sentence Transformers by
   default), and stores vectors in PostgreSQL/pgvector. Retrieval combines cosine
   similarity with a recency score and demotes explicitly superseded memories.
 - **Episodic memory** stores structured attempted/completed/failed actions and
@@ -76,9 +76,11 @@ finally:
     await store.close()
 ```
 
-Construct `LLMMemoryExtractor` with an existing `LLMProvider` and pass it to
-`LongTermMemory` to enable conversation extraction. Embedding and extraction calls
-are explicit dependencies; configure provider API keys through the existing
+Construct `LLMMemoryExtractor` with the shared `LLMService` (which implements the
+`LLMServices` completion interface) and pass it to `LongTermMemory` to enable
+conversation extraction. The extractor sends typed `LLMManagerRequest` values
+through `LLMService.complete()` and converts provider errors into explicit
+`MemoryExtractionError`s. Configure provider API keys through the existing
 environment-backed settings.
 
 ## Python APIs
@@ -88,12 +90,13 @@ from memory_system import (
     ConversationMessage,
     EpisodicMemory,
     LLMMemoryExtractor,
+    LLMService,
     LongTermMemory,
     MemoryCandidate,
-    MemoryService,
     PostgresMemoryStore,
     WorkingMemoryRegistry,
 )
+from memory_system.services.memory_service import MemoryService
 
 working = WorkingMemoryRegistry()
 context = working.get("user-123", "conversation-456")
@@ -101,7 +104,8 @@ context.pin_goal("Plan a three-day vegetarian menu")
 context.add_message(ConversationMessage(role="user", content="Avoid peanuts."))
 trimmed = context.snapshot(token_budget=1_000)
 
-long_term = LongTermMemory(store, extractor=LLMMemoryExtractor(llm_provider))
+llm_service = LLMService()
+long_term = LongTermMemory(store, extractor=LLMMemoryExtractor(llm_service))
 await long_term.remember_conversation(
     "user-123",
     [ConversationMessage(role="user", content="I prefer vegetarian meals.")],
@@ -155,6 +159,14 @@ uv run ruff check src tests
 PostgreSQL integration tests use `MEMORY_TEST_DATABASE_URL` when set, otherwise
 `DATABASE_CONNECTION_CONVERSATION_URL` from `.env`. They create the idempotent
 schema automatically and use a generated test user ID; prefer a disposable database.
+Integration tests are disabled by default and run only when `INTEGRATION_TEST=1`
+is set in `.env`.
+
+```sh
+INTEGRATION_TEST=1 uv run pytest tests/integration -m integration
+```
+
+Or set `INTEGRATION_TEST=1` in `.env` and run:
 
 ```sh
 uv run pytest tests/integration -m integration

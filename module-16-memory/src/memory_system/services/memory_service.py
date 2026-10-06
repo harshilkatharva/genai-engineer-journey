@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from uuid import UUID
 
+from ..memory.episodic import EpisodicMemory
+from ..memory.long_term import LongTermMemory
+from ..memory.working import WorkingMemoryRegistry
 from ..models import LongTermMemoryRecord
-from .episodic import EpisodicMemory
-from .long_term import LongTermMemory
-from .working import WorkingMemoryRegistry
 
 
 class MemoryService:

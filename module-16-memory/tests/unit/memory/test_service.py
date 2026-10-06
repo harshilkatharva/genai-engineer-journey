@@ -6,10 +6,10 @@ from memory_system import (
     EpisodicMemory,
     LongTermMemory,
     MemoryCandidate,
-    MemoryService,
     WorkingMemoryRegistry,
 )
 from memory_system.core import Settings
+from memory_system.services.memory_service import MemoryService
 from tests.fakes import FixedEmbedder, MemoryFakeRepository
 
 

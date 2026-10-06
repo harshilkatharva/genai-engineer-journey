@@ -10,7 +10,6 @@ from ..models import (
 )
 from .episodic import EpisodicMemory
 from .long_term import LongTermMemory
-from .service import MemoryService
 from .working import WorkingMemory, WorkingMemoryRegistry
 
 __all__ = [
@@ -22,7 +21,6 @@ __all__ = [
     "LongTermMemoryRecord",
     "MemoryCandidate",
     "MemorySearchResult",
-    "MemoryService",
     "PinnedGoal",
     "WorkingContext",
     "WorkingMemory",

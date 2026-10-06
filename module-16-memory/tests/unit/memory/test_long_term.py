@@ -12,8 +12,8 @@ from memory_system import (
 )
 from memory_system.core import Settings
 from memory_system.memory.extraction import MemoryExtractionError
-from memory_system.models import LongTermMemoryRecord
-from tests.fakes import FakeLLMProvider, FixedEmbedder, MemoryFakeRepository
+from memory_system.models import LLMError, LLMManagerResponse, LongTermMemoryRecord
+from tests.fakes import FakeLLMService, FixedEmbedder, MemoryFakeRepository
 
 
 # Creates a long-term memory service with deterministic test dependencies.
@@ -51,9 +51,12 @@ async def test_newer_superseding_memory_ranks_above_old_memory() -> None:
 @pytest.mark.asyncio
 async def test_extractor_parses_memories_and_rejects_secrets() -> None:
     extractor = LLMMemoryExtractor(
-        FakeLLMProvider(
-            '[{"content":"Prefers green tea","category":"preference",'
-            '"supersedes_ids":[],"expires_at":null}]'
+        FakeLLMService(
+            LLMManagerResponse(
+                text='[{"content":"Prefers green tea","category":"preference",'
+                '"supersedes_ids":[],"expires_at":null}]',
+                model="fake",
+            )
         )
     )
     candidates = await extractor.extract(
@@ -63,15 +66,32 @@ async def test_extractor_parses_memories_and_rejects_secrets() -> None:
     assert [candidate.content for candidate in candidates] == ["Prefers green tea"]
 
     unsafe = LLMMemoryExtractor(
-        FakeLLMProvider(
-            '[{"content":"password is hunter2","category":"fact",'
-            '"supersedes_ids":[],"expires_at":null}]'
+        FakeLLMService(
+            LLMManagerResponse(
+                text='[{"content":"password is hunter2","category":"fact",'
+                '"supersedes_ids":[],"expires_at":null}]',
+                model="fake",
+            )
         )
     )
     with pytest.raises(MemoryExtractionError):
         await unsafe.extract(
             [ConversationMessage(role="user", content="My password is hunter2.")], []
         )
+
+    failed = LLMMemoryExtractor(
+        FakeLLMService(
+            LLMManagerResponse(
+                error=LLMError(
+                    provider="fake",
+                    code="provider_unavailable",
+                    message="The provider is unavailable.",
+                )
+            )
+        )
+    )
+    with pytest.raises(MemoryExtractionError, match="provider_unavailable"):
+        await failed.extract([ConversationMessage(role="user", content="I prefer tea.")], [])
 
 
 # Verifies direct memory writes reject content containing credentials.

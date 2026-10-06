@@ -1,18 +1,15 @@
 from __future__ import annotations
 
 import math
-from collections.abc import AsyncIterator
 from datetime import UTC, datetime
 from uuid import UUID
 
 from memory_system.models import (
     ActionEpisode,
-    ChatMessage,
-    LLMResponseModel,
+    LLMManagerRequest,
+    LLMManagerResponse,
     LongTermMemoryRecord,
     MemorySearchResult,
-    ToolChoice,
-    ToolSpec,
 )
 
 
@@ -28,24 +25,19 @@ class FixedEmbedder:
         return [1.0, 0.0]
 
 
-class FakeLLMProvider:
-    # Stores the response text that the fake provider should return.
-    def __init__(self, response_text: str) -> None:
-        self.response_text = response_text
+class FakeLLMService:
+    # Stores the response returned by the fake LLM service.
+    def __init__(self, response: LLMManagerResponse) -> None:
+        self.response = response
+        self.requests: list[LLMManagerRequest] = []
 
-    # Returns a deterministic LLM response for extraction tests.
+    # Returns the configured response for extraction requests.
     async def complete(
         self,
-        messages: list[ChatMessage],
-        tools: list[ToolSpec] | None = None,
-        tool_choice: ToolChoice | None = None,
-    ) -> LLMResponseModel:
-        return LLMResponseModel(text=self.response_text, model="test", latency_ms=0)
-
-    # Supplies an empty text stream to satisfy the provider protocol.
-    async def stream(self, messages: list[ChatMessage]) -> AsyncIterator[str]:
-        if False:
-            yield ""
+        request: LLMManagerRequest,
+    ) -> LLMManagerResponse:
+        self.requests.append(request)
+        return self.response
 
 
 class MemoryFakeRepository:

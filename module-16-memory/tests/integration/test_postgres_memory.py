@@ -12,14 +12,18 @@ from memory_system import (
     EpisodicMemory,
     LongTermMemory,
     MemoryCandidate,
-    MemoryService,
 )
 from memory_system.core import Settings
 from memory_system.db import PostgresMemoryStore
+from memory_system.services.memory_service import MemoryService
 
 TEST_DATABASE_URL = os.getenv("MEMORY_TEST_DATABASE_URL") or Settings().database_url
 pytestmark = [
     pytest.mark.integration,
+    pytest.mark.skipif(
+        not Settings().integration_test,
+        reason="Set INTEGRATION_TEST=1 in .env to enable integration tests",
+    ),
 ]
 
 
