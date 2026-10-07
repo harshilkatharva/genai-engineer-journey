@@ -14,7 +14,9 @@ class LLMError(Exception):
 class ConfigError(LLMError):
     def __init__(self, key: str):
         self.key = key
-        self.message = f"Missing required configuration: '{key}'. Please set it in your .env file."
+        message = f"Missing required configuration: '{key}'. Please set it in your .env file."
+
+        super().__init__(message)
 
 
 class LLMRateLimitError(LLMError):
