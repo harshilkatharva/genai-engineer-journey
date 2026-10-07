@@ -11,6 +11,7 @@ from ai_app.models.llm_response_model import LLMResponseModel
 @pytest.fixture
 def summarization_service():
     service = SummarizationService()
+    service.conversation_manager.get_cached_response = AsyncMock(return_value=None)
 
     yield service
 

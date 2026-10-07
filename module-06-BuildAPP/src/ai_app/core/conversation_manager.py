@@ -71,7 +71,7 @@ class ConversationManager:
 
         return truncated
 
-    def _normalize_text(text: str) -> str:
+    def _normalize_text(self, text: str) -> str:
         """
         Normalize user input for exact-match caching.
 

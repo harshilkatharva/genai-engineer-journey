@@ -59,4 +59,4 @@ asyncio_mode = "auto"
 markers = [
     "integration : marks tests that call external services"
 ]
-addopts = "-m 'not intregration'"
+addopts = "-m 'not integration'"
