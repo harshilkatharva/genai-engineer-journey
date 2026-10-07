@@ -1,7 +1,9 @@
 from unittest.mock import patch
 from uuid import uuid4
+
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+
 from semantic_search_eng.api.routes.upsert import router
 
 app = FastAPI()

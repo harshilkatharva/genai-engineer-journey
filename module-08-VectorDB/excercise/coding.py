@@ -1,12 +1,10 @@
 import asyncio
 import time
-import asyncpg
-import pytest
-
 from contextlib import asynccontextmanager
 
+import asyncpg  # type: ignore[import-untyped]
+import pytest
 from fastapi import FastAPI, Request
-
 
 # 1
 
@@ -121,31 +119,33 @@ async def run_benchmark():
 
 # 4
 async def upsert_chunks(
-    pool: asyncpg.Pool, document_id: int, chunks: list[tuple[int, str]], embeddings: list[float]
-):
-    async with pool.acquire() as conn:
-        async with conn.transaction():
-            await conn.execute(
-                "DELETE FROM document_chunks WHERE document_id = $1",
-                document_id,
-            )
+    pool: asyncpg.Pool,
+    document_id: int,
+    chunks: list[tuple[int, str]],
+    embeddings: list[list[float]],
+) -> None:
+    async with pool.acquire() as conn, conn.transaction():
+        await conn.execute(
+            "DELETE FROM document_chunks WHERE document_id = $1",
+            document_id,
+        )
 
-            await conn.executemany(
-                """
-                INSERT INTO document_chunks
-                    (document_id, chunk_index, content, embedding)
-                VALUES ($1, $2, $3, $4::vector)
-                """,
-                [
-                    (
-                        document_id,
-                        chunk.index,
-                        chunk.content,
-                        "[" + ",".join(map(str, embedding)) + "]",
-                    )
-                    for chunk, embedding in zip(chunks, embeddings)
-                ],
-            )
+        await conn.executemany(
+            """
+            INSERT INTO document_chunks
+                (document_id, chunk_index, content, embedding)
+            VALUES ($1, $2, $3, $4::vector)
+            """,
+            [
+                (
+                    document_id,
+                    chunk_index,
+                    chunk_text,
+                    "[" + ",".join(map(str, embedding)) + "]",
+                )
+                for (chunk_index, chunk_text), embedding in zip(chunks, embeddings)
+            ],
+        )
 
 
 # 5

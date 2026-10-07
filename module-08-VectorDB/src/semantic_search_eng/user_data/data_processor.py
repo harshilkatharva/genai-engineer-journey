@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from pathlib import Path
 import uuid
+from pathlib import Path
 from uuid import UUID
 
 from semantic_search_eng.user_data.data_manager import DataManager

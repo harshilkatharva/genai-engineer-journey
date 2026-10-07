@@ -1,3 +1,5 @@
+from typing import Any, cast
+
 import pytest
 from pydantic import ValidationError
 
@@ -59,7 +61,7 @@ def test_retrive_request_rejects_empty_strings(
     data[field] = value
 
     with pytest.raises(ValidationError):
-        RetriveRequest(**data)
+        RetriveRequest(**cast(dict[str, Any], data))
 
 
 def test_retrive_request_rejects_invalid_top_k() -> None:

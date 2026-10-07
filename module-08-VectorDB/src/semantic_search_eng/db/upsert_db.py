@@ -48,13 +48,13 @@ class UpsertDBManager:
             raise ValueError("Number of chunks must match number of embeddings")
 
         if not updated_chunks:
-            return 0
+            return []
 
         query = """
             UPDATE document_chunks
             SET
                 chunk_text = %s,
-                embedding = %s,
+                embedding = %s
             WHERE tenant_id = %s
               AND document_id = %s
               AND chunk_id = %s

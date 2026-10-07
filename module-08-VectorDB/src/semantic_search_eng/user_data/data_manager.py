@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 from uuid import UUID
 
@@ -69,6 +70,23 @@ class DataManager:
         return document_path.read_text(
             encoding="utf-8",
         )
+
+    def save_embeddings(
+        self,
+        tenant_id: UUID,
+        document_id: UUID | str,
+        embeddings: list[list[float]],
+    ) -> Path:
+        conversation_path = self.create_conversation_directory(tenant_id)
+        embeddings_dir = conversation_path / "embeddings"
+        embeddings_dir.mkdir(parents=True, exist_ok=True)
+
+        embeddings_path = embeddings_dir / f"{document_id}.json"
+        embeddings_path.write_text(
+            json.dumps(embeddings),
+            encoding="utf-8",
+        )
+        return embeddings_path
 
     # ------------------------------------------------------------------
     # Internal helpers
