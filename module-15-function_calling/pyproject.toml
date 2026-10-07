@@ -49,11 +49,11 @@ where = ["src"]
 line-length = 100
 
 [tool.pytest.ini_options]
-testpaths = ["tests/unit", "tests/integration"]
+testpaths = ["tests/unit"]
 pythonpath = [".", "tests"]
 
 asyncio_mode = "auto"
 markers = [
-    "integration : marks tests that call external services"
+    "integration: marks tests that call external services"
 ]
 

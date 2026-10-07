@@ -1,5 +1,6 @@
 import asyncio
 from types import SimpleNamespace
+from typing import Any, cast
 
 from function_calling_library.models import ChatMessage
 from function_calling_library.providers import GoogleProvider
@@ -18,7 +19,7 @@ class FakeGoogleModels:
 
 def test_google_provider_maps_system_and_tool_messages_correctly() -> None:
     models = FakeGoogleModels()
-    client = SimpleNamespace(aio=SimpleNamespace(models=models))
+    client = cast(Any, SimpleNamespace(aio=SimpleNamespace(models=models)))
     provider = GoogleProvider(client=client)
     messages = [
         ChatMessage(role="system", content="Be concise."),
@@ -35,6 +36,8 @@ def test_google_provider_maps_system_and_tool_messages_correctly() -> None:
     response = asyncio.run(provider.complete(messages))
 
     assert response.text == "Done"
+    assert models.config is not None
+    assert models.contents is not None
     assert models.config.system_instruction == "Be concise."
     assert [content.role for content in models.contents] == ["user", "model", "user"]
     function_response = models.contents[-1].parts[0].function_response
@@ -45,7 +48,7 @@ def test_google_provider_maps_system_and_tool_messages_correctly() -> None:
 
 def test_google_provider_rejects_tool_result_without_name() -> None:
     models = FakeGoogleModels()
-    client = SimpleNamespace(aio=SimpleNamespace(models=models))
+    client = cast(Any, SimpleNamespace(aio=SimpleNamespace(models=models)))
     provider = GoogleProvider(client=client)
 
     try:
