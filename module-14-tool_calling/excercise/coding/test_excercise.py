@@ -4,7 +4,7 @@
 def execute_tool(tool, args):
     try:
         return {"type": "tool_result", "error": str(tool(**args))}
-    except Exception as e:
+    except ValueError as e:
         return {"type": "tool_result", "error": str(e)}
 
 
