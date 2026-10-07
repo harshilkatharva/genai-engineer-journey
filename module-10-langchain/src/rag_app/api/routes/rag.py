@@ -2,8 +2,8 @@ import time
 
 from fastapi import APIRouter
 
-from rag_app.features.rag_classification import RAGClassification
 from rag_app.features.rag_chat_langchain import RAGChatLangchain
+from rag_app.features.rag_classification import RAGClassification
 from rag_app.features.rag_extraction import RAGExtraction
 from rag_app.models import RAGEndpointRequest, RAGRequest, RAGTextRequest
 from rag_app.observability.logger import logger

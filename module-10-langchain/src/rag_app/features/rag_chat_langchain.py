@@ -95,7 +95,6 @@ class RAGChatLangchain:
         tracker = QueryPerformanceTracker(
             app_version=self.settings.app_version,
             query=request.query,
-            no_of_queries=None,
             chunk_ids=None,
             llm_answer=answer.text,
         )

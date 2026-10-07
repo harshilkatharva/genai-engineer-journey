@@ -7,7 +7,6 @@ from rag_app.api.app import app
 from rag_app.api.routes import retrive as retrive_route
 from rag_app.models import RetriveResponse
 
-
 client = TestClient(app)
 
 

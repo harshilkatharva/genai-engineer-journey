@@ -5,7 +5,6 @@ from fastapi.testclient import TestClient
 from rag_app.api.app import app
 from rag_app.api.routes import evalution as evalution_route
 
-
 client = TestClient(app)
 
 

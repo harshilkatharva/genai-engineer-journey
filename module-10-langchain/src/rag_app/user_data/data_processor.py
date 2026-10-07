@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from pathlib import Path
 import uuid
+from pathlib import Path
 from uuid import UUID
 
 from rag_app.user_data.data_manager import DataManager

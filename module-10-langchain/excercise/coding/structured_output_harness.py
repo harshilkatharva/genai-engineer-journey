@@ -1,13 +1,14 @@
-from jinja2 import Template
-from pathlib import Path
 import json
-from dotenv import load_dotenv
 import os
-from google import genai
-from pydantic import BaseModel
-import time
 import re
+import time
+from pathlib import Path
 
+from dotenv import load_dotenv
+from google import genai
+from google.genai import types
+from jinja2 import Template
+from pydantic import BaseModel
 
 load_dotenv()
 
@@ -28,7 +29,7 @@ DATASET_PATH = Path("src/prompt_test_harness/data/golden_dataset.json")
 def get_answers_from_google_api(
     prompt: str,
     model: str | None = None,
-    config: dict | None = None,
+    config: types.GenerateContentConfig | types.GenerateContentConfigDict | None = None,
 ):
     response = google_client.models.generate_content(
         model=model or "gemini-3.5-flash-lite",
@@ -118,7 +119,7 @@ Try again and carefully follow the required output format.
                 retry_no + 1,
             )
 
-        raise e
+        raise
 
 
 # ============================================================
@@ -176,7 +177,7 @@ def evaluate_prompt(version: int = 1):
     data = load_golden_dataset()
 
     results = []
-    answers = []
+    answers: list[RecommandSchema | dict[str, str]] = []
 
     for obj in data:
         query = obj["question"]
@@ -192,7 +193,7 @@ def evaluate_prompt(version: int = 1):
             results.append(1 if is_correct else 0)
             answers.append(answer)
 
-        except Exception as e:
+        except (TypeError, ValueError) as e:
             results.append(0)
             answers.append({"error": str(e)})
 
