@@ -12,7 +12,6 @@ from rag_app.models import (
     RAGResposne,
 )
 
-
 client = TestClient(app)
 
 

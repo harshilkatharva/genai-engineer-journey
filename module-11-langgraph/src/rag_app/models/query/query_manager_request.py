@@ -8,7 +8,7 @@ class QueryManagerRequest(BaseModel):
     technique: (
         Literal[
             "query_expansion",
-            "query_hyde",
+            "query_HyDE",
         ]
         | None
     ) = None

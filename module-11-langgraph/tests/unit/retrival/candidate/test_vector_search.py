@@ -1,8 +1,8 @@
 from unittest.mock import AsyncMock, patch
 from uuid import uuid4
 
-import pytest
 import numpy as np
+import pytest
 
 from rag_app.models import RetriveResult
 from rag_app.retrieval.candidate.vector_search import VectorSearch

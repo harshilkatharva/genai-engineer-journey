@@ -1,6 +1,7 @@
 import time
 from collections.abc import AsyncIterator
 
+from langchain_openai import ChatOpenAI
 from openai import (
     APIConnectionError,
     APIError,
@@ -9,7 +10,7 @@ from openai import (
     AuthenticationError,
     RateLimitError,
 )
-from pydantic import BaseModel
+from pydantic import BaseModel, SecretStr
 
 from rag_app.core.config import OPENAI_API_KEY
 from rag_app.core.settings import get_settings
@@ -23,8 +24,6 @@ from rag_app.exceptions.llm_exceptions import (
 from rag_app.models.llm.llm_response_model import LLMResponseModel
 from rag_app.providers.llm_provider import LLMProvider
 
-from langchain_openai import ChatOpenAI
-
 
 class OpenAIProvider(LLMProvider):
     """
@@ -36,7 +35,7 @@ class OpenAIProvider(LLMProvider):
         self.setting = get_settings()
         self.llm = ChatOpenAI(
             model=self._get_model(),
-            openai_api_key=OPENAI_API_KEY,
+            api_key=SecretStr(OPENAI_API_KEY),
             temperature=self.setting.default_llm_temperature,
         )
 

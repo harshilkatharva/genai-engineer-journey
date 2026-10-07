@@ -5,7 +5,6 @@ from fastapi.testclient import TestClient
 from rag_app.api.app import app
 from rag_app.api.routes import index as index_route
 
-
 client = TestClient(app)
 
 
