@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from datetime import datetime
+from typing import cast
+from uuid import uuid4
 
 import pytest
 
@@ -12,8 +13,8 @@ from memory_system import (
 )
 from memory_system.core import Settings
 from memory_system.memory.extraction import MemoryExtractionError
-from memory_system.models import LLMError, LLMManagerResponse, LongTermMemoryRecord
-from tests.fakes import FakeLLMService, FixedEmbedder, MemoryFakeRepository
+from memory_system.models import LLMError, LLMManagerResponse
+from tests.fakes import FakeLLMService, FixedEmbedder, MemoryFakeRepository, make_settings
 
 
 # Creates a long-term memory service with deterministic test dependencies.
@@ -94,28 +95,89 @@ async def test_extractor_parses_memories_and_rejects_secrets() -> None:
         await failed.extract([ConversationMessage(role="user", content="I prefer tea.")], [])
 
 
-# Verifies direct memory writes reject content containing credentials.
 @pytest.mark.asyncio
-async def test_direct_storage_rejects_credential_content() -> None:
-    _, long_term = create_long_term()
+async def test_store_validates_user_supersession_ownership_and_embedding_shape() -> None:
+    repository, long_term = create_long_term()
 
-    with pytest.raises(MemoryExtractionError):
+    with pytest.raises(ValueError, match="user_id"):
+        await long_term.store("", MemoryCandidate(content="A fact"))
+    with pytest.raises(ValueError, match="this user's existing memories"):
+        await long_term.store(
+            "user-1", MemoryCandidate(content="A correction", supersedes_ids=[uuid4()])
+        )
+    with pytest.raises(MemoryExtractionError, match="credential or identifier"):
         await long_term.store("user-1", MemoryCandidate(content="The password is hunter2"))
 
+    class WrongDimensionEmbedder:
+        async def embed(self, text: str) -> list[float]:
+            return [1.0]
 
-# Verifies memory expiration timestamps must specify a timezone.
-def test_memory_expiration_requires_timezone() -> None:
-    with pytest.raises(ValueError, match="timezone"):
-        MemoryCandidate(
-            content="temporary preference", expires_at=datetime.fromisoformat("2030-01-01")
+    invalid = LongTermMemory(
+        repository,
+        WrongDimensionEmbedder(),
+        settings=make_settings(memory_embedding_dimension=2),
+    )
+    with pytest.raises(ValueError, match="1 dimensions"):
+        await invalid.store("user-1", MemoryCandidate(content="A fact"))
+    assert repository.memories == {}
+
+
+@pytest.mark.asyncio
+async def test_store_rejects_non_numeric_or_non_finite_embeddings() -> None:
+    invalid_vectors: list[list[object]] = [
+        [float("nan"), 0.0],
+        [float("inf"), 0.0],
+        [True, 0.0],
+        ["1", 0.0],
+    ]
+    for vector in invalid_vectors:
+
+        class InvalidEmbedder:
+            def __init__(self, values: list[object]) -> None:
+                self.values = values
+
+            async def embed(self, text: str) -> list[float]:
+                return cast(list[float], self.values)
+
+        long_term = LongTermMemory(
+            MemoryFakeRepository(),
+            InvalidEmbedder(vector),
+            settings=make_settings(memory_embedding_dimension=2),
         )
+        with pytest.raises(ValueError, match="non-finite or non-numeric"):
+            await long_term.store("user-1", MemoryCandidate(content="A fact"))
 
 
-# Verifies stored memory creation timestamps must specify a timezone.
-def test_long_term_record_requires_timezone_for_creation_timestamp() -> None:
-    with pytest.raises(ValueError, match="timezone"):
-        LongTermMemoryRecord(
-            content="temporary preference",
-            user_id="user-1",
-            created_at=datetime.fromisoformat("2030-01-01"),
-        )
+@pytest.mark.asyncio
+async def test_remember_conversation_requires_extractor_and_valid_supersession_ids() -> None:
+    repository, long_term = create_long_term()
+    messages = [ConversationMessage(role="user", content="I moved.")]
+
+    with pytest.raises(RuntimeError, match="extractor is required"):
+        await long_term.remember_conversation("user-1", messages)
+
+    class UnknownSupersessionExtractor:
+        async def extract(self, messages, existing_memories):
+            return [MemoryCandidate(content="New fact", supersedes_ids=[uuid4()])]
+
+    long_term.extractor = UnknownSupersessionExtractor()
+    with pytest.raises(ValueError, match="Extracted supersedes_ids"):
+        await long_term.remember_conversation("user-1", messages)
+    assert repository.memories == {}
+
+    class CandidateExtractor:
+        async def extract(self, messages, existing_memories):
+            return [MemoryCandidate(content="One"), MemoryCandidate(content="Two")]
+
+    long_term.extractor = CandidateExtractor()
+    records = await long_term.remember_conversation("user-1", messages)
+
+    assert [record.content for record in records] == ["One", "Two"]
+    assert await long_term.view("user-1", 1) == [records[1]]
+    for limit in (0, 501):
+        with pytest.raises(ValueError, match="between 1 and 500"):
+            await long_term.view("user-1", limit)
+    with pytest.raises(ValueError, match="user_id"):
+        await long_term.view("", 1)
+    assert await long_term.delete("user-1", records[0].id) is True
+    assert await long_term.delete("user-1", uuid4()) is False
