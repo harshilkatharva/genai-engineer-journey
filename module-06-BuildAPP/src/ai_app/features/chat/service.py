@@ -47,9 +47,16 @@ class ChatService:
     async def _get_conversation(self, conversation_id: UUID):
         return await self.conversation_manager.get_conversations(conversation_id=conversation_id)
 
-    def _build_prompt(self, conversations: list[Message], user_message: str) -> str:
+    def _build_prompt(
+        self, conversations: list[Message | dict[str, str]], user_message: str
+    ) -> str:
         prompt_template = Template(Path("src/ai_app/features/chat/prompts/prompt.md").read_text())
-        history = [{"role": con.role, "content": con.content} for con in conversations]
+        history = [
+            {"role": con["role"], "content": con["content"]}
+            if isinstance(con, dict)
+            else {"role": con.role, "content": con.content}
+            for con in conversations
+        ]
 
         return prompt_template.render(conversation_history=history, user_message=user_message)
 
