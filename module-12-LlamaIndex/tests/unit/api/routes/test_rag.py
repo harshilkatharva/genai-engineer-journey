@@ -62,3 +62,30 @@ def test_query_endpoint_maps_unready_service() -> None:
 
     assert response.status_code == 409
     assert response.json() == {"detail": "The indexes are not ready"}
+
+
+def test_query_endpoint_uses_explicit_route_value() -> None:
+    service = MagicMock()
+    service.query = AsyncMock(
+        return_value=QueryResponse(
+            answer="vector answer",
+            route="vector",
+            sources=[SourceReference(source="doc.txt", snippet="snippet")],
+        )
+    )
+
+    response = make_client(service).post("/query", json={"query": "lookup", "route": "vector"})
+
+    assert response.status_code == 200
+    service.query.assert_called_once_with("lookup", route="vector")
+    assert response.json()["route"] == "vector"
+
+
+def test_ingest_endpoint_handles_runtime_errors() -> None:
+    service = MagicMock()
+    service.ingest = AsyncMock(side_effect=RuntimeError("Index build failed"))
+
+    response = make_client(service).post("/ingest", json={"data_dir": "/tmp"})
+
+    assert response.status_code == 400
+    assert response.json() == {"detail": "Index build failed"}

@@ -1,4 +1,5 @@
 import json
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import cast
@@ -11,8 +12,6 @@ from llama_index.core import (
 )
 from llama_index.core.schema import BaseNode
 from llama_index.vector_stores.postgres import PGVectorStore
-
-from collections.abc import Sequence
 
 from ..core.config import Settings
 

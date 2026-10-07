@@ -3,10 +3,9 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
+from llama_index.core.schema import TextNode
 
 from rag_app.indexes.registry import IndexFactory, IndexRegistry
-
-from llama_index.core.schema import TextNode
 
 
 def make_settings(tmp_path, postgres_url="postgresql://db"):
@@ -83,3 +82,29 @@ def test_restore_returns_persisted_indexes_and_metadata(tmp_path) -> None:
 
 def test_restore_returns_none_without_manifest(tmp_path) -> None:
     assert IndexFactory(make_settings(tmp_path)).restore() is None
+
+
+def test_vector_store_uses_configured_postgres_settings(tmp_path) -> None:
+    settings = make_settings(
+        tmp_path, postgres_url="postgresql+psycopg://user:pass@localhost:5432/db"
+    )
+    factory = IndexFactory(settings)
+
+    with patch("rag_app.indexes.registry.PGVectorStore") as pg_vector_store:
+        factory._vector_store()
+
+    pg_vector_store.assert_called_once_with(
+        connection_string="postgresql+psycopg://user:pass@localhost:5432/db",
+        async_connection_string="postgresql+psycopg://user:pass@localhost:5432/db",
+        table_name="vectors",
+        schema_name="public",
+        embed_dim=384,
+    )
+
+
+def test_restore_raises_runtime_error_for_invalid_persisted_manifest(tmp_path) -> None:
+    factory = IndexFactory(make_settings(tmp_path))
+    factory.manifest_path.write_text("{not valid json}", encoding="utf-8")
+
+    with pytest.raises(RuntimeError, match="Persisted index state could not be restored"):
+        factory.restore()
