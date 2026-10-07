@@ -1,5 +1,6 @@
 import uuid
 from uuid import UUID
+
 import psycopg
 
 from ai_app.models.message import Message

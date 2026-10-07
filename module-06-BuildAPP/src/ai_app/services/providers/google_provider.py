@@ -41,15 +41,16 @@ class GoogleProvider:
 
             latency = (time.perf_counter() - start) * 1000
             usage = response.usage_metadata
-            input_tokens = usage.prompt_token_count | 0
-            output_tokens = usage.candidates_token_count | 0
+            prompt_token_count = (usage.prompt_token_count or 0) if usage is not None else 0
+            candidate_token_count = (usage.candidates_token_count or 0) if usage is not None else 0
 
             return LLMResponseModel(
                 text=response.text or "",
-                model=response.model_version,
+                model=response.model_version or model,
+                provider="google",
                 latency_ms=latency,
-                input_tokens=input_tokens,
-                output_tokens=output_tokens,
+                input_tokens=prompt_token_count,
+                output_tokens=candidate_token_count,
             )
 
         except ClientError as e:

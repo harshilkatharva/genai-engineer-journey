@@ -1,5 +1,6 @@
-from fastapi import APIRouter
 from uuid import UUID
+
+from fastapi import APIRouter
 
 from ai_app.db.db_report import DBReport
 

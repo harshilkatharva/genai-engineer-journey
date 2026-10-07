@@ -1,5 +1,7 @@
-from fastapi import APIRouter
 from uuid import UUID
+
+from fastapi import APIRouter
+
 from ai_app.core.conversation_manager import ConversationManager
 
 router = APIRouter()

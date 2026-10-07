@@ -42,13 +42,13 @@ class OpenAIProvider:
             latency = (time.perf_counter() - start) * 1000
 
             usage = response.usage
-
-            input_tokens = usage.input_tokens | 0
-            output_tokens = usage.output_tokens | 0
+            input_tokens = usage.input_tokens if usage is not None else 0
+            output_tokens = usage.output_tokens if usage is not None else 0
 
             return LLMResponseModel(
                 text=response.output_text,
-                model=response.model,
+                model=response.model or "gpt-4o-mini",
+                provider="openai",
                 latency_ms=latency,
                 input_tokens=input_tokens,
                 output_tokens=output_tokens,
