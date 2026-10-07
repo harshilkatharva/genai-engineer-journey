@@ -1,8 +1,9 @@
 import re
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Any, Callable
-from pydantic import BaseModel, Field
+from typing import Any
 
+from pydantic import BaseModel, Field
 
 # 1
 
@@ -234,6 +235,6 @@ def rerank_with_fallback(query, chunks, reranker):
 
         return reranked
 
-    except Exception:
+    except Exception:  # noqa: BLE001
         # Re-ranking failure should not fail the request.
         return fallback
