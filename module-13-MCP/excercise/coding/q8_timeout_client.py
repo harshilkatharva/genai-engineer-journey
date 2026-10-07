@@ -16,7 +16,7 @@ async def call_with_timeout(session, tool_name, arguments, timeout=5):
             timeout=timeout,
         )
 
-    except asyncio.TimeoutError:
+    except TimeoutError:
         print(f"Tool '{tool_name}' timed out after {timeout} seconds.")
         return None
 

@@ -1,2 +1,0 @@
-{"tenant_id": "06f197fb-3b03-469f-b3ba-461dae52cf7a", "query": "vector retrieval", "top_k": 5, "results_count": 0, "retrieval_latency_ms": 85.59020600296208, "embedding_latency_ms": 25.96123900002567, "total_latency_ms": 111.55454199979431, "logged_at": "2026-09-21T10:06:32.522929+00:00"}
-{"tenant_id": "06f197fb-3b03-469f-b3ba-461dae52cf7a", "query": "vector retrieval", "top_k": 5, "results_count": 0, "retrieval_latency_ms": 45.80292500031646, "embedding_latency_ms": 21.814206000271952, "total_latency_ms": 67.62126000103308, "logged_at": "2026-09-21T10:41:11.317636+00:00"}

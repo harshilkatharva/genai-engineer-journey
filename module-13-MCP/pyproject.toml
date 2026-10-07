@@ -27,11 +27,12 @@ dependencies = [
     "google>=3.0.0",
     "google-genai>=2.19.0",
     "openai>=3.3.1",
+    "mypy>=2.4.0",
+    "ruff>=0.16.10",
+    "pytest>=9.1.1",
+    "module-08-vectordb",
+    "module-09-rag",
 ]
-
-[tool.pytest.ini_options]
-pythonpath = ["src"]
-testpaths = ["tests"]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
@@ -42,4 +43,34 @@ where = ["src"]
 [dependency-groups]
 dev = [
     "pytest>=9.1.1",
+]
+
+[tool.mypy]
+exclude = ['^excercise/']
+
+[[tool.mypy.overrides]]
+module = [
+    "rag_app.*",
+    "semantic_search_eng.*",
+]
+ignore_missing_imports = true
+
+[tool.ruff]
+line-length = 100
+extend-exclude = [
+    "excercise",
+    ".venv",
+    ".mypy_cache",
+    ".ruff_cache",
+]
+
+[tool.uv.sources]
+module-08-vectordb = { path = "../module-08-VectorDB", editable = true }
+module-09-rag = { path = "../module-09-rag", editable = true }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = [
+    "integration : marks tests that call external services"
 ]

@@ -11,7 +11,6 @@ from mcp.server.mcpserver.context import Context
 from internal_tools_mcp.rag_service.rag_service import ask_question
 from internal_tools_mcp.retrive_service.retrive_service import retrieve_documents
 
-
 LOGGER = logging.getLogger("internal_tools_mcp.audit")
 UUID_PATTERN = re.compile(
     r"^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$"
@@ -36,17 +35,15 @@ def _caller(ctx: Context | None) -> str:
     if ctx is None:
         return "direct-call"
     try:
-        return (ctx.request_context.request.headers or {}).get(
-            "x-caller-id", "anonymous"
-        )
+        request = getattr(ctx.request_context, "request", None)
+        headers = getattr(request, "headers", None) or {}
+        return headers.get("x-caller-id", "anonymous")
     except (AttributeError, ValueError):
         return "stdio"
 
 
 def _audit(name: str, arguments: dict[str, Any], ctx: Context | None) -> None:
-    LOGGER.info(
-        "tool_invocation tool=%s arguments=%s caller=%s", name, arguments, _caller(ctx)
-    )
+    LOGGER.info("tool_invocation tool=%s arguments=%s caller=%s", name, arguments, _caller(ctx))
 
 
 async def _default_answer(query: str, tenant_id: str) -> dict[str, object]:
@@ -70,9 +67,7 @@ async def _default_retrieval(
 def register_tools(
     mcp: MCPServer,
     answer_service: Callable[[str, str], Awaitable[dict[str, object]]] | None = None,
-    retrieval_service: Callable[
-        [str, str, str | None, int], Awaitable[dict[str, object]]
-    ]
+    retrieval_service: Callable[[str, str, str | None, int], Awaitable[dict[str, object]]]
     | None = None,
 ) -> None:
     """Register all application tools on the supplied MCP server."""
@@ -93,9 +88,7 @@ def register_tools(
         tenant_id = _tenant_uuid(tenant_id)
         return await answer(query, tenant_id)
 
-    @mcp.tool(
-        description="Retrieve tenant-scoped documents with Module 8's vector search service."
-    )
+    @mcp.tool(description="Retrieve tenant-scoped documents with Module 8's vector search service.")
     async def module8_retrieve_documents(
         tenant_id: str,
         query: str,

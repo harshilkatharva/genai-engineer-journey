@@ -1,5 +1,4 @@
 import anyio
-
 from mcp import Client, StdioServerParameters
 
 server = StdioServerParameters(

@@ -3,7 +3,6 @@
 import sys
 from pathlib import Path
 
-
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 
 
@@ -15,8 +14,8 @@ def _add_source(path: Path) -> None:
 
 def module9_services():
     _add_source(REPOSITORY_ROOT / "module-09-rag" / "src")
-    from rag_app.models import RAGRequest
     from rag_app.features.rag_chat import RAGChat
+    from rag_app.models import RAGRequest
 
     return RAGChat, RAGRequest
 

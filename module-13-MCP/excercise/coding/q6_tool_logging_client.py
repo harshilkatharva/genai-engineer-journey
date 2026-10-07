@@ -1,10 +1,9 @@
 import asyncio
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
-
 
 LOG_FILE = "excercise/coding/logs/tool_calls.jsonl"
 
@@ -16,7 +15,7 @@ server_params = StdioServerParameters(
 
 def write_log(tool_name, arguments, result, status):
     entry = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "tool": tool_name,
         "arguments": arguments,
         "result": result,

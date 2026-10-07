@@ -3,7 +3,6 @@ import sys
 
 from mcp.server.mcpserver import MCPServer
 
-
 mcp = MCPServer("Slow Server")
 
 
