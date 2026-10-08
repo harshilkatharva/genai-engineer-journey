@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 import time
 from collections.abc import AsyncIterator
-from typing import cast
+from typing import Any, cast
 
 from openai import AsyncOpenAI
 from openai.types.responses import FunctionToolParam, ResponseInputParam
@@ -32,7 +32,7 @@ class OpenAIProvider(LLMProvider):
         for tool in tools or []:
             request_tools.append(tool.to_openai_tool())
         start = time.perf_counter()
-        request_options = {"tools": request_tools} if request_tools else {}
+        request_options: dict[str, Any] = {"tools": request_tools} if request_tools else {}
         if request_tools:
             request_options["tool_choice"] = (tool_choice or ToolChoice()).to_openai()
         response = await self.client.responses.create(
@@ -41,7 +41,7 @@ class OpenAIProvider(LLMProvider):
                 ResponseInputParam,
                 [message.model_dump(exclude_none=True) for message in messages],
             ),
-            **request_options,
+            **cast(Any, request_options),
         )
         calls: list[ToolCall] = []
         for item in response.output:

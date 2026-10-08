@@ -37,7 +37,7 @@ class LLMServices(Protocol):
 _SENSITIVE_PATTERNS = (
     re.compile(
         r"(?i)\b(?:password|passwd|secret|api[_ -]?key|access[_ -]?token)"
-        r"\b.{0,16}\b(?:is|=|:)\s*\S+"
+        r"\b.{0,16}(?:\bis\b|=|:)\s*\S+"
     ),
     re.compile(r"\b(?:sk-[A-Za-z0-9_-]{16,}|AKIA[0-9A-Z]{16})\b"),
     re.compile(r"\b\d{3}-\d{2}-\d{4}\b"),

@@ -3,19 +3,23 @@ from __future__ import annotations
 import asyncio
 import inspect
 from collections.abc import Sequence
-from typing import Any
+from typing import Any, Protocol
 
 from pydantic import BaseModel
 
 from ..models import (
     ChatMessage,
     LLMManagerRequest,
+    LLMManagerResponse,
     ToolArgumentError,
     ToolCall,
     ToolChoice,
     ToolSpec,
 )
-from .llm_services import LLMService
+
+
+class SupportsStructuredCompletion(Protocol):
+    async def complete(self, request: LLMManagerRequest) -> LLMManagerResponse: ...
 
 
 class ToolExecutionResult(BaseModel):
@@ -71,7 +75,7 @@ async def execute_tool_calls(
 
 
 async def extract_structured_output(
-    service: LLMService,
+    service: SupportsStructuredCompletion,
     messages: list[ChatMessage],
     output_model: type[BaseModel],
     *,

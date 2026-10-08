@@ -1,9 +1,8 @@
 import asyncio
-import pytest
 
+import pytest
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
-
 
 server_params = StdioServerParameters(
     command="python3",
@@ -17,7 +16,7 @@ async def call_with_timeout(session, tool_name, arguments, timeout=2):
             session.call_tool(tool_name, arguments),
             timeout=timeout,
         )
-    except asyncio.TimeoutError:
+    except TimeoutError:
         return None
 
 

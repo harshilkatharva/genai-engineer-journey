@@ -57,7 +57,10 @@ class RetriverManager:
 
         retrieval_start_time = perf_counter()
         results = await self.retrive_db_manager.retrive_chunks(
-            tenant_id, Vector(query_embedding), top_k, document_type=document_type
+            tenant_id,
+            Vector(query_embedding),
+            top_k,
+            document_type=document_type,
         )
         retrieval_latency_ms = (perf_counter() - retrieval_start_time) * 1000
 

@@ -1,7 +1,7 @@
 from collections.abc import Sequence
 
-from langchain_redis import RedisChatMessageHistory
 from langchain_core.messages import BaseMessage
+from langchain_redis import RedisChatMessageHistory
 
 from rag_app.core.settings import get_settings
 

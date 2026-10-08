@@ -31,13 +31,14 @@ async def ask_question(
                 factory = services_factory or module9_services
                 rag_chat_class, request_class = factory()
                 request_token = None
-                reset_request_id = None
+                reset_request_handler = None
                 if services_factory is None:
-                    from rag_app.observability.context import (
-                        reset_request_id,
+                    from rag_app.observability.context import (  # noqa: I001
+                        reset_request_id as reset_request_id_fn,
                         set_request_id,
                     )
 
+                    reset_request_handler = reset_request_id_fn
                     request_token = set_request_id(uuid4())
                 service = rag_chat_class()
                 try:
@@ -46,7 +47,7 @@ async def ask_question(
                     )
                     return response.model_dump()
                 finally:
-                    if reset_request_id is not None and request_token is not None:
-                        reset_request_id(request_token)
+                    if reset_request_handler is not None and request_token is not None:
+                        reset_request_handler(request_token)
         finally:
             os.chdir(previous_directory)

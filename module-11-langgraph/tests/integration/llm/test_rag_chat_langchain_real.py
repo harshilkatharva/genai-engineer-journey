@@ -9,9 +9,8 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from rag_app.core.config import GOOGLE_API_KEY
 from rag_app.core.settings import get_settings
 from rag_app.features.rag_chat_langchain import RAGChatLangchain
-from rag_app.prompts.prompt_manager import PromptManager
 from rag_app.models import RAGResposne
-
+from rag_app.prompts.prompt_manager import PromptManager
 
 pytestmark = pytest.mark.skipif(
     os.getenv("RUN_REAL_LLM_TESTS") != "1" or not GOOGLE_API_KEY,

@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import json
 from collections.abc import Callable, Mapping
-from typing import Any, Literal
+from typing import Any, Literal, cast
 
+from openai.types.responses import FunctionToolParam
 from pydantic import BaseModel, ConfigDict, Field, ValidationError, model_validator
 
 
@@ -56,14 +57,17 @@ class ToolSpec(BaseModel):
     def parameters(self) -> dict[str, Any]:
         return self.argument_model.model_json_schema()
 
-    def to_openai_tool(self) -> dict[str, Any]:
-        return {
-            "type": "function",
-            "name": self.name,
-            "description": self.description,
-            "parameters": self.parameters,
-            "strict": False,
-        }
+    def to_openai_tool(self) -> FunctionToolParam:
+        return cast(
+            FunctionToolParam,
+            {
+                "type": "function",
+                "name": self.name,
+                "description": self.description,
+                "parameters": self.parameters,
+                "strict": False,
+            },
+        )
 
     def to_anthropic_tool(self) -> dict[str, Any]:
         return {

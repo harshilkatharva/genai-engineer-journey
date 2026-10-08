@@ -3,7 +3,7 @@ from fastapi.security import APIKeyHeader
 
 from ai_app.api.exception_handler import register_exception_handler
 from ai_app.api.limiter import limiter
-from ai_app.api.routes import chat, sentiment, summarization, start, report
+from ai_app.api.routes import chat, report, sentiment, start, summarization
 from ai_app.core.config import X_API_KEY
 
 app = FastAPI(title="AI Application API", version="0.141.1")

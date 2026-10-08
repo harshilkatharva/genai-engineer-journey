@@ -3,7 +3,8 @@ from __future__ import annotations
 import time
 import uuid
 from dataclasses import dataclass, field
-from typing import Any
+from types import TracebackType
+from typing import Any, Self
 
 
 @dataclass
@@ -46,14 +47,14 @@ class Span:
 
         return self.finish(status="error")
 
-    def __enter__(self) -> Span:
+    def __enter__(self) -> Self:
         return self
 
     def __exit__(
         self,
         exc_type: type[BaseException] | None,
         exc_value: BaseException | None,
-        traceback: Any,
+        traceback: TracebackType | None,
     ) -> None:
         if exc_type is not None:
             self.fail(error_type=exc_type.__name__)

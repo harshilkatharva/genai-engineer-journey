@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import math
 from datetime import UTC, datetime
+from typing import Any, cast
 from uuid import UUID
 
+from memory_system.core import Settings
 from memory_system.models import (
     ActionEpisode,
     LLMManagerRequest,
@@ -11,6 +13,10 @@ from memory_system.models import (
     LongTermMemoryRecord,
     MemorySearchResult,
 )
+
+
+def make_settings(**values: Any) -> Settings:
+    return cast(Any, Settings)(_env_file=None, **values)
 
 
 class CharacterCounter:

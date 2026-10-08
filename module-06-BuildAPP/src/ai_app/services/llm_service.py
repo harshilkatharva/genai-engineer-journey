@@ -56,6 +56,7 @@ class LLMClient:
 
             return LLMResponseModel(
                 text=e.user_message,
+                model=provider,
                 provider=provider,
                 latency_ms=0.0,
                 input_tokens=0,

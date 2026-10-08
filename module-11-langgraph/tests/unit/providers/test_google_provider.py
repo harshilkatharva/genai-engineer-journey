@@ -1,6 +1,7 @@
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
+
 from rag_app.providers.google_provider import GoogleProvider
 
 

@@ -1,16 +1,20 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import UTC, datetime
 
 import pytest
 from pydantic import ValidationError
 
 from memory_system.models import (
+    ActionCheck,
     ActionEpisode,
     ConversationMessage,
     LongTermMemoryRecord,
     MemoryCandidate,
+    MemorySearchResult,
     PinnedGoal,
+    WorkingContext,
+    utc_now,
 )
 
 
@@ -27,10 +31,46 @@ def test_memory_models_validate_and_dump() -> None:
         ConversationMessage.model_validate({"role": "invalid", "content": "hello"})
 
 
-# Verifies naive datetimes are rejected by memory and episode models.
-def test_memory_timestamps_require_timezone() -> None:
-    naive = datetime.fromisoformat("2030-01-01")
+def test_memory_context_and_search_models_validate_invariants() -> None:
+    record = LongTermMemoryRecord(content="Prefers tea", user_id="user-1")
+    result = MemorySearchResult(memory=record, similarity=0.9, rank_score=0.8)
+    context = WorkingContext(
+        pinned_goals=[PinnedGoal(content="Keep it short")],
+        messages=[ConversationMessage(role="user", content="hello")],
+        token_count=4,
+        token_budget=8,
+    )
 
+    assert result.superseded is False
+    assert context.token_count <= context.token_budget
+    with pytest.raises(ValidationError):
+        WorkingContext(pinned_goals=[], messages=[], token_count=-1, token_budget=0)
+    with pytest.raises(ValidationError):
+        PinnedGoal(content="")
+
+
+def test_action_episode_rejects_extra_fields_and_invalid_status() -> None:
+    now = utc_now()
+    values = {
+        "user_id": "user-1",
+        "task_id": "task-1",
+        "action_type": "send",
+        "target": "team",
+        "occurred_at": now,
+        "expires_at": now,
+    }
+
+    with pytest.raises(ValidationError):
+        ActionEpisode.model_validate({**values, "unexpected": "value"})
+    with pytest.raises(ValidationError):
+        ActionEpisode.model_validate({**values, "status": "unknown"})
+    check = ActionCheck(already_attempted=False, recommendation="execute")
+    assert check.episode is None
+    with pytest.raises(ValidationError):
+        ActionCheck.model_validate({"already_attempted": False, "recommendation": "repeat"})
+    assert utc_now().tzinfo == UTC
+
+    naive = datetime.fromisoformat("2030-01-01")
     with pytest.raises(ValidationError, match="timezone"):
         MemoryCandidate(content="temporary preference", expires_at=naive)
     with pytest.raises(ValidationError, match="timezone"):

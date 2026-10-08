@@ -1,13 +1,12 @@
 import time
 from collections.abc import AsyncIterator
 
-from pydantic import BaseModel
-
+from langchain_core.messages import UsageMetadata
 from langchain_google_genai import ChatGoogleGenerativeAI
+from pydantic import BaseModel
 
 from rag_app.core.config import GOOGLE_API_KEY
 from rag_app.core.settings import get_settings
-
 from rag_app.models import LLMResponseModel
 from rag_app.providers.llm_provider import LLMProvider
 
@@ -41,7 +40,7 @@ class GoogleProvider(LLMProvider):
 
             return LLMResponseModel(
                 text=None,
-                data=response.model_dump(),
+                data=response.model_dump() if isinstance(response, BaseModel) else response,
                 model=self._get_model(),
                 latency_ms=latency,
                 input_tokens=0,
@@ -52,13 +51,29 @@ class GoogleProvider(LLMProvider):
         print(response)
         latency = (time.perf_counter() - start) * 1000
 
-        usage = response.usage_metadata or {}
+        usage: UsageMetadata | dict[str, int] = response.usage_metadata or {}
 
         input_tokens = usage.get("input_tokens", 0)
         output_tokens = usage.get("output_tokens", 0)
+        content = response.content
+        text: str | None
+        if isinstance(content, str):
+            text = content
+        elif content is None:
+            text = None
+        else:
+            parts: list[str] = []
+            for block in content:
+                if isinstance(block, str):
+                    parts.append(block)
+                elif isinstance(block, dict):
+                    text_value = block.get("text")
+                    if isinstance(text_value, str):
+                        parts.append(text_value)
+            text = "".join(parts) if parts else None
 
         return LLMResponseModel(
-            text=response.content[0]["text"] if response.content else None,
+            text=text,
             data=None,
             model=self._get_model(),
             latency_ms=latency,
@@ -70,8 +85,23 @@ class GoogleProvider(LLMProvider):
 
     async def stream(self, prompt: str) -> AsyncIterator[str]:
         async for chunk in self.llm.astream(prompt):
-            if chunk.content:
-                yield chunk.content
+            content = chunk.content
+            if content is None:
+                continue
+
+            if isinstance(content, str):
+                if content:
+                    yield content
+                continue
+
+            for block in content:
+                if isinstance(block, str):
+                    if block:
+                        yield block
+                elif isinstance(block, dict):
+                    text = block.get("text")
+                    if isinstance(text, str) and text:
+                        yield text
 
     def _get_model(self) -> str:
         return (

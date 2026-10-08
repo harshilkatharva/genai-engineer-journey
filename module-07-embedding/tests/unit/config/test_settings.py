@@ -11,7 +11,7 @@ def test_settings_default_values() -> None:
     assert settings.debug is False
     assert settings.api_host == "0.0.0.0"
     assert settings.api_port == 8000
-    assert settings.data_directory == "user_data/data"
+    assert settings.data_directory == "src/semantic_search_eng/user_data/data"
     assert settings.chunking_strategy == "sentence"
     assert settings.chunk_size == 500
     assert settings.chunk_overlap == 50
@@ -20,7 +20,7 @@ def test_settings_default_values() -> None:
     assert settings.embedding_cost_per_million_tokens == 0.0
     assert settings.default_top_k == 5
     assert settings.max_top_k == 100
-    assert settings.log_directory == "user_data/logs"
+    assert settings.log_directory == "src/semantic_search_eng/user_data/logs"
     assert settings.log_level == "INFO"
 
 

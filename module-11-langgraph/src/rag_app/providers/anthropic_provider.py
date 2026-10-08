@@ -9,7 +9,8 @@ from anthropic import (
     AuthenticationError,
     RateLimitError,
 )
-from pydantic import BaseModel
+from langchain_anthropic import ChatAnthropic
+from pydantic import BaseModel, SecretStr
 
 from rag_app.core.config import ANTHROPIC_API_KEY
 from rag_app.core.settings import get_settings
@@ -23,8 +24,6 @@ from rag_app.exceptions.llm_exceptions import (
 from rag_app.models.llm.llm_response_model import LLMResponseModel
 from rag_app.providers.llm_provider import LLMProvider
 
-from langchain_anthropic import ChatAnthropic
-
 
 class AnthropicProvider(LLMProvider):
     """
@@ -35,9 +34,11 @@ class AnthropicProvider(LLMProvider):
         self.client = AsyncAnthropic(api_key=ANTHROPIC_API_KEY)
         self.setting = get_settings()
         self.llm = ChatAnthropic(
-            model=self._get_model(),
-            anthropic_api_key=ANTHROPIC_API_KEY,
+            model_name=self._get_model(),
+            api_key=SecretStr(ANTHROPIC_API_KEY),
             temperature=self.setting.default_llm_temperature,
+            timeout=None,
+            stop=None,
         )
 
     async def complete(

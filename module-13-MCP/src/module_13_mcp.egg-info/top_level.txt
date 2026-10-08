@@ -1,2 +1,1 @@
 internal_tools_mcp
-semantic_search_eng

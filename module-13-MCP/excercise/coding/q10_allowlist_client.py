@@ -3,7 +3,6 @@ import asyncio
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
-
 # Client-side capability allowlist
 ALLOWED_TOOLS = {
     "get_employee",

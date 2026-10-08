@@ -74,10 +74,22 @@ from mcp.server.mcpserver import MCPServer
 
 ## Setup
 
-From this project directory:
+This project depends on the sibling repositories `module-08-VectorDB` and `module-09-rag`. They must be present in the same parent directory and installed as editable local packages before the server can run.
+
+From the parent directory that contains all three repos:
 
 ```bash
-uv sync
+cd /path/to/genai-engineer-journey
+uv pip install -e ./module-13-MCP -e ./module-08-VectorDB -e ./module-09-rag
+```
+
+If you are using a standard virtual environment instead of `uv`, do:
+
+```bash
+cd /path/to/genai-engineer-journey
+python -m venv .venv
+. .venv/bin/activate
+python -m pip install -e ./module-13-MCP -e ./module-08-VectorDB -e ./module-09-rag
 ```
 
 The adapters resolve the sibling source directories from the repository layout. Keep this project beside `module-08-VectorDB` and `module-09-rag` as shown:
@@ -87,6 +99,12 @@ genai-engineer-journey/
 	module-08-VectorDB/
 	module-09-rag/
 	module-13-MCP/
+```
+
+You can confirm the required sibling repos are present with:
+
+```bash
+ls ../module-08-VectorDB ../module-09-rag
 ```
 
 ## Run Locally With Stdio

@@ -1,3 +1,6 @@
+from collections.abc import Callable
+from typing import cast
+
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from slowapi import _rate_limit_exceeded_handler
@@ -18,7 +21,7 @@ from ai_app.exceptions import (
 def register_exception_handler(app: FastAPI) -> None:
     app.add_exception_handler(
         RateLimitExceeded,
-        _rate_limit_exceeded_handler,
+        cast(Callable[[Request, Exception], JSONResponse], _rate_limit_exceeded_handler),
     )
 
     @app.exception_handler(LLMTimeoutError)

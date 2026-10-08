@@ -1,6 +1,7 @@
 from collections.abc import AsyncIterator
 from typing import Protocol
 
+from langchain_core.language_models.chat_models import BaseChatModel
 from pydantic import BaseModel
 
 from rag_app.models import LLMResponseModel
@@ -11,4 +12,6 @@ class LLMProvider(Protocol):
         self, prompt: str, response_schema: type[BaseModel] | None = None
     ) -> LLMResponseModel: ...
 
-    async def stream(self, prompt: str) -> AsyncIterator[str]: ...
+    def stream(self, prompt: str) -> AsyncIterator[str]: ...
+
+    def get_llm(self) -> BaseChatModel: ...

@@ -2,17 +2,14 @@ import json
 from pathlib import Path
 
 from jinja2 import Template
+from langchain_core.language_models.fake_chat_models import FakeChatModel
 from langchain_core.output_parsers import PydanticOutputParser
-
+from langchain_core.prompts import ChatPromptTemplate
 from structured_output_harness import (
+    RecommandSchema,
     get_answers_from_google_api,
     schema_output,
-    RecommandSchema,
 )
-
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.language_models.fake_chat_models import FakeChatModel
-
 
 # Task 5
 prompt = ChatPromptTemplate.from_messages(
@@ -88,7 +85,7 @@ def structured_output_reliability():
             if custom_answer.genre == expected_genre:
                 custom_correct += 1
 
-        except Exception as e:
+        except (TypeError, ValueError) as e:
             print(f"Custom harness failed: {question}")
             print(e)
 
@@ -106,7 +103,7 @@ def structured_output_reliability():
             if langchain_answer.genre == expected_genre:
                 langchain_correct += 1
 
-        except Exception as e:
+        except (TypeError, ValueError) as e:
             print(f"LangChain parser failed: {question}")
             print(e)
 

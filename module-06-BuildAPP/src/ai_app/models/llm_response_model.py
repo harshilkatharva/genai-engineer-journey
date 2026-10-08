@@ -10,6 +10,8 @@ class LLMResponseModel(BaseModel):
 
     model: str = Field(..., description="Name of model")
 
+    provider: str | None = Field(default=None, description="Provider used for this response")
+
     latency_ms: float = Field(..., description="Request latency in milisecond")
 
     input_tokens: int = Field(..., description="Input token consumed in request")

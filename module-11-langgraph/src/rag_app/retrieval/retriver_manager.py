@@ -1,17 +1,16 @@
 from __future__ import annotations
+
 import time
-
-from rag_app.core import get_settings
-from rag_app.models import RetriveRequest, RetriveResponse, QueryManagerRequest
-from rag_app.query.query_manager import QueryManager
-
-from pydantic import Field
-from rag_app.observability.logger import logger
-from rag_app.observability.events import EventName
-
 
 from langchain_core.documents import Document
 from langchain_core.retrievers import BaseRetriever
+from pydantic import Field
+
+from rag_app.core import get_settings
+from rag_app.models import QueryManagerRequest, RetriveRequest, RetriveResponse
+from rag_app.observability.events import EventName
+from rag_app.observability.logger import logger
+from rag_app.query.query_manager import QueryManager
 
 from .candidate.base import RetrievalStrategy
 from .candidate.hybrid_search import HybridSearch

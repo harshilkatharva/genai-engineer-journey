@@ -1,11 +1,11 @@
+import re
+from uuid import UUID
+
 from ai_app.core.AIConfig import AiConfig
 from ai_app.core.config import DATABASE_CONNECTION_CONVERSATION_URL
 from ai_app.db.db_conversation_operations import DBOperator
-from ai_app.models.message import Message
 from ai_app.models import LLMResponseModel
-
-from uuid import UUID
-import re
+from ai_app.models.message import Message
 
 
 class ConversationManager:
@@ -71,7 +71,7 @@ class ConversationManager:
 
         return truncated
 
-    def _normalize_text(text: str) -> str:
+    def _normalize_text(self, text: str) -> str:
         """
         Normalize user input for exact-match caching.
 
@@ -99,9 +99,9 @@ class ConversationManager:
         (
             content,
             llm_model,
-            input_tokens,
-            output_tokens,
-            duration_ms,
+            _,
+            _,
+            _,
         ) = cached_history
 
         return LLMResponseModel(

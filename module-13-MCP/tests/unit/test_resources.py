@@ -5,7 +5,6 @@ from mcp.server.mcpserver import MCPServer
 
 from internal_tools_mcp.mcp.resources.resource_catalog import register_resources
 
-
 RESOURCE_URIS = (
     "internal://company/profile",
     "internal://catalog/services",

@@ -1,8 +1,9 @@
 import json
 import time
-import requests
-from rag_app.core.settings import get_settings
 
+import requests
+
+from rag_app.core.settings import get_settings
 
 API_URL = "http://127.0.0.1:8000/rag/chat_answer"
 

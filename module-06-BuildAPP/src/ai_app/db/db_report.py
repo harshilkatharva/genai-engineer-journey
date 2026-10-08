@@ -1,8 +1,8 @@
 from uuid import UUID
 
-from ai_app.core.config import DATABASE_CONNECTION_CONVERSATION_URL
-
 import psycopg
+
+from ai_app.core.config import DATABASE_CONNECTION_CONVERSATION_URL
 from ai_app.models.usage_report import UsageBreakdown, UsageReport
 
 

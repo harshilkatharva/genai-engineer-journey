@@ -4,6 +4,7 @@ import inspect
 import operator
 from collections.abc import AsyncIterator, Callable
 from typing import Annotated, Any, TypedDict
+from uuid import UUID
 
 from langchain_core.documents import Document
 from langchain_core.output_parsers import PydanticOutputParser
@@ -64,6 +65,7 @@ class RAGChatLanggraph:
         self.query_transformer = query_transformer or self._transform_query
         self.review_categories = review_categories or {"requires_review"}
         self.checkpointer = checkpointer or InMemorySaver()
+        self._checkpointer_context: Any | None = None
         self.graph = self._build_graph()
 
     @classmethod
@@ -107,7 +109,7 @@ class RAGChatLanggraph:
 
     async def _retrieve(self, state: RAGGraphState) -> dict[str, Any]:
         response = await self.retriever_manager.retrieve(
-            RetriveRequest(tenant_id=state["tenant_id"], query=state["current_query"])
+            RetriveRequest(tenant_id=UUID(state["tenant_id"]), query=state["current_query"])
         )
         documents = [
             {
@@ -214,7 +216,7 @@ class RAGChatLanggraph:
         response = await self.query_manager.get_queries(
             QueryManagerRequest(query=query, technique="query_HyDE")
         )
-        return response.queries[1] if len(response.queries) >= 1 else query
+        return response.queries[1] if len(response.queries) >= 2 else query
 
     async def get_chat_answer(
         self,
@@ -237,7 +239,6 @@ class RAGChatLanggraph:
         tracker = QueryPerformanceTracker(
             app_version=self.settings.app_version,
             query=request.query,
-            no_of_queries=None,
             chunk_ids=None,
             llm_answer=result.get("answer", ""),
         )

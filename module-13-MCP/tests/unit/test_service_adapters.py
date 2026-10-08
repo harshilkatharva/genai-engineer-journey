@@ -1,5 +1,6 @@
-import pytest
 from uuid import UUID
+
+import pytest
 
 from internal_tools_mcp.rag_service.rag_service import ask_question
 from internal_tools_mcp.retrive_service.retrive_service import retrieve_documents

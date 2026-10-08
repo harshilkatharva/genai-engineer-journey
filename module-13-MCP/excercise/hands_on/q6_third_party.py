@@ -7,12 +7,11 @@ server = StdioServerParameters(
 
 
 async def main():
-    async with stdio_client(server) as (read, write):
-        async with ClientSession(read, write) as session:
-            await session.initialize()
+    async with stdio_client(server) as (read, write), ClientSession(read, write) as session:
+        await session.initialize()
 
-            tools = await session.list_tools()
-            resources = await session.list_resources()
+        tools = await session.list_tools()
+        resources = await session.list_resources()
 
-            print("Tools:", tools)
-            print("Resources:", resources)
+        print("Tools:", tools)
+        print("Resources:", resources)

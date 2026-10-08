@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import asyncio
 from time import perf_counter
 from uuid import UUID
@@ -145,7 +146,7 @@ class EmbeddingManager:
             strict=True,
         ):
             grouped.setdefault(
-                chunk.document_id,
+                str(chunk.document_id),
                 [],
             ).append(embedding)
 

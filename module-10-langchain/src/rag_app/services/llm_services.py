@@ -1,9 +1,11 @@
 import asyncio
 from collections.abc import AsyncIterator
 
+from langchain_core.language_models.chat_models import BaseChatModel
+
+from rag_app.core.settings import get_settings
 from rag_app.exceptions.llm_exceptions import LLMError
 from rag_app.models import LLMManagerRequest, LLMManagerResponse, LLMResponseModel
-from rag_app.core.settings import get_settings
 from rag_app.observability.events import EventName
 from rag_app.observability.logger import logger
 from rag_app.providers import (
@@ -12,8 +14,6 @@ from rag_app.providers import (
     OpenAIProvider,
 )
 from rag_app.providers.llm_provider import LLMProvider
-
-from langchain_core.language_models.chat_models import BaseChatModel
 
 
 class LLMServicemanager:

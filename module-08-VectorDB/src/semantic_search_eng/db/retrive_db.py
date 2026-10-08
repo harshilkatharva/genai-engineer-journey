@@ -2,6 +2,7 @@ from time import perf_counter
 from uuid import UUID
 
 import psycopg
+from pgvector import Vector
 from pgvector.psycopg import register_vector_async
 
 from semantic_search_eng.config import get_settings
@@ -18,7 +19,7 @@ class RetriveDBManager:
     async def retrive_chunks(
         self,
         tenant_id: UUID,
-        query_embedding: list[float],
+        query_embedding: list[float] | Vector,
         top_k: int | None = None,
         document_type: str | None = None,
     ):
@@ -35,7 +36,7 @@ class RetriveDBManager:
                 LIMIT %s
             """
 
-            query_params = (
+            query_params: tuple[object, ...] = (
                 query_embedding,
                 tenant_id,
                 query_embedding,
@@ -94,7 +95,7 @@ class RetriveDBManager:
             top_k=top_k or self.settings.default_top_k,
             results_count=len(results),
             query_latency_ms=query_latency_ms,
-            chunk_ids=[id[2] for id in rows],
+            chunk_ids=[row[2] for row in rows],
         )
         self.db_tracker.track_query(db_query_tracker)
 

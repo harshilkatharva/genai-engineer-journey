@@ -18,11 +18,11 @@ from rag_app.models.query.query_manager_request import QueryManagerRequest
 # Query Models
 from rag_app.models.query.query_request import QueryRequest
 from rag_app.models.query.query_response import QueryResponse
+from rag_app.models.rag.classification_response import RAGClassificationResponse
+from rag_app.models.rag.extraction_response import RAGExtractionResponse
 
 # RAG Models
 from rag_app.models.rag.rag_endpoint_request import RAGEndpointRequest
-from rag_app.models.rag.classification_response import RAGClassificationResponse
-from rag_app.models.rag.extraction_response import RAGExtractionResponse
 from rag_app.models.rag.rag_request import RAGRequest
 from rag_app.models.rag.rag_response import RAGResposne
 from rag_app.models.rag.rag_text_request import RAGTextRequest
@@ -68,8 +68,8 @@ __all__ = [
     "QueryRequest",
     "QueryResponse",
     "QueryTracker",
-    "RAGEndpointRequest",
     "RAGClassificationResponse",
+    "RAGEndpointRequest",
     "RAGExtractionResponse",
     "RAGRequest",
     "RAGResposne",
