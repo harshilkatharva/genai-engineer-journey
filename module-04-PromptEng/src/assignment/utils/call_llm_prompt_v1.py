@@ -1,11 +1,13 @@
+import json
+import re
+import time
+from pathlib import Path
+
+from google.genai import errors
+from jinja2 import Template
+
 from ..logger.llm_calls_logger import llm_call_logger
 from ..providers.google_provider import GoogleProvider
-
-import json
-from jinja2 import Template
-from pathlib import Path
-import time
-import re
 
 
 class Prompt_v1:
@@ -39,7 +41,7 @@ class Prompt_v1:
                 response = self.google_provider.get_answer(prompt)
                 return response.text
             except Exception as e:
-                if e.code == 429 and retry:
+                if isinstance(e, errors.APIError) and e.code == 429 and retry:
                     retry = False
                     msg = str(e)
 
@@ -55,7 +57,7 @@ class Prompt_v1:
                     continue
                 else:
                     llm_call_logger.error(str(e))
-                    raise e
+                    raise
 
     def check_result(self):
         with open("src/assignment/data/prompt_v1.json", "r") as f:

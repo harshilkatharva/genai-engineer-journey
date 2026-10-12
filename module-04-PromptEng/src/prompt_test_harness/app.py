@@ -1,15 +1,19 @@
-from jinja2 import Template
-from pathlib import Path
 import json
-from dotenv import load_dotenv
 import os
-from google import genai
-from pydantic import BaseModel
-import time
 import re
+import time
+from pathlib import Path
+from typing import TypeVar
+
+from dotenv import load_dotenv
+from google import genai
+from google.genai import errors, types
+from jinja2 import Template
+from pydantic import BaseModel
 
 load_dotenv()
 
+SchemaT = TypeVar("SchemaT", bound=BaseModel)
 
 GOOGLE_API_KEY = os.environ["GOOGLE_API_KEY"]
 
@@ -17,73 +21,75 @@ google_client = genai.Client(api_key=GOOGLE_API_KEY)
 
 
 def get_answers_from_google_api(
-    prompt: str, model: str | None = None, config: dict | None = None
-) -> str:
+    prompt: str,
+    model: str | None = None,
+    config: types.GenerateContentConfig | types.GenerateContentConfigDict | None = None,
+) -> types.GenerateContentResponse:
     """
     Function to get answers from Google API using the provided prompt.
 
     Args:
         prompt (str): The input prompt for which the answer is to be generated.
         model (str): The model to use for generating the answer.
-        config (dict | None): The configuration for generating the answer.
+        config: The configuration for generating the answer.
 
     Returns:
-        str: The generated answer from the Google API.
+        GenerateContentResponse: The response from the Google API.
     """
-    try:
-        response = google_client.models.generate_content(
-            model=model if model else "gemini-3.5-flash-lite",
-            contents=prompt,
-            config=config if config else None,
-        )
-
-        return response
-
-    except Exception as e:
-        raise e
+    return google_client.models.generate_content(
+        model=model if model else "gemini-3.5-flash-lite",
+        contents=prompt,
+        config=config if config else None,
+    )
 
 
-def clean_response(text: str):
+def clean_response(text: str) -> str:
     clean = text.removeprefix("```json\n").removesuffix("\n```").strip()
     return clean
 
 
-def schema_output(prompt: str, schema: BaseModel, retry_no: int = 0):
+def schema_output(prompt: str, schema: type[SchemaT], retry_no: int = 0) -> SchemaT:
     try:
         response = get_answers_from_google_api(prompt)
-        clean = clean_response(response.text)
+    except errors.APIError as e:
+        if e.code != 429:
+            raise
+
+        msg = str(e)
+        match = re.search(r"retry in ([\d.]+)s", msg, re.IGNORECASE)
+        wait_time = (int(float(match.group(1))) + 1 if match else 60) + 5
+
+        print(f"Rate limit hit. Retrying in {wait_time} seconds...")
+        time.sleep(wait_time)
+        print(f"{wait_time} completed Retrying...")
+        return schema_output(prompt, schema)
+
+    response_text = response.text
+    if response_text is None:
+        raise ValueError("The model response did not contain text.")
+
+    try:
+        clean = clean_response(response_text)
         answer = json.loads(clean)
-        answer = schema.model_validate(answer)
-        return answer
+        return schema.model_validate(answer)
 
     except Exception as e:
-        if e.code == 429:
-            msg = str(e)
-
-            match = re.search(r"retry in ([\d.]+)s", msg, re.IGNORECASE)
-            wait_time = (int(float(match.group(1))) + 1 if match else 60) + 5
-
-            print(f"Rate limit hit. Retrying in {wait_time} seconds...")
-            time.sleep(wait_time)
-            print(f"{wait_time} completed Retrying...")
-            return schema_output(prompt, schema)
-        else:
-            prompt = (
-                prompt
-                + f"""
+        prompt = (
+            prompt
+            + f"""
             i gave you this prompt and i specified output format but you did not work correctly
-            Answer :- {response.text}
+            Answer :- {response_text}
 
             Error :- {e}
 
             Try again and this time carefull in output fomate
             """
-            )
-            if retry_no >= 1:
-                raise e
-            else:
-                print("Schema not matched Retrying...")
-                return schema_output(prompt, schema, 1)
+        )
+        if retry_no >= 1:
+            raise
+
+        print("Schema not matched Retrying...")
+        return schema_output(prompt, schema, 1)
 
 
 # Define Model response schema

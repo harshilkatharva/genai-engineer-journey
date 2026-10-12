@@ -11,4 +11,12 @@ dependencies = [
     "ipykernel>=7.3.0",
     "jinja2>=3.1.6",
     "logging>=0.4.9.6",
+    "pyyaml>=6.0",
+]
+
+[dependency-groups]
+dev = [
+    "mypy>=2.4.0",
+    "ruff>=0.17.0",
+    "types-PyYAML>=6.0.12",
 ]

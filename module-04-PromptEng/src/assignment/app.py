@@ -1,7 +1,8 @@
+from pathlib import Path
+
 from .utils.call_llm_prompt_v1 import Prompt_v1
 from .utils.call_llm_prompt_v2 import Prompt_v2
 from .utils.call_llm_prompt_v3 import Prompt_v3
-from pathlib import Path
 
 prompt_v1 = Prompt_v1()
 prompt_v2 = Prompt_v2()

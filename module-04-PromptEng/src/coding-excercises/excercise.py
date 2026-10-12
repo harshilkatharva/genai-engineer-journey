@@ -1,11 +1,10 @@
-from pathlib import Path
-from jinja2 import Template
 import json
 import re
-from pydantic import BaseModel, ValidationError
-import yaml
+from pathlib import Path
 
-from typing import List
+import yaml
+from jinja2 import Template
+from pydantic import BaseModel, ValidationError
 
 # 1
 
@@ -140,7 +139,7 @@ SUSPICIOUS_PATTERNS = [
 ]
 
 
-def detect_prompt_injection(text: str) -> List[str]:
+def detect_prompt_injection(text: str) -> list[str]:
     text = text.lower()
 
     detected = []

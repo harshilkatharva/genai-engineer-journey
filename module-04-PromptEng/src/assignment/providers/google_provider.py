@@ -1,5 +1,6 @@
-from ..config import GOOGLE_API_KEY
 from google import genai
+
+from ..config import GOOGLE_API_KEY
 
 
 class GoogleProvider:
@@ -32,5 +33,5 @@ class GoogleProvider:
             print(response.text)
             return response
 
-        except Exception as e:
-            raise e
+        except Exception as e:  # noqa
+            raise
