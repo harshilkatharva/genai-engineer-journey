@@ -1,12 +1,13 @@
-import tiktoken
-from google import genai
-import os
-from dotenv import load_dotenv
-from difflib import ndiff
 import json
-import matplotlib.pyplot as plt
+import os
 import time
+from difflib import ndiff
 
+import matplotlib.pyplot as plt
+import tiktoken
+from dotenv import load_dotenv
+from google import genai
+from google.genai import types
 
 load_dotenv()  # Load environment variables from .env file
 
@@ -48,13 +49,13 @@ def manage_history(
     final_history = []
     for history in reversed(convertation_history):
         history_token_usage = token_estimate(history["content"])
-        if history_token_usage + system_message_token_size <= input_token_limit:
+        if manage_history_tokens + history_token_usage <= input_token_limit:
             final_history.append(history)
             manage_history_tokens += history_token_usage
         else:
             break
 
-        return list(reversed(final_history))
+    return list(reversed(final_history))
 
 
 def cost_estimation(token_count: int, pricing_table: dict, provider: str) -> int:
@@ -81,25 +82,25 @@ google_client = genai.Client(api_key=os.environ["GOOGLE_API_KEY"])
 
 
 def get_answers_from_google_api(
-    prompt: str, model: str, config: dict | None = None
-) -> str:
+    prompt: str,
+    model: str,
+    config: types.GenerateContentConfig | types.GenerateContentConfigDict | None = None,
+) -> types.GenerateContentResponse:
     """
     Function to get answers from Google API using the provided prompt.
 
     Args:
         prompt (str): The input prompt for which the answer is to be generated.
         model (str): The model to use for generating the answer.
-        config (dict | None): The configuration for generating the answer.
+        config: The configuration for generating the answer.
 
     Returns:
-        str: The generated answer from the Google API.
+        GenerateContentResponse: The generated response from the Google API.
     """
     response = google_client.models.generate_content(
-        model=model, contents=prompt, config=config if config else None
+        model=model, contents=prompt, config=config
     )
-
-    if response:
-        return response
+    return response
 
 
 temps = [0.0, 0.2, 0.5, 0.8, 1.0]
@@ -110,7 +111,10 @@ for temp in temps:
     response = get_answers_from_google_api(
         prompt, model="gemini-3.5-flash-lite", config={"temperature": temp}
     )
-    responses[temp] = response.text
+    response_text = response.text
+    if response_text is None:
+        raise ValueError("Google API response did not contain text.")
+    responses[temp] = response_text
 
 for i in range(len(temps) - 1):
     t1 = temps[i]
@@ -128,11 +132,11 @@ def check_json(output: str) -> str:
     try:
         json.loads(output)
         return "Valid JSON"
-    except ValueError as e:
+    except json.JSONDecodeError as e:
         if (
             "Expecting value" in e.msg
             or "Unterminated string" in e.msg
-            or output.split().endswith((",", "{", "[", ":"))
+            or output.rstrip().endswith((",", "{", "[", ":"))
         ):
             return "Truncated JSON"
         else:
@@ -214,7 +218,7 @@ def check_hallucination(output: str, expected_answer: str) -> bool:
     Returns:
         bool: True if hallucination is detected (output does not match expected answer), False otherwise.
     """
-    return True if expected_answer in output else False
+    return bool(expected_answer in output)
 
 
 def compare_latency_by_max_tokens(prompt: str, max_tokens: list[int]) -> None:
@@ -272,9 +276,14 @@ def model_evalution(prompt: str, models: dict[str, int]) -> list:
         response = get_answers_from_google_api(prompt, model_name)
         end_time = time.perf_counter()
         latency = (end_time - start_time) * 100
-        total_token_usage = response.usage_metadata.total_token_count
+        usage_metadata = response.usage_metadata
+        if usage_metadata is None or usage_metadata.total_token_count is None:
+            raise ValueError("Google API response did not include token usage.")
+        total_token_usage = usage_metadata.total_token_count
         cost = total_token_usage * cost_per_token
         output_text = response.text
+        if output_text is None:
+            raise ValueError("Google API response did not contain text.")
 
         result.append(
             {

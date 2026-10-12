@@ -1,42 +1,43 @@
+import logging
 import sys
 from pathlib import Path
 
 from google import genai
+from google.genai import types
 
 from config import GOOGLE_API_KEY
-from utils.experiment_logger import experiment_logger
 
 ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
-    sys.path.append(str(ROOT))
+    sys.path.insert(0, str(ROOT))
+
+
+experiment_logger = logging.getLogger(__name__)
 
 
 google_client = genai.Client(api_key=GOOGLE_API_KEY)
 
 
 def get_answers_from_google_api(
-    prompt: str, model: str, config: dict | None = None
-) -> str:
+    prompt: str,
+    model: str,
+    config: types.GenerateContentConfig | types.GenerateContentConfigDict | None = None,
+) -> types.GenerateContentResponse:
     """
     Function to get answers from Google API using the provided prompt.
 
     Args:
         prompt (str): The input prompt for which the answer is to be generated.
         model (str): The model to use for generating the answer.
-        config (dict | None): The configuration for generating the answer.
+        config: The configuration for generating the answer.
 
     Returns:
-        str: The generated answer from the Google API.
+        GenerateContentResponse: The generated response from the Google API.
     """
     response = google_client.models.generate_content(
-        model=model, contents=prompt, config=config if config else None
+        model=model, contents=prompt, config=config
     )
-
-    if response:
-        return response
-    else:
-        experiment_logger.error(f"No response received for prompt: {prompt}")
-        return "No response received."
+    return response
 
 
 # 1
