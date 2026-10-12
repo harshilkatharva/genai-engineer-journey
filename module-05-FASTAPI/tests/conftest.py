@@ -12,8 +12,14 @@ from llm_client.api.routes.prompts import get_prompt_test
 from llm_client.models import LLMResponseModel
 
 
-@pytest.fixture(autouse=True, scope="session")
-def mock_providers() -> Generator[dict[str, MagicMock], None, None]:
+@pytest.fixture(autouse=True)
+def mock_providers(
+    request: pytest.FixtureRequest,
+) -> Generator[dict[str, MagicMock], None, None]:
+    if request.node.get_closest_marker("integration"):
+        yield {}
+        return
+
     with (
         patch("llm_client.services.llm_service.OpenAIProvider") as openai,
         patch("llm_client.services.llm_service.GoogleProvider") as google,
@@ -22,8 +28,14 @@ def mock_providers() -> Generator[dict[str, MagicMock], None, None]:
         yield {"openai": openai, "google": google, "anthropic": anthropic}
 
 
-@pytest.fixture(autouse=True, scope="session")
-def mock_clients() -> Generator[dict[str, MagicMock], None, None]:
+@pytest.fixture(autouse=True)
+def mock_clients(
+    request: pytest.FixtureRequest,
+) -> Generator[dict[str, MagicMock], None, None]:
+    if request.node.get_closest_marker("integration"):
+        yield {}
+        return
+
     with (
         patch("llm_client.services.providers.openai_provider.AsyncOpenAI") as openai,
         patch("llm_client.services.providers.google_provider.genai.Client") as google,
@@ -46,12 +58,12 @@ class FakeLLMClient:
             yield token
 
 
-async def override_llm_client():
+async def override_llm_client() -> FakeLLMClient:
     return FakeLLMClient()
 
 
 @pytest_asyncio.fixture(autouse=True, scope="session")
-async def api_client():
+async def api_client() -> AsyncIterator[AsyncClient]:
     app.dependency_overrides[get_llm_client] = override_llm_client
 
     transport = ASGITransport(app=app)
@@ -63,22 +75,22 @@ async def api_client():
 
 
 class FakePromptTest:
-    async def process(self, provider: str):
+    async def process(self, provider: str) -> None:
         pass
 
-    def check_result(self):
+    def check_result(self) -> dict[str, object]:
         return {
             "Pass Percentage": 100,
             "Comparison Result": [],
         }
 
 
-def override_prompt_test():
+def override_prompt_test() -> FakePromptTest:
     return FakePromptTest()
 
 
 @pytest_asyncio.fixture(autouse=True, scope="session")
-async def api_client_prompt():
+async def api_client_prompt() -> AsyncIterator[AsyncClient]:
     app.dependency_overrides[get_prompt_test] = override_prompt_test
 
     transport = ASGITransport(app=app)

@@ -1,7 +1,9 @@
 import time
+from typing import TypedDict
 
 from anthropic import Anthropic
 from anthropic import APIError as ANTHROPIC_APIERROR
+from anthropic.types import MessageParam
 from google import genai
 from google.genai.errors import APIError as GOOGLE_APIERROR
 from openai import APIError as OPENAAI_APIERROR
@@ -17,31 +19,39 @@ POSTGRESQL_CONNECTION = getattr(config, "POSTGRESQL_CONNECTION", False)
 REDIS_CONNECTION = getattr(config, "REDIS_CONNECTION", False)
 
 
-# Schema of result
-results_schema = {
-    "OpenAI": {
-        "key_available": "Yes" if OPENAI_API_KEY else "No",
-        "latency": None,
-        "result": None,
-    },
-    "Google": {
-        "key_available": "Yes" if GOOGLE_API_KEY else "No",
-        "latency": None,
-        "result": None,
-    },
-    "Anthropic": {
-        "key_available": "Yes" if ANTHROPIC_API_KEY else "No",
-        "latency": None,
-        "result": None,
-    },
-}
+class ProviderHealthResult(TypedDict):
+    key_available: str
+    latency: float | None
+    result: str | None
+
+
+class HealthCheckResult(TypedDict):
+    OpenAI: ProviderHealthResult
+    Google: ProviderHealthResult
+    Anthropic: ProviderHealthResult
 
 
 class HealthCheck:
-    def __init__(self):
-        self.results = results_schema
+    def __init__(self) -> None:
+        self.results: HealthCheckResult = {
+            "OpenAI": {
+                "key_available": "Yes" if OPENAI_API_KEY else "No",
+                "latency": None,
+                "result": None,
+            },
+            "Google": {
+                "key_available": "Yes" if GOOGLE_API_KEY else "No",
+                "latency": None,
+                "result": None,
+            },
+            "Anthropic": {
+                "key_available": "Yes" if ANTHROPIC_API_KEY else "No",
+                "latency": None,
+                "result": None,
+            },
+        }
 
-    def check(self):
+    def check(self) -> HealthCheckResult:
         if OPENAI_API_KEY:
             start = time.perf_counter()
             try:
@@ -78,9 +88,11 @@ class HealthCheck:
             start = time.perf_counter()
             try:
                 anthropic_client = Anthropic(api_key=ANTHROPIC_API_KEY)
+                messages: list[MessageParam] = [{"role": "user", "content": "Hello World!"}]
                 anthropic_client.messages.create(
-                    model="claude-3.0",
-                    messages=[{"role": "user", "content": "Hello World!"}],
+                    model="claude-3-5-haiku-latest",
+                    max_tokens=1,
+                    messages=messages,
                 )
                 end = time.perf_counter()
                 self.results["Anthropic"]["latency"] = end - start

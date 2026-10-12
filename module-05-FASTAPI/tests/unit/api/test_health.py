@@ -1,9 +1,12 @@
-import pytest
+from collections.abc import Generator
 from unittest.mock import MagicMock, patch
+
+import pytest
+from httpx import AsyncClient
 
 
 @pytest.fixture
-def mock_health_providers():
+def mock_health_providers() -> Generator[dict[str, MagicMock], None, None]:
     with (
         patch("llm_client.services.healthcheck.OpenAI") as openai,
         patch("llm_client.services.healthcheck.genai.Client") as google,
@@ -25,7 +28,7 @@ def mock_health_providers():
         }
 
 
-async def test_health(api_client, mock_health_providers):
+async def test_health(api_client: AsyncClient, mock_health_providers: dict[str, MagicMock]) -> None:
     response = await api_client.get("/health/")
     print(response.json())
     assert response.status_code == 200

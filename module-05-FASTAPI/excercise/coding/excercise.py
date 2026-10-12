@@ -1,23 +1,29 @@
-from pydantic import BaseModel, Field, field_validator
-import tiktoken
+from __future__ import annotations
+
+import asyncio
+import logging
 import time
+import uuid
+from collections.abc import AsyncIterator
+from typing import Annotated, ClassVar, Literal
+
+import httpx
+import pytest
+import tiktoken
 from fastapi import (
-    FastAPI,
-    Request,
-    File,
-    HTTPException,
-    UploadFile,
-    status,
     BackgroundTasks,
     Depends,
+    FastAPI,
+    File,
+    HTTPException,
+    Request,
+    UploadFile,
+    status,
 )
-from fastapi.responses import StreamingResponse, JSONResponse
-from typing import ClassVar, Annotated, Literal, Union
-import pytest
-import logging
-import asyncio
-import httpx
-import uuid
+from fastapi.responses import JSONResponse, StreamingResponse
+from pydantic import BaseModel, Field, field_validator
+from starlette.middleware.base import RequestResponseEndpoint
+from starlette.responses import Response
 
 
 # 2
@@ -58,7 +64,7 @@ logger = logging.getLogger(__name__)
 
 # 3
 @app.middleware("http")
-async def log_request(request: Request, call_func):
+async def log_request(request: Request, call_func: RequestResponseEndpoint) -> Response:
     start = time.perf_counter()
 
     response = await call_func(request)
@@ -88,7 +94,9 @@ ALLOWED_CONTENT_TYPES = {
 
 
 @app.post("/upload")
-async def upload_file(file: UploadFile = File(...)):
+async def upload_file(
+    file: Annotated[UploadFile, File()],
+) -> dict[str, str | int | None]:
     if file.content_type not in ALLOWED_CONTENT_TYPES:
         raise HTTPException(
             status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
@@ -115,8 +123,8 @@ async def upload_file(file: UploadFile = File(...)):
 
 
 @app.get("/stream")
-async def stream():
-    async def generate():
+async def stream() -> StreamingResponse:
+    async def generate() -> AsyncIterator[str]:
         yield "data: Hello\n\n"
         await asyncio.sleep(1)
         yield "data: World\n\n"
@@ -128,35 +136,36 @@ async def stream():
 
 
 @pytest.mark.asyncio
-async def test_sse_streams_incrementally():
+async def test_sse_streams_incrementally() -> None:
     start = time.perf_counter()
 
-    async with httpx.AsyncClient(base_url="http://127.0.0.1:8000") as client:
-        async with client.stream("GET", "/stream") as response:
-            assert response.status_code == 200
-            assert response.headers["content-type"].startswith("text/event-stream")
+    async with (
+        httpx.AsyncClient(base_url="http://127.0.0.1:8000") as client,
+        client.stream("GET", "/stream") as response,
+    ):
+        assert response.status_code == 200
+        assert response.headers["content-type"].startswith("text/event-stream")
 
-            first_event = None
+        first_event = None
 
-            async for line in response.aiter_lines():
-                if line.startswith("data:"):
-                    first_event = line
-                    break
+        async for line in response.aiter_lines():
+            if line.startswith("data:"):
+                first_event = line
+                break
 
-            time_to_first_byte = time.perf_counter() - start
+        time_to_first_byte = time.perf_counter() - start
 
     assert first_event is not None
     assert time_to_first_byte < 0.5
 
 
 # 6
-class check_health:
-    # import from module
-    pass
+async def check_health() -> dict[str, str]:
+    return {"status": "ok"}
 
 
 @app.get("/health_check")
-async def health():
+async def health() -> dict[str, str]:
     return await check_health()
 
 
@@ -170,7 +179,7 @@ def get_request_id(request: Request) -> str:
 
 
 @app.middleware("http")
-async def request_id_middleware(request: Request, call_next):
+async def request_id_middleware(request: Request, call_next: RequestResponseEndpoint) -> Response:
     request_id = str(uuid.uuid4())
     request.state.request_id = request_id
 
@@ -180,6 +189,7 @@ async def request_id_middleware(request: Request, call_next):
         return response
 
     except Exception:
+        logger.exception("Request handling failed")
         return JSONResponse(
             status_code=500,
             content={
@@ -193,27 +203,25 @@ async def request_id_middleware(request: Request, call_next):
 # 8
 
 
-async def get_llm_client():
-    # call LLM client here
-    pass
+async def get_llm_client() -> FakeLLMClient:
+    return FakeLLMClient()
 
 
-class LLMTimeoutError:
-    # import from exception
+class LLMTimeoutError(RuntimeError):
     pass
 
 
 class FakeLLMClient:
-    async def complete(self, provider: str, prompt: str):
+    async def complete(self, provider: str, prompt: str) -> dict[str, str]:
         raise LLMTimeoutError("LLM provider timed out")
 
 
-async def override_llm_client():
+async def override_llm_client() -> FakeLLMClient:
     return FakeLLMClient()
 
 
 @pytest.mark.asyncio
-async def test_llm_timeout(api_client):
+async def test_llm_timeout(api_client: httpx.AsyncClient) -> None:
     app.dependency_overrides[get_llm_client] = override_llm_client
 
     try:
@@ -250,8 +258,13 @@ class ChatRequest(BaseModel):
     messages: list[str]
 
 
+class LLMChatRequest(BaseModel):
+    provider: Literal["openai", "google", "anthropic"]
+    prompt: str
+
+
 RequestModel = Annotated[
-    Union[TextRequest, ChatRequest],
+    TextRequest | ChatRequest,
     Field(discriminator="type"),
 ]
 
@@ -259,17 +272,17 @@ RequestModel = Annotated[
 # 10
 
 
-def save_chat_interaction():
+def save_chat_interaction(provider: str, prompt: str, response: str) -> None:
     # add loggging method here
     pass
 
 
 @app.post("/chat")
 async def chat(
-    request: ChatRequest,
+    request: LLMChatRequest,
     background_tasks: BackgroundTasks,
-    llm_client=Depends(get_llm_client),
-):
+    llm_client: Annotated[FakeLLMClient, Depends(get_llm_client)],
+) -> dict[str, str]:
     result = await llm_client.complete(
         provider=request.provider,
         prompt=request.prompt,
@@ -279,7 +292,7 @@ async def chat(
         save_chat_interaction,
         provider=request.provider,
         prompt=request.prompt,
-        response=result.text,
+        response=result["text"],
     )
 
     return result

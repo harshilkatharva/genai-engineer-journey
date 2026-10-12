@@ -1,3 +1,4 @@
+from collections.abc import AsyncIterator
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Request, Response
@@ -10,7 +11,7 @@ from llm_client.services.llm_service import LLMClient
 router = APIRouter()
 
 
-async def get_llm_client():
+async def get_llm_client() -> LLMClient:
     return LLMClient()
 
 
@@ -34,7 +35,7 @@ async def stream(
     body: LLMRequestModel,
     llm_client: Annotated[LLMClient, Depends(get_llm_client)],
 ) -> StreamingResponse:
-    async def genrator():
+    async def genrator() -> AsyncIterator[str]:
         async for chunk in llm_client.stream(body.provider, body.prompt):
             yield f"data: {chunk}\n\n"
 

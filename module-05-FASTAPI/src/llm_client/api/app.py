@@ -14,7 +14,7 @@ register_exception_handler(app)
 api_key_header = APIKeyHeader(name="X_API_KEY")
 
 
-async def verify_api_key(x_api_key: str = Security(api_key_header)):
+async def verify_api_key(x_api_key: str = Security(api_key_header)) -> str:
     if x_api_key != X_API_KEY:
         raise HTTPException(status_code=401, detail="Invalid API key to access")
     return x_api_key

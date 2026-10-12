@@ -4,9 +4,9 @@ from pydantic import BaseModel, Field
 
 
 class DetailsExtractionModel(BaseModel):
-    names: list = Field(description="Names includes in text")
-    numbers: list = Field(description="Numbers includes in text")
-    locations: list = Field(description="Locations includes in text")
+    names: list[str] = Field(description="Names includes in text")
+    numbers: list[str] = Field(description="Numbers includes in text")
+    locations: list[str] = Field(description="Locations includes in text")
 
 
 class PromptTestRequest(BaseModel):

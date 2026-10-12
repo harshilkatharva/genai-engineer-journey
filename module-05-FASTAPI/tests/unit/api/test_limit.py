@@ -1,14 +1,15 @@
 import pytest
+from httpx import AsyncClient
 
 from llm_client.config import X_API_KEY
 
 
 @pytest.mark.asyncio
-async def test_chat_limit(api_client):
+async def test_chat_limit(api_client: AsyncClient) -> None:
     provider = "openai"
     prompt = "hello"
 
-    for i in range(10):
+    for _ in range(10):
         response = await api_client.post(
             "/chat",
             headers={"x_api_key": X_API_KEY},
@@ -20,11 +21,11 @@ async def test_chat_limit(api_client):
 
 
 @pytest.mark.asyncio
-async def test_chat_stream_limit(api_client):
+async def test_chat_stream_limit(api_client: AsyncClient) -> None:
     provider = "openai"
     prompt = "hello"
 
-    for i in range(5):
+    for _ in range(5):
         response = await api_client.post(
             "/chat/stream",
             headers={"x_api_key": X_API_KEY},

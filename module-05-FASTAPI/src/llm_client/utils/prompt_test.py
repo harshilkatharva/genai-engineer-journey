@@ -2,6 +2,7 @@ import asyncio
 import json
 import re
 from pathlib import Path
+from typing import Any
 
 import aiofiles
 from google.genai.errors import ClientError, ServerError
@@ -15,17 +16,17 @@ from llm_client.services.llm_service import LLMClient
 class PromptTest:
     def __init__(self, client: LLMClient):
         with open("src/llm_client/data/golden_dataset.json", "r") as f:
-            self.data = json.loads(f.read())
+            self.data: list[dict[str, Any]] = json.loads(f.read())
         self.client = client
         self.model = DetailsExtractionModel
         self.model_schema = DetailsExtractionModel.model_json_schema()
 
-    def _clean_response(self, text: str):
+    def _clean_response(self, text: str) -> Any:
         clean = text.removeprefix("```json\n").removesuffix("\n```").strip()
         clean = json.loads(clean)
         return clean
 
-    async def _get_output(self, provider: str, prompt: str, retry_no: int = 0):
+    async def _get_output(self, provider: str, prompt: str) -> Any:
         retry = True
         while True:
             try:
@@ -46,18 +47,17 @@ class PromptTest:
 
                     print(f"Rate limit hit. Retrying in {wait_time} seconds...")
                     await asyncio.sleep(wait_time)
-                    asyncio.sleep(wait_time)
                     print(f"{wait_time} completed Retrying...")
                     continue
+                raise
             except ServerError:
                 print("Model busy. Retrying in 10 seconds...")
                 await asyncio.sleep(10)
-                asyncio.sleep(10)
                 continue
             except Exception:
                 raise
 
-    async def process(self, provider: str):
+    async def process(self, provider: str) -> None:
         prompt_template = Template(
             Path("src/llm_client/prompts/details_extration_v3.md").read_text()
         )
@@ -69,9 +69,9 @@ class PromptTest:
             answers.append({"id": obj["id"], "Question": obj["input"], "Response": response})
 
         async with aiofiles.open("src/llm_client/data/prompt_result.json", "w") as f:
-            await f.write(json.dump(answers, f, indent=4, ensure_ascii=False))
+            await f.write(json.dumps(answers, indent=4, ensure_ascii=False))
 
-    def check_result(self):
+    def check_result(self) -> dict[str, object]:
         with open("src/llm_client/data/prompt_result.json", "r") as f:
             results = json.loads(f.read())
         golden_lookup = {item["id"]: item for item in self.data}
@@ -79,6 +79,8 @@ class PromptTest:
         compare = []
         for result in results:
             expected = golden_lookup.get(result["id"])
+            if expected is None:
+                raise KeyError(f"No expected output found for id {result['id']!r}")
             if expected["expected_output"] == result["Response"]:
                 response_result.append(1)
             else:

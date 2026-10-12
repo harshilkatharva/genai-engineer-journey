@@ -1,10 +1,11 @@
 import pytest
+from httpx import AsyncClient
 
 from llm_client.config import X_API_KEY
 
 
 @pytest.mark.asyncio
-async def test_chat_unauthorized(api_client):
+async def test_chat_unauthorized(api_client: AsyncClient) -> None:
     provider = "openai"
     prompt = "hello"
 
@@ -15,7 +16,7 @@ async def test_chat_unauthorized(api_client):
 
 
 @pytest.mark.asyncio
-async def test_chat(api_client):
+async def test_chat(api_client: AsyncClient) -> None:
     provider = "openai"
     prompt = "hello"
 
@@ -31,7 +32,7 @@ async def test_chat(api_client):
 
 
 @pytest.mark.asyncio
-async def test_chat_stream_unauthorized(api_client):
+async def test_chat_stream_unauthorized(api_client: AsyncClient) -> None:
     provider = "openai"
     prompt = "hello"
 
@@ -44,7 +45,7 @@ async def test_chat_stream_unauthorized(api_client):
 
 
 @pytest.mark.asyncio
-async def test_chat_stream(api_client):
+async def test_chat_stream(api_client: AsyncClient) -> None:
     provider = "openai"
     prompt = "hello"
 

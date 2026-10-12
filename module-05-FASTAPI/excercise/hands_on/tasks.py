@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 import asyncio
+from collections.abc import AsyncIterator
 from typing import Annotated, Literal
 
 from fastapi import Depends, FastAPI, HTTPException, Request, Security
@@ -12,15 +15,15 @@ app = FastAPI()
 
 
 @app.get("/health")
-def health_check():
+def health_check() -> dict[str, str]:
     # logic for cheking
     return {"message": "Everything working"}
 
 
 @app.post("/chat")
-def chat_llm(request):
+def chat_llm(request: CheckRequest) -> CheckResponse:
     # call llm provider
-    return {"answer": "llm answer", "token_usages": "1000"}
+    return CheckResponse(answer="llm answer", token_usages=1000)
 
 
 # 2
@@ -51,7 +54,7 @@ async def verify_api_key(key: str = Security(api_key_header)) -> str:
 @app.post("/chat_auth")
 def chat_llm_auth(request: CheckRequest, api_key: str = Security(verify_api_key)) -> CheckResponse:
     # call llm provider
-    return {"answer": "llm answer", "token_usages": "1000"}
+    return CheckResponse(answer="llm answer", token_usages=1000)
 
 
 # 4
@@ -66,7 +69,7 @@ class LLMTimeoutError(RuntimeError):
 
 
 @app.exception_handler(LLMRateLimitError)
-async def rate_limit_handler(request: Request, exc: LLMRateLimitError):
+async def rate_limit_handler(request: Request, exc: LLMRateLimitError) -> JSONResponse:
     return JSONResponse(
         status_code=429,
         content={"error": "rate_limited", "message": "Please retry shortly."},
@@ -74,7 +77,7 @@ async def rate_limit_handler(request: Request, exc: LLMRateLimitError):
 
 
 @app.exception_handler(LLMTimeoutError)
-async def timeout_handler(request: Request, exc: LLMTimeoutError):
+async def timeout_handler(request: Request, exc: LLMTimeoutError) -> JSONResponse:
     return JSONResponse(
         status_code=504,
         content={"error": "upstream_timeout", "message": "The AI provider timed out."},
@@ -82,7 +85,7 @@ async def timeout_handler(request: Request, exc: LLMTimeoutError):
 
 
 # 5
-async def fake_stream():
+async def fake_stream() -> AsyncIterator[str]:
     sentences = ["Hello", "How", "are", "you"]
     for word in sentences:
         await asyncio.sleep(1)
@@ -90,8 +93,8 @@ async def fake_stream():
 
 
 @app.post("/chat/stream")
-async def chat_stream(request: CheckRequest) -> CheckResponse:
-    async def event_genrator():
+async def chat_stream(request: CheckRequest) -> StreamingResponse:
+    async def event_genrator() -> AsyncIterator[str]:
         # Provider stream
         # ...
 
@@ -106,16 +109,18 @@ async def chat_stream(request: CheckRequest) -> CheckResponse:
 
 
 class LLMServices:
-    def complete(self, provider: str, query: str):
-        return {"answer": "Openai Response", "token_usages": "1000"}
+    async def complete(self, provider: str, query: str) -> CheckResponse:
+        return CheckResponse(answer="Openai Response", token_usages=1000)
 
 
-def get_llm_services():
+def get_llm_services() -> LLMServices:
     return LLMServices()
 
 
 @app.post("/chat_overrideable")
-async def chat(request: CheckRequest, llm: Annotated[LLMServices, Depends(get_llm_services)]):
+async def chat(
+    request: CheckRequest, llm: Annotated[LLMServices, Depends(get_llm_services)]
+) -> CheckResponse:
     response = await llm.complete(request.provider, request.query)
 
     return response

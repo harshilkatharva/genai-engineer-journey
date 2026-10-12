@@ -39,6 +39,7 @@ dev = [
     "pytest-asyncio>=1.4.0",
     "respx>=0.23.1",
     "ruff>=0.16.0",
+    "types-aiofiles>=25.1.0.20260518",
 ]
 
 

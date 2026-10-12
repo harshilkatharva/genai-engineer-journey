@@ -22,7 +22,7 @@ async def prompt_test_golden_set(
     response: Response,
     body: PromptTestRequest,
     prompt_test: Annotated[PromptTest, Depends(get_prompt_test)],
-) -> dict:
+) -> dict[str, object]:
     await prompt_test.process(body.provider)
     result = prompt_test.check_result()
     return result
