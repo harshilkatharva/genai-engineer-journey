@@ -3,8 +3,8 @@ import importlib
 import pytest
 from pytest import MonkeyPatch
 
-import src.llm_client.config
-from src.llm_client.exceptions import ConfigError
+import llm_client.config
+from llm_client.exceptions import ConfigError
 
 
 def test_missing_openai_api_key(monkeypatch: MonkeyPatch) -> None:
@@ -17,4 +17,4 @@ def test_missing_openai_api_key(monkeypatch: MonkeyPatch) -> None:
         ConfigError,
         match="Missing required configuration: 'OPENAI_API_KEY'",
     ):
-        importlib.reload(src.llm_client.config)
+        importlib.reload(llm_client.config)
