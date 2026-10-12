@@ -1,10 +1,11 @@
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
 
 
 @pytest.fixture
-def test_settings(tmp_path):
+def test_settings(tmp_path: Path) -> SimpleNamespace:
     """
     Shared settings for filesystem-based unit tests.
 

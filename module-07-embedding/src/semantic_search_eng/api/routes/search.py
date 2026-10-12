@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 from fastapi import APIRouter, HTTPException
 
 from semantic_search_eng.chunking.chunking_manager import (
@@ -43,7 +45,7 @@ retriver_manager = RetriverManager()
 )
 def process_documents(
     request: ProcessRequest,
-) -> dict:
+) -> dict[str, Any]:
     """
     Process documents for a conversation:
 
@@ -77,7 +79,7 @@ def process_documents(
         )
 
         # Store chunks grouped by document.
-        grouped_chunks: dict[str, list[dict]] = {}
+        grouped_chunks: dict[str, list[dict[str, Any]]] = {}
 
         for chunk in chunks:
             grouped_chunks.setdefault(

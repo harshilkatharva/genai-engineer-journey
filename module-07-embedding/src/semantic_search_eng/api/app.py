@@ -17,7 +17,7 @@ app.include_router(search_router, tags=["search"])
 
 
 @app.get("/")
-def root() -> dict:
+def root() -> dict[str, str]:
     return {
         "name": settings.app_name,
         "version": settings.app_version,
@@ -26,7 +26,7 @@ def root() -> dict:
 
 
 @app.get("/health")
-def health() -> dict:
+def health() -> dict[str, str]:
     return {
         "status": "ok",
     }

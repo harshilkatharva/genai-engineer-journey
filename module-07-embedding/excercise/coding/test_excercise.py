@@ -3,7 +3,7 @@ import pytest
 from .excercise import chunk_text_with_overlap, cosine_similarity
 
 
-def test_cosine_similarity():
+def test_cosine_similarity() -> None:
     score1 = cosine_similarity([1.0, 1.0, 2.1], [1.0, 1.0, 2.1])
     score2 = cosine_similarity([1.0, 1.0, 2.1], [-1.0, -1.0, -2.1])
 
@@ -11,7 +11,7 @@ def test_cosine_similarity():
     assert score2 == pytest.approx(-1)
 
 
-def test_chunk_overlap():
+def test_chunk_overlap() -> None:
     chunks = chunk_text_with_overlap(
         "one two three four five six seven eight nine ten eleven", chunk_size=5, overlap=2
     )

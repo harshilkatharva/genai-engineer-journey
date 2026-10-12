@@ -4,6 +4,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from pydantic import TypeAdapter
+
 from semantic_search_eng.config import get_settings
 from semantic_search_eng.models.chunk import Chunk
 from semantic_search_eng.retrival.retriver_manager import (
@@ -47,7 +49,9 @@ class EvalutionManager:
         if not self.evaluation_file.exists():
             raise FileNotFoundError(f"Evaluation file not found: {self.evaluation_file}")
 
-        return json.loads(self.evaluation_file.read_text(encoding="utf-8"))
+        return TypeAdapter(list[dict[str, Any]]).validate_python(
+            json.loads(self.evaluation_file.read_text(encoding="utf-8"))
+        )
 
     def evaluate(
         self,

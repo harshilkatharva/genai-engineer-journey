@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import TYPE_CHECKING
 from unittest.mock import MagicMock
 
 import pytest
@@ -11,9 +12,12 @@ from semantic_search_eng.models.search_response import (
     SearchResult,
 )
 
+if TYPE_CHECKING:
+    from semantic_search_eng.evaluation.evalution_manager import EvalutionManager
+
 
 @pytest.fixture
-def evaluation_file(tmp_path) -> Path:
+def evaluation_file(tmp_path: Path) -> Path:
     path = tmp_path / "evalution.json"
 
     cases = [
@@ -49,7 +53,7 @@ def evaluation_file(tmp_path) -> Path:
 
 
 @pytest.fixture
-def sample_chunks():
+def sample_chunks() -> list[Chunk]:
     return [
         Chunk(
             chunk_id="chunk_0",
@@ -80,10 +84,10 @@ def sample_chunks():
 
 @pytest.fixture
 def evaluation_manager(
-    monkeypatch,
-    evaluation_file,
-    sample_chunks,
-):
+    monkeypatch: pytest.MonkeyPatch,
+    evaluation_file: Path,
+    sample_chunks: list[Chunk],
+) -> tuple[EvalutionManager, MagicMock]:
     mock_settings = MagicMock()
     mock_settings.evaluation_file = str(evaluation_file)
     mock_settings.data_directory = str(evaluation_file.parent / "data")
@@ -147,8 +151,8 @@ def evaluation_manager(
 
 
 def test_load_cases(
-    evaluation_manager,
-):
+    evaluation_manager: tuple[EvalutionManager, MagicMock],
+) -> None:
     manager, _ = evaluation_manager
 
     cases = manager.load_cases()
@@ -161,8 +165,8 @@ def test_load_cases(
 
 
 def test_load_cases_raises_for_missing_file(
-    tmp_path,
-):
+    tmp_path: Path,
+) -> None:
     from semantic_search_eng.evaluation.evalution_manager import (
         EvalutionManager,
     )
@@ -177,9 +181,9 @@ def test_load_cases_raises_for_missing_file(
 
 
 def test_evaluate_returns_expected_recall(
-    evaluation_manager,
-    sample_chunks,
-):
+    evaluation_manager: tuple[EvalutionManager, MagicMock],
+    sample_chunks: list[Chunk],
+) -> None:
     manager, mock_retriver = evaluation_manager
 
     mock_retriver.retrieve.side_effect = [
@@ -219,9 +223,9 @@ def test_evaluate_returns_expected_recall(
 
 
 def test_evaluate_partial_recall(
-    evaluation_manager,
-    sample_chunks,
-):
+    evaluation_manager: tuple[EvalutionManager, MagicMock],
+    sample_chunks: list[Chunk],
+) -> None:
     manager, mock_retriver = evaluation_manager
 
     mock_retriver.retrieve.side_effect = [
@@ -256,9 +260,9 @@ def test_evaluate_partial_recall(
 
 
 def test_evaluate_records_matched_chunk_ids(
-    evaluation_manager,
-    sample_chunks,
-):
+    evaluation_manager: tuple[EvalutionManager, MagicMock],
+    sample_chunks: list[Chunk],
+) -> None:
     manager, mock_retriver = evaluation_manager
 
     mock_retriver.retrieve.side_effect = [
@@ -299,9 +303,9 @@ def test_evaluate_records_matched_chunk_ids(
 
 
 def test_evaluate_records_missed_query(
-    evaluation_manager,
-    sample_chunks,
-):
+    evaluation_manager: tuple[EvalutionManager, MagicMock],
+    sample_chunks: list[Chunk],
+) -> None:
     manager, mock_retriver = evaluation_manager
 
     mock_retriver.retrieve.side_effect = [
@@ -340,9 +344,9 @@ def test_evaluate_records_missed_query(
 
 
 def test_evaluate_calls_retriever_for_every_query(
-    evaluation_manager,
-    sample_chunks,
-):
+    evaluation_manager: tuple[EvalutionManager, MagicMock],
+    sample_chunks: list[Chunk],
+) -> None:
     manager, mock_retriver = evaluation_manager
 
     mock_retriver.retrieve.side_effect = [
@@ -360,8 +364,8 @@ def test_evaluate_calls_retriever_for_every_query(
 
 
 def test_evaluate_uses_requested_top_k(
-    evaluation_manager,
-):
+    evaluation_manager: tuple[EvalutionManager, MagicMock],
+) -> None:
     manager, mock_retriver = evaluation_manager
 
     mock_retriver.retrieve.side_effect = [
@@ -380,9 +384,9 @@ def test_evaluate_uses_requested_top_k(
 
 
 def test_evaluate_handles_empty_evaluation_set(
-    monkeypatch,
-    tmp_path,
-):
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
     evaluation_path = tmp_path / "empty_evalution.json"
 
     evaluation_path.write_text(

@@ -9,7 +9,7 @@ from semantic_search_eng.retrival.retriver_manager import (
 
 
 @pytest.fixture
-def mock_settings():
+def mock_settings() -> MagicMock:
     settings = MagicMock()
 
     settings.embedding_model = "all-MiniLM-L6-v2"
@@ -22,9 +22,9 @@ def mock_settings():
 
 @pytest.fixture
 def retriver_manager(
-    monkeypatch,
-    mock_settings,
-):
+    monkeypatch: pytest.MonkeyPatch,
+    mock_settings: MagicMock,
+) -> tuple[RetriverManager, MagicMock, MagicMock]:
     monkeypatch.setattr(
         "semantic_search_eng.retrival.retriver_manager.get_settings",
         lambda: mock_settings,
@@ -60,7 +60,7 @@ def retriver_manager(
 
 
 @pytest.fixture
-def sample_chunks():
+def sample_chunks() -> list[Chunk]:
     return [
         Chunk(
             chunk_id="chunk_0",
@@ -90,7 +90,7 @@ def sample_chunks():
 
 
 @pytest.fixture
-def sample_embeddings():
+def sample_embeddings() -> list[list[float]]:
     return [
         [1.0, 0.0, 0.0],
         [0.0, 1.0, 0.0],
@@ -99,10 +99,10 @@ def sample_embeddings():
 
 
 def test_retrieve_returns_top_k(
-    retriver_manager,
-    sample_chunks,
-    sample_embeddings,
-):
+    retriver_manager: tuple[RetriverManager, MagicMock, MagicMock],
+    sample_chunks: list[Chunk],
+    sample_embeddings: list[list[float]],
+) -> None:
     manager, _, _ = retriver_manager
 
     results = manager.retrieve(
@@ -117,10 +117,10 @@ def test_retrieve_returns_top_k(
 
 
 def test_retrieve_orders_by_similarity(
-    retriver_manager,
-    sample_chunks,
-    sample_embeddings,
-):
+    retriver_manager: tuple[RetriverManager, MagicMock, MagicMock],
+    sample_chunks: list[Chunk],
+    sample_embeddings: list[list[float]],
+) -> None:
     manager, _, _ = retriver_manager
 
     results = manager.retrieve(
@@ -139,10 +139,10 @@ def test_retrieve_orders_by_similarity(
 
 
 def test_retrieve_returns_expected_similarity_scores(
-    retriver_manager,
-    sample_chunks,
-    sample_embeddings,
-):
+    retriver_manager: tuple[RetriverManager, MagicMock, MagicMock],
+    sample_chunks: list[Chunk],
+    sample_embeddings: list[list[float]],
+) -> None:
     manager, _, _ = retriver_manager
 
     results = manager.retrieve(
@@ -161,10 +161,10 @@ def test_retrieve_returns_expected_similarity_scores(
 
 
 def test_retrieve_embeds_the_query(
-    retriver_manager,
-    sample_chunks,
-    sample_embeddings,
-):
+    retriver_manager: tuple[RetriverManager, MagicMock, MagicMock],
+    sample_chunks: list[Chunk],
+    sample_embeddings: list[list[float]],
+) -> None:
     manager, embedding_manager, _ = retriver_manager
 
     manager.retrieve(
@@ -179,8 +179,8 @@ def test_retrieve_embeds_the_query(
 
 
 def test_retrieve_empty_chunks_returns_empty(
-    retriver_manager,
-):
+    retriver_manager: tuple[RetriverManager, MagicMock, MagicMock],
+) -> None:
     manager, embedding_manager, tracker_logger = retriver_manager
 
     result = manager.retrieve(
@@ -198,10 +198,10 @@ def test_retrieve_empty_chunks_returns_empty(
 
 
 def test_retrieve_rejects_empty_query(
-    retriver_manager,
-    sample_chunks,
-    sample_embeddings,
-):
+    retriver_manager: tuple[RetriverManager, MagicMock, MagicMock],
+    sample_chunks: list[Chunk],
+    sample_embeddings: list[list[float]],
+) -> None:
     manager, embedding_manager, _ = retriver_manager
 
     with pytest.raises(
@@ -220,9 +220,9 @@ def test_retrieve_rejects_empty_query(
 
 
 def test_retrieve_rejects_mismatched_lengths(
-    retriver_manager,
-    sample_chunks,
-):
+    retriver_manager: tuple[RetriverManager, MagicMock, MagicMock],
+    sample_chunks: list[Chunk],
+) -> None:
     manager, _, _ = retriver_manager
 
     with pytest.raises(
@@ -241,11 +241,11 @@ def test_retrieve_rejects_mismatched_lengths(
 
 
 def test_default_top_k_is_used(
-    retriver_manager,
-    sample_chunks,
-    sample_embeddings,
-    mock_settings,
-):
+    retriver_manager: tuple[RetriverManager, MagicMock, MagicMock],
+    sample_chunks: list[Chunk],
+    sample_embeddings: list[list[float]],
+    mock_settings: MagicMock,
+) -> None:
     manager, _, _ = retriver_manager
 
     results = manager.retrieve(
@@ -259,11 +259,11 @@ def test_default_top_k_is_used(
 
 
 def test_top_k_cannot_exceed_maximum(
-    retriver_manager,
-    sample_chunks,
-    sample_embeddings,
-    mock_settings,
-):
+    retriver_manager: tuple[RetriverManager, MagicMock, MagicMock],
+    sample_chunks: list[Chunk],
+    sample_embeddings: list[list[float]],
+    mock_settings: MagicMock,
+) -> None:
     mock_settings.max_top_k = 2
 
     manager, _, _ = retriver_manager
@@ -282,10 +282,10 @@ def test_top_k_cannot_exceed_maximum(
 
 
 def test_zero_top_k_is_rejected(
-    retriver_manager,
-    sample_chunks,
-    sample_embeddings,
-):
+    retriver_manager: tuple[RetriverManager, MagicMock, MagicMock],
+    sample_chunks: list[Chunk],
+    sample_embeddings: list[list[float]],
+) -> None:
     manager, _, _ = retriver_manager
 
     with pytest.raises(
@@ -302,10 +302,10 @@ def test_zero_top_k_is_rejected(
 
 
 def test_query_tracker_is_recorded(
-    retriver_manager,
-    sample_chunks,
-    sample_embeddings,
-):
+    retriver_manager: tuple[RetriverManager, MagicMock, MagicMock],
+    sample_chunks: list[Chunk],
+    sample_embeddings: list[list[float]],
+) -> None:
     manager, _, tracker_logger = retriver_manager
 
     manager.retrieve(
@@ -332,10 +332,10 @@ def test_query_tracker_is_recorded(
 
 
 def test_query_cost_is_zero_for_local_model(
-    retriver_manager,
-    sample_chunks,
-    sample_embeddings,
-):
+    retriver_manager: tuple[RetriverManager, MagicMock, MagicMock],
+    sample_chunks: list[Chunk],
+    sample_embeddings: list[list[float]],
+) -> None:
     manager, _, tracker_logger = retriver_manager
 
     manager.retrieve(

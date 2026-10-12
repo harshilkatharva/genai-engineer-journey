@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from time import perf_counter
 
+from pydantic import TypeAdapter
 from sentence_transformers import SentenceTransformer
 
 from semantic_search_eng.config import get_settings
@@ -140,7 +141,7 @@ class EmbeddingManager:
             normalize_embeddings=True,
         )
 
-        return embedding.tolist()
+        return TypeAdapter(list[float]).validate_python(embedding.tolist())
 
     def _save_embeddings(
         self,

@@ -1,6 +1,8 @@
-from pathlib import Path
 import json
+from pathlib import Path
 from typing import Any
+
+from pydantic import TypeAdapter
 
 from semantic_search_eng.config import get_settings
 
@@ -118,10 +120,8 @@ class DataManager:
         if not chunk_path.exists():
             return []
 
-        return json.loads(
-            chunk_path.read_text(
-                encoding="utf-8",
-            )
+        return TypeAdapter(list[dict[str, Any]]).validate_python(
+            json.loads(chunk_path.read_text(encoding="utf-8"))
         )
 
     # ------------------------------------------------------------------
@@ -159,10 +159,8 @@ class DataManager:
         if not embedding_path.exists():
             return []
 
-        return json.loads(
-            embedding_path.read_text(
-                encoding="utf-8",
-            )
+        return TypeAdapter(list[list[float]]).validate_python(
+            json.loads(embedding_path.read_text(encoding="utf-8"))
         )
 
     # ------------------------------------------------------------------

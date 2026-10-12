@@ -1,3 +1,4 @@
+from types import SimpleNamespace
 from unittest.mock import MagicMock
 
 import pytest
@@ -9,9 +10,9 @@ from semantic_search_eng.chunking.chunking_manager import (
 
 @pytest.fixture
 def chunking_manager(
-    monkeypatch,
-    test_settings,
-):
+    monkeypatch: pytest.MonkeyPatch,
+    test_settings: SimpleNamespace,
+) -> tuple[ChunkingManager, MagicMock]:
     monkeypatch.setattr(
         "semantic_search_eng.chunking.chunking_manager.get_settings",
         lambda: test_settings,
@@ -30,10 +31,10 @@ def chunking_manager(
 
 
 def test_chunk_document_returns_chunks(
-    chunking_manager,
-    conversation_id,
-    document_id,
-):
+    chunking_manager: tuple[ChunkingManager, MagicMock],
+    conversation_id: str,
+    document_id: str,
+) -> None:
     manager, _ = chunking_manager
 
     text = (
@@ -61,11 +62,11 @@ def test_chunk_document_returns_chunks(
 
 
 def test_chunk_preserves_sentence_boundaries(
-    monkeypatch,
-    test_settings,
-    conversation_id,
-    document_id,
-):
+    monkeypatch: pytest.MonkeyPatch,
+    test_settings: SimpleNamespace,
+    conversation_id: str,
+    document_id: str,
+) -> None:
     # Force a very small target so multiple chunks are created.
     test_settings.chunk_size = 8
     test_settings.chunk_overlap = 0
@@ -100,11 +101,11 @@ def test_chunk_preserves_sentence_boundaries(
 
 
 def test_chunk_indexes_are_sequential(
-    monkeypatch,
-    test_settings,
-    conversation_id,
-    document_id,
-):
+    monkeypatch: pytest.MonkeyPatch,
+    test_settings: SimpleNamespace,
+    conversation_id: str,
+    document_id: str,
+) -> None:
     test_settings.chunk_size = 7
     test_settings.chunk_overlap = 0
 
@@ -130,11 +131,11 @@ def test_chunk_indexes_are_sequential(
 
 
 def test_chunk_ids_are_unique(
-    monkeypatch,
-    test_settings,
-    conversation_id,
-    document_id,
-):
+    monkeypatch: pytest.MonkeyPatch,
+    test_settings: SimpleNamespace,
+    conversation_id: str,
+    document_id: str,
+) -> None:
     test_settings.chunk_size = 7
     test_settings.chunk_overlap = 0
 
@@ -162,10 +163,10 @@ def test_chunk_ids_are_unique(
 
 
 def test_empty_document_returns_no_chunks(
-    chunking_manager,
-    conversation_id,
-    document_id,
-):
+    chunking_manager: tuple[ChunkingManager, MagicMock],
+    conversation_id: str,
+    document_id: str,
+) -> None:
     manager, logger = chunking_manager
 
     chunks = manager.chunk_document(
@@ -180,9 +181,9 @@ def test_empty_document_returns_no_chunks(
 
 
 def test_chunk_documents_processes_multiple_documents(
-    chunking_manager,
-    conversation_id,
-):
+    chunking_manager: tuple[ChunkingManager, MagicMock],
+    conversation_id: str,
+) -> None:
     manager, logger = chunking_manager
 
     documents = {
@@ -206,10 +207,10 @@ def test_chunk_documents_processes_multiple_documents(
 
 
 def test_chunking_tracker_is_recorded(
-    chunking_manager,
-    conversation_id,
-    document_id,
-):
+    chunking_manager: tuple[ChunkingManager, MagicMock],
+    conversation_id: str,
+    document_id: str,
+) -> None:
     manager, logger = chunking_manager
 
     manager.chunk_document(
@@ -233,11 +234,11 @@ def test_chunking_tracker_is_recorded(
 
 
 def test_large_sentence_is_not_split_mid_sentence(
-    monkeypatch,
-    test_settings,
-    conversation_id,
-    document_id,
-):
+    monkeypatch: pytest.MonkeyPatch,
+    test_settings: SimpleNamespace,
+    conversation_id: str,
+    document_id: str,
+) -> None:
     test_settings.chunk_size = 5
     test_settings.chunk_overlap = 0
 
@@ -266,11 +267,11 @@ def test_large_sentence_is_not_split_mid_sentence(
 
 
 def test_chunk_overlap_keeps_previous_sentences(
-    monkeypatch,
-    test_settings,
-    conversation_id,
-    document_id,
-):
+    monkeypatch: pytest.MonkeyPatch,
+    test_settings: SimpleNamespace,
+    conversation_id: str,
+    document_id: str,
+) -> None:
     test_settings.chunk_size = 8
     test_settings.chunk_overlap = 4
 

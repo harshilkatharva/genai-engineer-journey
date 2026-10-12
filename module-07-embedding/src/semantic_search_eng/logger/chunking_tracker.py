@@ -1,6 +1,7 @@
 import json
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 from semantic_search_eng.config import get_settings
 from semantic_search_eng.models.chunking_tracker import ChunkingTracker
@@ -36,7 +37,7 @@ class ChunkingTrackerLogger:
     def _build_record(
         self,
         tracker: ChunkingTracker,
-    ) -> dict:
+    ) -> dict[str, Any]:
         record = tracker.model_dump()
 
         record["logged_at"] = datetime.now(UTC).isoformat()
@@ -45,7 +46,7 @@ class ChunkingTrackerLogger:
 
     def _write(
         self,
-        record: dict,
+        record: dict[str, Any],
     ) -> None:
         with self.log_file.open(
             "a",

@@ -44,7 +44,7 @@ def test_search_request_rejects_empty_strings(
     data[field] = value
 
     with pytest.raises(ValidationError):
-        SearchRequest(**data)
+        SearchRequest.model_validate(data)
 
 
 def test_search_request_rejects_invalid_top_k() -> None:

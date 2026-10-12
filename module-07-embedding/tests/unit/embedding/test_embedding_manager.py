@@ -2,6 +2,7 @@ from unittest.mock import MagicMock
 
 import numpy as np
 import pytest
+from numpy.typing import NDArray
 
 from semantic_search_eng.embedding.embedding_manager import (
     EmbeddingManager,
@@ -10,7 +11,7 @@ from semantic_search_eng.models.chunk import Chunk
 
 
 @pytest.fixture
-def mock_settings():
+def mock_settings() -> MagicMock:
     settings = MagicMock()
 
     settings.embedding_model = "all-MiniLM-L6-v2"
@@ -23,16 +24,16 @@ def mock_settings():
 
 
 @pytest.fixture
-def mock_model():
+def mock_model() -> MagicMock:
     model = MagicMock()
 
     def encode(
-        texts,
-        batch_size=None,
-        show_progress_bar=False,
-        convert_to_numpy=True,
-        normalize_embeddings=True,
-    ):
+        texts: str | list[str],
+        batch_size: int | None = None,
+        show_progress_bar: bool = False,
+        convert_to_numpy: bool = True,
+        normalize_embeddings: bool = True,
+    ) -> NDArray[np.float32]:
         if isinstance(texts, str):
             return np.array(
                 [0.6, 0.8, 0.0],
@@ -55,10 +56,10 @@ def mock_model():
 
 @pytest.fixture
 def embedding_manager(
-    monkeypatch,
-    mock_settings,
-    mock_model,
-):
+    monkeypatch: pytest.MonkeyPatch,
+    mock_settings: MagicMock,
+    mock_model: MagicMock,
+) -> tuple[EmbeddingManager, MagicMock, MagicMock, MagicMock]:
     monkeypatch.setattr(
         "semantic_search_eng.embedding.embedding_manager.get_settings",
         lambda: mock_settings,
@@ -94,7 +95,7 @@ def embedding_manager(
 
 
 @pytest.fixture
-def sample_chunks():
+def sample_chunks() -> list[Chunk]:
     return [
         Chunk(
             chunk_id="document_0000_chunk_0000",
@@ -124,18 +125,18 @@ def sample_chunks():
 
 
 def test_model_is_loaded_with_configured_model(
-    embedding_manager,
-    mock_model,
-):
+    embedding_manager: tuple[EmbeddingManager, MagicMock, MagicMock, MagicMock],
+    mock_model: MagicMock,
+) -> None:
     manager, _, _, _ = embedding_manager
 
     assert manager.model is mock_model
 
 
 def test_embed_chunks_returns_one_embedding_per_chunk(
-    embedding_manager,
-    sample_chunks,
-):
+    embedding_manager: tuple[EmbeddingManager, MagicMock, MagicMock, MagicMock],
+    sample_chunks: list[Chunk],
+) -> None:
     manager, _model, _, _ = embedding_manager
 
     embeddings = manager.embed_chunks(
@@ -154,10 +155,10 @@ def test_embed_chunks_returns_one_embedding_per_chunk(
 
 
 def test_embed_chunks_uses_configured_batch_size(
-    embedding_manager,
-    sample_chunks,
-    mock_settings,
-):
+    embedding_manager: tuple[EmbeddingManager, MagicMock, MagicMock, MagicMock],
+    sample_chunks: list[Chunk],
+    mock_settings: MagicMock,
+) -> None:
     manager, model, _, _ = embedding_manager
 
     manager.embed_chunks(
@@ -172,9 +173,9 @@ def test_embed_chunks_uses_configured_batch_size(
 
 
 def test_embed_chunks_normalizes_embeddings(
-    embedding_manager,
-    sample_chunks,
-):
+    embedding_manager: tuple[EmbeddingManager, MagicMock, MagicMock, MagicMock],
+    sample_chunks: list[Chunk],
+) -> None:
     manager, model, _, _ = embedding_manager
 
     manager.embed_chunks(
@@ -189,9 +190,9 @@ def test_embed_chunks_normalizes_embeddings(
 
 
 def test_embed_chunks_saves_embeddings(
-    embedding_manager,
-    sample_chunks,
-):
+    embedding_manager: tuple[EmbeddingManager, MagicMock, MagicMock, MagicMock],
+    sample_chunks: list[Chunk],
+) -> None:
     manager, _, data_manager, _ = embedding_manager
 
     embeddings = manager.embed_chunks(
@@ -208,9 +209,9 @@ def test_embed_chunks_saves_embeddings(
 
 
 def test_embed_chunks_does_not_save_when_requested(
-    embedding_manager,
-    sample_chunks,
-):
+    embedding_manager: tuple[EmbeddingManager, MagicMock, MagicMock, MagicMock],
+    sample_chunks: list[Chunk],
+) -> None:
     manager, _, data_manager, _ = embedding_manager
 
     manager.embed_chunks(
@@ -223,8 +224,8 @@ def test_embed_chunks_does_not_save_when_requested(
 
 
 def test_embed_chunks_returns_empty_for_empty_input(
-    embedding_manager,
-):
+    embedding_manager: tuple[EmbeddingManager, MagicMock, MagicMock, MagicMock],
+) -> None:
     manager, model, data_manager, tracker_logger = embedding_manager
 
     result = manager.embed_chunks(
@@ -240,9 +241,9 @@ def test_embed_chunks_returns_empty_for_empty_input(
 
 
 def test_embedding_tracker_is_recorded(
-    embedding_manager,
-    sample_chunks,
-):
+    embedding_manager: tuple[EmbeddingManager, MagicMock, MagicMock, MagicMock],
+    sample_chunks: list[Chunk],
+) -> None:
     manager, _, _, tracker_logger = embedding_manager
 
     manager.embed_chunks(
@@ -264,8 +265,8 @@ def test_embedding_tracker_is_recorded(
 
 
 def test_embed_query_returns_single_vector(
-    embedding_manager,
-):
+    embedding_manager: tuple[EmbeddingManager, MagicMock, MagicMock, MagicMock],
+) -> None:
     manager, model, _, _ = embedding_manager
 
     result = manager.embed_query("How does semantic search work?")
@@ -280,8 +281,8 @@ def test_embed_query_returns_single_vector(
 
 
 def test_embed_query_rejects_empty_query(
-    embedding_manager,
-):
+    embedding_manager: tuple[EmbeddingManager, MagicMock, MagicMock, MagicMock],
+) -> None:
     manager, model, _, _ = embedding_manager
 
     with pytest.raises(ValueError, match="Query cannot be empty"):
@@ -291,9 +292,9 @@ def test_embed_query_rejects_empty_query(
 
 
 def test_embed_documents_groups_results_by_document(
-    embedding_manager,
-    sample_chunks,
-):
+    embedding_manager: tuple[EmbeddingManager, MagicMock, MagicMock, MagicMock],
+    sample_chunks: list[Chunk],
+) -> None:
     manager, _, data_manager, _ = embedding_manager
 
     chunks_by_document = {
@@ -328,9 +329,9 @@ def test_embed_documents_groups_results_by_document(
 
 
 def test_local_embedding_cost_is_zero(
-    embedding_manager,
-    sample_chunks,
-):
+    embedding_manager: tuple[EmbeddingManager, MagicMock, MagicMock, MagicMock],
+    sample_chunks: list[Chunk],
+) -> None:
     manager, _, _, tracker_logger = embedding_manager
 
     manager.embed_chunks(

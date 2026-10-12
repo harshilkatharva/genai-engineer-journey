@@ -24,7 +24,7 @@ def test_settings_default_values() -> None:
     assert settings.log_level == "INFO"
 
 
-def test_settings_can_be_overridden(monkeypatch) -> None:
+def test_settings_can_be_overridden(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("CHUNK_SIZE", "800")
     monkeypatch.setenv("CHUNK_OVERLAP", "100")
     monkeypatch.setenv(

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib
 import sys
+from types import ModuleType
 from unittest.mock import MagicMock
 
 import pytest
@@ -9,7 +10,7 @@ from fastapi.testclient import TestClient
 
 
 @pytest.fixture
-def api_module(monkeypatch):
+def api_module(monkeypatch: pytest.MonkeyPatch) -> tuple[ModuleType, ModuleType]:
     """
     Import the API route module with all expensive managers mocked.
 
@@ -24,8 +25,7 @@ def api_module(monkeypatch):
     # mock_retriver_manager_class = MagicMock()
 
     monkeypatch.setattr(
-        embedding_module.SentenceTransformer,
-        "__new__",
+        "semantic_search_eng.embedding.embedding_manager.SentenceTransformer.__new__",
         staticmethod(lambda cls, *args, **kwargs: MagicMock()),
     )
 
@@ -57,20 +57,26 @@ def api_module(monkeypatch):
 
 
 @pytest.fixture
-def client(api_module):
+def client(api_module: tuple[ModuleType, ModuleType]) -> TestClient:
     app_module, _ = api_module
     return TestClient(app_module.app)
 
 
 @pytest.fixture
-def mocked_dependencies(api_module):
+def mocked_dependencies(
+    api_module: tuple[ModuleType, ModuleType],
+) -> dict[str, MagicMock]:
     _, search_module = api_module
 
-    search_module.data_processor = MagicMock()
-    search_module.data_manager = MagicMock()
-    search_module.chunking_manager = MagicMock()
-    search_module.embedding_manager = MagicMock()
-    search_module.retriver_manager = MagicMock()
+    search_module.__dict__.update(
+        {
+            "data_processor": MagicMock(),
+            "data_manager": MagicMock(),
+            "chunking_manager": MagicMock(),
+            "embedding_manager": MagicMock(),
+            "retriver_manager": MagicMock(),
+        }
+    )
 
     return {
         "data_processor": search_module.data_processor,
@@ -81,7 +87,7 @@ def mocked_dependencies(api_module):
     }
 
 
-def test_root_endpoint(client):
+def test_root_endpoint(client: TestClient) -> None:
     response = client.get("/")
 
     assert response.status_code == 200
@@ -93,7 +99,7 @@ def test_root_endpoint(client):
     assert body["status"] == "running"
 
 
-def test_health_endpoint(client):
+def test_health_endpoint(client: TestClient) -> None:
     response = client.get("/health")
 
     assert response.status_code == 200
@@ -103,9 +109,9 @@ def test_health_endpoint(client):
 
 
 def test_process_documents_success(
-    client,
-    mocked_dependencies,
-):
+    client: TestClient,
+    mocked_dependencies: dict[str, MagicMock],
+) -> None:
     dependencies = mocked_dependencies
 
     dependencies["data_processor"].process_documents.return_value = [
@@ -197,9 +203,9 @@ def test_process_documents_success(
 
 
 def test_process_documents_validation_error(
-    client,
-    mocked_dependencies,
-):
+    client: TestClient,
+    mocked_dependencies: dict[str, MagicMock],
+) -> None:
     response = client.post(
         "/documents/process",
         json={
@@ -214,9 +220,9 @@ def test_process_documents_validation_error(
 
 
 def test_process_documents_internal_error(
-    client,
-    mocked_dependencies,
-):
+    client: TestClient,
+    mocked_dependencies: dict[str, MagicMock],
+) -> None:
     mocked_dependencies["data_processor"].process_documents.side_effect = RuntimeError(
         "processing failed"
     )
@@ -236,9 +242,9 @@ def test_process_documents_internal_error(
 
 
 def test_search_success(
-    client,
-    mocked_dependencies,
-):
+    client: TestClient,
+    mocked_dependencies: dict[str, MagicMock],
+) -> None:
     dependencies = mocked_dependencies
 
     from semantic_search_eng.models.chunk import Chunk
@@ -329,9 +335,9 @@ def test_search_success(
 
 
 def test_search_uses_default_top_k_when_omitted(
-    client,
-    mocked_dependencies,
-):
+    client: TestClient,
+    mocked_dependencies: dict[str, MagicMock],
+) -> None:
     dependencies = mocked_dependencies
 
     from semantic_search_eng.api.routes import search as search_module
@@ -362,9 +368,9 @@ def test_search_uses_default_top_k_when_omitted(
 
 
 def test_search_rejects_invalid_request(
-    client,
-    mocked_dependencies,
-):
+    client: TestClient,
+    mocked_dependencies: dict[str, MagicMock],
+) -> None:
     response = client.post(
         "/search",
         json={
@@ -380,9 +386,9 @@ def test_search_rejects_invalid_request(
 
 
 def test_search_handles_value_error(
-    client,
-    mocked_dependencies,
-):
+    client: TestClient,
+    mocked_dependencies: dict[str, MagicMock],
+) -> None:
     import semantic_search_eng.api.routes.search as search_module
     from semantic_search_eng.models.chunk import Chunk
 
@@ -421,9 +427,9 @@ def test_search_handles_value_error(
 
 
 def test_search_handles_missing_conversation(
-    client,
-    mocked_dependencies,
-):
+    client: TestClient,
+    mocked_dependencies: dict[str, MagicMock],
+) -> None:
     import semantic_search_eng.api.routes.search as search_module
 
     search_module._load_all_chunks = MagicMock(

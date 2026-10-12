@@ -1,12 +1,14 @@
 import logging
 import math
+from collections.abc import Callable
+from typing import Any
 
-import nltk
+import nltk  # type: ignore[import-untyped]
 
 # 1
 
 
-def cosine_similarity(X: list, Y: list) -> float:
+def cosine_similarity(X: list[float], Y: list[float]) -> float:
     # Dot product
     dot_product = 0.0
     for x, y in zip(X, Y):
@@ -32,8 +34,12 @@ def cosine_similarity(X: list, Y: list) -> float:
 
 
 # 2
-def batch_embeddings(texts, embed_function, batch_size=100):
-    all_embeddings = []
+def batch_embeddings(
+    texts: list[str],
+    embed_function: Callable[[list[str]], list[list[float]]],
+    batch_size: int = 100,
+) -> list[list[float]]:
+    all_embeddings: list[list[float]] = []
     for start in range(0, len(texts), batch_size):
         end = start + batch_size
         batch = texts[start:end]
@@ -48,10 +54,10 @@ def batch_embeddings(texts, embed_function, batch_size=100):
 # 3
 
 
-def split_long_sentence(sentence, max_tokens):
+def split_long_sentence(sentence: str, max_tokens: int) -> list[str]:
     tokens = sentence.split()
 
-    chunks = []
+    chunks: list[str] = []
 
     for i in range(0, len(tokens), max_tokens):
         chunks.append(" ".join(tokens[i : i + max_tokens]))
@@ -59,11 +65,15 @@ def split_long_sentence(sentence, max_tokens):
     return chunks
 
 
-def sentence_chunker(text, max_tokens: int = 500, overlap_tokens: int = 500):
+def sentence_chunker(
+    text: str,
+    max_tokens: int = 500,
+    overlap_tokens: int = 500,
+) -> list[str]:
     sentences = nltk.tokenize(text)
 
-    chunks = []
-    current_sentences = []
+    chunks: list[str] = []
+    current_sentences: list[str] = []
     current_tokens = 0
 
     for sentence in sentences:
@@ -94,7 +104,7 @@ def sentence_chunker(text, max_tokens: int = 500, overlap_tokens: int = 500):
         else:
             chunks.append(" ".join(current_sentences))
 
-            overlap_sentences = []
+            overlap_sentences: list[str] = []
             overlap_count = 0
 
             for previous_sentence in reversed(current_sentences):
@@ -117,8 +127,8 @@ def sentence_chunker(text, max_tokens: int = 500, overlap_tokens: int = 500):
 
 
 # 4
-def deduplicate_chunks(chunks, threshold=0.9):
-    unique = []
+def deduplicate_chunks(chunks: list[str], threshold: float = 0.9) -> list[str]:
+    unique: list[str] = []
 
     for chunk in chunks:
         words = set(chunk.lower().split())
@@ -141,7 +151,7 @@ def deduplicate_chunks(chunks, threshold=0.9):
 
 
 # 5
-def check_dimensionality(X, Y):
+def check_dimensionality(X: list[float], Y: list[float]) -> bool:
     if len(X) != len(Y):
         raise ValueError(f"Embedding dimention noth match.{len(X)} != {len(Y)}")
 
@@ -150,14 +160,18 @@ def check_dimensionality(X, Y):
 
 # 6
 class VectorIndex:
-    def __init__(self):
-        self.items = []
+    def __init__(self) -> None:
+        self.items: list[dict[str, Any]] = []
 
-    def add(self, text, embedding):
+    def add(self, text: str, embedding: list[float]) -> None:
         self.items.append({"text": text, "embedding": embedding})
 
-    def search(self, query_embedding, top_k=5):
-        results = []
+    def search(
+        self,
+        query_embedding: list[float],
+        top_k: int = 5,
+    ) -> list[dict[str, Any]]:
+        results: list[dict[str, Any]] = []
 
         for item in self.items:
             embedding = item["embedding"]
@@ -179,14 +193,14 @@ class VectorIndex:
 # 7
 
 
-def embedding_cost(corpus_total_token, per_token_price):
+def embedding_cost(corpus_total_token: int, per_token_price: float) -> float:
     return corpus_total_token * per_token_price
 
 
 # 8
-def chunk_meta_data(text, source, chunk_size=500):
+def chunk_meta_data(text: str, source: str, chunk_size: int = 500) -> None:
     words = text.split()
-    chunks = []
+    chunks: list[dict[str, Any]] = []
 
     for i in range(0, len(words), chunk_size):
         chunk_words = words[i : i + chunk_size]
@@ -205,9 +219,9 @@ def chunk_meta_data(text, source, chunk_size=500):
 
 
 # 9
-def chunk_text_with_overlap(text: str, chunk_size, overlap):
+def chunk_text_with_overlap(text: str, chunk_size: int, overlap: int) -> list[str]:
     tokens = text.split()
-    chunks = []
+    chunks: list[str] = []
 
     start = 0
 
@@ -225,7 +239,12 @@ def chunk_text_with_overlap(text: str, chunk_size, overlap):
 logger = logging.getLogger(__name__)
 
 
-def reindex_corpus(corpus, index, embed_function, model_name):
+def reindex_corpus(
+    corpus: list[str],
+    index: VectorIndex,
+    embed_function: Callable[[list[str], str], list[list[float]]],
+    model_name: str,
+) -> VectorIndex:
     """
     Re-embed and re-index the corpus using the new embedding model.
 

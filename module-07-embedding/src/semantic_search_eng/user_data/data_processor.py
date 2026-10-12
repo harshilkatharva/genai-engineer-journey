@@ -121,9 +121,8 @@ class DataProcessor:
         try:
             document_path = Path(document)
 
-            if document_path.exists() and document_path.is_file():
-                if document_path.stem:
-                    return document_path.stem
+            if document_path.exists() and document_path.is_file() and document_path.stem:
+                return document_path.stem
 
         except OSError:
             pass
