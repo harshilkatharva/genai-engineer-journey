@@ -33,6 +33,29 @@ class OpenAIProvider(LLMProvider):
         )
         self.temperature = temperature
 
+    @staticmethod
+    def _prepare_strict_json_schema(schema: dict[str, Any]) -> dict[str, Any]:
+        result = dict(schema)
+        if result.get("type") == "object":
+            result["additionalProperties"] = False
+            if "properties" in result and isinstance(result["properties"], dict):
+                props = {}
+                for k, v in result["properties"].items():
+                    props[k] = (
+                        OpenAIProvider._prepare_strict_json_schema(v) if isinstance(v, dict) else v
+                    )
+                result["properties"] = props
+                if "required" not in result:
+                    result["required"] = list(props.keys())
+        if "$defs" in result and isinstance(result["$defs"], dict):
+            defs = {}
+            for k, v in result["$defs"].items():
+                defs[k] = (
+                    OpenAIProvider._prepare_strict_json_schema(v) if isinstance(v, dict) else v
+                )
+            result["$defs"] = defs
+        return result
+
     async def complete_structure(
         self,
         prompt: str,
@@ -73,6 +96,7 @@ class OpenAIProvider(LLMProvider):
         last_response_text: str | None = None
 
         for attempt in range(effective_max_retries + 1):
+            prepared_schema = self._prepare_strict_json_schema(response_schema.model_json_schema())
             request_kwargs = {
                 "model": self.model,
                 "input": current_prompt,
@@ -80,7 +104,7 @@ class OpenAIProvider(LLMProvider):
                     "format": {
                         "type": "json_schema",
                         "name": response_schema.__name__,
-                        "schema": response_schema.model_json_schema(),
+                        "schema": prepared_schema,
                         "strict": True,
                     }
                 },

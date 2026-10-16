@@ -168,3 +168,27 @@ This document records the architectural decisions, component responsibilities, d
 - **Decision**: Added `max_structured_error_retry: int = 2` to `Settings`. In `complete_structure`, if `max_retries` is not explicitly passed, providers default to `get_settings().max_structured_error_retry`.
 - **Rationale**: Enables centralized configuration of structured error retry limits via environment variables (`MAX_STRUCTURED_ERROR_RETRY`) or settings overrides without requiring hardcoded limits.
 
+---
+
+## 2026-10-16: Live Integration Tests for All 3 LLM Providers
+
+### 1. Dedicated Live Tests
+- **Locations**:
+  - [`packages/genai-core/tests/integration/test_google_provider_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/test_google_provider_integration.py)
+  - [`packages/genai-core/tests/integration/test_openai_provider_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/test_openai_provider_integration.py)
+  - [`packages/genai-core/tests/integration/test_anthropic_provider_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/test_anthropic_provider_integration.py)
+- **Decision**: Created live integration tests covering `complete_structure`, `complete_tool`, and `stream` for Google Gemini, OpenAI, and Anthropic Claude.
+- **Rationale**: Verifies real-world connectivity, schema adherence, and streaming mechanics directly with each provider.
+
+### 2. Gating Execution on `INTEGRATION_TEST=1`
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/core/settings.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/core/settings.py)
+  - [`packages/genai-core/tests/conftest.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/conftest.py)
+- **Decision**: Added `integration_test: int = 0` to `Settings`. Installed an `autouse` fixture in `conftest.py` that skips all `@pytest.mark.integration` tests unless `INTEGRATION_TEST=1` is specified in `.env` or the environment.
+- **Rationale**: Prevents accidental live API billing and test failures in environments without configured credentials.
+
+### 3. Graceful Error Handling for OpenAI Credits and Missing Anthropic Key
+- **Decision**: Integration tests for OpenAI intercept quota exhaustion, billing errors, and rate limits (429 / `insufficient_quota`), cleanly skipping the test. Anthropic integration tests intercept missing keys, authorization errors (401/403), and credit issues, skipping without test suite failure. Google integration tests intercept transient 503 high-demand spike errors and skip gracefully.
+- **Rationale**: Enables developers to run integration tests against available and funded providers without failing the entire suite for unconfigured or unfunded services.
+
+

@@ -31,9 +31,12 @@ package-dir = {"" = "src"}
 where = ["src"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests/unit"]
+testpaths = ["tests"]
 pythonpath = [".", "src", "tests"]
 asyncio_mode = "auto"
+markers = [
+    "integration: marks tests as integration tests that hit external live APIs",
+]
 
 [tool.ruff]
 line-length = 100

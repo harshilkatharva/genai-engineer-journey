@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     default_llm_model: str = "gemini-3.5-flash-lite"
     default_llm_temperature: float = 0.2
     max_structured_error_retry: int = 2
+    integration_test: int = 0
     google_api_key: str | None = None
     openai_api_key: str | None = None
     anthropic_api_key: str | None = None
