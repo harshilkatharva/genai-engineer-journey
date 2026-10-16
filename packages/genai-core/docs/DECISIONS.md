@@ -191,4 +191,33 @@ This document records the architectural decisions, component responsibilities, d
 - **Decision**: Integration tests for OpenAI intercept quota exhaustion, billing errors, and rate limits (429 / `insufficient_quota`), cleanly skipping the test. Anthropic integration tests intercept missing keys, authorization errors (401/403), and credit issues, skipping without test suite failure. Google integration tests intercept transient 503 high-demand spike errors and skip gracefully.
 - **Rationale**: Enables developers to run integration tests against available and funded providers without failing the entire suite for unconfigured or unfunded services.
 
+---
+
+## 2026-10-16: Reusable Caller-Controlled Observability for `genai-core`
+
+### 1. Caller-Controlled Log Destination & Zero Side-Effects by Default
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/observability/config.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/observability/config.py)
+  - [`packages/genai-core/src/genai_core/observability/logger.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/observability/logger.py)
+- **Decision**: Implemented `ObservabilityConfig` and `configure_observability()`. By default, `genai-core` initializes with a `logging.NullHandler()` and creates no files or directories. File logging is activated only when the consuming application explicitly supplies a file path (`log_file`), at which point the required parent directory is created and a `RotatingFileHandler` (or standard `FileHandler`) is attached.
+- **Alternatives Considered**: Module 09's approach of creating a hardcoded `logs/rag_app.log` in `parents[3]` at module import time. Rejected because it produces filesystem pollution, conflicts with caller directory layouts, and violates library reusability principles.
+- **Impact**: Consuming applications maintain full control over where log artifacts are stored, rotation limits, log formats, and stdout emission.
+
+### 2. Automated Secret and Credential Redaction
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/observability/redactor.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/observability/redactor.py)
+  - [`packages/genai-core/src/genai_core/observability/formatters.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/observability/formatters.py)
+- **Decision**: Added `RedactingFilter` and redaction utilities (`redact_string`, `redact_data`). Scrubs Google API keys (`AIza...`), OpenAI keys (`sk-...`), Anthropic keys (`sk-ant-...`), Bearer authorization headers, and credential dict keys (`api_key`, `secret`, `password`, `token`). Configured whitelist for non-sensitive token metrics (`input_tokens`, `output_tokens`, `total_tokens`, `token_count`) to avoid false-positive masking.
+- **Alternatives Considered**: Relying on developers never logging secrets or using external masking libraries. Rejected to keep `genai-core` dependency-free and prevent accidental credential exposure in production or logs.
+- **Impact**: All messages, extra attributes, and exception tracebacks emitted by `genai_core` are automatically sanitized before hitting disk or stdout.
+
+### 3. Fault-Tolerant Logging & Safe Dispatch (`safe_log`)
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/observability/logger.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/observability/logger.py)
+  - [`packages/genai-core/src/genai_core/services/llm_services.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/llm_services.py)
+- **Decision**: Wrapped all instrumentation points in `LLMService` (`complete` and `stream`) with `safe_log`. Logging failures (e.g. disk full, permission errors, serialization issues) are suppressed and never cause the primary LLM call to fail.
+- **Alternatives Considered**: Module 09's approach of raising `RuntimeError` when `request_id` was absent. Rejected because logging should never crash business operations.
+- **Impact**: Zero downtime or request failure caused by observability subsystem issues.
+
+
 

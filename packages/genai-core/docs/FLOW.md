@@ -172,9 +172,71 @@ flowchart TD
 
 ---
 
-## 6. Verification and Test Flow
+## 6. Observability Execution Flow
 
-The behavior above is verified through 39 automated unit tests in `packages/genai-core/tests/unit/`:
+Observability is built as a reusable, caller-controlled capability in `packages/genai-core/src/genai_core/observability/`:
+
+```mermaid
+flowchart TD
+    Caller["Consuming Application"]
+    ConfigureCall["configure_observability(config)"]
+    ContextCall["with observability_context(request_id)"]
+    ObsConfig["Observability Engine"]
+    LLMService["LLMService"]
+
+    Caller --> ConfigureCall
+    ConfigureCall --> ObsConfig
+    Caller --> ContextCall
+    ContextCall --> LLMService
+
+    subgraph ObservabilityLifecycle["Observability Lifecycle"]
+        ObsConfig --> ConfigLogger["Configure genai_core Logger"]
+        ConfigLogger --> AttachFormatter["Attach JsonFormatter or TextFormatter"]
+        ConfigLogger --> AttachRedactor["Attach RedactingFilter"]
+        ConfigLogger --> AttachHandler["Attach Caller LogFile or StreamHandler"]
+    end
+
+    subgraph ServiceRequestLifecycle["Service Request Lifecycle"]
+        LLMService --> RequestStart["safe_log: LLM_REQUEST_START"]
+        RequestStart --> ProviderExec["Invoke Provider: complete or stream"]
+        ProviderExec --> Success["safe_log: LLM_REQUEST_SUCCESS"]
+        Success --> SuccessDetails["Record latency_ms and tokens"]
+        ProviderExec --> Failure["safe_log: LLM_REQUEST_FAILED"]
+        Failure --> FailureDetails["Record error_code and retryable"]
+    end
+
+    subgraph LogProcessingSecurity["Log Record Processing and Security"]
+        ConfigLogger --> RedactingFilter["Scrub API Keys and Credentials"]
+        RedactingFilter --> Formatter["Format JSON or Text"]
+        Formatter --> Destination["Caller Destination: File or Console"]
+    end
+
+    RequestStart --> ConfigLogger
+    SuccessDetails --> ConfigLogger
+    FailureDetails --> ConfigLogger
+```
+
+### 6.1 Configuration & Isolation
+- Consuming applications configure logging via [`ObservabilityConfig`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/observability/config.py) and [`configure_observability`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/observability/logger.py).
+- `genai-core` creates no log files, directories, or disk side-effects by default (defaults to `logging.NullHandler()` if unconfigured).
+- All handlers are namespaced to `"genai_core"` and tracked for clean reconfiguration or teardown via `close_observability()`.
+
+### 6.2 Security & Credential Redaction
+- [`RedactingFilter`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/observability/redactor.py) and [`JsonFormatter`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/observability/formatters.py) inspect all log records, messages, arguments, extra attributes, and exception tracebacks.
+- Known patterns (Google Gemini API keys `AIza...`, OpenAI `sk-...`, Anthropic `sk-ant-...`, Bearer tokens) and sensitive dictionary keys (`api_key`, `secret`, `token`, `password`, `authorization`) are automatically replaced with `[REDACTED]`.
+- Non-sensitive metrics (`input_tokens`, `output_tokens`, `total_tokens`, `token_count`) are explicitly protected from false-positive redaction.
+
+### 6.3 Fault Isolation (`safe_log`)
+- All logging calls inside [`LLMService`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/llm_services.py) are dispatched through `safe_log`.
+- Any underlying handler errors (e.g. disk full, permission denied, invalid character encoding) are safely suppressed and never disrupt LLM service execution or caller requests.
+
+---
+
+## 7. Verification and Test Flow
+
+The behavior above is verified through 56 automated unit tests and live integration tests:
+- **Observability unit tests**: [`test_observability.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_observability.py) validates caller-defined destinations, JSON/text formatting, secret scrubbing, async request context, idempotency, and error shielding.
+- **Observability live integration tests**: [`test_observability_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/test_observability_integration.py) verifies real log emission to caller-specified paths with live API execution and confirms zero credentials leak.
 - **Protocol conformance**: [`test_protocol.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_protocol.py) validates all adapters conform to `LLMProvider`.
 - **Google adapter**: [`test_google_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_google_provider.py) validates schema outputs, tool calling, tool-name enforcement, and streaming.
 - **OpenAI adapter**: [`test_openai_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_openai_provider.py) validates structured output formatting, function calls, and delta streaming.
@@ -184,8 +246,7 @@ The behavior above is verified through 39 automated unit tests in `packages/gena
 
 ---
 
-## 7. Unimplemented / Reserved Areas
+## 8. Unimplemented / Reserved Areas
 
-1. **Subpackages**: `agents/`, `embedding/`, `evaluation/`, `memory/`, `observability/`, `prompts/`, `retrieval/`, and `tools/` are currently empty directory placeholders. No execution flows exist for them yet.
-2. **Integration Tests**: `tests/integration/` is currently empty; all automated verification is unit-level using injected mock clients.
-3. **Anthropic Native Schema Enforcement**: Anthropic does not support native JSON grammar constraints outside tool calling; structured output decoding relies on parsing generated text into JSON.
+1. **Subpackages**: `agents/`, `embedding/`, `evaluation/`, `memory/`, `prompts/`, `retrieval/`, and `tools/` are currently empty directory placeholders. (`observability/` is fully implemented and tested).
+2. **Anthropic Native Schema Enforcement**: Anthropic does not support native JSON grammar constraints outside tool calling; structured output decoding relies on parsing generated text into JSON.

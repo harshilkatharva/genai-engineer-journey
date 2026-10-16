@@ -1,0 +1,270 @@
+# GOAL.md — `genai-core`
+
+> **Document type:** Purpose, intended outcomes, scope, and architectural direction  
+> **Status:** Living design document  
+> **Intended location in the repository:** `packages/genai-core/docs/GOAL.md`
+
+## 1. Executive goal
+
+Build `genai-core` as a small, reusable, well-tested Python package that provides the common GenAI capabilities needed across the `genai-engineer-journey` modules and future applications.
+
+The package exists to turn repeated, project-specific implementations into shared, clearly defined capabilities. It should make it easier to build the next mini-project without copying service wrappers, recreating provider configuration, inventing another response format, or debugging inconsistent imports.
+
+**`genai-core` is not just an LLM wrapper.** LLM integration is the first practical milestone. The broader goal is a dependable foundation that can gradually support model access, embeddings, retrieval, memory, tool/function-calling primitives, and other cross-project capabilities when real projects demonstrate the need for them.
+
+The package must grow from proven reuse—not from a desire to implement every GenAI concept up front.
+
+## 2. Why create it before Module 17?
+
+Modules 0–16 have already produced learning and mini-project code. As the journey moves into Modules 17–20, projects are expected to connect more closely and reuse concepts built earlier. Without a shared package, each new project can introduce another copy of the same logic.
+
+The problems `genai-core` is intended to prevent include:
+
+- **Duplicated implementations:** Similar LLM, embedding, retrieval, or memory logic gets copied from one mini-project to another.
+- **Inconsistent contracts:** Similar components accept different arguments, return different shapes, or report failures differently.
+- **Import friction:** Code copied between folders develops path assumptions and becomes hard to import or test reliably.
+- **Provider coupling:** Application logic becomes dependent on one provider's SDK or response structure.
+- **Fixes do not propagate:** A correction made in one copy is not automatically available to other projects.
+- **Unclear ownership:** It becomes difficult to decide whether a behavior belongs in a mini-project or a shared component.
+- **Expensive future changes:** Switching providers, adding tests, or improving error handling requires updates across multiple projects.
+
+Creating the shared package before Module 17 gives the connected modules a common starting point. It does **not** mean every capability must be fully designed or implemented before the learning projects begin.
+
+## 3. Mission and intended outcomes
+
+### 3.1 Primary outcomes
+
+`genai-core` should:
+
+1. **Reduce duplication.** Put genuinely shared, stable logic in one maintained package.
+2. **Standardize contracts.** Give common capabilities predictable inputs, outputs, configuration, and error behavior.
+3. **Separate application logic from provider details.** Keep provider-specific request/response handling behind adapters or equivalent boundaries where that separation is useful.
+4. **Support composition.** Allow capabilities to be used independently or combined without requiring one monolithic framework.
+5. **Improve testability.** Make core behavior testable without requiring live provider calls for every unit test.
+6. **Make imports and packaging reliable.** Let mini-projects depend on the package through a supported public API instead of copying files or importing private internals.
+7. **Enable incremental evolution.** Add functionality as Modules 17–20 and later work reveal repeatable needs.
+8. **Preserve learning value.** The package should simplify repeated infrastructure without hiding the important concepts being studied in each module.
+
+### 3.2 What success looks like
+
+A developer starting a new mini-project should be able to reuse an existing `genai-core` capability, provide the required configuration, and focus on the project's unique behavior. They should not need to copy a previously implemented service or reverse-engineer a different interface from an earlier project.
+
+When a shared behavior needs to change, the change should have one clear home, relevant tests, documented compatibility implications, and a predictable way to reach the projects that use it.
+
+## 4. Who and what is it for?
+
+The initial consumers are the connected mini-projects in Modules 17–20 of `genai-engineer-journey`. Future consumers may include other modules, demonstrations, experiments, and standalone applications that have a genuine need for the same capabilities.
+
+The package should be useful for:
+
+- shared model access and normalized generation behavior;
+- reusable embedding interfaces and provider integrations;
+- reusable retrieval abstractions and adapters;
+- explicit memory primitives and storage/retrieval integrations;
+- reusable tool/function-call representations and validation boundaries;
+- shared configuration, errors, typed contracts, and provider integration conventions;
+- other cross-project functionality that proves stable and reusable.
+
+These are capability areas and an evolutionary direction—not a mandate to implement all of them in the first release.
+
+## 5. Scope boundaries
+
+### 5.1 What belongs in `genai-core`
+
+A capability is a candidate for the package when it is used, or is very likely to be used, by multiple projects; has a meaningful and stable contract; can be explained independently of one project's domain; and can be tested and maintained as shared code.
+
+Examples include provider adapters, reusable service logic, shared request/response models, common error types, configuration validation, and small utilities that are essential to those capabilities.
+
+### 5.2 What should stay in an individual mini-project
+
+Project-specific behavior should remain in the project that owns it. Examples include:
+
+- a particular application's business workflow or user journey;
+- a domain-specific prompt or policy that is not shared;
+- application-specific orchestration and control flow;
+- project-specific data models and persistence rules;
+- experiments that have not yet demonstrated repeatable reuse;
+- presentation, API routes, CLI commands, and deployment configuration for one application.
+
+A mini-project may wrap or compose `genai-core` to express its own workflow. The shared package should not absorb that workflow simply because it uses an LLM.
+
+### 5.3 What `genai-core` is not intended to become
+
+`genai-core` is not intended to be:
+
+- a replacement implementation of every feature in LangChain, LangGraph, LlamaIndex, or other established frameworks;
+- a universal abstraction that pretends all providers have identical capabilities;
+- a monolithic application or a global runtime that every project must use;
+- a place for every helper that happens to be written in Python;
+- a speculative framework for capabilities that no project currently needs;
+- a reason to remove useful framework-specific learning from a module.
+
+Existing libraries and frameworks can still be used by individual projects or through focused adapters when they provide clear value. The package should integrate with them deliberately rather than trying to replace them.
+
+## 6. Development strategy: start small, expand with evidence
+
+The implementation should proceed in validated increments. The sequence below is a default direction; actual needs and module requirements can adjust it.
+
+### Phase 0 — Establish the package boundary
+
+- Confirm the package location and how projects install or import it in the repository.
+- Define a small public API and keep internal implementation details private.
+- Establish configuration, error, testing, and dependency conventions.
+- Review what Modules 17–20 actually need before designing abstractions around assumptions.
+
+**Outcome:** A real, importable package boundary and a documented method for deciding what is shared.
+
+### Phase 1 — LLM service integration
+
+This is the starting capability because model access is a common dependency of many GenAI projects.
+
+- Define a clear request/response contract for the required generation use cases.
+- Isolate provider-specific calls behind an adapter or provider integration boundary.
+- Validate configuration and inputs before issuing a provider request.
+- Normalize common response information while preserving meaningful provider differences.
+- Define useful error categories and safe handling of credentials.
+- Add unit tests using fakes/mocks and a separately controlled integration-test path.
+- Demonstrate use from a small consumer project.
+
+**Outcome:** One reusable, testable model-access path that can be consumed without copying provider glue code.
+
+### Phase 2 — Embedding service
+
+Add an embedding capability when a module needs it. Define the reusable contract, input/output expectations, batch behavior, metadata, configuration, and provider-specific limitations. Keep embedding behavior separate from text generation even if one provider supplies both.
+
+### Phase 3 — Retrieval abstractions and integrations
+
+Extract only the stable responsibilities needed across projects—for example, document/chunk representation, retrieval request/result contracts, metadata and score handling, and adapters to actual retrieval or vector-store implementations. Avoid forcing every store into a lowest-common-denominator interface that loses essential features.
+
+### Phase 4 — Memory primitives
+
+Introduce memory capabilities when the connected projects demonstrate a shared requirement. Keep session/user scope, storage choice, retrieval behavior, retention, and lifecycle explicit. Do not silently create process-global or cross-user memory.
+
+### Phase 5 — Tool/function-calling primitives and interoperability
+
+Where useful across multiple projects, normalize tool definitions, tool-call requests, arguments, results, and errors. Keep the decision to execute a tool—and authorization to do so—under the consuming application's control. Add framework integration only when it solves a demonstrated interoperability problem.
+
+### Phase 6 — Further shared capabilities
+
+Additional concerns such as streaming, observability hooks, caching, structured output, evaluation integration, or orchestration adapters may be considered when they solve a repeated problem. Each should have its own use case, contract, tests, and adoption justification.
+
+**Important:** These phases do not mean all listed features are committed to the first release. Scope each phase against real Module 17–20 needs and keep unneeded capabilities out of the initial implementation.
+
+## 7. Architectural principles
+
+### 7.1 Reuse is earned
+
+Do not extract code into the package only because it could theoretically be reused. Prefer a real repeated need, a clear contract, or a well-supported near-term requirement. Similar-looking code is not automatically the same abstraction.
+
+### 7.2 Stable public contracts, flexible internals
+
+Consumer projects should import supported public names. Internal module paths and provider SDK objects should not become accidental public contracts. Refactoring internals should not require unrelated projects to change unless a documented public contract changes.
+
+### 7.3 Provider flexibility without pretending providers are identical
+
+Keep common behavior consistent where possible. Expose provider-specific options or capabilities explicitly where necessary. Never silently discard a setting or pretend a provider supports a feature it does not.
+
+### 7.4 Explicit configuration and dependencies
+
+A consumer should be able to understand which provider, model, settings, and dependencies are being used. Avoid hidden global configuration and hidden network activity during import. Credentials should come from appropriate secret/configuration sources, not source code.
+
+### 7.5 Framework-aware, not framework-dependent by default
+
+Use a framework when it provides a real benefit, but do not force every shared primitive to depend on one orchestration framework. Core contracts should remain comprehensible and useful to ordinary Python consumers.
+
+### 7.6 Test at the correct boundary
+
+Unit tests should cover deterministic core behavior without live network calls. Adapter tests should verify provider translation. Integration tests may call real services only when explicitly configured and should be clearly separated from the default fast test suite.
+
+### 7.7 Secure and predictable defaults
+
+Do not log secrets or sensitive prompt content by default. Use bounded timeouts and explicit retry behavior. Make failures observable and understandable without exposing credentials or private data.
+
+### 7.8 Backward compatibility matters
+
+Because multiple modules may use the package at the same time, public changes should be intentional. Prefer additive changes when practical; document deprecations and breaking changes. Do not promise strict semantic stability for experimental APIs until they are explicitly promoted to supported status.
+
+## 8. Dependency direction and ownership
+
+The intended dependency direction is:
+
+```text
+Mini-project / application
+        |
+        v
+ genai-core public API
+        |
+        v
+ shared contracts and service logic
+        |
+        v
+ provider / storage / framework adapters
+        |
+        v
+ external SDKs and services
+```
+
+This is a conceptual direction, not a requirement that every capability use the same internal layering.
+
+Rules:
+
+- Consumer projects may depend on `genai-core`.
+- `genai-core` must not import code from Module 17, Module 18, Module 19, Module 20, or another consuming application.
+- A project should not reach into private core internals when a public API is available.
+- Provider-specific SDKs should be confined to the integration boundary as far as practical.
+- Avoid circular dependencies between core components; share small contracts in a neutral location when there is a real need.
+- Optional integrations should not force every consumer to install all provider, vector-store, or framework dependencies.
+
+## 9. How to decide whether a capability belongs in core
+
+Before promoting a component into `genai-core`, answer these questions:
+
+1. Do at least two projects use it, or is there a concrete near-term reason they will?
+2. Is the behavior meaningfully the same across those projects?
+3. Can we define an interface without encoding one application's workflow?
+4. Can the component be tested independently and documented clearly?
+5. Will centralization reduce maintenance rather than create excessive indirection?
+6. Are its dependencies and provider-specific limitations understood?
+7. Is the proposed abstraction needed now, or are we designing for hypothetical future use?
+
+If the answers are uncertain, leave the code in the mini-project temporarily and revisit after another use case appears. Keeping a small amount of local duplication is sometimes cheaper than maintaining a premature abstraction.
+
+## 10. Risks and intended responses
+
+| Risk | Why it matters | Response |
+|---|---|---|
+| Overengineering | The package becomes a framework before the projects need one. | Implement the smallest capability that solves a real repeated problem. |
+| Scope creep | Every GenAI-related helper gets added to core. | Apply the promotion checklist and keep application workflows local. |
+| Provider leakage | Consumer code relies on one SDK's request/response shape. | Normalize shared behavior at the adapter boundary and expose differences explicitly. |
+| Over-abstraction | The public API hides useful functionality or becomes hard to understand. | Prefer direct, typed contracts over excessive layers and generic factories. |
+| Breaking changes | Connected modules fail when core evolves. | Test consumers, document public changes, and use deprecation/versioning discipline. |
+| Dependency conflicts | Optional providers/frameworks burden unrelated projects. | Keep integrations modular and dependencies intentional. |
+| False sense of portability | A common interface implies capabilities that providers do not share. | Document and validate feature support rather than silently emulating it. |
+| Sensitive data leakage | Prompts, credentials, or memory data could appear in logs. | Redact by default and make any additional logging explicit. |
+| Learning concepts get hidden | Core abstractions obscure the topic a module should teach. | Keep core focused on repeatable infrastructure; leave module-specific learning visible. |
+
+## 11. Success criteria
+
+`genai-core` is succeeding when the following become true:
+
+- A new mini-project can use existing shared capabilities through documented imports instead of copying implementation files.
+- The initial LLM integration has clear inputs, outputs, configuration, and errors, and can be tested without live API calls in its unit tests.
+- Provider-specific code is separated from project workflow code to a useful degree.
+- Shared changes can be tested against consumers and do not require manual edits to duplicate implementations.
+- Modules 17–20 can compose the shared capabilities they genuinely need without being forced into one architecture.
+- Core has no dependency on its consumers and avoids circular imports.
+- Optional integrations do not impose unnecessary dependencies on all projects.
+- New abstractions are justified by concrete needs and documented trade-offs.
+- The package remains small enough that a contributor can understand where a capability belongs and how to extend it.
+
+Success is **not** measured by the number of modules or abstractions inside the package. It is measured by reduced duplication, clearer contracts, safer change, and easier project development.
+
+## 12. Relationship to `BUSINESS_LOGIC.md`
+
+This document explains the **why, intended outcomes, scope, and direction** of `genai-core`. It does not by itself specify every runtime behavior.
+
+`BUSINESS_LOGIC.md` defines the package's **responsibilities, behavioral rules, component boundaries, validation expectations, errors, and interactions**. Implementation details should follow those contracts where a capability is supported, while future capabilities remain planned until a real project justifies implementation.
+
+## 13. Guiding statement
+
+> Build a reusable GenAI foundation once, make its contracts understandable, and grow it only as connected projects prove what should be shared. Start with LLM service integration, but design `genai-core` for the broader set of reusable capabilities that future modules genuinely need.
