@@ -342,18 +342,17 @@ Consumers should be able to catch the appropriate category without relying on ra
 
 ## 15. Observability and logging
 
-Observability is a cross-cutting concern, but a full tracing/telemetry integration is not a prerequisite for the first release.
+Observability is implemented as a reusable, caller-controlled core capability (`genai_core.observability`).
 
-Baseline rules:
+Verified rules:
 
-- Errors should include safe, useful context such as operation category and provider/model identifiers when available.
-- Never log credentials.
-- Avoid logging prompt text, retrieved content, memory, or tool arguments by default.
-- Make provider/request IDs available when safe and supplied by the dependency.
-- Do not require one logging or tracing vendor in the core contract.
-- Add callbacks, tracing hooks, metrics, or structured event abstractions only when more than one consumer or a clear operational requirement justifies them.
+- **Caller-controlled destination:** Logs are emitted to destinations configured by the consuming application (`ObservabilityConfig.log_file` or console stdout). By default (`NullHandler`), zero files or side effects are created on disk.
+- **Format selection:** Supports structured single-line JSON (`JsonFormatter`) and human-readable text (`TextFormatter`).
+- **Security & Secret Scrubbing:** `RedactingFilter` automatically scrubs Google, OpenAI, Anthropic API keys, Bearer tokens, and credential dictionary keys (`api_key`, `secret`, `password`, `token`) from all log records, messages, and exception tracebacks. Token usage metrics (`input_tokens`, `output_tokens`) are preserved.
+- **Request tracing:** Async request context is managed via `observability_context` and `get_request_id` without requiring intrusive function argument passing. Context lookups return `None` or auto-generate UUIDs gracefully without raising exceptions.
+- **Fault isolation:** All internal service logging calls dispatch via `safe_log`. Handler or filesystem errors are caught and suppressed, ensuring logging failures never break primary business logic or LLM completions.
 
-**Status:** Safe baseline applies from the start; advanced instrumentation is optional and planned only as needed.
+**Status:** Implemented and integrated with `LLMService` operations.
 
 ## 16. Testing and compatibility behavior
 
@@ -478,20 +477,20 @@ Memory retrieval, prompt assembly, write policy, and retention should be explici
 
 Before calling the first LLM service milestone usable, verify:
 
-- [ ] The package can be imported from a consumer project using the documented workflow.
-- [ ] The supported public API and required configuration are documented.
-- [ ] Invalid requests and invalid configuration fail before unnecessary external calls.
-- [ ] Provider-specific request/response translation is isolated behind a defined integration boundary.
-- [ ] Successful results have a predictable normalized response shape.
-- [ ] Provider errors are translated into useful, safe error categories.
-- [ ] Unsupported settings/capabilities are reported rather than silently ignored.
-- [ ] Timeouts and retry behavior are bounded and documented.
-- [ ] Unit tests run without live credentials or network access.
-- [ ] Integration tests are separately controllable.
-- [ ] Secrets and sensitive request content are not logged by default.
-- [ ] At least one consumer example uses public imports and does not depend on provider internals.
-- [ ] The core package does not import from its consuming modules.
-- [ ] Future/planned sections have not been mistaken for implemented features.
+- [x] The package can be imported from a consumer project using the documented workflow.
+- [x] The supported public API and required configuration are documented.
+- [x] Invalid requests and invalid configuration fail before unnecessary external calls.
+- [x] Provider-specific request/response translation is isolated behind a defined integration boundary.
+- [x] Successful results have a predictable normalized response shape.
+- [x] Provider errors are translated into useful, safe error categories.
+- [x] Unsupported settings/capabilities are reported rather than silently ignored.
+- [x] Timeouts and retry behavior are bounded and documented.
+- [x] Unit tests run without live credentials or network access.
+- [x] Integration tests are separately controllable (gated on `INTEGRATION_TEST=1`).
+- [x] Secrets and sensitive request content are not logged by default; automated secret scrubbing is active.
+- [x] At least one consumer example uses public imports and does not depend on provider internals.
+- [x] The core package does not import from its consuming modules.
+- [x] Future/planned sections have not been mistaken for implemented features.
 
 ## 20. Rule for adding a new component
 

@@ -105,6 +105,20 @@ Existing libraries and frameworks can still be used by individual projects or th
 
 The implementation should proceed in validated increments. The sequence below is a default direction; actual needs and module requirements can adjust it.
 
+### Current Implementation Status
+
+| Milestone / Capability | Status | Verified Deliverables |
+|---|---|---|
+| **Phase 0 — Package Boundary** | **Completed** | Clean public API (`genai_core`), package structure, automated pre-push checks (`ruff`, `mypy`). |
+| **Phase 1 — LLM Service Integration** | **Completed** | Unified `LLMService`, provider adapters (Google, OpenAI, Anthropic), structured responses via Pydantic, tool calling, streaming, error normalization, and live integration tests. |
+| **Observability Infrastructure** | **Completed** | Reusable, caller-controlled logging (`ObservabilityConfig`), zero side effects by default (`NullHandler`), JSON/Text formatters, secret scrubbing (`RedactingFilter`), non-throwing async context (`observability_context`), and fault-isolated logging (`safe_log`). |
+| **Phase 2 — Embedding Service** | **Next Planned Milestone** | Standardized embedding contracts, single/batch vectorization, provider adapters, and dimension metadata. |
+| **Phase 3 — Retrieval Abstractions** | Planned | Document/chunk models, vector-store adapters, hybrid search contracts. |
+| **Phase 4 — Memory Primitives** | Planned | Session/user scoped conversation memory and storage primitives. |
+| **Phase 5 — Tool Calling Interoperability**| Planned | Higher-level dispatch and orchestration boundaries. |
+
+---
+
 ### Phase 0 — Establish the package boundary
 
 - Confirm the package location and how projects install or import it in the repository.
@@ -112,7 +126,7 @@ The implementation should proceed in validated increments. The sequence below is
 - Establish configuration, error, testing, and dependency conventions.
 - Review what Modules 17–20 actually need before designing abstractions around assumptions.
 
-**Outcome:** A real, importable package boundary and a documented method for deciding what is shared.
+**Outcome:** Completed. A real, importable package boundary and a documented method for deciding what is shared.
 
 ### Phase 1 — LLM service integration
 
@@ -126,11 +140,23 @@ This is the starting capability because model access is a common dependency of m
 - Add unit tests using fakes/mocks and a separately controlled integration-test path.
 - Demonstrate use from a small consumer project.
 
-**Outcome:** One reusable, testable model-access path that can be consumed without copying provider glue code.
+**Outcome:** Completed. One reusable, testable model-access path implemented via `LLMService` and validated through 56 unit tests and live integration tests across Google, OpenAI, and Anthropic.
 
-### Phase 2 — Embedding service
+### Observability — Cross-cutting infrastructure
+
+Built as a reusable, caller-controlled capability in `genai_core.observability`.
+- Consuming applications explicitly configure destination files or console output.
+- Automatic secret and credential masking protects API keys while preserving token metrics.
+- Async request tracing via `observability_context` correlates operations without intrusive argument passing.
+- Fault-tolerant dispatch via `safe_log` prevents logging errors from impacting application requests.
+
+**Outcome:** Completed. Fully tested and integrated across all `LLMService` operations.
+
+### Phase 2 — Embedding service (Next Planned Milestone)
 
 Add an embedding capability when a module needs it. Define the reusable contract, input/output expectations, batch behavior, metadata, configuration, and provider-specific limitations. Keep embedding behavior separate from text generation even if one provider supplies both.
+
+**Status:** Next Planned Milestone.
 
 ### Phase 3 — Retrieval abstractions and integrations
 
@@ -146,7 +172,7 @@ Where useful across multiple projects, normalize tool definitions, tool-call req
 
 ### Phase 6 — Further shared capabilities
 
-Additional concerns such as streaming, observability hooks, caching, structured output, evaluation integration, or orchestration adapters may be considered when they solve a repeated problem. Each should have its own use case, contract, tests, and adoption justification.
+Additional concerns such as caching, evaluation integration, or orchestration adapters may be considered when they solve a repeated problem. Each should have its own use case, contract, tests, and adoption justification.
 
 **Important:** These phases do not mean all listed features are committed to the first release. Scope each phase against real Module 17–20 needs and keep unneeded capabilities out of the initial implementation.
 
