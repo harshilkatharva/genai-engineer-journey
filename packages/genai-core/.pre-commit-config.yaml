@@ -1,0 +1,23 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.0
+    hooks:
+      - id: ruff
+        name: ruff-check
+        stages: [pre-push, pre-commit]
+      - id: ruff-format
+        stages: [pre-push, pre-commit]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.13.0
+    hooks:
+      - id: mypy
+        name: mypy-check
+        stages: [pre-push]
+        additional_dependencies:
+          - pydantic>=2.0.0
+          - pydantic-settings>=2.0.0
+          - google-genai>=2.19.0
+          - openai>=1.50.0
+          - anthropic>=0.40.0
+          - pytest>=8.0.0
