@@ -112,8 +112,8 @@ The implementation should proceed in validated increments. The sequence below is
 | **Phase 0 — Package Boundary** | **Completed** | Clean public API (`genai_core`), package structure, automated pre-push checks (`ruff`, `mypy`). |
 | **Phase 1 — LLM Service Integration** | **Completed** | Unified `LLMService`, provider adapters (Google, OpenAI, Anthropic), structured responses via Pydantic, tool calling, streaming, error normalization, and live integration tests. |
 | **Observability Infrastructure** | **Completed** | Reusable, caller-controlled logging (`ObservabilityConfig`), zero side effects by default (`NullHandler`), JSON/Text formatters, secret scrubbing (`RedactingFilter`), non-throwing async context (`observability_context`), and fault-isolated logging (`safe_log`). |
-| **Phase 2 — Embedding Service** | **Next Planned Milestone** | Standardized embedding contracts, single/batch vectorization, provider adapters, and dimension metadata. |
-| **Phase 3 — Retrieval Abstractions** | Planned | Document/chunk models, vector-store adapters, hybrid search contracts. |
+| **Phase 2 — Embedding Service & Shared Resilience** | **Completed** | Full embedding capability across Local (`sentence-transformers`), OpenAI (`text-embedding-3-small`), and Google (`text-embedding-005`), non-blocking thread execution, strict dimension validation (`EmbeddingDimensionError`), internal batch slicing with 1-to-1 order preservation, shared async resilience (`RateLimiter` dual token buckets for RPM/TPM, `RetryPolicy` with backoff/jitter/deadlines, `extract_retry_after`), honest token usage reporting, and full observability integration. |
+| **Phase 3 — Retrieval Abstractions** | Next Planned Milestone | Document/chunk models, vector-store adapters, hybrid search contracts. |
 | **Phase 4 — Memory Primitives** | Planned | Session/user scoped conversation memory and storage primitives. |
 | **Phase 5 — Tool Calling Interoperability**| Planned | Higher-level dispatch and orchestration boundaries. |
 
@@ -152,11 +152,26 @@ Built as a reusable, caller-controlled capability in `genai_core.observability`.
 
 **Outcome:** Completed. Fully tested and integrated across all `LLMService` operations.
 
-### Phase 2 — Embedding service (Next Planned Milestone)
+### Phase 2 — Embedding service and shared resilience
 
-Add an embedding capability when a module needs it. Define the reusable contract, input/output expectations, batch behavior, metadata, configuration, and provider-specific limitations. Keep embedding behavior separate from text generation even if one provider supplies both.
+Provide a complete, production-grade vectorization capability with unified APIs, multi-provider support, and reusable resilience:
 
-**Status:** Next Planned Milestone.
+- Implemented `EmbeddingService` entry point, `EmbeddingRequest`, and `EmbeddingResponse`.
+- Established `EmbeddingProvider` runtime checkable protocol.
+- Implemented `LocalEmbeddingProvider` using `sentence-transformers` as an optional package extra (`genai-core[local]`), running inference non-blocking via `asyncio.to_thread`.
+- Implemented `OpenAIEmbeddingProvider` using `AsyncOpenAI` SDK with model `text-embedding-3-small`, flexible dimension truncation, order preservation via API index sorting, and honest usage reporting.
+- Implemented `GoogleEmbeddingProvider` using current `google-genai` SDK with `text-embedding-005` (768 native dims) and `output_dimensionality` configuration. Prohibited retired `text-embedding-004`.
+- Built package-level shared resilience package (`genai_core.resilience`):
+  - In-memory async rate limiter (`RateLimiter`, `AsyncTokenBucket`) with RPM and TPM token bucket controls and `Retry-After` header parsing.
+  - Internal heuristic token estimation (`estimate_tokens`, ~4 chars/token) strictly for internal TPM pacing; never exposed as actual response usage.
+  - Asynchronous retry policy (`RetryPolicy`, `execute_with_retry`) with exponential backoff, full jitter, attempt timeouts, overall bounded request deadlines, and selective retryability (fast-fail for auth/quota/dimension errors).
+- Enforced strict dimension validation during service initialization, rejecting unsupported dimensions via `EmbeddingDimensionError`.
+- Added internal sub-batch slicing with strict 1-to-1 order preservation.
+- Enforced empty input validation (`input=[]` or whitespace-only raises `ValueError`).
+- Integrated lifecycle observability logging (`EMBEDDING_REQUEST_START`, `EMBEDDING_REQUEST_SUCCESS`, `EMBEDDING_RATE_LIMITED`, `EMBEDDING_RETRY`, `EMBEDDING_TIMEOUT`, `EMBEDDING_REQUEST_FAILED`).
+
+**Outcome:** Completed. Fully validated through 42 embedding and resilience unit tests (98 unit tests total in the package, 100% pass rate) and all pre-push checks (`ruff`, `mypy`).
+
 
 ### Phase 3 — Retrieval abstractions and integrations
 

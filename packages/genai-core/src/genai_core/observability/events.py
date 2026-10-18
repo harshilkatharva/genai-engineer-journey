@@ -13,3 +13,11 @@ class ObservabilityEvent(StrEnum):
     LLM_STREAM_SUCCESS = "llm_stream_success"
     LLM_STREAM_FAILED = "llm_stream_failed"
     LLM_RETRY = "llm_retry"
+
+    # Embedding events
+    EMBEDDING_REQUEST_START = "embedding_request_start"
+    EMBEDDING_REQUEST_SUCCESS = "embedding_request_success"
+    EMBEDDING_REQUEST_FAILED = "embedding_request_failed"
+    EMBEDDING_RATE_LIMITED = "embedding_rate_limited"
+    EMBEDDING_RETRY = "embedding_retry"
+    EMBEDDING_TIMEOUT = "embedding_timeout"

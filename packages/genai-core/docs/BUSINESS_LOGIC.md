@@ -182,24 +182,78 @@ Retries must have a limit and must not form unbounded loops. Backoff and provide
 
 Streaming, automatic tool execution, automatic retries beyond the basic safe policy, caching, routing across many providers, prompt management systems, tracing platforms, and complex fallback chains are **not required by default**. Add them only when a module use case justifies their cost and the behavior can be specified and tested clearly.
 
-## 6. Planned capability: embeddings
+## 6. Implemented capability: embeddings
 
-Embeddings are a separate capability from text generation, even when provided by the same vendor.
+Embeddings are a separate capability from text generation, even when provided by the same vendor. The service is implemented via [`EmbeddingService`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/embedding_service.py) with the following confirmed business rules:
 
-When implemented, the embedding service should:
+### 6.1 Provider & Model Defaults
+- Default provider is `local` (using SentenceTransformers).
+- Default model is `sentence-transformers/all-MiniLM-L6-v2` (`all-MiniLM-L6-v2`).
+- Default native dimension is `384`.
+- Default internal batch size is `32`.
+- `sentence-transformers` is an optional package extra (`genai-core[local]`), keeping base `genai-core` installation lightweight. If absent, attempting local embedding raises `MissingExtraDependencyError` with instructions to install `genai-core[local]`.
 
-- accept one input or a batch through a clear documented contract;
-- return vectors associated with the correct inputs;
-- preserve input-to-output ordering or explicitly provide stable identifiers that remove ambiguity;
-- validate empty or unsupported input according to documented rules;
-- expose model/dimension metadata when available and needed by downstream storage;
-- distinguish model/provider failures from invalid input;
-- document batch-size, token-size, and provider limitations;
-- avoid silently mixing vectors produced by incompatible model/dimension configurations in workflows where that would invalidate retrieval.
+### 6.2 Strict Dimension Validation
+- Dimensions are configured and validated at service initialization time (`EmbeddingService(dimensions=...)`).
+- Unsupported dimensions are strictly rejected whenever model capabilities are known or inspectable. For example, `all-MiniLM-L6-v2` strictly rejects `dimensions=768` by raising `EmbeddingDimensionError`.
+- Vector dimensions in returned batches are verified against configured dimensions; mismatches raise `EmbeddingDimensionError`.
 
-The embedding service should not own vector storage or retrieval ranking merely because embeddings are commonly used with them. A consumer should be able to use embeddings independently.
+### 6.3 Input Validation & Empty Input Policy
+- `embed(input=[])` raises `ValueError("Input cannot be empty.")`.
+- Empty strings (`""`) or whitespace-only strings (`"   "`) passed as input raise `ValueError("Input text cannot be empty or whitespace only.")`.
+- Any item within an input list that is empty or whitespace-only raises `ValueError` identifying the invalid index.
+- Non-string / non-list inputs raise `TypeError`.
 
-**Status:** Planned until a real module use case is selected and the public contract is implemented and tested.
+### 6.4 Batch Size & Internal Batching
+- Batch size is configurable at the service level and overridable per request via `EmbeddingRequest(batch_size=...)`.
+- Batch size is completely distinct from vector dimensions.
+- Batch size `<= 0` raises `ValueError("batch_size must be greater than 0.")`.
+- Large inputs (e.g. 1,000 texts) are sliced internally into sub-batches of `batch_size`.
+- **Strict 1-to-1 Order Preservation**: Output vectors in `EmbeddingResponse.embeddings` strictly match the index order of input texts.
+
+### 6.5 Token Usage & Metadata Semantics
+- When token usage metrics are unavailable (such as local model embeddings), `response.usage` is explicitly `None`.
+- Token counts are never fabricated, estimated, or guessed.
+- `response.latency_ms` records total wall-clock duration in milliseconds.
+
+### 6.6 Asynchronous Non-Blocking Execution
+- All embedding endpoints (`embed`, `embed_query`, `embed_documents`) are strictly asynchronous coroutines.
+- CPU-bound local model inference runs in a worker thread via `asyncio.to_thread`, keeping the Python asyncio event loop responsive.
+
+### 6.7 Hosted Provider Rules (OpenAI & Google)
+- **OpenAI (`OpenAIEmbeddingProvider`)**:
+  - Default model is `text-embedding-3-small` (1536 native dimensions). Also supports `text-embedding-3-large` (3072 native dimensions) and legacy `text-embedding-ada-002` (1536 fixed dimensions).
+  - Supports variable `dimensions` parameter for `text-embedding-3-*` models down to any positive integer `<= max_dimensions`. Legacy `text-embedding-ada-002` strictly rejects non-1536 dimensions.
+  - Guarantees 1-to-1 index-ordered outputs by explicitly sorting response objects on the `item.index` attribute returned by OpenAI API.
+  - Aggregates actual token usage (`prompt_tokens`, `total_tokens`) reported in OpenAI API response into `EmbeddingResponse.usage`.
+- **Google Gemini (`GoogleEmbeddingProvider`)**:
+  - Uses current supported `text-embedding-005` model (768 native dimensions). Retired `text-embedding-004` is forbidden and rejected.
+  - Passes `output_dimensionality=dimensions` via `EmbedContentConfig` when a dimension `<= 768` is configured.
+  - Safely extracts values from `EmbedContentResponse` and computes L2 unit normalization.
+  - Provider errors are caught and converted to `EmbeddingProviderError("google", ...)`.
+
+### 6.8 Shared Resilience: Rate Limiting & Bounded Retries
+- **In-Memory Asynchronous Rate Limiter (`RateLimiter`)**:
+  - Enforces configurable RPM (requests per minute) and TPM (tokens per minute) using an async dual-token bucket (`AsyncTokenBucket`).
+  - Thread/coroutine-safe via `asyncio.Lock` with non-blocking waits (`asyncio.sleep`).
+  - Scope is strictly **per-process in-memory**. Does not require distributed locks or external Redis coordination in this phase.
+  - **Internal Pacing Token Estimation**: Uses `estimate_tokens` (~4 characters per token heuristic) strictly for internal TPM bucket pacing. These estimates are never exposed as actual usage metadata in `EmbeddingResponse`.
+  - **`Retry-After` Handling**: Inspects provider rate-limit responses and pauses dispatch dynamically when a `Retry-After` header is returned.
+- **Retry Policy & Deadlines (`RetryPolicy` & `execute_with_retry`)**:
+  - Default policy: `max_retries=3`, `initial_backoff=0.5s`, `max_backoff=10.0s`, with full randomized jitter to avoid synchronized retry storms.
+  - **Selective Retryability**: Transient errors (network connection errors, HTTP 408, 429, 500, 502, 503, 504) are retried with exponential backoff.
+  - **Fail-Fast Policy**: Authentication failures, invalid inputs, dimension errors, missing extras, and permanent quota/billing failures (`insufficient_quota`, `billing_not_active`, `account_deactivated`) immediately fail without retrying.
+  - **Bounded Request Deadline**: Evaluates `time.monotonic()` against an overall deadline across all sub-batches. Times out with `EmbeddingTimeoutError` if exceeded.
+
+### 6.9 Observability Integration
+- Emits `EMBEDDING_REQUEST_START` and `EMBEDDING_REQUEST_SUCCESS` via `safe_log` with provider, model, dimensions, total inputs, and latency.
+- Emits `EMBEDDING_RATE_LIMITED` when the rate limiter throttles and delays a batch.
+- Emits `EMBEDDING_RETRY` on transient error retry attempts with attempt index, sleep delay, and error message.
+- Emits `EMBEDDING_TIMEOUT` when the request deadline or attempt timeout expires.
+- Provider errors emit `EMBEDDING_REQUEST_FAILED` with error details and raise `EmbeddingProviderError`.
+
+**Status:** Completed (Stages 1, 2, and 3 verified by 98 unit tests and package pre-push checks).
+
 
 ## 7. Planned capability: retrieval and document abstractions
 

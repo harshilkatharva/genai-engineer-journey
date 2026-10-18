@@ -11,6 +11,23 @@ class Settings(BaseSettings):
     default_llm_model: str = "gemini-3.5-flash-lite"
     default_llm_temperature: float = 0.2
     max_structured_error_retry: int = 2
+    # Embedding settings
+    default_embedding_provider: str = "local"
+    default_embedding_model: str = "all-MiniLM-L6-v2"
+    default_embedding_dimensions: int = 384
+    default_embedding_batch_size: int = 32
+    default_google_embedding_model: str = "text-embedding-005"
+    default_openai_embedding_model: str = "text-embedding-3-small"
+
+    # Embedding resilience settings
+    embedding_max_retries: int = 3
+    embedding_initial_backoff: float = 0.5
+    embedding_max_backoff: float = 10.0
+    embedding_timeout_seconds: float = 30.0
+    embedding_rate_limit_rpm: int | None = None
+    embedding_rate_limit_tpm: int | None = None
+
+    # Integration and API keys
     integration_test: int = 0
     google_api_key: str | None = None
     openai_api_key: str | None = None

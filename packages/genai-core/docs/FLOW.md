@@ -1,10 +1,93 @@
 # Execution & Data Flow: `genai-core` Scope
 
-This document details the actual verified execution flows, component interactions, and data normalization across `genai-core` (`packages/genai-core/`).
+This document details the actual verified execution flows, component interactions, and data normalization across the entire `genai-core` package (`packages/genai-core/`).
+
+It is structured by service and capability, providing an evolving architecture map of how components connect.
 
 ---
 
-## 1. Request Lifecycle Overview
+## 1. Overall Package Architecture & Component Interconnection
+
+`genai-core` provides reusable, provider-agnostic GenAI capabilities designed with clean layer separation, loose coupling, shared resilience, and cross-cutting observability:
+
+```mermaid
+flowchart TD
+    Client[Consuming Application / Mini-Projects]
+
+    subgraph PublicAPI ["Public API: genai_core"]
+        direction TB
+        LLM[LLMService]
+        EMB[EmbeddingService]
+        RESIL[Resilience: RateLimiter & RetryPolicy]
+        OBS[Observability Engine]
+        MODELS[Models: Request & Response Contracts]
+        EXC[Exceptions: Typed Error Hierarchy]
+        CORE[Core: Settings & Configuration]
+    end
+
+    Client -->|generate text / tool calls| LLM
+    Client -->|vectorize text / documents| EMB
+    Client -->|configure logging / request_id context| OBS
+    Client -->|access config / typed models| MODELS
+
+    subgraph ServiceLayer ["Service Orchestration Layer"]
+        LLM --> LLMProviderResolve{Resolve LLM Provider}
+        EMB --> EMBProviderResolve{Resolve Embedding Provider}
+    end
+
+    subgraph ResilienceSubsystem ["Shared Resilience Infrastructure"]
+        EMB --> RateLimiter[RateLimiter: RPM & TPM Token Bucket]
+        EMB --> RetryPolicy[RetryPolicy: Exponential Backoff & Jitter]
+        RateLimiter -.->|reusable by| LLM
+        RetryPolicy -.->|reusable by| LLM
+    end
+
+    subgraph CrossCutting ["Cross-Cutting Observability & Safety"]
+        OBS --> ContextManager[observability_context / request_id]
+        OBS --> SafeLog[safe_log Fault Isolation]
+        OBS --> Redaction[RedactingFilter Secret Scrubbing]
+    end
+
+    LLM -.->|emit lifecycle events| SafeLog
+    EMB -.->|emit lifecycle events| SafeLog
+    ResilienceSubsystem -.->|emit throttled / retry / timeout events| SafeLog
+
+    subgraph Adapters ["Integration & Provider Adapters"]
+        LLMProviderResolve --> GoogleLLM[GoogleProvider]
+        LLMProviderResolve --> OpenAILLM[OpenAIProvider]
+        LLMProviderResolve --> AnthropicLLM[AnthropicProvider]
+
+        EMBProviderResolve --> LocalEmb[LocalEmbeddingProvider]
+        EMBProviderResolve --> OpenAIEmb[OpenAIEmbeddingProvider]
+        EMBProviderResolve --> GoogleEmb[GoogleEmbeddingProvider]
+    end
+
+    subgraph FutureServices ["Future Services (Planned)"]
+        RET[RetrievalService]
+        MEM[MemoryService]
+        TOOL[ToolOrchestrator]
+    end
+
+    SafeLog --> Formatter[JsonFormatter / TextFormatter]
+    Formatter --> Output[Caller-Defined File / Console]
+```
+
+### Component Roles & Responsibilities:
+- **`genai_core.services`**: Unified entry points (`LLMService`, `EmbeddingService`). Validate input, resolve providers, coordinate internal batching, manage fault isolation, and emit observability events.
+- **`genai_core.resilience`**: Shared asynchronous resilience infrastructure (`RateLimiter`, `AsyncTokenBucket`, `RetryPolicy`, `execute_with_retry`, `extract_retry_after`, `estimate_tokens`). Implements in-memory token bucket pacing for RPM/TPM and bounded retries with jitter and deadlines. Designed as a package-level capability reusable across embeddings, LLMs, and future services.
+- **`genai_core.llm`**: Adapters conforming to `LLMProvider` protocol translating between normalized contracts and vendor SDKs (Google, OpenAI, Anthropic).
+- **`genai_core.embedding`**: Adapters conforming to `EmbeddingProvider` protocol:
+  - `LocalEmbeddingProvider`: CPU-bound models (`sentence-transformers`) non-blocking in background threads.
+  - `OpenAIEmbeddingProvider`: Hosted OpenAI models (`text-embedding-3-small`, `text-embedding-3-large`, `text-embedding-ada-002`) with flexible output dimensions and exact usage reporting.
+  - `GoogleEmbeddingProvider`: Hosted Google Gemini models (`text-embedding-005`) with `output_dimensionality` truncation and error wrapping.
+- **`genai_core.observability`**: Reusable logging with caller-isolated outputs, secret/key scrubbing, asynchronous request context propagation, and zero side effects by default.
+- **`genai_core.models`**: Pydantic v2 schemas (`ChatMessage`, `LLMManagerRequest`, `LLMResponseModel`, `EmbeddingRequest`, `EmbeddingResponse`, `ToolSpec`).
+- **`genai_core.exceptions`**: Typed error hierarchies (`LLMError`, `EmbeddingError`, `EmbeddingDimensionError`, `EmbeddingTimeoutError`, `EmbeddingRateLimitError`, `MissingExtraDependencyError`, `EmbeddingProviderError`).
+- **`genai_core.core`**: Environment settings loaded via `pydantic-settings` with explicit precedence and fallback defaults.
+
+---
+
+## 2. LLMService Execution Flow
 
 The diagram below illustrates how client calls enter `LLMService`, get dispatched to provider adapters conforming to `LLMProvider`, and return normalized responses:
 
@@ -40,11 +123,7 @@ flowchart TD
     ErrorResp --> Client
 ```
 
----
-
-## 2. Request Dispatch & Routing
-
-### 2.1 Provider Resolution
+### 2.1 Request Dispatch & Routing
 - **File**: [`packages/genai-core/src/genai_core/services/llm_services.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/llm_services.py)
 - **Function**: [`LLMService.complete`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/llm_services.py#L55-L121)
 - **Execution Flow**:
@@ -52,201 +131,278 @@ flowchart TD
   2. Resolves provider name via precedence: `request.provider` -> `self.default_provider` -> `settings.default_llm_provider` -> fallback `"google"`.
   3. Checks `self.providers.get(provider_name)`.
   4. If provider is `None`: immediately returns `LLMManagerResponse(error=LLMError(provider=provider_name, code="unsupported_provider", message=...))`.
+  5. **Operation Routing**:
+     - **If `request.response_schema is not None`**: extracts prompt and calls `await provider.complete_structure(prompt=prompt, response_schema=request.response_schema)`.
+     - **If `request.response_schema is None`**: builds messages and calls `await provider.complete_tool(messages=messages, tools=request.tools, tool_choice=request.tool_choice)`.
 
-### 2.2 Operation Routing
-- **If `request.response_schema is not None`**:
-  - Extracts prompt: `request.prompt` or the content of the last message in `request.messages`.
-  - Dispatches to `await provider.complete_structure(prompt=prompt, response_schema=request.response_schema)`.
-- **If `request.response_schema is None`**:
-  - Prepares messages: if `request.messages` is empty but `request.prompt` is present, builds `[ChatMessage(role="user", content=request.prompt)]`.
-  - Dispatches to `await provider.complete_tool(messages=messages, tools=request.tools, tool_choice=request.tool_choice)`.
+### 2.2 Provider Adapters
+- **Google Gemini (`GoogleProvider`)**: Uses `google-genai` SDK. Supports native JSON schema constraints, function calling declarations, and delta streaming.
+- **OpenAI (`OpenAIProvider`)**: Uses `openai` SDK v1+. Supports strict structured schema responses (`text={"format": ...}`), tool schemas via `FunctionToolParam`, and event stream deltas.
+- **Anthropic Claude (`AnthropicProvider`)**: Uses `anthropic` SDK. Extracts text blocks for JSON schema validation, maps tools into Anthropic tool specs, and streams text deltas.
 
----
+### 2.3 Concurrent Provider Query Flow (`complete_all`)
+- Takes `prompt` and optional `response_schema`.
+- Spawns concurrent asynchronous tasks for each registered provider using `asyncio.gather(*tasks, return_exceptions=True)`.
+- Returns a list containing `LLMResponseModel` instances or exceptions for failed providers without aborting successful ones.
 
-## 3. Provider-Specific Execution Flows
-
-### 3.1 Google Gemini Flow (`GoogleProvider`)
-- **File**: [`packages/genai-core/src/genai_core/llm/google_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/llm/google_provider.py)
-
-#### Structured Output (`complete_structure`)
-1. Instantiates `types.GenerateContentConfig(temperature=self.temperature)`.
-2. When `response_schema` is supplied, sets `config.response_mime_type = "application/json"` and `config.response_schema = response_schema`.
-3. Invokes `await self.client.aio.models.generate_content(model=self.model, contents=prompt, config=config)`.
-4. Parses JSON and validates against `response_schema.model_validate(parsed_json)`.
-5. **Retry Mechanism**: If JSON parsing or Pydantic validation fails, retries up to `max_structured_error_retry` (from `Settings` in `genai_core.core`, default 2) times with feedback prompt containing error details. If all retries fail, raises `LLMValidationError`.
-6. Calculates total latency and accumulated token counts from `response.usage_metadata`.
-7. Returns [`LLMResponseModel`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/models/llm_model/llm_response_model.py) with `text`, `structured_response=validated_model_instance`, token usage, latency, and `model`.
-
-#### Tool Calling (`complete_tool`)
-1. Converts all `ToolSpec` objects into Gemini declarations: `types.FunctionDeclaration(**tool.to_google_function_declaration())`.
-2. Extracts system instructions from messages with `role == "system"`.
-3. Maps `tool_choice` to `types.ToolConfig(function_calling_config=...)` via `tool_choice.to_google()`.
-4. Converts conversation messages to Gemini `types.Content`:
-   - `role == "tool"`: Validates `message.tool_name` exists (raises `ValueError` if absent), decodes JSON payload into dict, wraps in `types.FunctionResponse`, and appends as `role="user"`.
-   - `role == "assistant"`: Appends with `role="model"`.
-   - `role == "user"`: Appends with `role="user"`.
-5. Calls `await self.client.aio.models.generate_content`.
-6. Inspects candidates and content parts for `part.function_call`.
-7. Builds `ToolCall(id=f"google-{i}", name=function_call.name, arguments=dict(function_call.args))`.
-8. Returns `LLMResponseModel(text=response.text if not calls else None, tool_calls=calls, ...)`.
-
-#### Streaming (`stream`)
-1. Extracts contents from messages (ignoring system role).
-2. Calls `self.client.aio.models.generate_content_stream`.
-3. Inspects whether return object is awaitable; awaits if necessary, then iterates asynchronously over stream chunks yielding `chunk.text`.
+### 2.4 Error Normalization Flow
+- Provider exceptions are intercepted and inspected for HTTP status codes, error codes, and messages.
+- Status codes in `{408, 429, 500, 502, 503, 504}` are flagged `retryable=True`.
+- Returns `LLMManagerResponse(error=LLMError(...))` guaranteeing no unhandled exceptions leak to callers.
 
 ---
 
-### 3.2 OpenAI Flow (`OpenAIProvider`)
-- **File**: [`packages/genai-core/src/genai_core/llm/openai_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/llm/openai_provider.py)
+## 3. Observability Execution Flow
 
-#### Structured Output (`complete_structure`)
-1. Prepares `request_kwargs = {"model": self.model, "input": prompt}`.
-2. If `response_schema` is present, adds `text={"format": {"type": "json_schema", "name": response_schema.__name__, "schema": response_schema.model_json_schema(), "strict": True}}`.
-3. Calls `await self.client.responses.create(**request_kwargs)`.
-4. Parses JSON and validates against `response_schema.model_validate(parsed_json)`.
-5. **Retry Mechanism**: If JSON parsing or Pydantic validation fails, retries up to `max_structured_error_retry` (from `Settings` in `genai_core.core`, default 2) times with feedback prompt containing error details. If all retries fail, raises `LLMValidationError`.
-6. Returns normalized `LLMResponseModel` with `structured_response=validated_model_instance`.
-
-#### Tool Calling (`complete_tool`)
-1. Converts tools into `FunctionToolParam` list via `tool.to_openai_tool()`.
-2. Sets `tool_choice` using `tool_choice.to_openai()` (`"auto"`, `"required"`, or `{"type": "function", "name": ...}`).
-3. Calls `await self.client.responses.create(model=self.model, input=[...], tools=..., tool_choice=...)`.
-4. Iterates over `response.output`: identifies items with `type == "function_call"`, parses JSON arguments, and constructs `ToolCall(id=item.call_id, name=item.name, arguments=args)`.
-5. Returns normalized `LLMResponseModel`.
-
-#### Streaming (`stream`)
-1. Formats input messages.
-2. Context-manages `async with self.client.responses.stream(...) as stream:`.
-3. Iterates over stream events; yields `event.delta` when event matches `ResponseTextDeltaEvent` or contains text delta.
-
----
-
-### 3.3 Anthropic Claude Flow (`AnthropicProvider`)
-- **File**: [`packages/genai-core/src/genai_core/llm/anthropic_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/llm/anthropic_provider.py)
-
-#### Structured Output (`complete_structure`)
-1. Calls `await self.client.messages.create(model=self.model, max_tokens=self.max_tokens, messages=[{"role": "user", "content": prompt}])`.
-2. Extracts combined text from blocks with `type == "text"`.
-3. Parses JSON and validates against `response_schema.model_validate(parsed_json)`.
-4. **Retry Mechanism**: If JSON parsing or Pydantic validation fails, retries up to `max_structured_error_retry` (from `Settings` in `genai_core.core`, default 2) times with feedback prompt containing error details. If all retries fail, raises `LLMValidationError`.
-5. Returns normalized `LLMResponseModel` with `structured_response=validated_model_instance`.
-
-#### Tool Calling (`complete_tool`)
-1. Extracts system message string from messages.
-2. Converts tools via `tool.to_anthropic_tool()` (`{"name": ..., "description": ..., "input_schema": ...}`).
-3. Configures `tool_choice` via `tool_choice.to_anthropic()` (`{"type": "auto"}`, `{"type": "any"}`, or `{"type": "tool", "name": ...}`).
-4. Calls `await self.client.messages.create(model=..., system=system, messages=request_messages, tools=..., tool_choice=...)`.
-5. Iterates over `response.content`:
-   - Extracts blocks with `type == "tool_use"` into `ToolCall(id=block.id, name=block.name, arguments=block.input)`.
-   - Extracts blocks with `type == "text"` into `text`.
-6. Returns normalized `LLMResponseModel`.
-
-#### Streaming (`stream`)
-1. Extracts user message content.
-2. Context-manages `async with self.client.messages.stream(...) as stream:`.
-3. Iterates asynchronously over `stream.text_stream` yielding chunks.
-
----
-
-## 4. Concurrent Provider Query Flow (`complete_all`)
-
-- **File**: [`packages/genai-core/src/genai_core/services/llm_services.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/llm_services.py#L148-L161)
-- **Flow**:
-  1. Invoked with `prompt` and optional `response_schema`.
-  2. Creates concurrent asynchronous tasks for each provider registered in `self.providers`:
-     `[provider.complete_structure(prompt=prompt, response_schema=response_schema) for provider in self.providers.values()]`.
-  3. Executes tasks concurrently via `asyncio.gather(*tasks, return_exceptions=True)`.
-  4. Returns a list containing `LLMResponseModel` instances or exceptions for failed providers without aborting successful ones.
-
----
-
-## 5. Error Normalization Flow
-
-- When any provider raises an unhandled exception inside `LLMService.complete`:
-  1. Traps exception in `except Exception as error:`.
-  2. Inspects `status_code` attribute if present on the exception.
-  3. Inspects response body dict for nested `error.code` or `error.message`.
-  4. Determines retryability: flags `retryable=True` if status code is in `{408, 429, 500, 502, 503, 504}`.
-  5. Returns `LLMManagerResponse(error=LLMError(provider=provider_name, code=code, message=message, status_code=status_code, retryable=retryable))`.
-
----
-
-## 6. Observability Execution Flow
-
-Observability is built as a reusable, caller-controlled capability in `packages/genai-core/src/genai_core/observability/`:
+Observability is a cross-cutting subsystem in `packages/genai-core/src/genai_core/observability/`:
 
 ```mermaid
 flowchart TD
     Caller["Consuming Application"]
     ConfigureCall["configure_observability(config)"]
     ContextCall["with observability_context(request_id)"]
-    ObsConfig["Observability Engine"]
-    LLMService["LLMService"]
+    ObsEngine["Observability Subsystem"]
 
-    Caller --> ConfigureCall
-    ConfigureCall --> ObsConfig
-    Caller --> ContextCall
-    ContextCall --> LLMService
+    Caller -->|1. Setup config| ConfigureCall
+    ConfigureCall --> ObsEngine
+    ObsEngine --> InitHandlers["Attach RotatingFileHandler / StreamHandler"]
+    InitHandlers --> AttachRedactor["Attach RedactingFilter"]
 
-    subgraph ObservabilityLifecycle["Observability Lifecycle"]
-        ObsConfig --> ConfigLogger["Configure genai_core Logger"]
-        ConfigLogger --> AttachFormatter["Attach JsonFormatter or TextFormatter"]
-        ConfigLogger --> AttachRedactor["Attach RedactingFilter"]
-        ConfigLogger --> AttachHandler["Attach Caller LogFile or StreamHandler"]
+    Caller -->|2. Scoped operation| ContextCall
+    ContextCall --> SetVar["contextvars.set(request_id)"]
+
+    subgraph ServiceLogging ["Service Invocation (LLM or Embedding)"]
+        Service["LLMService / EmbeddingService"]
+        Service --> SafeLog["safe_log(logger, level, event, **fields)"]
+        SafeLog --> ExtractCtx["Read request_id from contextvars"]
+        ExtractCtx --> EmitRecord["logger.log()"]
     end
 
-    subgraph ServiceRequestLifecycle["Service Request Lifecycle"]
-        LLMService --> RequestStart["safe_log: LLM_REQUEST_START"]
-        RequestStart --> ProviderExec["Invoke Provider: complete or stream"]
-        ProviderExec --> Success["safe_log: LLM_REQUEST_SUCCESS"]
-        Success --> SuccessDetails["Record latency_ms and tokens"]
-        ProviderExec --> Failure["safe_log: LLM_REQUEST_FAILED"]
-        Failure --> FailureDetails["Record error_code and retryable"]
-    end
+    EmitRecord --> FilterPass{"RedactingFilter"}
+    FilterPass --> ScrubDict["Scrub API keys & secrets from extra fields"]
+    ScrubDict --> ScrubMsg["Regex scrub AIza..., sk-..., Bearer tokens"]
+    ScrubMsg --> FormatterChoice{"Format Selection"}
 
-    subgraph LogProcessingSecurity["Log Record Processing and Security"]
-        ConfigLogger --> RedactingFilter["Scrub API Keys and Credentials"]
-        RedactingFilter --> Formatter["Format JSON or Text"]
-        Formatter --> Destination["Caller Destination: File or Console"]
-    end
+    FormatterChoice -->|JSON| JsonFmt["JsonFormatter: Output structured JSON line"]
+    FormatterChoice -->|Text| TextFmt["TextFormatter: Human-readable timestamp + msg"]
 
-    RequestStart --> ConfigLogger
-    SuccessDetails --> ConfigLogger
-    FailureDetails --> ConfigLogger
+    JsonFmt --> TargetFile["Caller-configured log_file"]
+    TextFmt --> TargetConsole["Standard Output"]
 ```
 
-### 6.1 Configuration & Isolation
-- Consuming applications configure logging via [`ObservabilityConfig`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/observability/config.py) and [`configure_observability`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/observability/logger.py).
-- `genai-core` creates no log files, directories, or disk side-effects by default (defaults to `logging.NullHandler()` if unconfigured).
-- All handlers are namespaced to `"genai_core"` and tracked for clean reconfiguration or teardown via `close_observability()`.
+---
 
-### 6.2 Security & Credential Redaction
-- [`RedactingFilter`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/observability/redactor.py) and [`JsonFormatter`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/observability/formatters.py) inspect all log records, messages, arguments, extra attributes, and exception tracebacks.
-- Known patterns (Google Gemini API keys `AIza...`, OpenAI `sk-...`, Anthropic `sk-ant-...`, Bearer tokens) and sensitive dictionary keys (`api_key`, `secret`, `token`, `password`, `authorization`) are automatically replaced with `[REDACTED]`.
-- Non-sensitive metrics (`input_tokens`, `output_tokens`, `total_tokens`, `token_count`) are explicitly protected from false-positive redaction.
+## 4. EmbeddingService Execution Flow
 
-### 6.3 Fault Isolation (`safe_log`)
-- All logging calls inside [`LLMService`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/llm_services.py) are dispatched through `safe_log`.
-- Any underlying handler errors (e.g. disk full, permission denied, invalid character encoding) are safely suppressed and never disrupt LLM service execution or caller requests.
+`EmbeddingService` provides standardized vector generation across local, OpenAI, and Google providers, with strict dimension validation, internal batching, token bucket rate limiting, and bounded retries:
+
+```mermaid
+flowchart TD
+    Client[Caller / Application] -->|embed / embed_query / embed_documents| EmbeddingService
+
+    subgraph InitPhase ["Initialization & Dimension Validation"]
+        EmbeddingService --> InitService["Initialize: provider, model, dimensions, batch_size"]
+        InitService --> ResolveProvider["Resolve Local, OpenAI, or Google Provider"]
+        ResolveProvider --> ValDim{"provider.validate_dimensions(dimensions)"}
+        ValDim -->|Mismatch| RaiseDimErr["Raise EmbeddingDimensionError"]
+        ValDim -->|Supported| Ready["Service Ready"]
+    end
+
+    subgraph InputValidation ["Request & Input Validation"]
+        Ready --> ReceiveReq["Receive EmbeddingRequest or kwargs"]
+        ReceiveReq --> CheckEmpty{"Input empty or whitespace?"}
+        CheckEmpty -->|Yes: input=[] or whitespace| RaiseValErr["Raise ValueError"]
+        CheckEmpty -->|No| CheckBatchSize{"batch_size <= 0?"}
+        CheckBatchSize -->|Yes| RaiseBatchErr["Raise ValueError"]
+        CheckBatchSize -->|Valid| SetDeadline["Calculate overall request_deadline"]
+        SetDeadline --> LogStart["safe_log: EMBEDDING_REQUEST_START"]
+    end
+
+    subgraph BatchingLoop ["Internal Batch Slicing & Resilient Execution"]
+        LogStart --> SliceBatch["Slice inputs into chunks of batch_size"]
+        
+        SliceBatch --> RateLimitCheck["await rate_limiter.acquire(requests=1, tokens=est)"]
+        RateLimitCheck -->|Throttled| LogRateLimit["safe_log: EMBEDDING_RATE_LIMITED"]
+        RateLimitCheck -->|Capacity Ready| ExecWithRetry["execute_with_retry(provider.embed_batch, retry_policy)"]
+        
+        subgraph ProviderExecution ["Provider-Specific Dispatch"]
+            ExecWithRetry --> RouteProvider{Active Provider}
+            
+            RouteProvider -->|Local| LocalExec["asyncio.to_thread(model.encode, ...)"]
+            RouteProvider -->|OpenAI| OpenAIExec["await client.embeddings.create(...)"]
+            RouteProvider -->|Google| GoogleExec["await client.aio.models.embed_content(...)"]
+        end
+
+        ProviderExecution --> Retried{"Transient 429/5xx or timeout?"}
+        Retried -->|Yes: within retry limit| BackoffSleep["Wait with exponential backoff & jitter"]
+        BackoffSleep --> LogRetry["safe_log: EMBEDDING_RETRY"]
+        LogRetry --> ExecWithRetry
+        Retried -->|No: Permanent 400/401/quota or deadline reached| RaiseError["Raise typed Error / Timeout"]
+
+        ProviderExecution --> SuccessBatch["Return batch float vectors"]
+        SuccessBatch --> ValidateDim{"Vector count & dim match?"}
+        ValidateDim -->|No| RaiseDimErr2["Raise EmbeddingDimensionError"]
+        ValidateDim -->|Yes| AppendResult["Append vectors in exact input order"]
+        
+        AppendResult --> RecordUsage["Aggregate provider usage: prompt_tokens, total_tokens"]
+        RecordUsage --> MoreBatches{"More batches remaining?"}
+        MoreBatches -->|Yes| SliceBatch
+        MoreBatches -->|No| FinishBatches["All inputs processed"]
+    end
+
+    subgraph ResponseConstruction ["Response & Observability"]
+        FinishBatches --> CalcMetrics["Calculate latency_ms; set usage"]
+        CalcMetrics --> LogSuccess["safe_log: EMBEDDING_REQUEST_SUCCESS"]
+        LogSuccess --> BuildResp["Return EmbeddingResponse"]
+        BuildResp --> Client
+    end
+
+    subgraph ErrorHandling ["Error Shielding & Observability"]
+        RaiseError -.-> LogFail["safe_log: EMBEDDING_TIMEOUT or EMBEDDING_REQUEST_FAILED"]
+        LogFail --> PropagateErr["Propagate typed Exception to caller"]
+    end
+```
+
+### 4.1 Service Initialization & Strict Dimension Validation
+- **Location**: [`packages/genai-core/src/genai_core/services/embedding_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/embedding_service.py)
+- **Execution Flow**:
+  1. Resolves default configurations from `Settings` (`default_embedding_provider="local"`, `default_embedding_model="all-MiniLM-L6-v2"`, `default_embedding_dimensions=384`, `default_embedding_batch_size=32`).
+  2. Resolves active provider: accepts registered provider dictionary, provider name string (`"local"`, `"openai"`, `"google"`), or direct `EmbeddingProvider` instance.
+  3. **Strict Dimension Validation**: Calls `self.active_provider.validate_dimensions(self.dimensions)` at initialization.
+     - For `LocalEmbeddingProvider`: `all-MiniLM-L6-v2` strictly rejects `dimensions=768` by raising `EmbeddingDimensionError(model='all-MiniLM-L6-v2', requested=768, supported=384)`.
+     - For `OpenAIEmbeddingProvider`: `text-embedding-3-small` allows dimensions `<= 1536`, `text-embedding-3-large` allows `<= 3072`, while `text-embedding-ada-002` strictly requires `1536`.
+     - For `GoogleEmbeddingProvider`: `text-embedding-005` native dimension is `768`, allowing output dimensionality `<= 768`. Prohibits retired `text-embedding-004`.
+     - Invalid configurations fail fast before any inference or data processing occurs.
+
+### 4.2 Request Preparation & Input Validation
+- Accepts an [`EmbeddingRequest`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/models/embedding_model/embedding_request.py) object or keyword arguments (`input`, `batch_size`, `normalize_embeddings`).
+- **Empty Input Checking**:
+  - `input=[]`: raises `ValueError("Input cannot be empty.")`.
+  - `input=""` or all-whitespace string: raises `ValueError("Input text cannot be empty or whitespace only.")`.
+  - `input=["valid", "   "]`: raises `ValueError("Input text at index 1 cannot be empty or whitespace only.")`.
+- **Batch Size Checking**:
+  - `batch_size <= 0`: raises `ValueError("batch_size must be greater than 0.")`.
+- **Bounded Request Deadline**: Computes overall request deadline `time.monotonic() + self.retry_policy.timeout_seconds` across the entire multi-batch request.
+- Emits `EMBEDDING_REQUEST_START` via `safe_log` with provider, model, dimensions, total inputs, and batch counts.
+
+### 4.3 Provider Adapters
+1. **`LocalEmbeddingProvider`**:
+   - Runs `sentence-transformers` via `asyncio.to_thread` for non-blocking execution.
+   - Caches models using `@lru_cache(maxsize=4)`.
+   - `sentence-transformers` is an optional extra (`genai-core[local]`).
+2. **`OpenAIEmbeddingProvider`**:
+   - Uses `AsyncOpenAI` SDK (`client.embeddings.create(input=texts, model=..., dimensions=...)`).
+   - Sorts returned embeddings by item index to guarantee input order preservation regardless of API concurrency.
+   - Stores exact token usage in `last_usage = {"prompt_tokens": ..., "total_tokens": ...}`.
+3. **`GoogleEmbeddingProvider`**:
+   - Uses current `google-genai` SDK with model `text-embedding-005`.
+   - Configures `EmbedContentConfig(output_dimensionality=dimensions)` for variable dimensionality.
+   - L2-normalizes vectors and wraps provider errors in `EmbeddingProviderError`.
+
+---
+
+## 5. Shared Resilience Execution Flow
+
+Resilience logic is isolated in `packages/genai-core/src/genai_core/resilience/` as a shared capability reusable across services:
+
+```mermaid
+flowchart TD
+    Operation[Async Service Operation: Batch Call] --> LimiterAcquire["RateLimiter.acquire(requests=1, tokens=est_tokens)"]
+
+    subgraph TokenBucketLimiter ["AsyncTokenBucket Rate Limiter (Per-Process)"]
+        LimiterAcquire --> CheckHold{"In dynamic Retry-After hold?"}
+        CheckHold -->|Yes| HoldWait["asyncio.sleep(remaining_hold)"]
+        CheckHold -->|No| CheckBuckets{"RPM and TPM tokens available?"}
+        HoldWait --> CheckBuckets
+        CheckBuckets -->|Insufficient| CalcWait["Calculate required sleep to replenish"]
+        CalcWait --> BucketWait["asyncio.sleep(wait_seconds)"]
+        BucketWait --> ConsumeTokens["Consume 1 request token & N token capacity"]
+        CheckBuckets -->|Available| ConsumeTokens
+    end
+
+    ConsumeTokens --> ExecRetry["execute_with_retry(operation, policy, deadline)"]
+
+    subgraph RetryLoop ["Bounded Retry & Timeout Engine"]
+        ExecRetry --> CheckDeadline{"Now >= Deadline?"}
+        CheckDeadline -->|Yes| RaiseTimeout["Raise EmbeddingTimeoutError"]
+        CheckDeadline -->|No| RunAttempt["await asyncio.wait_for(op(), attempt_timeout)"]
+        
+        RunAttempt -->|Success| ReturnResult["Return operation result"]
+        RunAttempt -->|Timeout| AttemptTimedOut["Attempt timeout exceeded"]
+        RunAttempt -->|Exception| EvalErr{"is_retryable_error(exc)?"}
+        
+        EvalErr -->|Non-Retryable: 400/401/quota/dim error| FastFail["Raise Exception immediately (no retry)"]
+        AttemptTimedOut --> CheckMaxRetries{"attempt >= max_retries?"}
+        EvalErr -->|Retryable: 429, 5xx, network error| CheckMaxRetries
+        
+        CheckMaxRetries -->|Exhausted| ReRaise["Re-raise last exception"]
+        CheckMaxRetries -->|Attempts remain| ParseRetryAfter["extract_retry_after(exc)"]
+        ParseRetryAfter --> NotifyLimiter["rate_limiter.record_rate_limit(wait)"]
+        NotifyLimiter --> CalcBackoff["delay = min(max_backoff, init * 2^attempt) + jitter"]
+        CalcBackoff --> SleepRetry["await asyncio.sleep(delay)"]
+        SleepRetry --> NextAttempt["attempt += 1"]
+        NextAttempt --> CheckDeadline
+    end
+```
+
+### 5.1 Per-Process Token Bucket Rate Limiting
+- **Location**: [`packages/genai-core/src/genai_core/resilience/rate_limiter.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/resilience/rate_limiter.py)
+- **Mechanics**:
+  - Maintained as dual token buckets: Request Bucket (RPM) and Token Bucket (TPM).
+  - Continuous fractional replenishment based on elapsed wall-clock time (`time.monotonic()`).
+  - Thread/coroutine-safe asynchronous acquisition via `asyncio.Lock`.
+  - Non-blocking waiting: coroutines sleep only for the exact duration required to replenish capacity, without blocking unrelated async tasks.
+  - **Scope**: Documented as strictly **per-process in-memory**. Does not require Redis or external infrastructure in this phase.
+  - **Internal Pacing Token Estimation**: Uses `estimate_tokens(texts)` heuristic (~4 characters per token) strictly for TPM pacing. These pacing estimates are internal and never leaked as actual usage in `EmbeddingResponse`.
+
+### 5.2 Error Classification & Selective Retryability
+- **Location**: [`packages/genai-core/src/genai_core/resilience/retry_policy.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/resilience/retry_policy.py)
+- **Retryable Errors**:
+  - Network timeouts, connection resets, transient DNS failures.
+  - HTTP `408 Request Timeout`, `429 Too Many Requests`.
+  - HTTP `500 Internal Server Error`, `502 Bad Gateway`, `503 Service Unavailable`, `504 Gateway Timeout`.
+- **Non-Retryable Errors (Fail-Fast)**:
+  - Input validation errors (`ValueError`, `TypeError`).
+  - Strict dimension mismatches (`EmbeddingDimensionError`).
+  - Missing dependency errors (`MissingExtraDependencyError`).
+  - HTTP 400 Bad Request, 401 Unauthorized, 403 Forbidden.
+  - Quota exhaustion / billing failure (`insufficient_quota`, `billing_not_active`, `account_deactivated`).
+- **`Retry-After` Header Parsing**: Parses integer seconds, floats, or RFC-2822 date strings from `Retry-After` HTTP headers. When received on a 429 response, informs the `RateLimiter` to pause subsequent dispatches dynamically.
+
+---
+
+## 6. Future Services (Planned Architecture)
+
+As `genai-core` expands in Modules 17–20, additional shared capabilities will connect into the package architecture:
+
+### 6.1 Retrieval & Document Abstractions (Phase 3)
+- **Location**: `genai_core.retrieval`
+- **Role**: Common contracts for `DocumentChunk`, `RetrievalQuery`, `RetrievalResult`, and vector-store adapters (Chroma, Qdrant, PGVector).
+- **Interconnection**: Uses `EmbeddingService` to vectorize incoming queries and document chunks before querying vector stores; leverages `observability_context` to correlate retrieval latency and top-k scores with the overall request lifecycle.
+
+### 6.2 Memory Primitives (Phase 4)
+- **Location**: `genai_core.memory`
+- **Role**: Session and user scoped conversation memory, buffer windows, and persistent store adapters.
+- **Interconnection**: Injects conversation history into `LLMService` requests (`ChatMessage` lists) and extracts facts/summaries post-completion.
+
+### 6.3 Tool & Agent Orchestration (Phase 5)
+- **Location**: `genai_core.agents` / `genai_core.tools`
+- **Role**: Higher-level multi-step tool execution loops, argument dispatching, and agent state machines.
+- **Interconnection**: Dispatches tool definitions (`ToolSpec`) to `LLMService`, executes validated functions under caller control, and reports tool execution steps via `safe_log`.
 
 ---
 
 ## 7. Verification and Test Flow
 
-The behavior above is verified through 56 automated unit tests and live integration tests:
+The behavior of `genai-core` is verified through automated unit tests and integration tests:
+- **Resilience unit tests**: [`test_embedding_resilience.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_embedding_resilience.py) validates RPM/TPM token bucket pacing, token estimation heuristics, error classification, exponential backoff, jitter, Retry-After header parsing, attempt timeout, deadline enforcement, and service retry integration.
+- **Hosted provider unit tests**:
+  - [`test_openai_embedding_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_openai_embedding_provider.py) validates dimension validation, request creation, output normalization, index-ordered sorting, usage tracking, and error wrapping.
+  - [`test_google_embedding_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_google_embedding_provider.py) validates `text-embedding-005` model configuration, output dimensionality, embedding extraction, and error wrapping.
+- **Embedding service unit tests**: [`test_embedding_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_embedding_service.py) validates initialization defaults, strict dimension rejection, empty input rejection, batch size validation, internal slicing loop, 1-to-1 order preservation, missing dependency handling, convenience helpers, and observability events.
 - **Observability unit tests**: [`test_observability.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_observability.py) validates caller-defined destinations, JSON/text formatting, secret scrubbing, async request context, idempotency, and error shielding.
 - **Observability live integration tests**: [`test_observability_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/test_observability_integration.py) verifies real log emission to caller-specified paths with live API execution and confirms zero credentials leak.
-- **Protocol conformance**: [`test_protocol.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_protocol.py) validates all adapters conform to `LLMProvider`.
-- **Google adapter**: [`test_google_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_google_provider.py) validates schema outputs, tool calling, tool-name enforcement, and streaming.
-- **OpenAI adapter**: [`test_openai_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_openai_provider.py) validates structured output formatting, function calls, and delta streaming.
-- **Anthropic adapter**: [`test_anthropic_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_anthropic_provider.py) validates structured output JSON decoding, tool choice, and text streaming.
+- **Protocol conformance**: [`test_protocol.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_protocol.py) validates all adapters conform to `LLMProvider` and `EmbeddingProvider`.
+- **LLM Provider adapters**: [`test_google_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_google_provider.py), [`test_openai_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_openai_provider.py), [`test_anthropic_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_anthropic_provider.py).
 - **Service orchestration**: [`test_llm_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_llm_service.py) validates dispatch, error shielding, `complete_all` concurrency, and stream delegation.
 - **Tool definitions**: [`test_tool_spec.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_tool_spec.py) validates schema generators and argument parsing.
-
----
-
-## 8. Unimplemented / Reserved Areas
-
-1. **Subpackages**: `agents/`, `embedding/`, `evaluation/`, `memory/`, `prompts/`, `retrieval/`, and `tools/` are currently empty directory placeholders. (`observability/` is fully implemented and tested).
-2. **Anthropic Native Schema Enforcement**: Anthropic does not support native JSON grammar constraints outside tool calling; structured output decoding relies on parsing generated text into JSON.

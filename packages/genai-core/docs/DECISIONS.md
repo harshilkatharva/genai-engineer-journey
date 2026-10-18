@@ -219,5 +219,97 @@ This document records the architectural decisions, component responsibilities, d
 - **Alternatives Considered**: Module 09's approach of raising `RuntimeError` when `request_id` was absent. Rejected because logging should never crash business operations.
 - **Impact**: Zero downtime or request failure caused by observability subsystem issues.
 
+---
+
+## 2026-10-17: Embedding Service Architecture (Stage 1 & Stage 2)
+
+### 1. Default Provider & Optional Extra Dependency
+- **Locations**:
+  - [`packages/genai-core/pyproject.toml`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/pyproject.toml)
+  - [`packages/genai-core/src/genai_core/embedding/local_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/embedding/local_provider.py)
+- **Decision**: The default embedding provider is `local` using `sentence-transformers/all-MiniLM-L6-v2`. `sentence-transformers` is declared as an optional package extra (`[project.optional-dependencies] local = ["sentence-transformers>=3.0.0"]`). When the dependency is absent, `LocalEmbeddingProvider` raises a typed `MissingExtraDependencyError` with instructions to install `genai-core[local]`.
+- **Alternatives Considered**: Making `sentence-transformers` and PyTorch mandatory dependencies of base `genai-core`. Rejected because heavy ML libraries would force 2GB+ downloads on consumers that only need LLM API access or hosted embeddings.
+- **Impact**: Keeps the base package lightweight and fast to install while providing high-performance local vector generation out of the box when the `local` extra is installed.
+
+### 2. Strict Service-Level Dimension Validation
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/services/embedding_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/embedding_service.py)
+  - [`packages/genai-core/src/genai_core/exceptions/embedding_exceptions.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/exceptions/embedding_exceptions.py)
+- **Decision**: Embedding output dimensions are configured and strictly validated during service initialization (`EmbeddingService(dimensions=...)`). Whenever the provider model's native dimension is known or discoverable, unsupported dimensions are immediately rejected with `EmbeddingDimensionError(model, requested, supported)`. Returned batch vector sizes are also verified.
+- **Alternatives Considered**: Silent truncation, zero-padding, or postponing dimension checking until vectors are stored downstream in a vector database. Rejected because silently altering vector dimensions invalidates semantic cosine similarity and breaks downstream retrieval.
+- **Impact**: Incompatible configurations fail fast at initialization before executing expensive model inference or data ingestion.
+
+### 3. Clear Separation Between Batch Size and Vector Dimensions
+- **Location**: [`packages/genai-core/src/genai_core/services/embedding_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/embedding_service.py)
+- **Decision**: `batch_size` (number of texts processed per forward pass, default 32) and `dimensions` (vector length, e.g. 384) are completely separated in configuration and method signatures. Batch size <= 0 raises `ValueError`.
+- **Alternatives Considered**: Conflating batch size and model dimension into a generic "shape" parameter. Rejected for clarity and usability.
+- **Impact**: Eliminates developer confusion between batch slicing throughput and vector geometric dimensions.
+
+### 4. Internal Batching with Guaranteed 1-to-1 Order Preservation
+- **Location**: [`packages/genai-core/src/genai_core/services/embedding_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/embedding_service.py)
+- **Decision**: Callers can supply arbitrary collections of texts (e.g. 1,000 document chunks) in a single `embed()` call. `EmbeddingService` slices the input into internal sub-batches of `batch_size`, invokes the provider, and concatenates the resulting vectors into `EmbeddingResponse.embeddings` in exact sequential 1-to-1 input order.
+- **Alternatives Considered**: Forcing client applications to implement their own chunking and batch loops. Rejected because internal batching prevents memory exhaustion and standardizes slicing across all consumers.
+- **Impact**: Prevents OOM crashes while maintaining predictable input-to-output mapping.
+
+### 5. Honest Token Usage & Input Validation
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/models/embedding_model/embedding_response.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/models/embedding_model/embedding_response.py)
+  - [`packages/genai-core/src/genai_core/services/embedding_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/embedding_service.py)
+- **Decision**:
+  - `response.usage` is explicitly `None` when token counts are not natively emitted by the embedding model (e.g., local sentence-transformers). Never fabricate or guess token usage.
+  - Passing empty list `input=[]` or empty/whitespace strings raises `ValueError("Input cannot be empty.")`.
+- **Alternatives Considered**: Estimating tokens via string length heuristics (e.g., `len(text) // 4`). Rejected because heuristic token estimation is inaccurate and misleading for downstream billing or quota systems.
+- **Impact**: Accurate metadata contracts and fail-fast validation on degenerate inputs.
+
+### 6. Strictly Asynchronous Non-Blocking Execution
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/embedding/local_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/embedding/local_provider.py)
+  - [`packages/genai-core/src/genai_core/services/embedding_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/embedding_service.py)
+- **Decision**: All embedding service endpoints (`embed`, `embed_query`, `embed_documents`) are async coroutines. Local PyTorch inference runs via `asyncio.to_thread`.
+- **Alternatives Considered**: Providing synchronous methods or running `model.encode()` directly on the main event loop thread. Rejected because CPU-bound PyTorch model execution blocks concurrent HTTP requests and async task scheduling.
+- **Impact**: Consuming async applications (FastAPI, background workers) remain non-blocking during heavy vector embedding operations.
+
+---
+
+## 2026-10-17: Embedding Service Stage 3 — Hosted Providers and Shared Resilience Subsystem
+
+### 1. Hosted Embedding Adapters (OpenAI and Google Gemini)
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/embedding/openai_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/embedding/openai_provider.py)
+  - [`packages/genai-core/src/genai_core/embedding/google_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/embedding/google_provider.py)
+  - [`packages/genai-core/src/genai_core/embedding/__init__.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/embedding/__init__.py)
+- **Decision**: Implemented `OpenAIEmbeddingProvider` and `GoogleEmbeddingProvider` conforming to the unified `EmbeddingProvider` protocol.
+  - `OpenAIEmbeddingProvider`: Targets `text-embedding-3-small` (default, 1536 native dims) with truncation support via the `dimensions` parameter. Sorts response objects by API `item.index` to guarantee exact 1-to-1 input sequence preservation. Exposes honest token usage (`prompt_tokens`, `total_tokens`) in `last_usage`.
+  - `GoogleEmbeddingProvider`: Uses current `text-embedding-005` (768 native dims) via `google-genai` SDK with `output_dimensionality` configuration. Strictly prohibits retired `text-embedding-004`. Safely extracts values from `EmbedContentResponse` and applies L2 unit normalization.
+- **Alternatives Considered**: Making callers use separate APIs or instantiate SDK clients directly. Rejected because `genai-core`'s mission is to offer a consistent, interchangeable public API (`EmbeddingService`) across all providers.
+- **Impact**: Consuming applications switch between local inference, OpenAI, and Google Gemini embeddings with zero code modifications to client vectorization logic.
+
+### 2. Package-Level Shared Resilience Subsystem (`genai_core.resilience`)
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/resilience/rate_limiter.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/resilience/rate_limiter.py)
+  - [`packages/genai-core/src/genai_core/resilience/retry_policy.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/resilience/retry_policy.py)
+  - [`packages/genai-core/src/genai_core/resilience/__init__.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/resilience/__init__.py)
+- **Decision**: Created reusable resilience primitives in `genai_core.resilience`:
+  - `RateLimiter`: Dual async token buckets (`AsyncTokenBucket`) tracking requests (RPM) and estimated tokens (TPM). Coroutines wait non-blocking via `asyncio.sleep` without stalling the event loop. Scope is explicitly documented as **per-process in-memory**. Supports dynamic rate-limit pauses upon receiving HTTP `Retry-After` headers.
+  - `RetryPolicy` and `execute_with_retry`: Configurable retries (`max_retries=3`), exponential backoff (`initial_backoff=0.5s`, `max_backoff=10s`), full randomized jitter, per-attempt timeouts, and overall bounded deadlines.
+  - Selective retryability: Transient network errors and HTTP 408/429/5xx are retried; non-retryable errors (400, 401, 403, quota exhaustion, dimension errors) fail fast without retrying.
+- **Alternatives Considered**: Embedding resilience logic directly inside `EmbeddingService`. Rejected because `LLMService` and future retrieval/agent services require the identical token bucket and retry behavior, and duplicating resilience logic across services would lead to divergence and maintenance overhead.
+- **Impact**: Provides a clean, reusable foundation for service stability across the entire package.
+
+### 3. Internal Pacing Token Estimation vs. Honest Response Usage
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/resilience/rate_limiter.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/resilience/rate_limiter.py)
+  - [`packages/genai-core/src/genai_core/services/embedding_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/embedding_service.py)
+- **Decision**: Added `estimate_tokens` (~4 characters per token heuristic) strictly for pacing TPM consumption inside `RateLimiter.acquire()`. These heuristic counts are internal pacing estimates and are **never** returned as actual usage in `EmbeddingResponse.usage`. `EmbeddingResponse.usage` is `None` for local models and aggregated from actual provider SDK counts for hosted models.
+- **Alternatives Considered**: Returning heuristic token counts in `EmbeddingResponse.usage` for local models. Rejected because fabricating metadata misinforms callers and violates the honest usage contract.
+- **Impact**: Accurate rate-limit pacing without corrupting client-facing usage metadata.
+
+### 4. Bounded Request Deadlines Across Multi-Batch Requests
+- **Location**: [`packages/genai-core/src/genai_core/services/embedding_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/embedding_service.py)
+- **Decision**: For multi-batch requests, an overall request deadline (`time.monotonic() + timeout_seconds`) is established before the batch loop. Each sub-batch dynamically inherits the remaining deadline rather than resetting the clock, raising `EmbeddingTimeoutError` if the overall deadline is exceeded.
+- **Alternatives Considered**: Giving every individual batch a fresh full timeout window. Rejected because a request with 100 batches could hang for 50 minutes (100 * 30s) without triggering a timeout.
+- **Impact**: Guaranteed bounded execution time for large embedding jobs.
+
+
 
 

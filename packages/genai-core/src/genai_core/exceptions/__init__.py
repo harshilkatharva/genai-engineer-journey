@@ -1,3 +1,11 @@
+from .embedding_exceptions import (
+    EmbeddingDimensionError,
+    EmbeddingError,
+    EmbeddingProviderError,
+    EmbeddingRateLimitError,
+    EmbeddingTimeoutError,
+    MissingExtraDependencyError,
+)
 from .llm_exceptions import (
     ConfigError,
     LLMAuthenticationError,
@@ -12,6 +20,11 @@ from .llm_exceptions import (
 
 __all__ = [
     "ConfigError",
+    "EmbeddingDimensionError",
+    "EmbeddingError",
+    "EmbeddingProviderError",
+    "EmbeddingRateLimitError",
+    "EmbeddingTimeoutError",
     "LLMAuthenticationError",
     "LLMConnectionError",
     "LLMContentFilterError",
@@ -20,4 +33,5 @@ __all__ = [
     "LLMRateLimitError",
     "LLMTimeoutError",
     "LLMValidationError",
+    "MissingExtraDependencyError",
 ]

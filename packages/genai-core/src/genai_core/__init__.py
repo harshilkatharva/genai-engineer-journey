@@ -1,6 +1,17 @@
 from .core import Settings, get_settings
+from .embedding import (
+    EmbeddingProvider,
+    GoogleEmbeddingProvider,
+    LocalEmbeddingProvider,
+    OpenAIEmbeddingProvider,
+)
 from .exceptions import (
     ConfigError,
+    EmbeddingDimensionError,
+    EmbeddingError,
+    EmbeddingProviderError,
+    EmbeddingRateLimitError,
+    EmbeddingTimeoutError,
     LLMAuthenticationError,
     LLMConnectionError,
     LLMContentFilterError,
@@ -8,6 +19,7 @@ from .exceptions import (
     LLMRateLimitError,
     LLMTimeoutError,
     LLMValidationError,
+    MissingExtraDependencyError,
 )
 from .exceptions import (
     LLMError as LLMException,
@@ -20,6 +32,8 @@ from .llm import (
 )
 from .models import (
     ChatMessage,
+    EmbeddingRequest,
+    EmbeddingResponse,
     LLMError,
     LLMManagerRequest,
     LLMManagerResponse,
@@ -46,12 +60,32 @@ from .observability import (
     safe_log,
     set_request_id,
 )
-from .services import LLMService, LLMServicemanager
+from .resilience import (
+    AsyncTokenBucket,
+    RateLimiter,
+    RetryPolicy,
+    estimate_tokens,
+    execute_with_retry,
+    extract_retry_after,
+    is_retryable_error,
+)
+from .services import EmbeddingService, LLMService, LLMServicemanager
 
 __all__ = [
     "AnthropicProvider",
+    "AsyncTokenBucket",
     "ChatMessage",
     "ConfigError",
+    "EmbeddingDimensionError",
+    "EmbeddingError",
+    "EmbeddingProvider",
+    "EmbeddingProviderError",
+    "EmbeddingRateLimitError",
+    "EmbeddingRequest",
+    "EmbeddingResponse",
+    "EmbeddingService",
+    "EmbeddingTimeoutError",
+    "GoogleEmbeddingProvider",
     "GoogleProvider",
     "JsonFormatter",
     "LLMAuthenticationError",
@@ -69,10 +103,15 @@ __all__ = [
     "LLMServicemanager",
     "LLMTimeoutError",
     "LLMValidationError",
+    "LocalEmbeddingProvider",
+    "MissingExtraDependencyError",
     "ObservabilityConfig",
     "ObservabilityEvent",
+    "OpenAIEmbeddingProvider",
     "OpenAIProvider",
+    "RateLimiter",
     "RedactingFilter",
+    "RetryPolicy",
     "Settings",
     "TextFormatter",
     "ToolArgumentError",
@@ -81,9 +120,13 @@ __all__ = [
     "ToolSpec",
     "close_observability",
     "configure_observability",
+    "estimate_tokens",
+    "execute_with_retry",
+    "extract_retry_after",
     "get_logger",
     "get_request_id",
     "get_settings",
+    "is_retryable_error",
     "observability_context",
     "redact_data",
     "redact_string",

@@ -16,6 +16,11 @@ dependencies = [
     "anthropic>=0.40.0",
 ]
 
+[project.optional-dependencies]
+local = [
+    "sentence-transformers>=3.0.0",
+]
+
 [dependency-groups]
 dev = [
     "mypy>=1.10.0",

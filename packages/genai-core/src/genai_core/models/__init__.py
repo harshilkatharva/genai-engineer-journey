@@ -1,3 +1,7 @@
+from .embedding_model import (
+    EmbeddingRequest,
+    EmbeddingResponse,
+)
 from .llm_model import (
     ChatMessage,
     LLMError,
@@ -14,6 +18,8 @@ from .tools_model import (
 
 __all__ = [
     "ChatMessage",
+    "EmbeddingRequest",
+    "EmbeddingResponse",
     "LLMError",
     "LLMManagerRequest",
     "LLMManagerResponse",
