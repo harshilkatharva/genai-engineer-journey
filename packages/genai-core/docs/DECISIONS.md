@@ -522,3 +522,79 @@ This document records the architectural decisions, component responsibilities, d
 - **Alternatives Considered**: Modifying SQL queries to use explicit `%s::vector` casts everywhere or registering dumpers globally on `conn.adapters`. Global dumpers broke other list parameters (such as string lists), and SQL casts break databases where pgvector type is registered under different search paths.
 - **Impact**: Fully robust PostgreSQL pgvector operations for search, upsert, and delete without side effects on non-vector list parameters.
 
+---
+
+## 2026-10-19: Memory Subsystem Architecture (Short-Term, Long-Term, and Episodic Memory with Pluggable Storage)
+
+### 1. Unified Multi-Type Memory Architecture
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/memory/`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/memory/)
+  - [`packages/genai-core/src/genai_core/services/memory_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/memory_service.py)
+- **Decision**: Structured memory into three distinct subsystems coordinated by a high-level `MemoryService` facade:
+  - `ShortTermMemory`: Conversational history with pinned goals, budget pruning, and session inactivity TTL.
+  - `LongTermMemory`: Durable user facts and preferences with vector embedding, conflict resolution, and recency decay.
+  - `EpisodicMemory`: Action execution history, canonical parameter fingerprinting, and idempotency checks.
+- **Alternatives Considered**: Creating a single unified memory table/store that attempts to mix conversational messages, user profile facts, and tool execution logs. Rejected because short-term, long-term, and episodic data have completely different indexing requirements, lifecycles, and retrieval patterns.
+- **Impact**: Clear separation of concerns, optimal indexing per memory type, and clean caller APIs.
+
+### 2. Pluggable Storage Adapters with Caller Choice
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/memory/protocol.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/memory/protocol.py)
+  - [`packages/genai-core/src/genai_core/memory/in_memory_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/memory/in_memory_store.py)
+  - [`packages/genai-core/src/genai_core/memory/postgres_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/memory/postgres_store.py)
+- **Decision**: Defined runtime-checkable `MemoryStorageAdapter` protocol covering all three memory types. Implemented:
+  - `InMemoryMemoryStore`: Zero-dependency, thread-safe in-memory adapter for unit testing and ephemeral agents.
+  - `PostgresMemoryStore`: Production PostgreSQL + pgvector adapter utilizing parameterized SQL, JSONB indexing, and pgvector cosine distance.
+- **Alternatives Considered**: Hardcoding PostgreSQL persistence directly into memory classes. Rejected because fast in-memory execution is essential for local testing, offline development, and CLI tools.
+- **Impact**: Complete flexibility for callers to choose ephemeral in-memory storage or durable PostgreSQL storage without changing application code.
+
+### 3. Mathematical Recency Decay and Supersession Scoring
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/memory/in_memory_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/memory/in_memory_store.py)
+  - [`packages/genai-core/src/genai_core/memory/postgres_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/memory/postgres_store.py)
+- **Decision**: Standardized hybrid scoring across both in-memory and PostgreSQL stores:
+  $$\text{recency} = \exp\left(-\ln(2) \cdot \frac{\Delta t_{\text{days}}}{t_{1/2}}\right)$$
+  $$\text{rank\_score} = 0.65 \cdot \text{similarity} + 0.35 \cdot \text{recency} - (2.0 \text{ if superseded else } 0)$$
+  In PostgreSQL, this is computed directly in the database query via a Common Table Expression (CTE) and subqueries.
+- **Alternatives Considered**: Fetching all memories into application memory and computing scores in Python. Rejected because in-database ranking leverages PostgreSQL's query optimizer and minimizes network transfer over large memory datasets.
+- **Impact**: Consistent ranking behavior between in-memory and PostgreSQL backends, ensuring newer and non-superseded facts rank highest.
+
+### 4. Deterministic Canonical SHA-256 Parameter Fingerprinting
+- **Location**: [`packages/genai-core/src/genai_core/memory/episodic.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/memory/episodic.py)
+- **Decision**: Implemented `canonical_fingerprint(action_type, parameters, target)` using `json.dumps(..., sort_keys=True, separators=(",", ":"), allow_nan=False)` with casefolded strings, hashed via SHA-256.
+- **Alternatives Considered**: Hashing raw strings or un-sorted dict reprs. Rejected because Python dictionary key iteration order and formatting whitespace differences would cause identical actions to generate different hashes, defeating duplicate detection.
+- **Impact**: 100% deterministic duplicate detection and loop prevention across agent task executions.
+
+---
+
+## 2026-10-19: Automatic Knowledge Consolidation Architecture
+
+### 1. Dual Context Source Resolution with Exclusivity Enforcement
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/services/memory_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/memory_service.py)
+  - [`packages/genai-core/src/genai_core/memory/long_term.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/memory/long_term.py)
+- **Decision**: Allowed callers to provide conversation context via either:
+  1. A `session_id` to retrieve history automatically from `ShortTermMemory`.
+  2. A direct `WorkingContext` or `list[ConversationMessage]` instance.
+  Enforced strict exclusivity: providing both or neither raises `MemoryValidationError`.
+- **Alternatives Considered**: Allowing both simultaneously and concatenating them. Rejected because mixing short-term stored turns with custom slices can duplicate context and confuse token budgets and turn order.
+- **Impact**: Maximum flexibility for callers (e.g. summarizing a full session vs. a custom time window) with deterministic, error-checked boundaries.
+
+### 2. Extractor Architecture with Prompt Customization and Safety Scrubbing
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/memory/extraction.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/memory/extraction.py)
+  - [`packages/genai-core/src/genai_core/models/memory_model/consolidation.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/models/memory_model/consolidation.py)
+- **Decision**: Implemented `LLMMemoryExtractor` operating against `LLMService.complete()` with `response_schema=MemoryExtractionOutput` and JSON fallback parsing. Defined reusable default prompt templates focusing on durable facts, preferences, and goals while ignoring ephemeral chatter. Provided `custom_prompt_template` support so callers can customize extraction instructions without modifying library defaults. Added `validate_memory_content` regex filtering to scrub credentials, passwords, API keys, tokens, SSNs, and credit cards before persistence.
+- **Alternatives Considered**: Hardcoding prompts directly in `LongTermMemory`. Rejected because prompt tuning differs between domains (e.g. customer support vs. code assistants).
+- **Impact**: Safe, customizable extraction with structured validation, protecting databases from sensitive leaks.
+
+### 3. Multi-Tier Deduplication & Supersession Pipeline
+- **Location**: [`packages/genai-core/src/genai_core/memory/long_term.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/memory/long_term.py)
+- **Decision**: Implemented a multi-tier deduplication check before persisting extracted candidates:
+  1. *Exact string matching*: Normalized text and category comparison against active records.
+  2. *Semantic vector cosine similarity*: Checks against active memories in the same category; skips candidates exceeding `similarity_threshold` (default 0.95) when not superseding.
+  3. *Supersession handling*: Validates referenced `supersedes_ids` against user records, marks old records as superseded, and places new records in `result.updated`.
+- **Alternatives Considered**: Storing all extracted candidates and relying solely on post-retrieval filtering. Rejected because conversational consolidation frequently extracts repeated facts across turns, leading to index bloat and redundant embeddings.
+- **Impact**: High-quality, consolidated long-term memory store with clear reporting of created, updated, skipped, and failed items in `ConsolidationResult`.
+
+

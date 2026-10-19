@@ -15,15 +15,15 @@ def test_google_provider_implements_protocol() -> None:
     provider = GoogleEmbeddingProvider(client=mock_client)
     assert isinstance(provider, EmbeddingProvider)
     assert provider.provider_name == "google"
-    # Verify default model is text-embedding-005, never text-embedding-004
-    assert provider.default_model == "text-embedding-005"
-    assert provider.model == "text-embedding-005"
+
+    assert provider.default_model == "gemini-embedding-001"
+    assert provider.model == "gemini-embedding-001"
     assert provider.native_dimensions == 768
 
 
 def test_google_dimension_validation() -> None:
     mock_client = MagicMock()
-    provider = GoogleEmbeddingProvider(client=mock_client, model="text-embedding-005")
+    provider = GoogleEmbeddingProvider(client=mock_client, model="gemini-embedding-001")
 
     # Supports dimensions <= 768
     provider.validate_dimensions(768)

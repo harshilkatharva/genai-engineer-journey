@@ -33,3 +33,13 @@ class ObservabilityEvent(StrEnum):
     RETRIEVAL_RERANK_SUCCESS = "retrieval_rerank_success"
     RETRIEVAL_RERANK_SKIPPED = "retrieval_rerank_skipped"
     RETRIEVAL_RERANK_FAILED = "retrieval_rerank_failed"
+
+    # Memory events
+    MEMORY_STORE_SUCCESS = "memory_store_success"
+    MEMORY_RETRIEVE_SUCCESS = "memory_retrieve_success"
+    MEMORY_DELETE_SUCCESS = "memory_delete_success"
+    MEMORY_PURGE_SUCCESS = "memory_purge_success"
+    MEMORY_ACTION_CHECK = "memory_action_check"
+    MEMORY_CONSOLIDATION_START = "memory_consolidation_start"
+    MEMORY_CONSOLIDATION_SUCCESS = "memory_consolidation_success"
+    MEMORY_CONSOLIDATION_FAILED = "memory_consolidation_failed"

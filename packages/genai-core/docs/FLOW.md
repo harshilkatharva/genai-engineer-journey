@@ -19,6 +19,7 @@ flowchart TD
         LLM[LLMService]
         EMB[EmbeddingService]
         RET[RetrievalService]
+        MEM[MemoryService]
         RESIL[Resilience: RateLimiter & RetryPolicy]
         OBS[Observability Engine]
         MODELS[Models: Request & Response Contracts]
@@ -29,6 +30,7 @@ flowchart TD
     Client -->|generate text / tool calls| LLM
     Client -->|vectorize text / documents| EMB
     Client -->|semantic search & index| RET
+    Client -->|conversation & episodic memory| MEM
     Client -->|configure logging / request_id context| OBS
     Client -->|access config / typed models| MODELS
 
@@ -37,6 +39,9 @@ flowchart TD
         EMB --> EMBProviderResolve{Resolve Embedding Provider}
         RET --> RETStoreResolve{VectorStoreAdapter}
         RET --> RETEmbedQuery["EmbeddingService.embed_query()"]
+        MEM --> MEMSubsystems["ShortTerm / LongTerm / Episodic Subsystems"]
+        MEMSubsystems --> MEMStoreResolve{MemoryStorageAdapter}
+        MEMSubsystems --> MEMEmbedQuery["EmbeddingService.embed_query()"]
     end
 
     subgraph ResilienceSubsystem ["Shared Resilience Infrastructure"]
@@ -55,6 +60,7 @@ flowchart TD
     LLM -.->|emit lifecycle events| SafeLog
     EMB -.->|emit lifecycle events| SafeLog
     RET -.->|emit lifecycle events| SafeLog
+    MEM -.->|emit lifecycle events| SafeLog
     ResilienceSubsystem -.->|emit throttled / retry / timeout events| SafeLog
 
     subgraph Adapters ["Integration & Storage Adapters"]
@@ -67,11 +73,13 @@ flowchart TD
         EMBProviderResolve --> GoogleEmb[GoogleEmbeddingProvider]
 
         RETStoreResolve --> InMemoryStore[InMemoryVectorStore: Zero-dependency]
-        RETStoreResolve -.->|Stage 3| PGVectorStore[PGVectorStoreAdapter: PostgreSQL]
+        RETStoreResolve --> PGVectorStore[PGVectorStoreAdapter: PostgreSQL]
+
+        MEMStoreResolve --> InMemoryMemStore[InMemoryMemoryStore: Ephemeral / Test]
+        MEMStoreResolve --> PGMemStore[PostgresMemoryStore: PostgreSQL + pgvector]
     end
 
     subgraph FutureServices ["Future Services (Planned)"]
-        MEM[MemoryService]
         TOOL[ToolOrchestrator]
     end
 
@@ -503,54 +511,199 @@ flowchart TD
 
 ---
 
-## 7. Future Services (Planned Architecture)
+---
 
-As `genai-core` expands in Modules 17–20, additional shared capabilities will connect into the package architecture:
+## 7. Memory Subsystem Architecture & Execution Flow
 
-### 7.1 PostgreSQL pgvector Integration (Stage 3) — Completed
-- **Location**: [`packages/genai-core/src/genai_core/retrieval/pgvector_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/pgvector_store.py)
-- **Status**: Completed and fully verified with 14 dedicated unit tests.
+`MemoryService` provides a unified entry point orchestrating three distinct types of memory, with caller-selectable storage backends (`InMemoryMemoryStore` and `PostgresMemoryStore`):
 
-### 7.2 Hybrid Retrieval & Reranking (Phase 3 Follow-Up)
-- **Location**: `genai_core.retrieval.hybrid`
-- **Role**: Combines dense vector retrieval with PostgreSQL full-text search (`ts_rank_cd`), applying min-max score normalization and reciprocal rank or weighted score fusion, followed by optional cross-encoder reranking.
+```mermaid
+flowchart TD
+    Client[Caller / Mini-Project] --> MemoryService[MemoryService Facade]
 
-### 7.3 Memory Primitives (Phase 4)
-- **Location**: `genai_core.memory`
-- **Role**: Session and user scoped conversation memory, buffer windows, and persistent store adapters.
-- **Interconnection**: Injects conversation history into `LLMService` requests (`ChatMessage` lists) and extracts facts/summaries post-completion.
+    subgraph MemoryTypes ["Three Memory Subsystems"]
+        MemoryService --> ShortTerm[ShortTermMemory: Session Context & Token Budgeting]
+        MemoryService --> LongTerm[LongTermMemory: Semantic Facts & Recency Decay]
+        MemoryService --> Episodic[EpisodicMemory: Action History & Idempotency]
+    end
 
-### 7.4 Tool & Agent Orchestration (Phase 5)
+    subgraph ShortTermFlow ["Short-Term Working Context Flow"]
+        ShortTerm --> AddMsg["add_message(user_id, session_id, role, content)"]
+        ShortTerm --> PinGoal["pin_goal(user_id, session_id, goal)"]
+        ShortTerm --> Snapshot["snapshot(token_budget)"]
+        Snapshot --> TokenCounter["TokenCounter: Count Pinned Goals & Messages"]
+        TokenCounter --> PruneContext["Preserve Pinned Instructions -> Retain Newest Messages"]
+    end
+
+    subgraph LongTermFlow ["Long-Term Semantic & Recency Flow"]
+        LongTerm --> StoreFact["store(user_id, candidate)"]
+        StoreFact --> EmbedFact["EmbeddingService.embed_query()"]
+        LongTerm --> SearchFact["search(user_id, query, top_k)"]
+        SearchFact --> EmbedQuery["EmbeddingService.embed_query()"]
+        SearchFact --> RecencyScoring["Score = 0.65*sim + 0.35*exp(-ln2*t/t_half) - (2.0 if superseded)"]
+    end
+
+    subgraph EpisodicFlow ["Episodic Action & Idempotency Flow"]
+        Episodic --> Fingerprint["canonical_fingerprint(action_type, params, target)"]
+        Fingerprint --> Hash["Deterministic SHA-256 Hash"]
+        Episodic --> CheckAction["check(user_id, action_type, params)"]
+        CheckAction --> Decision{"Existing Matching Episode?"}
+        Decision -->|Found| DoNotRepeat["status: do_not_repeat"]
+        Decision -->|Not Found| Execute["status: execute"]
+        Episodic --> RecordAction["record(user_id, action_type, params, result)"]
+    end
+
+    subgraph StorageAdapters ["Pluggable Memory Storage Adapters"]
+        PruneContext --> StoreAdapter{MemoryStorageAdapter}
+        RecencyScoring --> StoreAdapter
+        RecordAction --> StoreAdapter
+        DoNotRepeat --> StoreAdapter
+        Execute --> StoreAdapter
+
+        StoreAdapter --> InMemoryStore[InMemoryMemoryStore: Thread-Safe / Ephemeral]
+        StoreAdapter --> PGStore[PostgresMemoryStore: PostgreSQL + pgvector]
+    end
+
+    MemoryService -.-> SafeLog["safe_log Observability Events"]
+```
+
+### 7.1 Short-Term Memory Flow
+- **Session Scoping & User Isolation**: All message turns and pinned goals are indexed by composite key `(user_id, session_id)`.
+- **Pinned Goals**: Critical instructions and system goals are pinned to persist unconditionally through context pruning.
+- **Budgeting & Pruning**:
+  1. Computes token cost of all pinned instructions first.
+  2. Traverses conversation messages in reverse order (newest to oldest).
+  3. Retains messages within the remaining budget (`max_tokens - pinned_cost`).
+  4. Truncates older history and flags `WorkingContext.truncated = True`.
+- **Inactivity Expiration**: Evaluates session idle time against `memory_working_ttl_hours`.
+
+### 7.2 Long-Term Memory Flow
+- **Validation**: Enforces strict `user_id` presence and content length bounds (1 to 4000 characters).
+- **Vector Generation**: Vectorizes candidate content using `EmbeddingService.embed_query()`.
+- **Supersession Resolution**:
+  - When storing a record with `supersedes_ids`, targets are marked as `is_superseded = True`.
+  - Searches dynamically penalize superseded records by `-2.0`, effectively filtering them unless `include_superseded=True`.
+- **Hybrid Similarity & Recency Scoring**:
+  $$\text{recency} = \exp\left(-\ln(2) \cdot \frac{\Delta t_{\text{days}}}{t_{1/2}}\right)$$
+  $$\text{rank\_score} = 0.65 \cdot \text{similarity} + 0.35 \cdot \text{recency} - (2.0 \text{ if superseded else } 0)$$
+- **Temporal Expiration**: Active searches filter out records where `expires_at <= now()`.
+
+### 7.3 Episodic Memory Flow
+- **Canonical Parameter Fingerprinting**:
+  - Serializes `{action_type, target, parameters}` into canonical JSON with sorted keys, no whitespace separators (`","`, `":"`), and casefolded strings.
+  - Produces a deterministic SHA-256 digest invariant to Python dict key insertion order.
+- **Idempotency & Loop Prevention**:
+  - `check(user_id, action_type, parameters)` verifies if an identical action was already executed.
+  - Returns `ActionCheck(status="do_not_repeat")` with a reference to the previous episode, or `ActionCheck(status="execute")`.
+- **Rolling Retention Purge**: Purges episodes older than `memory_episodic_retention_days` (default 14 days).
+
+### 7.4 Pluggable Storage Adapters
+- **`InMemoryMemoryStore`**: Thread-safe in-memory adapter implementing exact cosine similarity and mathematical recency decay. Ideal for fast unit testing and ephemeral agents.
+- **`PostgresMemoryStore`**: PostgreSQL + pgvector adapter utilizing parameterized SQL queries, pgvector distance operator (`<=>`), Common Table Expression (CTE) recency scoring, and JSONB parameter indexing.
+
+### 7.5 Automatic Knowledge Consolidation Flow
+`MemoryService.consolidate()` extracts durable long-term memories from conversation turns using `LLMService`, filters out sensitive credentials, performs multi-level deduplication, and handles supersession:
+
+```mermaid
+flowchart TD
+    Client[Caller / Mini-Project] --> Consolidate["MemoryService.consolidate()"]
+    
+    subgraph ContextResolution ["Context Source Validation (Exclusivity)"]
+        Consolidate --> CheckSource{"Source Type?"}
+        CheckSource -->|"(user_id, session_id)"| FetchST["short_term.get_messages(user_id, session_id)"]
+        CheckSource -->|"(user_id, WorkingContext)"| ExtractMsgs["context.messages"]
+        CheckSource -->|"Both or Neither"| ValErr["Raise MemoryValidationError"]
+    end
+
+    subgraph LLMExtraction ["Extraction Boundary"]
+        FetchST --> Extractor["LLMMemoryExtractor"]
+        ExtractMsgs --> Extractor
+        Extractor --> PromptBuilder["Build System & User Prompt + Existing User Records"]
+        PromptBuilder --> LLMComplete["LLMService.complete(response_schema=MemoryExtractionOutput)"]
+        LLMComplete --> ParseCandidates["Parse MemoryCandidate List"]
+    end
+
+    subgraph SafetyAndDeduplication ["Safety & Deduplication Pipeline"]
+        ParseCandidates --> FilterSensitive{"validate_memory_content()"}
+        FilterSensitive -->|Sensitive Pattern| SkipSensitive["Add to skipped: Sensitive Pattern"]
+        FilterSensitive -->|Safe| CheckExact{"Exact Duplicate in Active Memories?"}
+        CheckExact -->|Yes| SkipExact["Add to skipped: Exact Duplicate"]
+        CheckExact -->|No| CheckSemantic{"Semantic Similarity >= threshold?"}
+        CheckSemantic -->|Yes| SkipSemantic["Add to skipped: Semantic Redundancy"]
+        CheckSemantic -->|No| CheckSupersedes{"Declares supersedes_ids?"}
+    end
+
+    subgraph PersistencePipeline ["Persistence & Result Aggregation"]
+        CheckSupersedes -->|Yes| UpdateStore["store(user_id, candidate) -> Mark Old Superseded"]
+        UpdateStore --> AddUpdated["Add to result.updated"]
+        CheckSupersedes -->|No| CreateStore["store(user_id, candidate) -> Vectorize & Save"]
+        CreateStore --> AddCreated["Add to result.created"]
+        UpdateStore -.->|Failure| AddFailed["Add to result.failed"]
+        CreateStore -.->|Failure| AddFailed
+    end
+
+    AddCreated --> ReturnResult["Return ConsolidationResult"]
+    AddUpdated --> ReturnResult
+    SkipSensitive --> ReturnResult
+    SkipExact --> ReturnResult
+    SkipSemantic --> ReturnResult
+    AddFailed --> ReturnResult
+```
+
+- **Dual Context Resolution**:
+  - Exactly one context source is accepted per consolidation request.
+  - Callers either provide `session_id` (retrieved from `short_term`) or directly inject `WorkingContext` (or `list[ConversationMessage]`).
+- **Extraction Template & Customization**:
+  - Established default prompt focuses on durable user facts, preferences, goals, and constraints while instructing the model to emit `supersedes_ids` for contradictions.
+  - Callers can provide `custom_prompt_template` to specialize extraction behavior without altering package defaults.
+- **Sensitive Information Safeguards**:
+  - `validate_memory_content` scrubs credential, API key, access token, SSN, and credit card patterns before storage.
+- **Deduplication Hierarchy**:
+  1. *Exact Matching*: Matches normalized text and category against existing active records.
+  2. *Semantic Cosine Similarity*: Computes vector similarity against existing active records in the same category; skips candidates exceeding `similarity_threshold` (default 0.95) if not declaring explicit supersession.
+- **Supersession Invariants**:
+  - Validates that declared `supersedes_ids` belong to the user's active memory pool.
+  - Automatically updates superseded records to `is_superseded = True` during storage.
+- **Observability**:
+  - Emits `MEMORY_CONSOLIDATION_START` and `MEMORY_CONSOLIDATION_SUCCESS` / `MEMORY_CONSOLIDATION_FAILED` tracking extraction counts, persistence latency, and audit metadata.
+
+---
+
+## 8. Future Services (Planned Architecture)
+
+As `genai-core` expands, additional shared capabilities will connect into the package architecture:
+
+### 8.1 Tool & Agent Orchestration
 - **Location**: `genai_core.agents` / `genai_core.tools`
 - **Role**: Higher-level multi-step tool execution loops, argument dispatching, and agent state machines.
 - **Interconnection**: Dispatches tool definitions (`ToolSpec`) to `LLMService`, executes validated functions under caller control, and reports tool execution steps via `safe_log`.
 
 ---
 
-## 8. Verification and Test Flow
+## 9. Verification and Test Flow
 
 The behavior of `genai-core` is verified through automated unit tests organized by feature under `tests/unit/` and integration tests under `tests/integration/`:
+- **Memory unit tests (`tests/unit/memory/`)**:
+  - [`test_in_memory_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/memory/test_in_memory_store.py) validates protocol conformance (`isinstance(store, MemoryStorageAdapter)`), cosine similarity, short-term message ordering and limits, pinned goals, budget pruning, strict user isolation across all three memory types, long-term recency decay and supersession ranking, episodic history lookup, and timestamped purging.
+  - [`test_short_term.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/memory/test_short_term.py) validates message additions, token count estimation, goal pinning and unpinning, snapshot budgeting, session TTL checking, and validation error handling.
+  - [`test_long_term.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/memory/test_long_term.py) validates memory candidate storage, content length bounds (1–4000 characters), semantic vector search, expiration filtering, viewing, and record deletion.
+  - [`test_episodic.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/memory/test_episodic.py) validates canonical parameter fingerprinting (key order invariance, whitespace/casefold invariance, JSON type safety), action execution recording, duplicate detection (`do_not_repeat`), and aged episode purging.
+  - [`test_memory_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/memory/test_memory_service.py) validates unified facade orchestration across short-term, long-term, and episodic subsystems.
 - **Retrieval unit tests (`tests/unit/retrieval/`)**:
-  - [`test_fusion.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/retrieval/test_fusion.py) validates min-max normalization (empty sets, singletons, identical scores, diverse scores), weighted score blending with custom weights, disjoint vs overlapping candidate handling, and score threshold filtering.
-  - [`test_reranker.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/retrieval/test_reranker.py) validates protocol conformance (`isinstance(reranker, Reranker)`), empty candidate handling, missing optional `sentence-transformers` dependency raising `MissingExtraDependencyError`, cross-encoder prediction, and preservation of initial scores in `metadata['retrieval_score']`.
-  - [`test_retrieval_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/retrieval/test_retrieval_service.py) validates dense semantic search, sparse keyword search (skipping embeddings), hybrid search with concurrent execution and score fusion, optional cross-encoder re-ranking with candidate expansion, fallback behavior (`warn_and_continue` vs `raise`), store timeout handling, document indexing (strings and chunks), and observability events.
-  - [`test_in_memory_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/retrieval/test_in_memory_store.py) validates protocol conformance (`isinstance(store, VectorStoreAdapter)`), dimension validation, upsert validation, chunk updates, chunk deletion, cosine vector ranking, full-text token keyword matching (`search_keyword`), metadata key-value filtering, and score thresholding.
-  - [`test_pgvector_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/retrieval/test_pgvector_store.py) validates protocol conformance (`isinstance(store, VectorStoreAdapter)`), SQL identifier safety against injection, vector search and full-text keyword search (`ts_rank_cd` and `websearch_to_tsquery`), dedicated vs fallback `to_tsvector` column paths, parameterization of query values, metadata JSONB filtering, score thresholding, batch upsert with `ON CONFLICT`, delete execution with `ANY(%s)`, transient vs permanent failure classification, missing dependency raising `MissingExtraDependencyError`, and end-to-end integration with `RetrievalService`.
+  - [`test_fusion.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/retrieval/test_fusion.py) validates min-max normalization, weighted score blending, and threshold filtering.
+  - [`test_reranker.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/retrieval/test_reranker.py) validates cross-encoder re-ranking protocol conformance, prediction, and retrieval score auditability.
+  - [`test_retrieval_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/retrieval/test_retrieval_service.py) validates dense, sparse, and hybrid retrieval, re-ranking fallback, and indexing.
+  - [`test_in_memory_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/retrieval/test_in_memory_store.py) and [`test_pgvector_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/retrieval/test_pgvector_store.py).
 - **Embedding unit tests (`tests/unit/embedding/`)**:
-  - [`test_embedding_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/embedding/test_embedding_service.py) validates initialization defaults, strict dimension rejection, empty input rejection, batch size validation, internal slicing loop, 1-to-1 order preservation, missing dependency handling, convenience helpers, and observability events.
-  - [`test_embedding_resilience.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/embedding/test_embedding_resilience.py) validates RPM/TPM token bucket pacing, token estimation heuristics, error classification, exponential backoff, jitter, Retry-After header parsing, attempt timeout, deadline enforcement, and service retry integration.
-  - [`test_openai_embedding_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/embedding/test_openai_embedding_provider.py) validates dimension validation, request creation, output normalization, index-ordered sorting, usage tracking, and error wrapping.
-  - [`test_google_embedding_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/embedding/test_google_embedding_provider.py) validates `text-embedding-005` model configuration, output dimensionality, embedding extraction, and error wrapping.
+  - [`test_embedding_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/embedding/test_embedding_service.py), [`test_embedding_resilience.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/embedding/test_embedding_resilience.py), [`test_openai_embedding_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/embedding/test_openai_embedding_provider.py), [`test_google_embedding_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/embedding/test_google_embedding_provider.py).
 - **LLM unit tests (`tests/unit/llm/`)**:
-  - [`test_llm_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_llm_service.py) validates dispatch, error shielding, `complete_all` concurrency, and stream delegation.
-  - [`test_protocol.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_protocol.py) validates provider adapters conform to `LLMProvider`.
-  - [`test_tool_spec.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_tool_spec.py) validates schema generators and argument parsing.
-  - [`test_google_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_google_provider.py), [`test_openai_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_openai_provider.py), [`test_anthropic_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_anthropic_provider.py).
+  - [`test_llm_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_llm_service.py), [`test_protocol.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_protocol.py), [`test_tool_spec.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_tool_spec.py), [`test_google_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_google_provider.py), [`test_openai_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_openai_provider.py), [`test_anthropic_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_anthropic_provider.py).
 - **Observability unit tests (`tests/unit/observability/`)**:
-  - [`test_observability.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/observability/test_observability.py) validates caller-defined destinations, JSON/text formatting, secret scrubbing, async request context, idempotency, and error shielding.
+  - [`test_observability.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/observability/test_observability.py).
 - **Live integration tests (`tests/integration/`)**:
+  - **Memory integration tests (`tests/integration/memory/`)**: [`test_postgres_memory_store_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/memory/test_postgres_memory_store_integration.py) validates live PostgreSQL persistence for short-term message ordering and budget pruning, long-term vector search with pgvector cosine distance, in-database recency scoring and supersession penalty, episodic action history lookup, and strict multi-user data isolation.
   - **LLM integration tests (`tests/integration/llm/`)**: [`test_anthropic_provider_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/llm/test_anthropic_provider_integration.py), [`test_google_provider_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/llm/test_google_provider_integration.py), [`test_openai_provider_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/llm/test_openai_provider_integration.py).
-  - **Embedding integration tests (`tests/integration/embedding/`)**: [`test_local_embedding_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/embedding/test_local_embedding_integration.py) (validates real model inference, vector dimensions, unit normalization, and semantic distance), [`test_google_embedding_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/embedding/test_google_embedding_integration.py), [`test_openai_embedding_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/embedding/test_openai_embedding_integration.py).
-  - **Retrieval integration tests (`tests/integration/retrieval/`)**: [`test_cross_encoder_reranker_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/retrieval/test_cross_encoder_reranker_integration.py) (validates live neural re-ranking, candidate scoring, and retrieval score tracking), [`test_pgvector_store_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/retrieval/test_pgvector_store_integration.py) (validates vector search, full-text keyword matching, metadata JSONB filtering, and deletion against PostgreSQL), [`test_hybrid_retrieval_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/retrieval/test_hybrid_retrieval_integration.py) (validates end-to-end pipeline combining embeddings, vector store, fusion, and re-ranking).
+  - **Embedding integration tests (`tests/integration/embedding/`)**: [`test_local_embedding_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/embedding/test_local_embedding_integration.py), [`test_google_embedding_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/embedding/test_google_embedding_integration.py), [`test_openai_embedding_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/embedding/test_openai_embedding_integration.py).
+  - **Retrieval integration tests (`tests/integration/retrieval/`)**: [`test_cross_encoder_reranker_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/retrieval/test_cross_encoder_reranker_integration.py), [`test_pgvector_store_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/retrieval/test_pgvector_store_integration.py), [`test_hybrid_retrieval_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/retrieval/test_hybrid_retrieval_integration.py).
   - **Observability integration tests (`tests/integration/observability/`)**: [`test_observability_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/observability/test_observability_integration.py).
 

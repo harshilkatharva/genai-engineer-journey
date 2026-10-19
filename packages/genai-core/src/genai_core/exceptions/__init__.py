@@ -1,4 +1,4 @@
-from . import embedding_exceptions, llm_exceptions, retrieval_exceptions
+from . import embedding_exceptions, llm_exceptions, memory_exceptions, retrieval_exceptions
 from .embedding_exceptions import (
     EmbeddingDimensionError,
     EmbeddingError,
@@ -17,6 +17,13 @@ from .llm_exceptions import (
     LLMRateLimitError,
     LLMTimeoutError,
     LLMValidationError,
+)
+from .memory_exceptions import (
+    MemoryError,
+    MemoryExtractionError,
+    MemoryNotFoundError,
+    MemoryStorageError,
+    MemoryValidationError,
 )
 from .retrieval_exceptions import (
     IncompatibleEmbeddingError,
@@ -42,6 +49,11 @@ __all__ = [
     "LLMRateLimitError",
     "LLMTimeoutError",
     "LLMValidationError",
+    "MemoryError",
+    "MemoryExtractionError",
+    "MemoryNotFoundError",
+    "MemoryStorageError",
+    "MemoryValidationError",
     "MissingExtraDependencyError",
     "RetrievalError",
     "RetrievalTimeoutError",
@@ -49,5 +61,6 @@ __all__ = [
     "VectorStoreError",
     "embedding_exceptions",
     "llm_exceptions",
+    "memory_exceptions",
     "retrieval_exceptions",
 ]

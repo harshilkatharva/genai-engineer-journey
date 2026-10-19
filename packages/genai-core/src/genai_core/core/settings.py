@@ -38,6 +38,12 @@ class Settings(BaseSettings):
     reranker_model_name: str = "cross-encoder/ms-marco-MiniLM-L6-v2"
     reranker_batch_size: int = 32
 
+    # Memory settings
+    memory_working_ttl_hours: int = 24
+    memory_token_budget: int = 4000
+    memory_recency_half_life_days: int = 30
+    memory_episodic_retention_days: int = 14
+
     # Integration and API keys
     integration_test: int = 0
     google_api_key: str | None = None

@@ -204,9 +204,24 @@ Extract only the stable responsibilities needed across projects, separating reus
 
 **Outcome:** Completed. Fully validated through 154 unit tests (100% pass rate), a dedicated live integration test suite for embeddings and retrieval (validating real model inference, PostgreSQL/pgvector storage, keyword search, score fusion, and cross-encoder re-ranking), and all pre-push checks (`ruff`, `mypy`).
 
-### Phase 4 — Memory primitives
+### Phase 4 — Memory primitives & Automatic Knowledge Consolidation
 
-Introduce memory capabilities when the connected projects demonstrate a shared requirement. Keep session/user scope, storage choice, retrieval behavior, retention, and lifecycle explicit. Do not silently create process-global or cross-user memory.
+Implemented unified memory architecture supporting three distinct memory types with caller-selectable in-memory and PostgreSQL storage, plus automatic knowledge consolidation:
+- **Short-term memory (`ShortTermMemory`)**: Conversation history, pinned goals that survive context pruning, dynamic token budgeting via `TokenCounter`, and session inactivity TTL.
+- **Long-term memory (`LongTermMemory`)**: Persistent facts and user preferences, vector generation via `EmbeddingService`, hybrid semantic similarity and exponential recency decay search ($0.65 \times \text{sim} + 0.35 \times \text{recency} - 2.0 \times \text{is\_superseded}$), conflict resolution and supersession tracking (`supersedes_ids`), and temporal expiration.
+- **Episodic memory (`EpisodicMemory`)**: Action execution history, canonical JSON parameter fingerprinting (SHA-256), idempotency decision checking (`execute` vs `do_not_repeat`), and rolling retention window purging.
+- **Automatic Knowledge Consolidation (`consolidate`)**:
+  - Dual context source resolution: callers supply either a `session_id` to retrieve history or an explicit `WorkingContext` slice (mutually exclusive).
+  - LLM-driven durable fact extraction via `LLMMemoryExtractor` with reusable default prompt and custom prompt template support.
+  - Sensitive information scrubbing (`validate_memory_content`) guarding against credential, token, SSN, and payment card leaks.
+  - Multi-tier deduplication (exact normalized string matching and semantic cosine similarity thresholding) and supersession tracking.
+  - Transparent `ConsolidationResult` reporting created, updated, skipped, and failed memory records.
+- **Storage Adapters (`MemoryStorageAdapter`)**:
+  - `InMemoryMemoryStore`: Zero-dependency, thread-safe in-memory store for unit testing and ephemeral agents.
+  - `PostgresMemoryStore`: PostgreSQL + pgvector durable storage with CTE recency scoring, JSONB indexing, and strict multi-user isolation.
+- **Unified Orchestration (`MemoryService`)**: High-level facade providing shortcut methods (`add_message`, `get_working_context`, `remember`, `recall`, `consolidate`, `record_action`, `check_action`, `purge_all`).
+
+**Outcome:** Completed. Fully validated with 176 unit tests (100% pass rate), 4 dedicated live PostgreSQL integration tests verifying persistence, vector distance, recency scoring, and user isolation, and passing all pre-push checks (`ruff`, `mypy`).
 
 ### Phase 5 — Tool/function-calling primitives and interoperability
 

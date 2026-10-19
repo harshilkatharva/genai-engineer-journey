@@ -49,7 +49,25 @@ Production-grade, modular, and resilient Python core package providing unified G
   - Automated vectorization of raw document chunks via attached `EmbeddingService`.
   - Strict dimension compatibility verification between embeddings and vector stores.
 
-### 4. Shared Resilience Subsystem (`genai_core.resilience`)
+### 4. Unified Memory Subsystem (`MemoryService`)
+- **Three distinct memory types**:
+  - `ShortTermMemory`: Conversational history with turn tracking, pinned agent instructions, token budget snapshot pruning via `TokenCounter`, and session inactivity TTL.
+  - `LongTermMemory`: Durable user profile facts and preferences with vector embedding, conflict resolution (`supersedes_ids`), temporal expiration, and hybrid cosine similarity + exponential recency decay ranking ($0.65 \times \text{sim} + 0.35 \times \text{recency} - 2.0 \times \text{is\_superseded}$).
+  - `EpisodicMemory`: Historical action log with canonical JSON parameter fingerprinting (deterministic SHA-256), idempotency decision checking (`execute` vs `do_not_repeat`), and rolling retention window purging.
+- **Automatic Knowledge Consolidation (`consolidate`)**:
+  - Caller-controlled extraction of durable user facts, preferences, and goals from conversation history using `LLMService`.
+  - Dual context source support: retrieve turns from `short_term` via `session_id`, or pass a caller-provided `WorkingContext` slice (mutually exclusive).
+  - Customizable prompts via `custom_prompt_template`.
+  - Sensitive information scrubbing (`validate_memory_content`) guarding against credential, token, SSN, and card leaks.
+  - Multi-tier deduplication (exact matching and semantic cosine thresholding) and supersession tracking.
+  - Returns structured `ConsolidationResult` reporting created, updated, skipped, and failed memory records.
+- **Pluggable storage adapters (`MemoryStorageAdapter`)**:
+  - `InMemoryMemoryStore`: Zero-dependency, thread-safe in-memory store for unit tests, ephemeral agents, and fast local runs.
+  - `PostgresMemoryStore`: PostgreSQL + pgvector adapter with parameterized queries, pgvector distance operator (`<=>`), in-database CTE recency scoring, JSONB indexing, and strict multi-user isolation.
+- **Unified orchestration facade**:
+  - `MemoryService`: Coordinates short-term, long-term, and episodic memory with shortcut APIs (`add_message`, `get_working_context`, `remember`, `recall`, `consolidate`, `record_action`, `check_action`, `purge_all`).
+
+### 5. Shared Resilience Subsystem (`genai_core.resilience`)
 - **Async Rate Limiter (`RateLimiter`)**:
   - Dual in-memory token buckets enforcing Requests Per Minute (RPM) and Tokens Per Minute (TPM).
   - Dynamic pause handling when upstream services return HTTP `Retry-After` headers.
@@ -58,7 +76,7 @@ Production-grade, modular, and resilient Python core package providing unified G
   - Bounded overall deadlines across multi-batch and chained operations.
   - Intelligent classification: retries transient errors (HTTP 408/429/5xx, connection resets), fails fast on permanent errors (400, 401, 403, quota exhaustion, validation failures).
 
-### 5. Caller-Controlled Observability (`genai_core.observability`)
+### 6. Caller-Controlled Observability (`genai_core.observability`)
 - **Zero side-effects by default**: Configured with `logging.NullHandler()`; never creates log directories or files without explicit caller opt-in.
 - **Automated redaction**: Sanitizes API keys (Google, OpenAI, Anthropic), Bearer headers, and sensitive fields before writing logs.
 - **Context tracking**: Async-safe request correlation (`set_request_id`, `observability_context`).
@@ -100,6 +118,10 @@ Settings are managed via `Settings` and can be configured through `.env` or envi
 | `OPENAI_API_KEY` | OpenAI API key | `""` |
 | `ANTHROPIC_API_KEY` | Anthropic Claude API key | `""` |
 | `MAX_STRUCTURED_ERROR_RETRY` | Default retries on JSON schema validation errors | `2` |
+| `MEMORY_WORKING_TTL_HOURS` | Inactivity TTL for short-term conversation sessions | `24` |
+| `MEMORY_TOKEN_BUDGET` | Default token budget for working context snapshots | `4000` |
+| `MEMORY_RECENCY_HALF_LIFE_DAYS` | Half-life in days for exponential recency decay | `30` |
+| `MEMORY_EPISODIC_RETENTION_DAYS` | Rolling retention window in days for episodic actions | `14` |
 | `INTEGRATION_TEST` | Enable live API integration test execution | `0` |
 | `LOG_LEVEL` | Logging level (`DEBUG`, `INFO`, `WARNING`, `ERROR`) | `"INFO"` |
 | `LOG_FILE` | Optional path to write rotating log files | `""` |
@@ -217,6 +239,78 @@ async def main():
 asyncio.run(main())
 ```
 
+### 3. Memory Service (Short-Term, Long-Term & Episodic)
+```python
+import asyncio
+from genai_core import (
+    EmbeddingService,
+    InMemoryMemoryStore,
+    LocalEmbeddingProvider,
+    MemoryCategory,
+    MemoryService,
+    MessageRole,
+)
+
+
+async def main():
+    # 1. Initialize store and embedding service
+    store = InMemoryMemoryStore()
+    embedding_service = EmbeddingService(provider=LocalEmbeddingProvider(), dimensions=384)
+    memory = MemoryService(store=store, embedding_service=embedding_service)
+    await memory.initialize()
+
+    user_id = "user_42"
+    session_id = "session_flight_booking"
+
+    # --- Short-Term Working Memory ---
+    await memory.pin_goal(user_id, session_id, "Target destination: Tokyo (HND/NRT)")
+    await memory.add_message(user_id, session_id, MessageRole.USER, "Show me non-stop flights.")
+    context = await memory.get_working_context(user_id, session_id, token_budget=1000)
+    print(f"Working context messages: {len(context.messages)}, Pinned: {len(context.pinned_goals)}")
+
+    # --- Long-Term Semantic Memory with Recency Decay ---
+    await memory.remember(
+        user_id,
+        content="User holds Star Alliance Gold frequent flyer status.",
+        category=MemoryCategory.FACT,
+    )
+    results = await memory.recall(user_id, query="frequent flyer benefits")
+    print(f"Recalled: {results[0].record.content} (score={results[0].rank_score:.4f})")
+
+    # --- Automatic Knowledge Consolidation via LLM ---
+    # Caller can trigger consolidation by session_id or by passing a WorkingContext
+    consolidation_result = await memory.consolidate(user_id=user_id, session_id=session_id)
+    print(
+        f"Consolidated: {len(consolidation_result.created)} created, "
+        f"{len(consolidation_result.updated)} updated, "
+        f"{len(consolidation_result.skipped)} skipped."
+    )
+
+    # --- Episodic Action History & Idempotency ---
+    check = await memory.check_action(
+        user_id, action_type="reserve_seat", parameters={"seat": "14A", "flight": "NH101"}
+    )
+    if check.status == "execute":
+        await memory.record_action(
+            user_id,
+            action_type="reserve_seat",
+            parameters={"seat": "14A", "flight": "NH101"},
+            result_summary="Seat 14A confirmed",
+        )
+        print("Action executed successfully.")
+
+    # Subsequent identical call is prevented automatically
+    duplicate_check = await memory.check_action(
+        user_id, action_type="reserve_seat", parameters={"seat": "14A", "flight": "NH101"}
+    )
+    print(f"Duplicate check recommendation: {duplicate_check.status} ({duplicate_check.reason})")
+
+    await memory.close()
+
+
+asyncio.run(main())
+```
+
 ---
 
 ## Project Structure
@@ -233,20 +327,23 @@ packages/genai-core/
 │   ├── embedding/            # Local, OpenAI, and Google embedding providers
 │   ├── exceptions/           # Strongly-typed exceptions
 │   ├── llm/                  # LLM provider adapters and protocol
-│   ├── models/               # Pydantic data models (LLM, embedding, retrieval)
+│   ├── memory/               # Short-term, long-term, and episodic memory + store adapters
+│   ├── models/               # Pydantic data models (LLM, embedding, retrieval, memory)
 │   ├── observability/        # Logging, redaction, formatting, and tracing
 │   ├── resilience/           # Rate limiting and retry policies
 │   ├── retrieval/            # Vector store protocol, InMemory, PGVector, fusion, and reranker
-│   └── services/             # LLMService, EmbeddingService, RetrievalService
+│   └── services/             # LLMService, EmbeddingService, RetrievalService, MemoryService
 ├── tests/
 │   ├── unit/                 # Fast, isolated unit tests (no live network)
 │   │   ├── embedding/
 │   │   ├── llm/
+│   │   ├── memory/
 │   │   ├── observability/
 │   │   └── retrieval/
 │   └── integration/          # Live API and service integration tests (gated by INTEGRATION_TEST=1)
 │       ├── embedding/
 │       ├── llm/
+│       ├── memory/
 │       ├── observability/
 │       └── retrieval/
 ├── pyproject.toml

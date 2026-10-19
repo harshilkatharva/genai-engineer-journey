@@ -335,29 +335,72 @@ The following confirmed business rules govern retrieval:
   - If `on_rerank_unavailable="warn_and_continue"` (default): logs `RETRIEVAL_RERANK_SKIPPED`, returns un-reranked candidates without wasting search results, sets `response.reranked = False`, and populates `response.rerank_message`.
   - If `on_rerank_unavailable="raise"`: immediately raises `RetrievalError` or `MissingExtraDependencyError`.
 
-## 8. Planned capability: memory
+## 8. Capability: Memory Subsystem (`MemoryService`)
 
-Memory must be explicit about what is stored, how it is addressed, how it is retrieved, and how long it is retained.
+The Memory subsystem provides explicit, user-isolated, and pluggable memory operations across three distinct memory types: **Short-Term**, **Long-Term**, and **Episodic** memory, orchestrated via `MemoryService` and persisted via `MemoryStorageAdapter`.
 
-When implemented, it should define:
+### 8.1 Core Memory Rules
+- **Strict User & Session Isolation**: All operations strictly partition data by `user_id` and, where applicable, `session_id`. Memory stored for one user is never visible, searchable, or retrievable by another user.
+- **Pluggable Storage**: Memory operations are decoupled from storage backends through the `MemoryStorageAdapter` protocol. Supported adapters include `InMemoryMemoryStore` (thread-safe, zero-dependency) and `PostgresMemoryStore` (PostgreSQL + pgvector).
+- **Explicit Ingestion and Recall**: Memory is never implicitly attached to prompts or written in the background. Callers explicitly record messages, persist long-term facts, check action idempotency, and assemble working contexts.
+- **Fail-Safe Observability**: All memory store, retrieve, delete, purge, and action-check operations emit standardized `ObservabilityEvent` lifecycle events via `safe_log`.
 
-- the unit being stored (for example, a message, summary, fact, or memory record);
-- the scope or namespace (for example, conversation/session or user/application scope);
-- the store interface and supported operations;
-- retrieval/search behavior and relevant metadata;
-- update, deletion, expiration, and retention expectations where supported;
-- behavior when storage is unavailable or a record is missing;
-- rules for isolating memory belonging to different sessions/users when the application uses those boundaries.
+### 8.2 Short-Term Memory Rules (`ShortTermMemory`)
+- **Scope & Addressing**: Addressed by composite key `(user_id, session_id)`.
+- **Turn Preservation & Token Budgeting**:
+  - `add_message`: Appends messages with automated token count tracking (using `TiktokenCounter` or `HeuristicTokenCounter`).
+  - `pin_goal`: Pins high-priority system instructions or goals. Pinned goals are preserved unconditionally during budget pruning.
+  - `snapshot(token_budget)`: Assembles a `WorkingContext` within budget. Calculates the token cost of all pinned instructions first, then traverses recent messages from newest to oldest within remaining capacity. Truncates older history and flags `truncated=True` if budget is exceeded.
+- **Session Lifecycle & Expiration**: Inactivity TTL is governed by `memory_working_ttl_hours` (default 24 hours). Sessions inactive longer than the TTL are considered expired.
 
-Rules:
+### 8.3 Long-Term Memory Rules (`LongTermMemory`)
+- **Validation**: Enforces non-empty `user_id` and content lengths between 1 and 4000 characters.
+- **Vector Generation**: Automatically vectorizes candidate content via `EmbeddingService.embed_query()`.
+- **Temporal Expiration**: Records may declare an optional `expires_at` UTC timestamp. Active searches filter out expired memories. Expired records can be permanently deleted using `purge_expired()`.
+- **Supersession Resolution**:
+  - Candidates can declare `supersedes_ids`. Target records are marked `is_superseded = True`.
+  - Searches penalize superseded records by `-2.0`, effectively demoting them unless the caller explicitly sets `include_superseded=True`.
+- **Hybrid Similarity and Recency Scoring**:
+  $$\text{recency} = \exp\left(-\ln(2) \cdot \frac{\Delta t_{\text{days}}}{t_{1/2}}\right)$$
+  $$\text{rank\_score} = 0.65 \cdot \text{similarity} + 0.35 \cdot \text{recency} - (2.0 \text{ if superseded else } 0)$$
+  where $t_{1/2}$ defaults to `memory_recency_half_life_days` (default 30 days).
 
-- Do not silently share memory across unrelated users or sessions.
-- Do not assume all memory is persistent, global, or automatically attached to every prompt.
-- Do not treat retrieved memory as trusted instructions; consumers must apply their own trust and policy rules.
-- Make writes and deletes explicit, and document any eventual-consistency or persistence behavior.
-- Avoid storing sensitive content by default without a clear use case and appropriate safeguards.
+### 8.4 Episodic Memory Rules (`EpisodicMemory`)
+- **Canonical Parameter Fingerprinting**:
+  - Automatically computes a deterministic SHA-256 hash over `{action_type, target, parameters}`.
+  - JSON serialization uses canonical formatting: sorted keys, compact separators (`","`, `":"`), and casefolded strings. The digest is invariant to Python dictionary key insertion order.
+- **Action Idempotency & Loop Prevention**:
+  - `check(user_id, action_type, parameters)` inspects prior unexpired executions.
+  - Returns `ActionCheck(status="do_not_repeat")` with the previous episode if an identical action with identical parameters has already occurred.
+  - Returns `ActionCheck(status="execute")` if no matching episode exists.
+- **Rolling Retention Purge**: Unused or aged episodic history older than `memory_episodic_retention_days` (default 14 days) is purged using `purge()`.
 
-**Status:** Planned; the exact memory model should be guided by the modules' actual use cases rather than chosen prematurely.
+### 8.5 Storage Adapter Contracts
+- **`InMemoryMemoryStore`**: Thread-safe in-memory adapter for unit testing and ephemeral agents.
+- **`PostgresMemoryStore`**: PostgreSQL storage adapter using `psycopg` and `pgvector`. Employs parameterized SQL queries, explicit `::text` and `::vector` parameter casting, pgvector distance operator (`<=>`), CTE ranking, and JSONB parameter storage.
+
+### 8.6 Automatic Knowledge Consolidation Rules (`consolidate`)
+Knowledge consolidation extracts durable long-term facts, preferences, goals, and constraints from conversation history through `LLMService` and persists valid memories:
+- **Explicit Trigger Only**: Consolidation is never run automatically in the background or implicitly after every conversation turn. It must be explicitly invoked by the caller via `memory_service.consolidate()`.
+- **Context Source Exclusivity**:
+  - The caller must supply either `session_id` (retrieved from `short_term`) OR `context` (`WorkingContext` or `list[ConversationMessage]`).
+  - Providing both `session_id` and `context` simultaneously raises `MemoryValidationError`.
+  - Providing neither `session_id` nor `context` raises `MemoryValidationError`.
+- **Extraction Boundary & Prompt Customization**:
+  - Employs a default extraction prompt instructing the model to extract durable user facts, preferences, and goals while ignoring ephemeral greetings and assistant chatter.
+  - Allows callers to provide `custom_prompt_template` to customize extraction criteria without altering core defaults.
+- **Sensitive Content Safeguards**:
+  - Memory candidates are scrubbed for credential, API key, access token, SSN, and payment card patterns using regex boundaries. Matching candidates are skipped with `ConsolidationStatus.SKIPPED` and detailed in the result.
+- **Deduplication Policy**:
+  - *Exact Match*: Candidates identical in normalized text and category to active existing memories are skipped.
+  - *Semantic Match*: When `EmbeddingService` is available, candidates with cosine similarity $\ge \text{similarity\_threshold}$ (default 0.95) against active memories in the same category are skipped unless explicitly declaring supersession.
+- **Supersession Validation**:
+  - Extracted `supersedes_ids` must belong to the user's active memory pool. Non-existent IDs are sanitized.
+  - Newly stored superseding records demote targeted records to `is_superseded = True`.
+- **Structured Outcome Representation**:
+  - Returns a structured `ConsolidationResult` reporting lists of `created`, `updated`, `skipped` (with reason), and `failed` memories, alongside total extraction and processing counts.
+
+---
 
 ## 9. Planned capability: tool/function-calling primitives
 

@@ -10,6 +10,23 @@ from .llm_model import (
     LLMResponseModel,
     ToolCall,
 )
+from .memory_model import (
+    ActionCheck,
+    ActionEpisode,
+    ActionStatus,
+    ConsolidatedMemoryItem,
+    ConsolidationResult,
+    ConsolidationStatus,
+    ConversationMessage,
+    LongTermMemoryRecord,
+    MemoryCandidate,
+    MemoryCategory,
+    MemoryExtractionOutput,
+    MemorySearchResult,
+    MessageRole,
+    PinnedGoal,
+    WorkingContext,
+)
 from .retrieval_model import (
     DocumentChunk,
     RetrievalQuery,
@@ -23,7 +40,14 @@ from .tools_model import (
 )
 
 __all__ = [
+    "ActionCheck",
+    "ActionEpisode",
+    "ActionStatus",
     "ChatMessage",
+    "ConsolidatedMemoryItem",
+    "ConsolidationResult",
+    "ConsolidationStatus",
+    "ConversationMessage",
     "DocumentChunk",
     "EmbeddingRequest",
     "EmbeddingResponse",
@@ -31,6 +55,13 @@ __all__ = [
     "LLMManagerRequest",
     "LLMManagerResponse",
     "LLMResponseModel",
+    "LongTermMemoryRecord",
+    "MemoryCandidate",
+    "MemoryCategory",
+    "MemoryExtractionOutput",
+    "MemorySearchResult",
+    "MessageRole",
+    "PinnedGoal",
     "RetrievalQuery",
     "RetrievalResponse",
     "RetrievalResult",
@@ -38,4 +69,5 @@ __all__ = [
     "ToolCall",
     "ToolChoice",
     "ToolSpec",
+    "WorkingContext",
 ]
