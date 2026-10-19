@@ -244,9 +244,11 @@ packages/genai-core/
 │   │   ├── llm/
 │   │   ├── observability/
 │   │   └── retrieval/
-│   └── integration/          # Live API integration tests (gated by INTEGRATION_TEST=1)
+│   └── integration/          # Live API and service integration tests (gated by INTEGRATION_TEST=1)
+│       ├── embedding/
 │       ├── llm/
-│       └── observability/
+│       ├── observability/
+│       └── retrieval/
 ├── pyproject.toml
 └── README.md
 ```

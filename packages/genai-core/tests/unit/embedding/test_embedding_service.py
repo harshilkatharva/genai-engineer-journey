@@ -309,14 +309,20 @@ async def test_embedding_observability_events() -> None:
 
 
 def test_local_provider_missing_dependency() -> None:
-    with patch.dict(sys.modules, {"sentence_transformers": None}):
-        provider = LocalEmbeddingProvider()
-        with pytest.raises(MissingExtraDependencyError) as exc_info:
-            provider._get_model()
+    from genai_core.embedding.local_provider import _load_sentence_transformer
 
-        err_msg = str(exc_info.value)
-        assert "sentence-transformers" in err_msg
-        assert "genai-core[local]" in err_msg
+    _load_sentence_transformer.cache_clear()
+    try:
+        with patch.dict(sys.modules, {"sentence_transformers": None}):
+            provider = LocalEmbeddingProvider()
+            with pytest.raises(MissingExtraDependencyError) as exc_info:
+                provider._get_model()
+
+            err_msg = str(exc_info.value)
+            assert "sentence-transformers" in err_msg
+            assert "genai-core[local]" in err_msg
+    finally:
+        _load_sentence_transformer.cache_clear()
 
 
 def test_local_provider_dimension_validation() -> None:

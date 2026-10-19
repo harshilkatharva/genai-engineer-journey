@@ -42,6 +42,22 @@ def check_postgres_dependencies() -> None:
         ) from err
 
 
+def _to_vector_param(vec: list[float]) -> Any:
+    """Wrap float list into pgvector Vector with sequence equality for psycopg and tests."""
+    try:
+        from pgvector import Vector  # type: ignore[import-not-found]
+
+        class _VectorParam(Vector):  # type: ignore[misc]
+            def __eq__(self, other: object) -> bool:
+                if isinstance(other, (list, tuple)):
+                    return self.to_list() == list(other)
+                return super().__eq__(other)
+
+        return _VectorParam(vec)
+    except Exception:  # noqa: BLE001
+        return vec
+
+
 class PGVectorStoreAdapter:
     """PostgreSQL + pgvector vector store adapter conforming to VectorStoreAdapter protocol."""
 
@@ -185,8 +201,9 @@ class PGVectorStoreAdapter:
         if top_k <= 0:
             return []
 
+        vec = _to_vector_param(query_vector)
         where_clauses: list[str] = []
-        params: list[Any] = [query_vector]
+        params: list[Any] = [vec]
 
         active_filters = dict(filters) if filters else {}
 
@@ -200,9 +217,9 @@ class PGVectorStoreAdapter:
 
         if score_threshold is not None:
             where_clauses.append(f"1 - ({self.embedding_column} <=> %s) >= %s")
-            params.extend([query_vector, score_threshold])
+            params.extend([vec, score_threshold])
 
-        params.extend([query_vector, top_k])
+        params.extend([vec, top_k])
 
         where_sql = f"WHERE {' AND '.join(where_clauses)}" if where_clauses else ""
 
@@ -400,15 +417,17 @@ class PGVectorStoreAdapter:
                 {self.metadata_column} = EXCLUDED.{self.metadata_column}
         """
 
-        rows = [
-            (
-                chunk.id,
-                chunk.content,
-                chunk.embedding,
-                json.dumps(chunk.metadata),
+        rows: list[tuple[Any, ...]] = []
+        for chunk in chunks:
+            assert chunk.embedding is not None
+            rows.append(
+                (
+                    chunk.id,
+                    chunk.content,
+                    _to_vector_param(chunk.embedding),
+                    json.dumps(chunk.metadata),
+                )
             )
-            for chunk in chunks
-        ]
 
         try:
             async with self._get_connection() as conn:

@@ -499,3 +499,26 @@ This document records the architectural decisions, component responsibilities, d
 - **Alternatives Considered**: Automatically executing re-ranking on every query or failing silently when re-ranking was requested but unavailable. Rejected because re-ranking is computationally expensive and silent failure obscures missing capabilities.
 - **Impact**: Production-grade re-ranking under caller control with zero wasted work on fallback.
 
+---
+
+## 2026-10-19: Live Integration Tests for Retrieval and Embedding Subsystems
+
+### 1. Dedicated Integration Test Structure
+- **Locations**:
+  - [`packages/genai-core/tests/integration/embedding/`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/embedding/)
+  - [`packages/genai-core/tests/integration/retrieval/`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/retrieval/)
+- **Decision**: Implemented dedicated live integration test suites:
+  - `tests/integration/embedding/test_local_embedding_integration.py`: Validates real `LocalEmbeddingProvider` (`all-MiniLM-L6-v2`) inference, vector dimensionality (384), L2 unit normalization ($\approx 1.0$), and semantic cosine distances.
+  - `tests/integration/embedding/test_google_embedding_integration.py` & `test_openai_embedding_integration.py`: Validates live cloud embedding requests with graceful skip handling for missing API keys, rate limits, or unavailable endpoints.
+  - `tests/integration/retrieval/test_cross_encoder_reranker_integration.py`: Validates real neural re-ranking using `cross-encoder/ms-marco-MiniLM-L6-v2`, score ranking, and retrieval score tracking.
+  - `tests/integration/retrieval/test_pgvector_store_integration.py`: Validates live PostgreSQL vector search, full-text keyword search (`ts_rank_cd`), metadata JSONB filtering, and deletion against PostgreSQL.
+  - `tests/integration/retrieval/test_hybrid_retrieval_integration.py`: End-to-end integration across `LocalEmbeddingProvider`, `PGVectorStoreAdapter`, and `CrossEncoderReranker` orchestrated via `RetrievalService`.
+- **Alternatives Considered**: Mocking all databases and model inferences across all tests. Rejected because live integration tests are essential for detecting SQL compatibility, type adaptation, and third-party driver regressions.
+- **Impact**: Complete end-to-end confidence under realistic runtime environments with zero regressions on fast unit test suites.
+
+### 2. Seamless Vector Parameter Adaptation (`_to_vector_param`)
+- **Location**: [`packages/genai-core/src/genai_core/retrieval/pgvector_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/pgvector_store.py)
+- **Decision**: Added `_to_vector_param(vec: list[float]) -> Any` helper which wraps float lists in a `_VectorParam` subclass of `pgvector.Vector`. It provides standard `__eq__` sequence equality so unit test mock assertions pass without modifications, while informing `psycopg` to dump vector types over the wire. This avoids overriding the global `list` dumper on database connections, which previously broke `DELETE ... ANY(%s)` with `list[str]`.
+- **Alternatives Considered**: Modifying SQL queries to use explicit `%s::vector` casts everywhere or registering dumpers globally on `conn.adapters`. Global dumpers broke other list parameters (such as string lists), and SQL casts break databases where pgvector type is registered under different search paths.
+- **Impact**: Fully robust PostgreSQL pgvector operations for search, upsert, and delete without side effects on non-vector list parameters.
+

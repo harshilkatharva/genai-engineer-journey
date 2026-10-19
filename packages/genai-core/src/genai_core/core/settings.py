@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     default_embedding_model: str = "all-MiniLM-L6-v2"
     default_embedding_dimensions: int = 384
     default_embedding_batch_size: int = 32
-    default_google_embedding_model: str = "text-embedding-005"
+    default_google_embedding_model: str = "gemini-embedding-001"
     default_openai_embedding_model: str = "text-embedding-3-small"
 
     # Embedding resilience settings

@@ -13,10 +13,10 @@ from ..exceptions.embedding_exceptions import (
 )
 
 GOOGLE_KNOWN_MODEL_DIMENSIONS: dict[str, int] = {
-    "text-embedding-005": 768,
-    "models/text-embedding-005": 768,
-    "embedding-001": 768,
-    "models/embedding-001": 768,
+    "gemini-embedding-001": 768,
+    "models/gemini-embedding-001": 768,
+    "gemini-embedding-2": 768,
+    "models/gemini-embedding-2": 768,
 }
 
 
@@ -50,7 +50,7 @@ class GoogleEmbeddingProvider:
             ) from err
 
         self.model: str = str(
-            model or getattr(settings, "default_google_embedding_model", "text-embedding-005")
+            model or getattr(settings, "default_google_embedding_model", "gemini-embedding-001")
         )
         self.dimensions: int | None = dimensions
         self.last_usage: dict[str, int] | None = None
@@ -61,7 +61,7 @@ class GoogleEmbeddingProvider:
 
     @property
     def default_model(self) -> str:
-        return "text-embedding-005"
+        return "gemini-embedding-001"
 
     @property
     def native_dimensions(self) -> int:

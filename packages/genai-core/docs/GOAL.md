@@ -202,7 +202,7 @@ Extract only the stable responsibilities needed across projects, separating reus
   - Optional `CrossEncoderReranker` (`cross-encoder/ms-marco-MiniLM-L6-v2`) with worker thread execution via `asyncio.to_thread`.
   - Candidate pool expansion for high recall prior to re-ranking, score tracking in metadata, and graceful fallback handling (`warn_and_continue` vs `raise`).
 
-**Outcome:** Completed. Fully validated through 154 unit tests across the package (100% pass rate) and all pre-push checks (`ruff`, `mypy`).
+**Outcome:** Completed. Fully validated through 154 unit tests (100% pass rate), a dedicated live integration test suite for embeddings and retrieval (validating real model inference, PostgreSQL/pgvector storage, keyword search, score fusion, and cross-encoder re-ranking), and all pre-push checks (`ruff`, `mypy`).
 
 ### Phase 4 — Memory primitives
 
