@@ -21,3 +21,11 @@ class ObservabilityEvent(StrEnum):
     EMBEDDING_RATE_LIMITED = "embedding_rate_limited"
     EMBEDDING_RETRY = "embedding_retry"
     EMBEDDING_TIMEOUT = "embedding_timeout"
+
+    # Retrieval events
+    RETRIEVAL_START = "retrieval_start"
+    RETRIEVAL_SUCCESS = "retrieval_success"
+    RETRIEVAL_FAILED = "retrieval_failed"
+    RETRIEVAL_INDEX_START = "retrieval_index_start"
+    RETRIEVAL_INDEX_SUCCESS = "retrieval_index_success"
+    RETRIEVAL_DELETE_SUCCESS = "retrieval_delete_success"

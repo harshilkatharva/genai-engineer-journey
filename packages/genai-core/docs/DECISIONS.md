@@ -310,6 +310,146 @@ This document records the architectural decisions, component responsibilities, d
 - **Alternatives Considered**: Giving every individual batch a fresh full timeout window. Rejected because a request with 100 batches could hang for 50 minutes (100 * 30s) without triggering a timeout.
 - **Impact**: Guaranteed bounded execution time for large embedding jobs.
 
+---
 
+## 2026-10-19: Retrieval Architecture & In-Memory Implementation (Stages 1 & 2)
 
+### 1. Retrieval Layer Boundaries & Extraction from Module 09
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/models/retrieval_model/`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/models/retrieval_model/)
+  - [`packages/genai-core/src/genai_core/services/retrieval_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/retrieval_service.py)
+- **Decision**: Analyzed Module 09's RAG implementation and extracted core, reusable retrieval responsibilities while intentionally excluding application-specific concerns:
+  - Excluded: Application-level text splitters/chunkers, document ingestion pipelines, hardcoded tenant logic, database schemas, and prompt synthesis templates.
+  - Extracted: Core data contracts (`DocumentChunk`, `RetrievalQuery`, `RetrievalResult`, `RetrievalResponse`), vector store abstraction protocol, semantic search orchestration, metadata filtering, score thresholding, and ranking.
+- **Alternatives Considered**: Copying Module 09's full RAG pipeline (including document chunkers, tenant parsers, and prompt templates) into `genai-core`. Rejected because ingestion and chunking vary widely across applications, whereas retrieval query execution and vector-store querying are universal primitives.
+- **Impact**: Keeps `genai-core` clean and reusable across diverse future modules without imposing rigid document ingestion or database schemas.
+
+### 2. Protocol-Driven Vector Store Architecture (`VectorStoreAdapter`)
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/retrieval/protocol.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/protocol.py)
+  - [`packages/genai-core/src/genai_core/retrieval/in_memory_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/in_memory_store.py)
+- **Decision**: Defined `VectorStoreAdapter` as a `@runtime_checkable` `Protocol` with:
+  - `dimensions: int`: Required geometric dimension matching.
+  - `search(query_vector, top_k, score_threshold, filters) -> list[RetrievalResult]`: Async semantic search.
+  - `upsert(chunks: list[DocumentChunk]) -> int`: Async vector indexing.
+  - `delete(chunk_ids: list[str]) -> int`: Async vector deletion.
+- **Alternatives Considered**: Using an abstract base class (`ABC`) or coupling `RetrievalService` directly to PGVector. Rejected because protocols provide duck-typing flexibility for third-party stores (Chroma, Qdrant, Pinecone) without forcing base class inheritance or heavy database client dependencies.
+- **Impact**: Enables complete vector store interchangeability. `RetrievalService` consumes any conforming adapter.
+
+### 3. Forward-Compatible Contract with Fail-Fast Search Mode Validation
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/models/retrieval_model/retrieval_query.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/models/retrieval_model/retrieval_query.py)
+  - [`packages/genai-core/src/genai_core/services/retrieval_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/retrieval_service.py)
+  - [`packages/genai-core/src/genai_core/exceptions/retrieval_exceptions.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/exceptions/retrieval_exceptions.py)
+- **Decision**: Added `search_mode: Literal["dense", "sparse", "hybrid"] = "dense"` to `RetrievalQuery`. In Phase 3 (Stages 1 & 2), only `"dense"` search is implemented. Requesting `"sparse"` or `"hybrid"` search immediately raises `UnsupportedSearchModeError`.
+- **Alternatives Considered**: Faking hybrid search by falling back to dense search, or omitting `search_mode` until hybrid search is implemented. Rejected because silently ignoring requested search modes creates deceptive behavior for callers, while omitting the field would require breaking contract changes later.
+- **Impact**: Clean forward-compatibility for sparse BM25 and hybrid reciprocal rank fusion (RRF) while strictly enforcing fail-fast behavior today.
+
+### 4. Basic Store Mutation Operations (`upsert`, `delete`, `index_documents`)
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/retrieval/protocol.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/protocol.py)
+  - [`packages/genai-core/src/genai_core/retrieval/in_memory_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/in_memory_store.py)
+  - [`packages/genai-core/src/genai_core/services/retrieval_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/retrieval_service.py)
+- **Decision**: Vector stores implement `upsert()` and `delete()`. Furthermore, `RetrievalService` provides a convenience `index_documents(chunks: list[DocumentChunk])` method: if chunks are missing embeddings, `RetrievalService` automatically vectorizes them using its attached `EmbeddingService` before delegating to `store.upsert()`.
+- **Alternatives Considered**: Pure read-only vector store interface. Rejected because testing, local development, and basic RAG workflows require a standard way to insert and remove chunks without bypassing the service abstraction.
+- **Impact**: Provides end-to-end indexing and retrieval capability out of the box.
+
+### 5. Strict Vector Dimension Validation
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/services/retrieval_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/retrieval_service.py)
+  - [`packages/genai-core/src/genai_core/retrieval/in_memory_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/in_memory_store.py)
+  - [`packages/genai-core/src/genai_core/exceptions/retrieval_exceptions.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/exceptions/retrieval_exceptions.py)
+- **Decision**: Dimension compatibility is enforced at three levels:
+  1. Service Initialization: If an `EmbeddingService` is provided, `retrieval_service.py` asserts `embedding_service.dimensions == store.dimensions`. A mismatch raises `IncompatibleEmbeddingError`.
+  2. Direct Vector Queries: If a caller passes `query_vector` directly, its length is checked against `store.dimensions`. Mismatches raise `IncompatibleEmbeddingError`.
+  3. Chunk Ingestion: `store.upsert()` verifies that all chunk embeddings match the store's configured dimension.
+- **Alternatives Considered**: Allowing dimension mismatches to trigger math exceptions (e.g. dot product shape errors) during similarity calculation. Rejected because late mathematical errors obscure the root configuration defect.
+- **Impact**: Immediate, actionable errors when components are misconfigured.
+
+### 6. Zero-Dependency `InMemoryVectorStore`
+- **Location**: [`packages/genai-core/src/genai_core/retrieval/in_memory_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/in_memory_store.py)
+- **Decision**: Implemented `InMemoryVectorStore` using pure Python standard library (`math`, `typing`). Calculates cosine similarity with floating-point tolerance, supports exact dictionary subset metadata filtering, filters results below `score_threshold`, and sorts by descending similarity score.
+- **Alternatives Considered**: Using ChromaDB or FAISS for in-memory testing. Rejected to prevent adding heavy native C++ dependencies or third-party packages to base `genai-core`.
+- **Impact**: Fast, lightweight, zero-dependency reference implementation ideal for unit testing, CI pipelines, and small in-memory retrieval tasks.
+
+### 7. Resilience, Timeout Translation, and Observability Integration
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/services/retrieval_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/retrieval_service.py)
+  - [`packages/genai-core/src/genai_core/exceptions/retrieval_exceptions.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/exceptions/retrieval_exceptions.py)
+  - [`packages/genai-core/src/genai_core/resilience/retry_policy.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/resilience/retry_policy.py)
+- **Decision**:
+  - In `retry_policy.py`, classified `IncompatibleEmbeddingError` and `UnsupportedSearchModeError` as non-retryable client errors.
+  - Wrapped search operations with `execute_with_retry` using configured timeout (`retrieval_timeout_seconds = 30.0`).
+  - Caught `EmbeddingTimeoutError` and `TimeoutError`, cleanly translating them to `RetrievalTimeoutError`.
+  - Emitted structured observability events (`RETRIEVAL_START`, `RETRIEVAL_SUCCESS`, `RETRIEVAL_FAILED`, `RETRIEVAL_INDEX_START`, `RETRIEVAL_INDEX_SUCCESS`, `RETRIEVAL_DELETE_SUCCESS`) via `safe_log`. Text content is truncated to 100 characters in logs to avoid log bloat and privacy leaks.
+- **Impact**: Robust operational behavior with comprehensive tracing and zero sensitive data leaks.
+
+---
+
+## 2026-10-19: PostgreSQL + pgvector Adapter Architecture (Stage 3 & Stage 4)
+
+### 1. Injected Connection Pattern & Connection Lifecycle
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/retrieval/pgvector_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/pgvector_store.py)
+  - [`packages/genai-core/src/genai_core/retrieval/protocol.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/protocol.py)
+- **Decision**: Analyzed Module 09's database implementation (`retrive_db.py`, `upsert_db.py`, `index_db.py`), which called `psycopg.AsyncConnection.connect()` on every operation. In `genai-core`, eliminated ad-hoc connection creation in favor of dependency-injected connections:
+  - Supports injected connection pool (`psycopg_pool.AsyncConnectionPool` with `async with pool.connection() as conn:`), persistent connection, or connection factory (`Callable[[], Any]`).
+  - Zero connection leaks: connections are acquired from the pool and released automatically.
+- **Alternatives Considered**: Creating a new connection per query or embedding connection string parsing and pool configuration directly inside `PGVectorStoreAdapter`. Rejected because managing pools inside the store couples the library to specific connection configuration and prevents callers from sharing connection pools across multiple services.
+- **Impact**: Optimal performance, pooling reuse, and seamless integration with FastAPI, background workers, or unit test mocks.
+
+### 2. SQL Safety & Complete Query Parameterization
+- **Location**: [`packages/genai-core/src/genai_core/retrieval/pgvector_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/pgvector_store.py)
+- **Decision**:
+  - Enforced whitelist regex validation (`^[a-zA-Z_][a-zA-Z0-9_]*$`) on all table and column names (`table_name`, `embedding_column`, `id_column`, `text_column`, `metadata_column`, `tenant_id_column`, `conflict_target`). Invalid identifiers raise `ValueError` at initialization.
+  - All query values (`query_vector`, filters, `score_threshold`, `top_k`, `chunk_ids`) are strictly passed as positional `%s` query parameters, completely eliminating SQL injection vulnerabilities.
+- **Alternatives Considered**: Relying on caller trust for table/column names. Rejected because dynamic SQL generation must be defensively guarded against malicious or malformed identifier strings.
+- **Impact**: Verified SQL safety against identifier injection and query value manipulation.
+
+### 3. Optional Dependency Isolation (`postgres` Extra)
+- **Locations**:
+  - [`packages/genai-core/pyproject.toml`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/pyproject.toml)
+  - [`packages/genai-core/src/genai_core/retrieval/pgvector_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/pgvector_store.py)
+  - [`packages/genai-core/src/genai_core/exceptions/embedding_exceptions.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/exceptions/embedding_exceptions.py)
+- **Decision**: Declared PostgreSQL dependencies as an optional package extra: `[project.optional-dependencies] postgres = ["psycopg[binary]>=3.1.0", "pgvector>=0.2.0"]`. Base `genai-core` remains lightweight with zero database dependencies. Attempting to use the adapter without installed dependencies raises `MissingExtraDependencyError(extra="postgres", package="psycopg[binary] and pgvector")`.
+- **Alternatives Considered**: Making `psycopg` and `pgvector` mandatory dependencies of `genai-core`. Rejected because consumers using hosted LLMs, embeddings, or in-memory retrieval should not be forced to install C-extensions and database drivers.
+- **Impact**: Keeps the base package install fast and lightweight while offering plug-and-play PostgreSQL vector capabilities when the extra is installed.
+
+### 4. JSONB Metadata Containment Filtering
+- **Location**: [`packages/genai-core/src/genai_core/retrieval/pgvector_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/pgvector_store.py)
+- **Decision**: Implemented metadata filtering via PostgreSQL's JSONB containment operator (`metadata @> %s::jsonb`). Supports arbitrary dictionary subset matching identical to `InMemoryVectorStore`. Added optional `tenant_id_column` support for dedicated indexed column filtering (`WHERE tenant_id = %s`).
+- **Alternatives Considered**: Creating dynamic SQL equality expressions for each metadata key (e.g. `metadata->>'key' = %s`). Rejected because JSONB containment (`@>`) leverages PostgreSQL GIN/jsonb_path_ops indexes and matches Python dict subset semantics cleanly.
+- **Impact**: Consistent metadata filtering behavior across both in-memory and PostgreSQL backends.
+
+### 5. Upsert & Delete Mechanics
+- **Location**: [`packages/genai-core/src/genai_core/retrieval/pgvector_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/pgvector_store.py)
+- **Decision**:
+  - Upsert: Parameterized batch `INSERT ... ON CONFLICT ({conflict_target}) DO UPDATE SET ...` updating content, vector, and metadata. Missing embeddings raise `ValueError`, and dimension mismatches raise `IncompatibleEmbeddingError`.
+  - Delete: Parameterized `DELETE FROM {table_name} WHERE {id_col} = ANY(%s)`.
+- **Alternatives Considered**: Separate insert-then-update or select-before-insert queries. Rejected because PostgreSQL `ON CONFLICT` is atomic and avoids race conditions.
+- **Impact**: Safe, idempotent document indexing and deletion.
+
+### 6. Fault Classification & Resilience Integration
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/retrieval/pgvector_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/pgvector_store.py)
+  - [`packages/genai-core/src/genai_core/exceptions/retrieval_exceptions.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/exceptions/retrieval_exceptions.py)
+  - [`packages/genai-core/src/genai_core/resilience/retry_policy.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/resilience/retry_policy.py)
+- **Decision**: Added `retryable: bool = False` to `VectorStoreError`. `PGVectorStoreAdapter` detects transient operational errors (connection reset, broken pipe, connection closed, timeouts, deadlocks) and flags `VectorStoreError(retryable=True)`, allowing the shared `execute_with_retry` engine to automatically backoff and retry. Permanent errors (syntax errors, relation missing) fail fast.
+---
+
+## 2026-10-19: Test Suite Restructuring into Functional Subdirectories
+
+### 1. Functional Categorization of Unit and Integration Tests
+- **Locations**:
+  - Unit tests: [`packages/genai-core/tests/unit/`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/)
+    - `embedding/`: `test_embedding_service.py`, `test_embedding_resilience.py`, `test_google_embedding_provider.py`, `test_openai_embedding_provider.py`
+    - `retrieval/`: `test_retrieval_service.py`, `test_in_memory_store.py`, `test_pgvector_store.py`
+    - `llm/`: `test_llm_service.py`, `test_anthropic_provider.py`, `test_google_provider.py`, `test_openai_provider.py`, `test_protocol.py`, `test_tool_spec.py`
+    - `observability/`: `test_observability.py`
+  - Integration tests: [`packages/genai-core/tests/integration/`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/)
+    - `llm/`: `test_anthropic_provider_integration.py`, `test_google_provider_integration.py`, `test_openai_provider_integration.py`
+    - `observability/`: `test_observability_integration.py`
+- **Decision**: Restructured flat test directories into functional subdirectories reflecting `module-09-rag`'s organization pattern and domain boundaries (`llm`, `embedding`, `retrieval`, `observability`). Added `__init__.py` markers across all test packages to ensure isolated pytest namespaces and type checking.
+- **Alternatives Considered**: Keeping a single flat directory for all unit tests and another for integration tests. Rejected as the test suite grew to 18+ test files across multiple distinct services, making test file discovery and selective test execution clumsy.
+- **Impact**: Clean domain isolation, clear separation of concerns, faster test file discovery, and 100% preservation of test assertions and coverage.
 

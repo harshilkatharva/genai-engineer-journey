@@ -27,6 +27,11 @@ class Settings(BaseSettings):
     embedding_rate_limit_rpm: int | None = None
     embedding_rate_limit_tpm: int | None = None
 
+    # Retrieval settings
+    default_retrieval_top_k: int = 5
+    default_retrieval_score_threshold: float | None = None
+    retrieval_timeout_seconds: float = 30.0
+
     # Integration and API keys
     integration_test: int = 0
     google_api_key: str | None = None

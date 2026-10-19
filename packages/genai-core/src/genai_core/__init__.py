@@ -12,6 +12,7 @@ from .exceptions import (
     EmbeddingProviderError,
     EmbeddingRateLimitError,
     EmbeddingTimeoutError,
+    IncompatibleEmbeddingError,
     LLMAuthenticationError,
     LLMConnectionError,
     LLMContentFilterError,
@@ -20,6 +21,10 @@ from .exceptions import (
     LLMTimeoutError,
     LLMValidationError,
     MissingExtraDependencyError,
+    RetrievalError,
+    RetrievalTimeoutError,
+    UnsupportedSearchModeError,
+    VectorStoreError,
 )
 from .exceptions import (
     LLMError as LLMException,
@@ -32,12 +37,16 @@ from .llm import (
 )
 from .models import (
     ChatMessage,
+    DocumentChunk,
     EmbeddingRequest,
     EmbeddingResponse,
     LLMError,
     LLMManagerRequest,
     LLMManagerResponse,
     LLMResponseModel,
+    RetrievalQuery,
+    RetrievalResponse,
+    RetrievalResult,
     ToolArgumentError,
     ToolCall,
     ToolChoice,
@@ -69,13 +78,15 @@ from .resilience import (
     extract_retry_after,
     is_retryable_error,
 )
-from .services import EmbeddingService, LLMService, LLMServicemanager
+from .retrieval import InMemoryVectorStore, PGVectorStoreAdapter, VectorStoreAdapter
+from .services import EmbeddingService, LLMService, LLMServicemanager, RetrievalService
 
 __all__ = [
     "AnthropicProvider",
     "AsyncTokenBucket",
     "ChatMessage",
     "ConfigError",
+    "DocumentChunk",
     "EmbeddingDimensionError",
     "EmbeddingError",
     "EmbeddingProvider",
@@ -87,6 +98,8 @@ __all__ = [
     "EmbeddingTimeoutError",
     "GoogleEmbeddingProvider",
     "GoogleProvider",
+    "InMemoryVectorStore",
+    "IncompatibleEmbeddingError",
     "JsonFormatter",
     "LLMAuthenticationError",
     "LLMConnectionError",
@@ -109,8 +122,15 @@ __all__ = [
     "ObservabilityEvent",
     "OpenAIEmbeddingProvider",
     "OpenAIProvider",
+    "PGVectorStoreAdapter",
     "RateLimiter",
     "RedactingFilter",
+    "RetrievalError",
+    "RetrievalQuery",
+    "RetrievalResponse",
+    "RetrievalResult",
+    "RetrievalService",
+    "RetrievalTimeoutError",
     "RetryPolicy",
     "Settings",
     "TextFormatter",
@@ -118,6 +138,9 @@ __all__ = [
     "ToolCall",
     "ToolChoice",
     "ToolSpec",
+    "UnsupportedSearchModeError",
+    "VectorStoreAdapter",
+    "VectorStoreError",
     "close_observability",
     "configure_observability",
     "estimate_tokens",

@@ -10,6 +10,12 @@ from .llm_model import (
     LLMResponseModel,
     ToolCall,
 )
+from .retrieval_model import (
+    DocumentChunk,
+    RetrievalQuery,
+    RetrievalResponse,
+    RetrievalResult,
+)
 from .tools_model import (
     ToolArgumentError,
     ToolChoice,
@@ -18,12 +24,16 @@ from .tools_model import (
 
 __all__ = [
     "ChatMessage",
+    "DocumentChunk",
     "EmbeddingRequest",
     "EmbeddingResponse",
     "LLMError",
     "LLMManagerRequest",
     "LLMManagerResponse",
     "LLMResponseModel",
+    "RetrievalQuery",
+    "RetrievalResponse",
+    "RetrievalResult",
     "ToolArgumentError",
     "ToolCall",
     "ToolChoice",

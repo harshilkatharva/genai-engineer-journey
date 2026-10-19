@@ -255,23 +255,66 @@ Embeddings are a separate capability from text generation, even when provided by
 **Status:** Completed (Stages 1, 2, and 3 verified by 98 unit tests and package pre-push checks).
 
 
-## 7. Planned capability: retrieval and document abstractions
+## 7. Implemented capability: retrieval and document abstractions (Stages 1 & 2)
 
-When multiple projects require shared retrieval behavior, the package may define contracts for documents/chunks, retrieval queries, filters, and results, along with adapters for selected backends.
+Retrieval provides decoupled, provider-independent semantic search, document indexing, and evidence provenance through [`RetrievalService`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/retrieval_service.py) and [`VectorStoreAdapter`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/protocol.py).
 
-Intended rules:
+The following confirmed business rules govern retrieval:
 
-- A document/chunk should keep its content distinct from metadata.
-- Stable IDs and source metadata should be retained where provided.
-- Retrieval results should preserve useful source information and relevant score/rank data when the backend provides it.
-- Optional metadata and scores must not be represented as guaranteed when a backend cannot supply them.
-- Filters and retrieval options must either be honored or rejected clearly; they must not be silently dropped.
-- Backend-specific features may remain accessible through explicit adapter-specific extensions.
-- Retrieval should return evidence/results; deciding how to cite, synthesize, or present it is generally application/workflow behavior unless a shared component is deliberately defined for that purpose.
+### 7.1 Strict Dimension & Compatibility Enforcement
+- At `RetrievalService` initialization, if an `EmbeddingService` is provided, its vector dimension must strictly match the store dimension (`embedding_service.dimensions == store.dimensions`). Any mismatch immediately raises `IncompatibleEmbeddingError(requested, supported)`.
+- When pre-computed `query_vector` is supplied in `RetrievalQuery`, its length must match `store.dimensions`; mismatches raise `IncompatibleEmbeddingError`.
+- Text queries require an `EmbeddingService` to be injected at initialization. Calling `search(query="...")` without an embedding service raises `RetrievalError`.
 
-Do not force all vector databases or search services into an interface that hides important differences. Start with the smallest shared contract required by the first consumers.
+### 7.2 Input Validation & Strict Search Mode Policy
+- `RetrievalQuery` requires either `query` (non-empty string) or `query_vector` (non-empty list of floats). If both are omitted, empty, or whitespace-only, a `ValueError` is raised.
+- `top_k` must be greater than 0 (`top_k <= 0` raises `ValueError`).
+- `score_threshold` if provided must be bounded between `0.0` and `1.0`.
+- **Dense-Only Search Policy (Phase 3)**:
+  - `search_mode` defaults to `"dense"`.
+  - While the contract is forward-compatible with `"sparse"` and `"hybrid"`, any request specifying `search_mode="sparse"` or `search_mode="hybrid"` strictly raises `UnsupportedSearchModeError(mode)` in Phase 3.
+  - The service never silently ignores an unsupported search mode or falsely emulates hybrid retrieval.
 
-**Status:** Planned; storage-specific implementations and dependency choices are intentionally deferred until requirements are known.
+### 7.3 In-Memory Vector Store (`InMemoryVectorStore`)
+- Provides a zero-dependency in-memory reference implementation of `VectorStoreAdapter` suitable for local development, rapid unit testing, and offline execution.
+- Computes exact cosine similarity `dot(a, b) / (norm(a) * norm(b))`, clamped to `[-1.0, 1.0]`.
+- Upsert validates each `DocumentChunk`: missing embeddings raise `ValueError`, and dimension mismatches raise `IncompatibleEmbeddingError`.
+- Supports exact metadata key-value filtering, score thresholding, and returns results sorted descending by score with 1-indexed ranks (`rank=1, 2, ...`).
+
+### 7.4 Document Indexing, Deletion, and Evidence Provenance
+- `RetrievalService.index_documents(documents)` accepts either raw text strings or `DocumentChunk` instances.
+- If raw strings or chunks lacking vectors are provided, `RetrievalService` automatically utilizes `self.embedding_service.embed_documents` to generate vectors before dispatching to `store.upsert()`. Attempting to index un-embedded documents without an embedding service raises `RetrievalError`.
+- `delete_documents(chunk_ids)` delegates to `store.delete()` and returns the count of deleted chunks.
+- Search outputs return normalized `RetrievalResult` objects preserving chunk `id`, `content`, `score`, `rank`, `metadata`, and `source_id`, ensuring evidence traceability for downstream prompt generation and citations.
+
+### 7.5 Resilience & Timeout Handling
+- Vector store operations inherit the shared resilience engine (`execute_with_retry`).
+- Searches exceeding the configured deadline or timeout raise `RetrievalTimeoutError`.
+- Input validation, dimension mismatches, and unsupported search modes are classified as non-retryable and fail fast.
+
+### 7.6 Observability & Data Privacy
+- Emits structured events: `RETRIEVAL_START`, `RETRIEVAL_SUCCESS`, `RETRIEVAL_FAILED`, `RETRIEVAL_INDEX_START`, `RETRIEVAL_INDEX_SUCCESS`, and `RETRIEVAL_DELETE_SUCCESS`.
+- Logs record operational metadata: `top_k`, `has_filters`, `search_mode`, `store_dimensions`, `total_results`, and `latency_ms`.
+- **Data Privacy**: Raw search queries, chunk text contents, and sensitive metadata are strictly never logged.
+
+**Status:** Completed (Stages 1, 2, 3, and 4 verified by 133 package unit tests and pre-push checks).
+
+### 7.7 PostgreSQL + pgvector Adapter (`PGVectorStoreAdapter`)
+- **Protocol Conformance**: Conforms strictly to `@runtime_checkable` `VectorStoreAdapter`, implementing `dimensions`, `search()`, `upsert()`, and `delete()`.
+- **Connection Injection**: Requires an injected `connection` (persistent `psycopg.AsyncConnection`), `connection_pool` (e.g. `psycopg_pool.AsyncConnectionPool` with async `.connection()`), or `connection_factory` (async callable returning a connection context manager). Never creates ad-hoc unpooled TCP connections per query.
+- **Optional Dependency**: Declared under `[project.optional-dependencies] postgres = ["psycopg[binary]>=3.1.0", "pgvector>=0.2.0"]`. Base package does not force database driver installation. If missing when explicitly checked or initialized, raises `MissingExtraDependencyError`.
+- **SQL Safety**:
+  - Table name, embedding column, id column, text column, metadata column, tenant column, and conflict targets are strictly validated against `^[a-zA-Z_][a-zA-Z0-9_]*$`. Invalid identifiers raise `ValueError`.
+  - All query values (`query_vector`, filters, `score_threshold`, `top_k`, `chunk_ids`) are passed strictly as `%s` positional parameters in query tuples, completely eliminating SQL injection.
+- **Dense Vector Search**: Computes cosine similarity via `1 - (embedding <=> %s) AS similarity_score`, ordered by `embedding <=> %s ASC` (nearest first) with `LIMIT %s`.
+- **Metadata Filtering**: Utilizes PostgreSQL JSONB containment operator (`metadata @> %s::jsonb`) to support dictionary subset filtering. If `tenant_id_column` is configured, tenant filtering uses a dedicated column equality condition (`WHERE tenant_id = %s`).
+- **Score Thresholding**: Adds `WHERE 1 - (embedding <=> %s) >= %s` when `score_threshold` is specified.
+- **Upsert Semantics**: Executes parameterized batch `INSERT ... ON CONFLICT ({conflict_target}) DO UPDATE SET ...` updating text, embedding, and metadata. Missing embeddings raise `ValueError`, and dimension mismatches raise `IncompatibleEmbeddingError`.
+- **Delete Semantics**: Executes parameterized `DELETE FROM {table_name} WHERE {id_col} = ANY(%s)`.
+- **Resilience & Fault Classification**: Translates database errors into `VectorStoreError`. Transient connection resets, timeouts, broken pipes, and deadlocks are flagged with `retryable=True` for automatic retry by `execute_with_retry`. Non-transient errors (syntax errors, relation missing, permission denied) fail fast.
+
+### 7.8 Planned Follow-Up: Hybrid Retrieval & Reranking
+- Combining dense vector retrieval with PostgreSQL full-text search (`ts_rank_cd`), applying score normalization, reciprocal rank/weighted score fusion, and optional cross-encoder reranking.
 
 ## 8. Planned capability: memory
 

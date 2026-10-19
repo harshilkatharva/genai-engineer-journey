@@ -18,6 +18,7 @@ flowchart TD
         direction TB
         LLM[LLMService]
         EMB[EmbeddingService]
+        RET[RetrievalService]
         RESIL[Resilience: RateLimiter & RetryPolicy]
         OBS[Observability Engine]
         MODELS[Models: Request & Response Contracts]
@@ -27,19 +28,22 @@ flowchart TD
 
     Client -->|generate text / tool calls| LLM
     Client -->|vectorize text / documents| EMB
+    Client -->|semantic search & index| RET
     Client -->|configure logging / request_id context| OBS
     Client -->|access config / typed models| MODELS
 
     subgraph ServiceLayer ["Service Orchestration Layer"]
         LLM --> LLMProviderResolve{Resolve LLM Provider}
         EMB --> EMBProviderResolve{Resolve Embedding Provider}
+        RET --> RETStoreResolve{VectorStoreAdapter}
+        RET --> RETEmbedQuery["EmbeddingService.embed_query()"]
     end
 
     subgraph ResilienceSubsystem ["Shared Resilience Infrastructure"]
         EMB --> RateLimiter[RateLimiter: RPM & TPM Token Bucket]
         EMB --> RetryPolicy[RetryPolicy: Exponential Backoff & Jitter]
+        RET --> RetryPolicy
         RateLimiter -.->|reusable by| LLM
-        RetryPolicy -.->|reusable by| LLM
     end
 
     subgraph CrossCutting ["Cross-Cutting Observability & Safety"]
@@ -50,9 +54,10 @@ flowchart TD
 
     LLM -.->|emit lifecycle events| SafeLog
     EMB -.->|emit lifecycle events| SafeLog
+    RET -.->|emit lifecycle events| SafeLog
     ResilienceSubsystem -.->|emit throttled / retry / timeout events| SafeLog
 
-    subgraph Adapters ["Integration & Provider Adapters"]
+    subgraph Adapters ["Integration & Storage Adapters"]
         LLMProviderResolve --> GoogleLLM[GoogleProvider]
         LLMProviderResolve --> OpenAILLM[OpenAIProvider]
         LLMProviderResolve --> AnthropicLLM[AnthropicProvider]
@@ -60,10 +65,12 @@ flowchart TD
         EMBProviderResolve --> LocalEmb[LocalEmbeddingProvider]
         EMBProviderResolve --> OpenAIEmb[OpenAIEmbeddingProvider]
         EMBProviderResolve --> GoogleEmb[GoogleEmbeddingProvider]
+
+        RETStoreResolve --> InMemoryStore[InMemoryVectorStore: Zero-dependency]
+        RETStoreResolve -.->|Stage 3| PGVectorStore[PGVectorStoreAdapter: PostgreSQL]
     end
 
     subgraph FutureServices ["Future Services (Planned)"]
-        RET[RetrievalService]
         MEM[MemoryService]
         TOOL[ToolOrchestrator]
     end
@@ -73,16 +80,17 @@ flowchart TD
 ```
 
 ### Component Roles & Responsibilities:
-- **`genai_core.services`**: Unified entry points (`LLMService`, `EmbeddingService`). Validate input, resolve providers, coordinate internal batching, manage fault isolation, and emit observability events.
-- **`genai_core.resilience`**: Shared asynchronous resilience infrastructure (`RateLimiter`, `AsyncTokenBucket`, `RetryPolicy`, `execute_with_retry`, `extract_retry_after`, `estimate_tokens`). Implements in-memory token bucket pacing for RPM/TPM and bounded retries with jitter and deadlines. Designed as a package-level capability reusable across embeddings, LLMs, and future services.
+- **`genai_core.services`**: Unified entry points (`LLMService`, `EmbeddingService`, `RetrievalService`). Validate input, resolve providers/backends, coordinate internal batching, manage fault isolation, and emit observability events.
+- **`genai_core.retrieval`**: Vector store abstractions and reference implementations:
+  - `VectorStoreAdapter`: Runtime-checkable protocol defining `dimensions`, `search`, `upsert`, and `delete`.
+  - `InMemoryVectorStore`: Zero-dependency in-memory reference store using exact cosine similarity, supporting metadata filtering and score thresholding.
+  - `PGVectorStoreAdapter` *(Planned Stage 3)*: PostgreSQL pgvector adapter using connection injection.
+- **`genai_core.resilience`**: Shared asynchronous resilience infrastructure (`RateLimiter`, `AsyncTokenBucket`, `RetryPolicy`, `execute_with_retry`, `extract_retry_after`, `estimate_tokens`). Implements in-memory token bucket pacing for RPM/TPM and bounded retries with jitter and deadlines. Reused across embeddings, retrieval, and LLMs.
 - **`genai_core.llm`**: Adapters conforming to `LLMProvider` protocol translating between normalized contracts and vendor SDKs (Google, OpenAI, Anthropic).
-- **`genai_core.embedding`**: Adapters conforming to `EmbeddingProvider` protocol:
-  - `LocalEmbeddingProvider`: CPU-bound models (`sentence-transformers`) non-blocking in background threads.
-  - `OpenAIEmbeddingProvider`: Hosted OpenAI models (`text-embedding-3-small`, `text-embedding-3-large`, `text-embedding-ada-002`) with flexible output dimensions and exact usage reporting.
-  - `GoogleEmbeddingProvider`: Hosted Google Gemini models (`text-embedding-005`) with `output_dimensionality` truncation and error wrapping.
+- **`genai_core.embedding`**: Adapters conforming to `EmbeddingProvider` protocol (`LocalEmbeddingProvider`, `OpenAIEmbeddingProvider`, `GoogleEmbeddingProvider`).
 - **`genai_core.observability`**: Reusable logging with caller-isolated outputs, secret/key scrubbing, asynchronous request context propagation, and zero side effects by default.
-- **`genai_core.models`**: Pydantic v2 schemas (`ChatMessage`, `LLMManagerRequest`, `LLMResponseModel`, `EmbeddingRequest`, `EmbeddingResponse`, `ToolSpec`).
-- **`genai_core.exceptions`**: Typed error hierarchies (`LLMError`, `EmbeddingError`, `EmbeddingDimensionError`, `EmbeddingTimeoutError`, `EmbeddingRateLimitError`, `MissingExtraDependencyError`, `EmbeddingProviderError`).
+- **`genai_core.models`**: Pydantic v2 schemas (`ChatMessage`, `LLMManagerRequest`, `LLMResponseModel`, `EmbeddingRequest`, `EmbeddingResponse`, `DocumentChunk`, `RetrievalQuery`, `RetrievalResult`, `RetrievalResponse`, `ToolSpec`).
+- **`genai_core.exceptions`**: Typed error hierarchies (`LLMError`, `EmbeddingError`, `EmbeddingDimensionError`, `EmbeddingTimeoutError`, `RetrievalError`, `VectorStoreError`, `IncompatibleEmbeddingError`, `UnsupportedSearchModeError`, `RetrievalTimeoutError`).
 - **`genai_core.core`**: Environment settings loaded via `pydantic-settings` with explicit precedence and fallback defaults.
 
 ---
@@ -171,8 +179,8 @@ flowchart TD
     Caller -->|2. Scoped operation| ContextCall
     ContextCall --> SetVar["contextvars.set(request_id)"]
 
-    subgraph ServiceLogging ["Service Invocation (LLM or Embedding)"]
-        Service["LLMService / EmbeddingService"]
+    subgraph ServiceLogging ["Service Invocation (LLM, Embedding, or Retrieval)"]
+        Service["LLMService / EmbeddingService / RetrievalService"]
         Service --> SafeLog["safe_log(logger, level, event, **fields)"]
         SafeLog --> ExtractCtx["Read request_id from contextvars"]
         ExtractCtx --> EmitRecord["logger.log()"]
@@ -307,7 +315,7 @@ Resilience logic is isolated in `packages/genai-core/src/genai_core/resilience/`
 
 ```mermaid
 flowchart TD
-    Operation[Async Service Operation: Batch Call] --> LimiterAcquire["RateLimiter.acquire(requests=1, tokens=est_tokens)"]
+    Operation[Async Service Operation: Batch Call or Store Search] --> LimiterAcquire["RateLimiter.acquire(requests=1, tokens=est_tokens)"]
 
     subgraph TokenBucketLimiter ["AsyncTokenBucket Rate Limiter (Per-Process)"]
         LimiterAcquire --> CheckHold{"In dynamic Retry-After hold?"}
@@ -324,7 +332,7 @@ flowchart TD
 
     subgraph RetryLoop ["Bounded Retry & Timeout Engine"]
         ExecRetry --> CheckDeadline{"Now >= Deadline?"}
-        CheckDeadline -->|Yes| RaiseTimeout["Raise EmbeddingTimeoutError"]
+        CheckDeadline -->|Yes| RaiseTimeout["Raise TimeoutError / Timeout Exception"]
         CheckDeadline -->|No| RunAttempt["await asyncio.wait_for(op(), attempt_timeout)"]
         
         RunAttempt -->|Success| ReturnResult["Return operation result"]
@@ -363,7 +371,8 @@ flowchart TD
   - HTTP `500 Internal Server Error`, `502 Bad Gateway`, `503 Service Unavailable`, `504 Gateway Timeout`.
 - **Non-Retryable Errors (Fail-Fast)**:
   - Input validation errors (`ValueError`, `TypeError`).
-  - Strict dimension mismatches (`EmbeddingDimensionError`).
+  - Strict dimension mismatches (`EmbeddingDimensionError`, `IncompatibleEmbeddingError`).
+  - Unsupported search mode errors (`UnsupportedSearchModeError`).
   - Missing dependency errors (`MissingExtraDependencyError`).
   - HTTP 400 Bad Request, 401 Unauthorized, 403 Forbidden.
   - Quota exhaustion / billing failure (`insufficient_quota`, `billing_not_active`, `account_deactivated`).
@@ -371,38 +380,177 @@ flowchart TD
 
 ---
 
-## 6. Future Services (Planned Architecture)
+## 6. RetrievalService & Vector Store Execution Flow
+
+`RetrievalService` provides unified semantic search and document indexing, strictly decoupling application logic from vector store implementations:
+
+```mermaid
+flowchart TD
+    Client[Caller / Application] -->|search / index_documents / delete_documents| RetrievalService
+
+    subgraph ServiceInit ["Service Initialization"]
+        RetrievalService --> InitService["Initialize: store, embedding_service, retry_policy"]
+        InitService --> CheckStoreDim{"embedding_service != None?"}
+        CheckStoreDim -->|Yes| CompareDims{"embedding_service.dimensions == store.dimensions?"}
+        CompareDims -->|Mismatch| RaiseIncompat["Raise IncompatibleEmbeddingError"]
+        CompareDims -->|Match| Ready["Service Ready"]
+        CheckStoreDim -->|No| Ready
+    end
+
+    subgraph SearchFlow ["search(query) Execution Path"]
+        Ready --> ReceiveSearch["Receive RetrievalQuery or query string"]
+        ReceiveSearch --> CheckMode{"query.search_mode == 'dense'?"}
+        CheckMode -->|No: 'sparse' or 'hybrid'| RaiseModeErr["Raise UnsupportedSearchModeError"]
+        CheckMode -->|Yes: 'dense'| ResolveVector{"query_vector provided?"}
+
+        ResolveVector -->|Yes| ValidateVecDim{"len(query_vector) == store.dimensions?"}
+        ValidateVecDim -->|Mismatch| RaiseDimErr["Raise IncompatibleEmbeddingError"]
+        ValidateVecDim -->|Match| QueryVecReady["query_vector ready"]
+
+        ResolveVector -->|No| CheckEmbSvc{"embedding_service != None?"}
+        CheckEmbSvc -->|No| RaiseNeedEmb["Raise RetrievalError (EmbeddingService required)"]
+        CheckEmbSvc -->|Yes| EmbedQuery["await embedding_service.embed_query(query.query)"]
+        EmbedQuery --> QueryVecReady
+
+        QueryVecReady --> LogSearchStart["safe_log: RETRIEVAL_START (no sensitive text)"]
+        LogSearchStart --> ExecStoreSearch["await store.search(query_vector, top_k, filters, threshold)"]
+
+        subgraph StoreSearch ["VectorStore Execution (e.g. InMemoryVectorStore)"]
+            ExecStoreSearch --> FilterChunks["Filter chunks by metadata key-values"]
+            FilterChunks --> CalcSim["Calculate cosine similarity dot(q, c)/(|q|*|c|)"]
+            CalcSim --> FilterThresh{"score >= score_threshold?"}
+            FilterThresh -->|Yes| KeepCandidate["Keep candidate"]
+            FilterThresh -->|No| DropCandidate["Drop candidate"]
+            KeepCandidate --> SortRank["Sort descending by score and slice top_k"]
+            SortRank --> AssignRanks["Assign 1-indexed ranks (1, 2, 3...)"]
+        end
+
+        AssignRanks --> ReturnResults["Return list[RetrievalResult]"]
+        ReturnResults --> CalcLatency["Calculate latency_ms"]
+        CalcLatency --> LogSearchSuccess["safe_log: RETRIEVAL_SUCCESS"]
+        LogSearchSuccess --> BuildResp["Return RetrievalResponse"]
+        BuildResp --> Client
+    end
+
+    subgraph IndexFlow ["index_documents(documents) Execution Path"]
+        Ready --> ReceiveIndex["Receive list[DocumentChunk] or list[str]"]
+        ReceiveIndex --> CheckDocType{"Elements are str or DocumentChunk?"}
+
+        CheckDocType -->|str| EmbedRaw["await embedding_service.embed_documents(texts)"]
+        EmbedRaw --> BuildChunks["Construct DocumentChunk with generated IDs and vectors"]
+        BuildChunks --> StoreUpsert["await store.upsert(chunks)"]
+
+        CheckDocType -->|DocumentChunk| CheckMissingVecs{"Any chunk.embedding is None?"}
+        CheckMissingVecs -->|Yes| EmbedMissing["await embedding_service.embed_documents(missing_texts)"]
+        EmbedMissing --> AssignMissing["Assign generated vectors to chunks"]
+        AssignMissing --> StoreUpsert
+        CheckMissingVecs -->|No| StoreUpsert
+
+        StoreUpsert --> ReturnCount["Return count of upserted chunks"]
+        ReturnCount --> Client
+    end
+
+    subgraph ErrorHandling ["Error Handling & Timeout Protection"]
+        ExecStoreSearch -.->|Timeout / Deadline| LogFail["safe_log: RETRIEVAL_FAILED"]
+        LogFail --> RaiseTimeoutErr["Raise RetrievalTimeoutError"]
+        ExecStoreSearch -.->|Exception| LogFail2["safe_log: RETRIEVAL_FAILED"]
+        LogFail2 --> ReRaise["Re-raise exception"]
+    end
+```
+
+### 6.1 Query Validation and Extensibility Rules
+- **Location**: [`packages/genai-core/src/genai_core/models/retrieval_model/retrieval_query.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/models/retrieval_model/retrieval_query.py)
+- **Input Validation**:
+  - `query` (text) or `query_vector` (float list) must be provided. If both are omitted, empty, or whitespace-only, raises `ValueError`.
+  - `top_k` must be greater than 0 (`top_k <= 0` raises `ValueError`).
+  - `score_threshold` if provided must be bounded between `0.0` and `1.0`.
+- **Search Mode Policy**:
+  - The request contract defines `search_mode: Literal["dense", "sparse", "hybrid"] = "dense"`.
+  - In Phase 3, **dense search is exclusively supported**.
+  - Requesting `"sparse"` or `"hybrid"` strictly raises `UnsupportedSearchModeError(mode)` explaining that sparse and hybrid retrieval are planned for a subsequent stage. The system never silently falls back or pretends hybrid retrieval is operating.
+
+### 6.2 Embedding Compatibility and Dimension Enforcement
+- **Location**: [`packages/genai-core/src/genai_core/services/retrieval_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/retrieval_service.py)
+- At service initialization, if an `EmbeddingService` is provided, `self.embedding_service.dimensions` is validated against `self.store.dimensions`. A mismatch immediately raises `IncompatibleEmbeddingError(requested, supported)`.
+- When pre-computed `query_vector` is supplied in `RetrievalQuery`, `len(query_vector)` is validated against `self.store.dimensions`.
+
+### 6.3 In-Memory Vector Store (`InMemoryVectorStore`)
+- **Location**: [`packages/genai-core/src/genai_core/retrieval/in_memory_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/in_memory_store.py)
+- Implements [`VectorStoreAdapter`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/protocol.py).
+- Zero external dependencies: computes exact cosine similarity `dot(a, b) / (norm(a) * norm(b))`, clamped to `[-1.0, 1.0]`.
+- Supports exact metadata key-value filtering, score threshold filtering, and descending rank assignment.
+- Enables deterministic, fast, offline unit testing without requiring Docker or PostgreSQL.
+
+### 6.4 PostgreSQL pgvector Store (`PGVectorStoreAdapter`)
+- **Location**: [`packages/genai-core/src/genai_core/retrieval/pgvector_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/pgvector_store.py)
+- **Role**: Concrete database adapter implementing [`VectorStoreAdapter`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/protocol.py) with PostgreSQL and `pgvector`.
+- **Injected Connection Management**: Requires injected `connection`, `connection_pool` (e.g. `psycopg_pool.AsyncConnectionPool`), or `connection_factory`. Never creates ad-hoc unpooled TCP connections per operation.
+- **SQL Safety**:
+  - Whitelist regex validation (`^[a-zA-Z_][a-zA-Z0-9_]*$`) for all table and column names, preventing SQL injection via dynamic identifiers.
+  - Strict parameterization using `%s` placeholders for all dynamic inputs (vectors, filters, thresholds, chunk IDs).
+- **Cosine Similarity & Ranking**:
+  - Uses pgvector cosine distance operator `<=>`: `1 - (embedding <=> %s) AS similarity_score`.
+  - Orders by `embedding <=> %s ASC` (nearest neighbors first) with `LIMIT %s`.
+- **Metadata Filtering**:
+  - Utilizes PostgreSQL JSONB containment (`metadata @> %s::jsonb`) to support dictionary subset filtering.
+  - Supports optional dedicated tenant column (`tenant_id_column`) for indexed tenant partition filtering (`WHERE tenant_id = %s`).
+- **Upsert & Delete**:
+  - Upsert: Parameterized batch `INSERT INTO ... ON CONFLICT ({conflict_target}) DO UPDATE SET ...` updating text, vector, and metadata.
+  - Delete: Parameterized `DELETE FROM {table_name} WHERE {id_col} = ANY(%s)`.
+- **Resilience**: Translates database errors into `VectorStoreError`. Flags transient network/operational errors (connection reset, timeout, broken pipe, deadlock) as `retryable=True` for automatic retry by `execute_with_retry`.
+- **Optional Dependency**: Declared under `[project.optional-dependencies] postgres = ["psycopg[binary]>=3.1.0", "pgvector>=0.2.0"]`. Attempting to use the adapter without installed dependencies raises `MissingExtraDependencyError`.
+
+### 6.5 Document Indexing and Provenance
+- `index_documents` accepts raw text strings or structured `DocumentChunk` instances.
+- If raw strings or chunks lacking vectors are provided, `RetrievalService` utilizes `self.embedding_service.embed_documents` to generate embeddings in batches before dispatching to `store.upsert()`.
+- Search results preserve the original `metadata`, `source_id`, and `rank` in [`RetrievalResult`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/models/retrieval_model/retrieval_response.py), guaranteeing evidence traceability for downstream prompt generation and citations.
+
+---
+
+## 7. Future Services (Planned Architecture)
 
 As `genai-core` expands in Modules 17–20, additional shared capabilities will connect into the package architecture:
 
-### 6.1 Retrieval & Document Abstractions (Phase 3)
-- **Location**: `genai_core.retrieval`
-- **Role**: Common contracts for `DocumentChunk`, `RetrievalQuery`, `RetrievalResult`, and vector-store adapters (Chroma, Qdrant, PGVector).
-- **Interconnection**: Uses `EmbeddingService` to vectorize incoming queries and document chunks before querying vector stores; leverages `observability_context` to correlate retrieval latency and top-k scores with the overall request lifecycle.
+### 7.1 PostgreSQL pgvector Integration (Stage 3) — Completed
+- **Location**: [`packages/genai-core/src/genai_core/retrieval/pgvector_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/pgvector_store.py)
+- **Status**: Completed and fully verified with 14 dedicated unit tests.
 
-### 6.2 Memory Primitives (Phase 4)
+### 7.2 Hybrid Retrieval & Reranking (Phase 3 Follow-Up)
+- **Location**: `genai_core.retrieval.hybrid`
+- **Role**: Combines dense vector retrieval with PostgreSQL full-text search (`ts_rank_cd`), applying min-max score normalization and reciprocal rank or weighted score fusion, followed by optional cross-encoder reranking.
+
+### 7.3 Memory Primitives (Phase 4)
 - **Location**: `genai_core.memory`
 - **Role**: Session and user scoped conversation memory, buffer windows, and persistent store adapters.
 - **Interconnection**: Injects conversation history into `LLMService` requests (`ChatMessage` lists) and extracts facts/summaries post-completion.
 
-### 6.3 Tool & Agent Orchestration (Phase 5)
+### 7.4 Tool & Agent Orchestration (Phase 5)
 - **Location**: `genai_core.agents` / `genai_core.tools`
 - **Role**: Higher-level multi-step tool execution loops, argument dispatching, and agent state machines.
 - **Interconnection**: Dispatches tool definitions (`ToolSpec`) to `LLMService`, executes validated functions under caller control, and reports tool execution steps via `safe_log`.
 
 ---
 
-## 7. Verification and Test Flow
+## 8. Verification and Test Flow
 
-The behavior of `genai-core` is verified through automated unit tests and integration tests:
-- **Resilience unit tests**: [`test_embedding_resilience.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_embedding_resilience.py) validates RPM/TPM token bucket pacing, token estimation heuristics, error classification, exponential backoff, jitter, Retry-After header parsing, attempt timeout, deadline enforcement, and service retry integration.
-- **Hosted provider unit tests**:
-  - [`test_openai_embedding_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_openai_embedding_provider.py) validates dimension validation, request creation, output normalization, index-ordered sorting, usage tracking, and error wrapping.
-  - [`test_google_embedding_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_google_embedding_provider.py) validates `text-embedding-005` model configuration, output dimensionality, embedding extraction, and error wrapping.
-- **Embedding service unit tests**: [`test_embedding_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_embedding_service.py) validates initialization defaults, strict dimension rejection, empty input rejection, batch size validation, internal slicing loop, 1-to-1 order preservation, missing dependency handling, convenience helpers, and observability events.
-- **Observability unit tests**: [`test_observability.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_observability.py) validates caller-defined destinations, JSON/text formatting, secret scrubbing, async request context, idempotency, and error shielding.
-- **Observability live integration tests**: [`test_observability_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/test_observability_integration.py) verifies real log emission to caller-specified paths with live API execution and confirms zero credentials leak.
-- **Protocol conformance**: [`test_protocol.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_protocol.py) validates all adapters conform to `LLMProvider` and `EmbeddingProvider`.
-- **LLM Provider adapters**: [`test_google_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_google_provider.py), [`test_openai_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_openai_provider.py), [`test_anthropic_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_anthropic_provider.py).
-- **Service orchestration**: [`test_llm_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_llm_service.py) validates dispatch, error shielding, `complete_all` concurrency, and stream delegation.
-- **Tool definitions**: [`test_tool_spec.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/test_tool_spec.py) validates schema generators and argument parsing.
+The behavior of `genai-core` is verified through automated unit tests organized by feature under `tests/unit/` and integration tests under `tests/integration/`:
+- **Retrieval unit tests (`tests/unit/retrieval/`)**:
+  - [`test_retrieval_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/retrieval/test_retrieval_service.py) validates query validation (missing query, empty strings, invalid top-k, negative thresholds), dense semantic search execution with mock embeddings, direct vector search, shorthand string query invocation, dimension mismatch enforcement, rejection of unsupported search modes (`hybrid`, `sparse`), store timeout handling, document indexing (strings and chunks), and observability events.
+  - [`test_in_memory_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/retrieval/test_in_memory_store.py) validates protocol conformance (`isinstance(store, VectorStoreAdapter)`), dimension validation, upsert validation (missing vectors, dimension mismatches), chunk updates, chunk deletion, cosine ranking, top-k truncation, metadata key-value filtering, and score thresholding.
+  - [`test_pgvector_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/retrieval/test_pgvector_store.py) validates protocol conformance (`isinstance(store, VectorStoreAdapter)`), SQL identifier safety against injection, result mapping into `RetrievalResult`, parameterization of query values, metadata JSONB filtering, score thresholding, batch upsert with `ON CONFLICT`, delete execution with `ANY(%s)`, transient vs permanent failure classification, missing dependency raising `MissingExtraDependencyError`, and end-to-end integration with `RetrievalService`.
+- **Embedding unit tests (`tests/unit/embedding/`)**:
+  - [`test_embedding_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/embedding/test_embedding_service.py) validates initialization defaults, strict dimension rejection, empty input rejection, batch size validation, internal slicing loop, 1-to-1 order preservation, missing dependency handling, convenience helpers, and observability events.
+  - [`test_embedding_resilience.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/embedding/test_embedding_resilience.py) validates RPM/TPM token bucket pacing, token estimation heuristics, error classification, exponential backoff, jitter, Retry-After header parsing, attempt timeout, deadline enforcement, and service retry integration.
+  - [`test_openai_embedding_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/embedding/test_openai_embedding_provider.py) validates dimension validation, request creation, output normalization, index-ordered sorting, usage tracking, and error wrapping.
+  - [`test_google_embedding_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/embedding/test_google_embedding_provider.py) validates `text-embedding-005` model configuration, output dimensionality, embedding extraction, and error wrapping.
+- **LLM unit tests (`tests/unit/llm/`)**:
+  - [`test_llm_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_llm_service.py) validates dispatch, error shielding, `complete_all` concurrency, and stream delegation.
+  - [`test_protocol.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_protocol.py) validates provider adapters conform to `LLMProvider`.
+  - [`test_tool_spec.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_tool_spec.py) validates schema generators and argument parsing.
+  - [`test_google_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_google_provider.py), [`test_openai_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_openai_provider.py), [`test_anthropic_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_anthropic_provider.py).
+- **Observability unit tests (`tests/unit/observability/`)**:
+  - [`test_observability.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/observability/test_observability.py) validates caller-defined destinations, JSON/text formatting, secret scrubbing, async request context, idempotency, and error shielding.
+- **Live integration tests (`tests/integration/`)**:
+  - **LLM integration tests (`tests/integration/llm/`)**: [`test_anthropic_provider_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/llm/test_anthropic_provider_integration.py), [`test_google_provider_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/llm/test_google_provider_integration.py), [`test_openai_provider_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/llm/test_openai_provider_integration.py).
+  - **Observability integration tests (`tests/integration/observability/`)**: [`test_observability_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/observability/test_observability_integration.py).
+

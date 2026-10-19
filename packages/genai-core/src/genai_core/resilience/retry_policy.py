@@ -8,10 +8,12 @@ from collections.abc import Callable, Coroutine
 from dataclasses import dataclass
 from typing import Any
 
-from ..exceptions.embedding_exceptions import (
+from ..exceptions import (
     EmbeddingDimensionError,
     EmbeddingTimeoutError,
+    IncompatibleEmbeddingError,
     MissingExtraDependencyError,
+    UnsupportedSearchModeError,
 )
 
 PERMANENT_ERROR_CODES = {
@@ -72,7 +74,9 @@ def is_retryable_error(error: Exception) -> bool:
             ValueError,
             TypeError,
             EmbeddingDimensionError,
+            IncompatibleEmbeddingError,
             MissingExtraDependencyError,
+            UnsupportedSearchModeError,
         ),
     ):
         return False
@@ -132,7 +136,7 @@ async def execute_with_retry[T](
     deadline: float | None = None,
     on_retry: Callable[[int, Exception, float], None] | None = None,
 ) -> T:
-    """Execute an async coroutine with bounded retries, exponential backoff, jitter, and deadline."""
+    """Execute an async coroutine with retries, exponential backoff, jitter, and deadline."""
     effective_deadline = (
         deadline if deadline is not None else (time.monotonic() + policy.timeout_seconds)
     )

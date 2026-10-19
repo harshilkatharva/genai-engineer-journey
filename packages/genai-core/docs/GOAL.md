@@ -113,7 +113,7 @@ The implementation should proceed in validated increments. The sequence below is
 | **Phase 1 — LLM Service Integration** | **Completed** | Unified `LLMService`, provider adapters (Google, OpenAI, Anthropic), structured responses via Pydantic, tool calling, streaming, error normalization, and live integration tests. |
 | **Observability Infrastructure** | **Completed** | Reusable, caller-controlled logging (`ObservabilityConfig`), zero side effects by default (`NullHandler`), JSON/Text formatters, secret scrubbing (`RedactingFilter`), non-throwing async context (`observability_context`), and fault-isolated logging (`safe_log`). |
 | **Phase 2 — Embedding Service & Shared Resilience** | **Completed** | Full embedding capability across Local (`sentence-transformers`), OpenAI (`text-embedding-3-small`), and Google (`text-embedding-005`), non-blocking thread execution, strict dimension validation (`EmbeddingDimensionError`), internal batch slicing with 1-to-1 order preservation, shared async resilience (`RateLimiter` dual token buckets for RPM/TPM, `RetryPolicy` with backoff/jitter/deadlines, `extract_retry_after`), honest token usage reporting, and full observability integration. |
-| **Phase 3 — Retrieval Abstractions** | Next Planned Milestone | Document/chunk models, vector-store adapters, hybrid search contracts. |
+| **Phase 3 — Retrieval Abstractions** | **Completed** | Full retrieval subsystem across Stages 1–4: Core data models (`DocumentChunk`, `RetrievalQuery`, `RetrievalResult`, `RetrievalResponse`), typed exceptions, lifecycle observability events, `VectorStoreAdapter` protocol, zero-dependency `InMemoryVectorStore`, production-grade `PGVectorStoreAdapter` (injected connection/pool pattern, SQL injection defense, parameterized `<=>` cosine distance, JSONB containment filtering, batch upsert, delete, transient error classification), and `RetrievalService` (dense search orchestration, dimension validation, auto-embedding, timeout translation). Hybrid search planned as future enhancement. |
 | **Phase 4 — Memory Primitives** | Planned | Session/user scoped conversation memory and storage primitives. |
 | **Phase 5 — Tool Calling Interoperability**| Planned | Higher-level dispatch and orchestration boundaries. |
 
@@ -175,7 +175,35 @@ Provide a complete, production-grade vectorization capability with unified APIs,
 
 ### Phase 3 — Retrieval abstractions and integrations
 
-Extract only the stable responsibilities needed across projects—for example, document/chunk representation, retrieval request/result contracts, metadata and score handling, and adapters to actual retrieval or vector-store implementations. Avoid forcing every store into a lowest-common-denominator interface that loses essential features.
+Extract only the stable responsibilities needed across projects, separating reusable retrieval coordination from application-specific ingestion and database schemas:
+
+- **Stage 1 (Contracts, Protocols, Exceptions, Observability):**
+  - Standardized retrieval data models: `DocumentChunk`, `RetrievalQuery`, `RetrievalResult`, `RetrievalResponse`.
+  - Added forward-compatible `search_mode: Literal["dense", "sparse", "hybrid"] = "dense"`.
+  - Established typed exceptions hierarchy: `RetrievalError`, `VectorStoreError`, `IncompatibleEmbeddingError`, `UnsupportedSearchModeError`, `RetrievalTimeoutError`.
+  - Defined `VectorStoreAdapter` `@runtime_checkable` `Protocol` (`dimensions`, `search`, `upsert`, `delete`).
+  - Added structured observability events: `RETRIEVAL_START`, `RETRIEVAL_SUCCESS`, `RETRIEVAL_FAILED`, `RETRIEVAL_INDEX_START`, `RETRIEVAL_INDEX_SUCCESS`, `RETRIEVAL_DELETE_SUCCESS`.
+- **Stage 2 (In-Memory Store & Retrieval Service):**
+  - Implemented zero-dependency `InMemoryVectorStore` using exact cosine similarity, dictionary subset metadata filtering, score thresholding, and upsert/delete operations.
+  - Implemented `RetrievalService` orchestrating text-to-vector embedding, direct vector querying, shorthand string search, store delegation, retry/timeout resilience, dimension validation, convenience `index_documents` auto-embedding, and safe observability dispatch.
+  - Enforced fail-fast rejection of unimplemented search modes (`sparse`, `hybrid`) via `UnsupportedSearchModeError`.
+- **Stage 3 (PostgreSQL pgvector Adapter):**
+  - Implemented `PGVectorStoreAdapter` conforming to `VectorStoreAdapter` using `psycopg` and `pgvector`.
+  - Injected connection pattern: requires `connection`, `connection_pool`, or `connection_factory`, preventing ad-hoc connection churn.
+  - Defensively validates all table and column names with whitelist regex (`^[a-zA-Z_][a-zA-Z0-9_]*$`).
+  - Strict `%s` query parameterization on all inputs completely eliminates SQL injection risk.
+  - Computes cosine similarity via `1 - (embedding <=> %s) AS similarity_score`.
+  - Implements dictionary subset metadata filtering using PostgreSQL JSONB containment (`metadata @> %s::jsonb`) and optional dedicated tenant column support.
+  - Batch upsert with `ON CONFLICT ({conflict_target}) DO UPDATE SET ...` and delete with `ANY(%s)`.
+  - Flags transient operational errors with `retryable=True` in `VectorStoreError` for automatic retry.
+  - Packaged as optional package extra `genai-core[postgres]`.
+- **Stage 4 (Verification and Documentation):**
+  - Added 14 unit tests in `test_pgvector_store.py` covering SQL safety, result mapping, missing dependencies, dimension mismatch, upsert/delete, resilience, and `RetrievalService` integration.
+  - Updated all core architectural and flow documentation (`FLOW.md`, `BUSINESS_LOGIC.md`, `DECISIONS.md`, `GOAL.md`).
+- **Future Hybrid Retrieval (Planned):**
+  - Sparse BM25 / full-text search integration and Reciprocal Rank Fusion (RRF).
+
+**Outcome:** Completed (Stages 1–4). Fully validated through 133 unit tests across the package (100% pass rate) and all pre-push checks (`ruff`, `mypy`).
 
 ### Phase 4 — Memory primitives
 

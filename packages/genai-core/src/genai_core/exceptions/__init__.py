@@ -1,3 +1,4 @@
+from . import embedding_exceptions, llm_exceptions, retrieval_exceptions
 from .embedding_exceptions import (
     EmbeddingDimensionError,
     EmbeddingError,
@@ -17,6 +18,13 @@ from .llm_exceptions import (
     LLMTimeoutError,
     LLMValidationError,
 )
+from .retrieval_exceptions import (
+    IncompatibleEmbeddingError,
+    RetrievalError,
+    UnsupportedSearchModeError,
+    VectorStoreError,
+    RetrievalTimeoutError,
+)
 
 __all__ = [
     "ConfigError",
@@ -25,6 +33,7 @@ __all__ = [
     "EmbeddingProviderError",
     "EmbeddingRateLimitError",
     "EmbeddingTimeoutError",
+    "IncompatibleEmbeddingError",
     "LLMAuthenticationError",
     "LLMConnectionError",
     "LLMContentFilterError",
@@ -34,4 +43,11 @@ __all__ = [
     "LLMTimeoutError",
     "LLMValidationError",
     "MissingExtraDependencyError",
+    "RetrievalError",
+    "RetrievalTimeoutError",
+    "UnsupportedSearchModeError",
+    "VectorStoreError",
+    "embedding_exceptions",
+    "llm_exceptions",
+    "retrieval_exceptions",
 ]

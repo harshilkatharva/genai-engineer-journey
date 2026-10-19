@@ -31,11 +31,18 @@ class EmbeddingDimensionError(EmbeddingError):
 class MissingExtraDependencyError(EmbeddingError):
     """Raised when a required optional dependency extra is not installed."""
 
-    def __init__(self, extra: str = "local", package: str = "sentence-transformers") -> None:
+    def __init__(
+        self,
+        extra: str = "local",
+        package: str = "sentence-transformers",
+        feature: str | None = None,
+    ) -> None:
         self.extra = extra
         self.package = package
+        self.feature = feature
+        subject = f"The '{feature}' feature" if feature else f"The '{extra}' embedding provider"
         message = (
-            f"The '{extra}' embedding provider requires '{package}'. "
+            f"{subject} requires '{package}'. "
             f"Install it in your active environment using: "
             f"pip install -e 'packages/genai-core[{extra}]' "
             f"or uv pip install -e 'packages/genai-core[{extra}]'"
