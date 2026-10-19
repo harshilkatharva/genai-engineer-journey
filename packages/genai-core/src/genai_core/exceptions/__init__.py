@@ -21,9 +21,9 @@ from .llm_exceptions import (
 from .retrieval_exceptions import (
     IncompatibleEmbeddingError,
     RetrievalError,
+    RetrievalTimeoutError,
     UnsupportedSearchModeError,
     VectorStoreError,
-    RetrievalTimeoutError,
 )
 
 __all__ = [
