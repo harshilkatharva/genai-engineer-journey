@@ -31,6 +31,12 @@ class Settings(BaseSettings):
     default_retrieval_top_k: int = 5
     default_retrieval_score_threshold: float | None = None
     retrieval_timeout_seconds: float = 30.0
+    default_vector_weight: float = 0.6
+    default_keyword_weight: float = 0.4
+    default_text_search_language: str = "english"
+    enable_reranking: bool = False
+    reranker_model_name: str = "cross-encoder/ms-marco-MiniLM-L6-v2"
+    reranker_batch_size: int = 32
 
     # Integration and API keys
     integration_test: int = 0

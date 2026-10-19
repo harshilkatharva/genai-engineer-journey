@@ -380,16 +380,16 @@ flowchart TD
 
 ---
 
-## 6. RetrievalService & Vector Store Execution Flow
+## 6. RetrievalService, Hybrid Search & Re-ranking Flow
 
-`RetrievalService` provides unified semantic search and document indexing, strictly decoupling application logic from vector store implementations:
+`RetrievalService` provides unified semantic (dense), full-text (sparse), and hybrid search, score fusion, optional cross-encoder re-ranking, and document indexing:
 
 ```mermaid
 flowchart TD
     Client[Caller / Application] -->|search / index_documents / delete_documents| RetrievalService
 
     subgraph ServiceInit ["Service Initialization"]
-        RetrievalService --> InitService["Initialize: store, embedding_service, retry_policy"]
+        RetrievalService --> InitService["Initialize: store, embedding_service, reranker, retry_policy"]
         InitService --> CheckStoreDim{"embedding_service != None?"}
         CheckStoreDim -->|Yes| CompareDims{"embedding_service.dimensions == store.dimensions?"}
         CompareDims -->|Mismatch| RaiseIncompat["Raise IncompatibleEmbeddingError"]
@@ -399,36 +399,32 @@ flowchart TD
 
     subgraph SearchFlow ["search(query) Execution Path"]
         Ready --> ReceiveSearch["Receive RetrievalQuery or query string"]
-        ReceiveSearch --> CheckMode{"query.search_mode == 'dense'?"}
-        CheckMode -->|No: 'sparse' or 'hybrid'| RaiseModeErr["Raise UnsupportedSearchModeError"]
-        CheckMode -->|Yes: 'dense'| ResolveVector{"query_vector provided?"}
+        ReceiveSearch --> CheckMode{"query.search_mode?"}
 
-        ResolveVector -->|Yes| ValidateVecDim{"len(query_vector) == store.dimensions?"}
-        ValidateVecDim -->|Mismatch| RaiseDimErr["Raise IncompatibleEmbeddingError"]
-        ValidateVecDim -->|Match| QueryVecReady["query_vector ready"]
+        CheckMode -->|dense| ExecDense["Dense Path: resolve query_vector -> store.search()"]
+        CheckMode -->|sparse| ExecSparse["Sparse Path: keyword match -> store.search_keyword()"]
+        CheckMode -->|hybrid| ExecHybrid["Hybrid Path: asyncio.gather(vector_search, keyword_search)"]
 
-        ResolveVector -->|No| CheckEmbSvc{"embedding_service != None?"}
-        CheckEmbSvc -->|No| RaiseNeedEmb["Raise RetrievalError (EmbeddingService required)"]
-        CheckEmbSvc -->|Yes| EmbedQuery["await embedding_service.embed_query(query.query)"]
-        EmbedQuery --> QueryVecReady
+        ExecHybrid --> ScoreFusion["weighted_score_fusion: min-max normalization + weighted sum"]
+        ExecDense --> CandidatesReady["Candidate results ready"]
+        ExecSparse --> CandidatesReady
+        ScoreFusion --> CandidatesReady
 
-        QueryVecReady --> LogSearchStart["safe_log: RETRIEVAL_START (no sensitive text)"]
-        LogSearchStart --> ExecStoreSearch["await store.search(query_vector, top_k, filters, threshold)"]
+        CandidatesReady --> CheckRerank{"should_rerank == True?"}
+        CheckRerank -->|No| SliceTopK["Slice to top_k"]
+        CheckRerank -->|Yes| CheckRerankerAvail{"reranker configured?"}
 
-        subgraph StoreSearch ["VectorStore Execution (e.g. InMemoryVectorStore)"]
-            ExecStoreSearch --> FilterChunks["Filter chunks by metadata key-values"]
-            FilterChunks --> CalcSim["Calculate cosine similarity dot(q, c)/(|q|*|c|)"]
-            CalcSim --> FilterThresh{"score >= score_threshold?"}
-            FilterThresh -->|Yes| KeepCandidate["Keep candidate"]
-            FilterThresh -->|No| DropCandidate["Drop candidate"]
-            KeepCandidate --> SortRank["Sort descending by score and slice top_k"]
-            SortRank --> AssignRanks["Assign 1-indexed ranks (1, 2, 3...)"]
-        end
+        CheckRerankerAvail -->|No & warn_and_continue| WarnFallback["Set rerank_message, return candidates"]
+        CheckRerankerAvail -->|No & raise| RaiseRerankErr["Raise RetrievalError"]
+        CheckRerankerAvail -->|Yes| ExecRerank["await reranker.rerank(query, candidates, top_k)"]
+        ExecRerank --> SetReranked["Preserve retrieval_score in metadata, set reranked=True"]
 
-        AssignRanks --> ReturnResults["Return list[RetrievalResult]"]
-        ReturnResults --> CalcLatency["Calculate latency_ms"]
+        SliceTopK --> CalcLatency["Calculate latency_ms"]
+        WarnFallback --> CalcLatency
+        SetReranked --> CalcLatency
+
         CalcLatency --> LogSearchSuccess["safe_log: RETRIEVAL_SUCCESS"]
-        LogSearchSuccess --> BuildResp["Return RetrievalResponse"]
+        LogSearchSuccess --> BuildResp["Return RetrievalResponse (results, reranked, metrics)"]
         BuildResp --> Client
     end
 
@@ -535,9 +531,11 @@ As `genai-core` expands in Modules 17–20, additional shared capabilities will 
 
 The behavior of `genai-core` is verified through automated unit tests organized by feature under `tests/unit/` and integration tests under `tests/integration/`:
 - **Retrieval unit tests (`tests/unit/retrieval/`)**:
-  - [`test_retrieval_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/retrieval/test_retrieval_service.py) validates query validation (missing query, empty strings, invalid top-k, negative thresholds), dense semantic search execution with mock embeddings, direct vector search, shorthand string query invocation, dimension mismatch enforcement, rejection of unsupported search modes (`hybrid`, `sparse`), store timeout handling, document indexing (strings and chunks), and observability events.
-  - [`test_in_memory_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/retrieval/test_in_memory_store.py) validates protocol conformance (`isinstance(store, VectorStoreAdapter)`), dimension validation, upsert validation (missing vectors, dimension mismatches), chunk updates, chunk deletion, cosine ranking, top-k truncation, metadata key-value filtering, and score thresholding.
-  - [`test_pgvector_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/retrieval/test_pgvector_store.py) validates protocol conformance (`isinstance(store, VectorStoreAdapter)`), SQL identifier safety against injection, result mapping into `RetrievalResult`, parameterization of query values, metadata JSONB filtering, score thresholding, batch upsert with `ON CONFLICT`, delete execution with `ANY(%s)`, transient vs permanent failure classification, missing dependency raising `MissingExtraDependencyError`, and end-to-end integration with `RetrievalService`.
+  - [`test_fusion.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/retrieval/test_fusion.py) validates min-max normalization (empty sets, singletons, identical scores, diverse scores), weighted score blending with custom weights, disjoint vs overlapping candidate handling, and score threshold filtering.
+  - [`test_reranker.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/retrieval/test_reranker.py) validates protocol conformance (`isinstance(reranker, Reranker)`), empty candidate handling, missing optional `sentence-transformers` dependency raising `MissingExtraDependencyError`, cross-encoder prediction, and preservation of initial scores in `metadata['retrieval_score']`.
+  - [`test_retrieval_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/retrieval/test_retrieval_service.py) validates dense semantic search, sparse keyword search (skipping embeddings), hybrid search with concurrent execution and score fusion, optional cross-encoder re-ranking with candidate expansion, fallback behavior (`warn_and_continue` vs `raise`), store timeout handling, document indexing (strings and chunks), and observability events.
+  - [`test_in_memory_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/retrieval/test_in_memory_store.py) validates protocol conformance (`isinstance(store, VectorStoreAdapter)`), dimension validation, upsert validation, chunk updates, chunk deletion, cosine vector ranking, full-text token keyword matching (`search_keyword`), metadata key-value filtering, and score thresholding.
+  - [`test_pgvector_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/retrieval/test_pgvector_store.py) validates protocol conformance (`isinstance(store, VectorStoreAdapter)`), SQL identifier safety against injection, vector search and full-text keyword search (`ts_rank_cd` and `websearch_to_tsquery`), dedicated vs fallback `to_tsvector` column paths, parameterization of query values, metadata JSONB filtering, score thresholding, batch upsert with `ON CONFLICT`, delete execution with `ANY(%s)`, transient vs permanent failure classification, missing dependency raising `MissingExtraDependencyError`, and end-to-end integration with `RetrievalService`.
 - **Embedding unit tests (`tests/unit/embedding/`)**:
   - [`test_embedding_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/embedding/test_embedding_service.py) validates initialization defaults, strict dimension rejection, empty input rejection, batch size validation, internal slicing loop, 1-to-1 order preservation, missing dependency handling, convenience helpers, and observability events.
   - [`test_embedding_resilience.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/embedding/test_embedding_resilience.py) validates RPM/TPM token bucket pacing, token estimation heuristics, error classification, exponential backoff, jitter, Retry-After header parsing, attempt timeout, deadline enforcement, and service retry integration.

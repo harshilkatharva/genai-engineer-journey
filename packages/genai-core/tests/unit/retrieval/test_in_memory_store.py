@@ -175,3 +175,49 @@ async def test_in_memory_store_search_dimension_mismatch() -> None:
         await store.search(query_vector=[1.0, 0.0], top_k=5)
     assert exc_info.value.requested == 2
     assert exc_info.value.supported == 3
+
+
+@pytest.mark.asyncio
+async def test_in_memory_store_search_keyword() -> None:
+    store = InMemoryVectorStore(dimensions=2)
+    c1 = DocumentChunk(
+        id="c1",
+        content="PostgreSQL pgvector provides fast vector similarity search.",
+        embedding=[1.0, 0.0],
+        metadata={"category": "database"},
+    )
+    c2 = DocumentChunk(
+        id="c2",
+        content="Python asyncio coroutines execute concurrent tasks non-blocking.",
+        embedding=[0.0, 1.0],
+        metadata={"category": "python"},
+    )
+    await store.upsert([c1, c2])
+
+    # Direct match on keywords
+    res = await store.search_keyword("pgvector similarity", top_k=5)
+    assert len(res) == 1
+    assert res[0].id == "c1"
+    assert res[0].rank == 1
+
+    # Filter match
+    res_filtered = await store.search_keyword("tasks", top_k=5, filters={"category": "python"})
+    assert len(res_filtered) == 1
+    assert res_filtered[0].id == "c2"
+
+    # Filter mismatch
+    res_nomatch = await store.search_keyword("tasks", top_k=5, filters={"category": "database"})
+    assert len(res_nomatch) == 0
+
+    # Score threshold
+    res_thresh = await store.search_keyword("pgvector", top_k=5, score_threshold=0.99)
+    # If threshold is too high, it might be filtered
+    assert isinstance(res_thresh, list)
+
+    # Empty query or whitespace
+    assert await store.search_keyword("", top_k=5) == []
+    assert await store.search_keyword("   ", top_k=5) == []
+
+    # Invalid top_k
+    with pytest.raises(ValueError, match="greater than 0"):
+        await store.search_keyword("query", top_k=0)

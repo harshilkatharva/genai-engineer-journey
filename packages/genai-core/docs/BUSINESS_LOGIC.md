@@ -255,29 +255,30 @@ Embeddings are a separate capability from text generation, even when provided by
 **Status:** Completed (Stages 1, 2, and 3 verified by 98 unit tests and package pre-push checks).
 
 
-## 7. Implemented capability: retrieval and document abstractions (Stages 1 & 2)
+## 7. Implemented capability: retrieval and document abstractions
 
-Retrieval provides decoupled, provider-independent semantic search, document indexing, and evidence provenance through [`RetrievalService`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/retrieval_service.py) and [`VectorStoreAdapter`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/protocol.py).
+Retrieval provides decoupled, provider-independent semantic search, full-text keyword search, hybrid fusion, document indexing, evidence provenance, and optional cross-encoder re-ranking through [`RetrievalService`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/retrieval_service.py), [`VectorStoreAdapter`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/protocol.py), and [`Reranker`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/protocol.py).
 
 The following confirmed business rules govern retrieval:
 
 ### 7.1 Strict Dimension & Compatibility Enforcement
 - At `RetrievalService` initialization, if an `EmbeddingService` is provided, its vector dimension must strictly match the store dimension (`embedding_service.dimensions == store.dimensions`). Any mismatch immediately raises `IncompatibleEmbeddingError(requested, supported)`.
 - When pre-computed `query_vector` is supplied in `RetrievalQuery`, its length must match `store.dimensions`; mismatches raise `IncompatibleEmbeddingError`.
-- Text queries require an `EmbeddingService` to be injected at initialization. Calling `search(query="...")` without an embedding service raises `RetrievalError`.
+- For `search_mode="dense"` or `search_mode="hybrid"`, text queries require an `EmbeddingService` to be injected at initialization (unless `query_vector` is supplied). Calling dense or hybrid search without an embedding service or vector raises `RetrievalError`.
+- For `search_mode="sparse"`, query embedding is bypassed completely, enabling full-text keyword retrieval without an embedding service or API token expenditure.
 
-### 7.2 Input Validation & Strict Search Mode Policy
+### 7.2 Input Validation & Search Modes
 - `RetrievalQuery` requires either `query` (non-empty string) or `query_vector` (non-empty list of floats). If both are omitted, empty, or whitespace-only, a `ValueError` is raised.
+- `search_mode` supports `"dense"` (vector similarity search), `"sparse"` (full-text keyword search), and `"hybrid"` (combined dense and keyword search). Any other search mode raises `UnsupportedSearchModeError`.
+- `search_mode in ("sparse", "hybrid")` strictly requires a text `query` string.
 - `top_k` must be greater than 0 (`top_k <= 0` raises `ValueError`).
 - `score_threshold` if provided must be bounded between `0.0` and `1.0`.
-- **Dense-Only Search Policy (Phase 3)**:
-  - `search_mode` defaults to `"dense"`.
-  - While the contract is forward-compatible with `"sparse"` and `"hybrid"`, any request specifying `search_mode="sparse"` or `search_mode="hybrid"` strictly raises `UnsupportedSearchModeError(mode)` in Phase 3.
-  - The service never silently ignores an unsupported search mode or falsely emulates hybrid retrieval.
+- Per-query weight overrides (`vector_weight`, `keyword_weight`) must be non-negative and sum to `1.0`. Defaults are taken from `Settings` (`0.6` vector, `0.4` keyword).
 
 ### 7.3 In-Memory Vector Store (`InMemoryVectorStore`)
 - Provides a zero-dependency in-memory reference implementation of `VectorStoreAdapter` suitable for local development, rapid unit testing, and offline execution.
 - Computes exact cosine similarity `dot(a, b) / (norm(a) * norm(b))`, clamped to `[-1.0, 1.0]`.
+- Implements `search_keyword` using term-frequency and token overlap matching against chunk content, enabling zero-dependency unit testing of keyword and hybrid search.
 - Upsert validates each `DocumentChunk`: missing embeddings raise `ValueError`, and dimension mismatches raise `IncompatibleEmbeddingError`.
 - Supports exact metadata key-value filtering, score thresholding, and returns results sorted descending by score with 1-indexed ranks (`rank=1, 2, ...`).
 
@@ -293,28 +294,46 @@ The following confirmed business rules govern retrieval:
 - Input validation, dimension mismatches, and unsupported search modes are classified as non-retryable and fail fast.
 
 ### 7.6 Observability & Data Privacy
-- Emits structured events: `RETRIEVAL_START`, `RETRIEVAL_SUCCESS`, `RETRIEVAL_FAILED`, `RETRIEVAL_INDEX_START`, `RETRIEVAL_INDEX_SUCCESS`, and `RETRIEVAL_DELETE_SUCCESS`.
-- Logs record operational metadata: `top_k`, `has_filters`, `search_mode`, `store_dimensions`, `total_results`, and `latency_ms`.
+- Emits structured events: `RETRIEVAL_START`, `RETRIEVAL_SUCCESS`, `RETRIEVAL_FAILED`, `RETRIEVAL_INDEX_START`, `RETRIEVAL_INDEX_SUCCESS`, `RETRIEVAL_DELETE_SUCCESS`, `RETRIEVAL_RERANK_START`, `RETRIEVAL_RERANK_SUCCESS`, and `RETRIEVAL_RERANK_SKIPPED`.
+- Logs record operational metadata: `top_k`, `has_filters`, `search_mode`, `store_dimensions`, `total_results`, `latency_ms`, and `reranked`.
 - **Data Privacy**: Raw search queries, chunk text contents, and sensitive metadata are strictly never logged.
 
-**Status:** Completed (Stages 1, 2, 3, and 4 verified by 133 package unit tests and pre-push checks).
-
 ### 7.7 PostgreSQL + pgvector Adapter (`PGVectorStoreAdapter`)
-- **Protocol Conformance**: Conforms strictly to `@runtime_checkable` `VectorStoreAdapter`, implementing `dimensions`, `search()`, `upsert()`, and `delete()`.
+- **Protocol Conformance**: Conforms strictly to `@runtime_checkable` `VectorStoreAdapter`, implementing `dimensions`, `search()`, `search_keyword()`, `upsert()`, and `delete()`.
 - **Connection Injection**: Requires an injected `connection` (persistent `psycopg.AsyncConnection`), `connection_pool` (e.g. `psycopg_pool.AsyncConnectionPool` with async `.connection()`), or `connection_factory` (async callable returning a connection context manager). Never creates ad-hoc unpooled TCP connections per query.
 - **Optional Dependency**: Declared under `[project.optional-dependencies] postgres = ["psycopg[binary]>=3.1.0", "pgvector>=0.2.0"]`. Base package does not force database driver installation. If missing when explicitly checked or initialized, raises `MissingExtraDependencyError`.
 - **SQL Safety**:
-  - Table name, embedding column, id column, text column, metadata column, tenant column, and conflict targets are strictly validated against `^[a-zA-Z_][a-zA-Z0-9_]*$`. Invalid identifiers raise `ValueError`.
-  - All query values (`query_vector`, filters, `score_threshold`, `top_k`, `chunk_ids`) are passed strictly as `%s` positional parameters in query tuples, completely eliminating SQL injection.
+  - Table name, embedding column, id column, text column, metadata column, tenant column, conflict targets, search vector column, and language are strictly validated against `^[a-zA-Z_][a-zA-Z0-9_]*$`. Invalid identifiers raise `ValueError`.
+  - All query values (`query_vector`, query text, language, filters, `score_threshold`, `top_k`, `chunk_ids`) are passed strictly as `%s` positional parameters in query tuples, completely eliminating SQL injection.
 - **Dense Vector Search**: Computes cosine similarity via `1 - (embedding <=> %s) AS similarity_score`, ordered by `embedding <=> %s ASC` (nearest first) with `LIMIT %s`.
+- **Full-Text Keyword Search**:
+  - Uses `websearch_to_tsquery(%s, %s)` and `ts_rank_cd`.
+  - If `search_vector_column` is configured, searches that indexed `tsvector` column directly (`{search_vector_column} @@ websearch_to_tsquery(%s, %s)`).
+  - If `search_vector_column` is `None`, falls back to generating tsvector on the fly (`to_tsvector(%s, {text_column}) @@ websearch_to_tsquery(%s, %s)`), allowing full-text search without database schema changes.
 - **Metadata Filtering**: Utilizes PostgreSQL JSONB containment operator (`metadata @> %s::jsonb`) to support dictionary subset filtering. If `tenant_id_column` is configured, tenant filtering uses a dedicated column equality condition (`WHERE tenant_id = %s`).
-- **Score Thresholding**: Adds `WHERE 1 - (embedding <=> %s) >= %s` when `score_threshold` is specified.
+- **Score Thresholding**: Evaluated in query to filter candidates below the requested threshold.
 - **Upsert Semantics**: Executes parameterized batch `INSERT ... ON CONFLICT ({conflict_target}) DO UPDATE SET ...` updating text, embedding, and metadata. Missing embeddings raise `ValueError`, and dimension mismatches raise `IncompatibleEmbeddingError`.
 - **Delete Semantics**: Executes parameterized `DELETE FROM {table_name} WHERE {id_col} = ANY(%s)`.
 - **Resilience & Fault Classification**: Translates database errors into `VectorStoreError`. Transient connection resets, timeouts, broken pipes, and deadlocks are flagged with `retryable=True` for automatic retry by `execute_with_retry`. Non-transient errors (syntax errors, relation missing, permission denied) fail fast.
 
-### 7.8 Planned Follow-Up: Hybrid Retrieval & Reranking
-- Combining dense vector retrieval with PostgreSQL full-text search (`ts_rank_cd`), applying score normalization, reciprocal rank/weighted score fusion, and optional cross-encoder reranking.
+### 7.8 Hybrid Search & Result Fusion
+- When `search_mode="hybrid"` is requested, `RetrievalService` executes dense vector search and full-text keyword search concurrently using `asyncio.gather`.
+- **Candidate Pool Expansion**: Each search channel retrieves an expanded candidate pool (`max(top_k * 2, top_k)`) to maximize recall before blending.
+- **Min-Max Score Normalization**:
+  $$\text{score}_{\text{norm}} = \frac{\text{score} - \text{score}_{\min}}{\text{score}_{\max} - \text{score}_{\min}}$$
+  If all scores in a channel are identical, they normalize to `1.0`. Empty result channels normalize to an empty list.
+- **Weighted Score Blending**:
+  $$\text{score}_{\text{hybrid}} = (\text{score}_{\text{vec\_norm}} \times w_{\text{vec}}) + (\text{score}_{\text{kw\_norm}} \times w_{\text{kw}})$$
+  Candidates present in only one channel receive only that channel's weighted contribution. Fused results are sorted descending by score and truncated to the requested `top_k`.
+
+### 7.9 Optional Cross-Encoder Re-ranking
+- Re-ranking is optional, disabled by default, and fully controlled by the caller (globally via `Settings` or `RetrievalService(enable_reranking=...)`, or per-query via `RetrievalQuery(rerank=True)`).
+- When active, the initial retrieval retrieves an expanded candidate set (e.g. `top_k * 3`, minimum 20 candidates), and the re-ranker scores pairs jointly using `CrossEncoderReranker` (`cross-encoder/ms-marco-MiniLM-L6-v2`).
+- Inference runs in worker threads via `asyncio.to_thread` for non-blocking execution.
+- **Traceability**: The cross-encoder score is placed in `result.score`, and the initial retrieval score is preserved in `result.metadata["retrieval_score"]`.
+- **Unavailable Re-ranker Fallback**: If re-ranking is requested but no reranker is configured or `sentence-transformers` is missing:
+  - If `on_rerank_unavailable="warn_and_continue"` (default): logs `RETRIEVAL_RERANK_SKIPPED`, returns un-reranked candidates without wasting search results, sets `response.reranked = False`, and populates `response.rerank_message`.
+  - If `on_rerank_unavailable="raise"`: immediately raises `RetrievalError` or `MissingExtraDependencyError`.
 
 ## 8. Planned capability: memory
 

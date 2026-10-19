@@ -33,12 +33,19 @@ Production-grade, modular, and resilient Python core package providing unified G
   - Honest token usage accounting (never estimates or fabricates token usage).
 
 ### 3. Unified Retrieval Subsystem (`RetrievalService`)
+- **Multi-modal retrieval workflows**:
+  - `search_mode="dense"`: Semantic vector similarity search via embeddings and cosine distance.
+  - `search_mode="sparse"`: Full-text keyword search via PostgreSQL `ts_rank_cd` and `websearch_to_tsquery` (or token matching in-memory), bypassing embeddings completely to save token costs.
+  - `search_mode="hybrid"`: Concurrent execution of vector and keyword search via `asyncio.gather`, min-max score normalization, and weighted score fusion (`w_vector * s_vec + w_keyword * s_kw`).
 - **Vector store adapters (`VectorStoreAdapter`)**:
-  - `InMemoryVectorStore`: Zero-dependency, pure-Python vector store with exact cosine similarity, metadata dictionary filtering, and score thresholding.
-  - `PGVectorStoreAdapter`: PostgreSQL + pgvector adapter with dependency-injected connection pooling (`psycopg_pool`), JSONB metadata containment filtering (`@>`), parameterized SQL, and identifier whitelisting.
-- **Retrieval workflows**:
-  - Dense semantic search with `top_k`, `score_threshold`, and metadata filtering.
-  - Seamless chunk ingestion (`upsert`, `delete`, `index_documents`).
+  - `InMemoryVectorStore`: Zero-dependency, pure-Python vector store with exact cosine similarity, token keyword matching, metadata dictionary filtering, and score thresholding.
+  - `PGVectorStoreAdapter`: PostgreSQL + pgvector adapter with dependency-injected connection pooling (`psycopg_pool`), full-text search (`ts_rank_cd` and `websearch_to_tsquery`), JSONB metadata containment filtering (`@>`), parameterized SQL, and identifier whitelisting.
+- **Optional Cross-Encoder Re-ranking (`CrossEncoderReranker`)**:
+  - Re-ranks candidate results jointly against the user query using `cross-encoder/ms-marco-MiniLM-L6-v2`.
+  - Non-blocking execution via `asyncio.to_thread`.
+  - Caller-controlled (disabled by default) with candidate pool expansion, score auditability in `metadata["retrieval_score"]`, and graceful fallback behavior.
+- **Document Management**:
+  - Chunk ingestion (`upsert`, `delete`, `index_documents`).
   - Automated vectorization of raw document chunks via attached `EmbeddingService`.
   - Strict dimension compatibility verification between embeddings and vector stores.
 
@@ -153,10 +160,11 @@ async def main():
 asyncio.run(main())
 ```
 
-### 3. Retrieval Service
+### 3. Retrieval Service (Dense, Sparse, Hybrid & Re-ranking)
 ```python
 import asyncio
 from genai_core import (
+    CrossEncoderReranker,
     DocumentChunk,
     EmbeddingService,
     InMemoryVectorStore,
@@ -172,20 +180,38 @@ async def main():
         dimensions=384,
     )
     store = InMemoryVectorStore(dimensions=384)
-    retriever = RetrievalService(embedding_service=embedding_service, store=store)
+    reranker = CrossEncoderReranker()
+    retriever = RetrievalService(
+        embedding_service=embedding_service,
+        store=store,
+        reranker=reranker,
+    )
 
     # Index document chunks
     chunks = [
-        DocumentChunk(id="c1", text="genai-core provides unified LLM and embedding access."),
-        DocumentChunk(id="c2", text="PostgreSQL pgvector enables persistent similarity search."),
+        DocumentChunk(
+            id="c1",
+            content="genai-core provides unified LLM, embedding, and retrieval access.",
+        ),
+        DocumentChunk(
+            id="c2",
+            content="PostgreSQL pgvector and full-text search enable hybrid similarity search.",
+        ),
     ]
     await retriever.index_documents(chunks)
 
-    # Dense semantic search
-    query = RetrievalQuery(text="How does genai-core handle embeddings?", top_k=1)
+    # Hybrid search with cross-encoder re-ranking
+    query = RetrievalQuery(
+        query="hybrid search with pgvector",
+        search_mode="hybrid",
+        vector_weight=0.6,
+        keyword_weight=0.4,
+        rerank=True,
+        top_k=2,
+    )
     response = await retriever.search(query)
     for result in response.results:
-        print(f"Score: {result.score:.4f} | Content: {result.chunk.text}")
+        print(f"Rank {result.rank} | Score: {result.score:.4f} | Content: {result.content}")
 
 
 asyncio.run(main())
@@ -210,7 +236,7 @@ packages/genai-core/
 │   ├── models/               # Pydantic data models (LLM, embedding, retrieval)
 │   ├── observability/        # Logging, redaction, formatting, and tracing
 │   ├── resilience/           # Rate limiting and retry policies
-│   ├── retrieval/            # Vector store protocol, InMemory and PGVector stores
+│   ├── retrieval/            # Vector store protocol, InMemory, PGVector, fusion, and reranker
 │   └── services/             # LLMService, EmbeddingService, RetrievalService
 ├── tests/
 │   ├── unit/                 # Fast, isolated unit tests (no live network)

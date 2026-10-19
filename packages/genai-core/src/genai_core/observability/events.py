@@ -29,3 +29,7 @@ class ObservabilityEvent(StrEnum):
     RETRIEVAL_INDEX_START = "retrieval_index_start"
     RETRIEVAL_INDEX_SUCCESS = "retrieval_index_success"
     RETRIEVAL_DELETE_SUCCESS = "retrieval_delete_success"
+    RETRIEVAL_RERANK_START = "retrieval_rerank_start"
+    RETRIEVAL_RERANK_SUCCESS = "retrieval_rerank_success"
+    RETRIEVAL_RERANK_SKIPPED = "retrieval_rerank_skipped"
+    RETRIEVAL_RERANK_FAILED = "retrieval_rerank_failed"

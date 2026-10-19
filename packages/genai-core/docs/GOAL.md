@@ -177,33 +177,32 @@ Provide a complete, production-grade vectorization capability with unified APIs,
 
 Extract only the stable responsibilities needed across projects, separating reusable retrieval coordination from application-specific ingestion and database schemas:
 
-- **Stage 1 (Contracts, Protocols, Exceptions, Observability):**
+- **Contracts, Protocols, Exceptions, Observability:**
   - Standardized retrieval data models: `DocumentChunk`, `RetrievalQuery`, `RetrievalResult`, `RetrievalResponse`.
-  - Added forward-compatible `search_mode: Literal["dense", "sparse", "hybrid"] = "dense"`.
+  - Supported search modes: `search_mode in ("dense", "sparse", "hybrid")` with configurable weights (`vector_weight`, `keyword_weight`).
   - Established typed exceptions hierarchy: `RetrievalError`, `VectorStoreError`, `IncompatibleEmbeddingError`, `UnsupportedSearchModeError`, `RetrievalTimeoutError`.
-  - Defined `VectorStoreAdapter` `@runtime_checkable` `Protocol` (`dimensions`, `search`, `upsert`, `delete`).
-  - Added structured observability events: `RETRIEVAL_START`, `RETRIEVAL_SUCCESS`, `RETRIEVAL_FAILED`, `RETRIEVAL_INDEX_START`, `RETRIEVAL_INDEX_SUCCESS`, `RETRIEVAL_DELETE_SUCCESS`.
-- **Stage 2 (In-Memory Store & Retrieval Service):**
-  - Implemented zero-dependency `InMemoryVectorStore` using exact cosine similarity, dictionary subset metadata filtering, score thresholding, and upsert/delete operations.
-  - Implemented `RetrievalService` orchestrating text-to-vector embedding, direct vector querying, shorthand string search, store delegation, retry/timeout resilience, dimension validation, convenience `index_documents` auto-embedding, and safe observability dispatch.
-  - Enforced fail-fast rejection of unimplemented search modes (`sparse`, `hybrid`) via `UnsupportedSearchModeError`.
-- **Stage 3 (PostgreSQL pgvector Adapter):**
+  - Defined `@runtime_checkable` `VectorStoreAdapter` (`dimensions`, `search`, `search_keyword`, `upsert`, `delete`) and `Reranker` (`rerank`).
+  - Structured observability events: `RETRIEVAL_START`, `RETRIEVAL_SUCCESS`, `RETRIEVAL_FAILED`, `RETRIEVAL_INDEX_START`, `RETRIEVAL_INDEX_SUCCESS`, `RETRIEVAL_DELETE_SUCCESS`, `RETRIEVAL_RERANK_START`, `RETRIEVAL_RERANK_SUCCESS`, `RETRIEVAL_RERANK_SKIPPED`.
+- **In-Memory Store & Standalone Fusion:**
+  - Zero-dependency `InMemoryVectorStore` using exact cosine similarity, term-frequency token keyword matching, dictionary subset metadata filtering, score thresholding, and upsert/delete operations.
+  - Standalone mathematical fusion engine in `fusion.py`: min-max score normalization and weighted score blending.
+- **PostgreSQL pgvector & Full-Text Search Adapter:**
   - Implemented `PGVectorStoreAdapter` conforming to `VectorStoreAdapter` using `psycopg` and `pgvector`.
   - Injected connection pattern: requires `connection`, `connection_pool`, or `connection_factory`, preventing ad-hoc connection churn.
   - Defensively validates all table and column names with whitelist regex (`^[a-zA-Z_][a-zA-Z0-9_]*$`).
   - Strict `%s` query parameterization on all inputs completely eliminates SQL injection risk.
-  - Computes cosine similarity via `1 - (embedding <=> %s) AS similarity_score`.
-  - Implements dictionary subset metadata filtering using PostgreSQL JSONB containment (`metadata @> %s::jsonb`) and optional dedicated tenant column support.
+  - Dense cosine similarity via `1 - (embedding <=> %s) AS similarity_score`.
+  - Full-text keyword search via `ts_rank_cd` and `websearch_to_tsquery` supporting configured `search_vector_column` or dynamic fallback to `to_tsvector(%s, text_column)`.
+  - Dictionary subset metadata filtering using PostgreSQL JSONB containment (`metadata @> %s::jsonb`) and optional dedicated tenant column support.
   - Batch upsert with `ON CONFLICT ({conflict_target}) DO UPDATE SET ...` and delete with `ANY(%s)`.
   - Flags transient operational errors with `retryable=True` in `VectorStoreError` for automatic retry.
   - Packaged as optional package extra `genai-core[postgres]`.
-- **Stage 4 (Verification and Documentation):**
-  - Added 14 unit tests in `test_pgvector_store.py` covering SQL safety, result mapping, missing dependencies, dimension mismatch, upsert/delete, resilience, and `RetrievalService` integration.
-  - Updated all core architectural and flow documentation (`FLOW.md`, `BUSINESS_LOGIC.md`, `DECISIONS.md`, `GOAL.md`).
-- **Future Hybrid Retrieval (Planned):**
-  - Sparse BM25 / full-text search integration and Reciprocal Rank Fusion (RRF).
+- **Retrieval Service & Optional Cross-Encoder Re-ranking:**
+  - `RetrievalService` orchestrating text-to-vector embedding, direct vector querying, sparse keyword retrieval, concurrent hybrid search via `asyncio.gather`, weighted fusion, retry/timeout resilience, dimension validation, convenience `index_documents` auto-embedding, and safe observability dispatch.
+  - Optional `CrossEncoderReranker` (`cross-encoder/ms-marco-MiniLM-L6-v2`) with worker thread execution via `asyncio.to_thread`.
+  - Candidate pool expansion for high recall prior to re-ranking, score tracking in metadata, and graceful fallback handling (`warn_and_continue` vs `raise`).
 
-**Outcome:** Completed (Stages 1–4). Fully validated through 133 unit tests across the package (100% pass rate) and all pre-push checks (`ruff`, `mypy`).
+**Outcome:** Completed. Fully validated through 154 unit tests across the package (100% pass rate) and all pre-push checks (`ruff`, `mypy`).
 
 ### Phase 4 — Memory primitives
 

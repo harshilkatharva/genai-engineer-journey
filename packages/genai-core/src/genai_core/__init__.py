@@ -78,7 +78,15 @@ from .resilience import (
     extract_retry_after,
     is_retryable_error,
 )
-from .retrieval import InMemoryVectorStore, PGVectorStoreAdapter, VectorStoreAdapter
+from .retrieval import (
+    CrossEncoderReranker,
+    InMemoryVectorStore,
+    PGVectorStoreAdapter,
+    Reranker,
+    VectorStoreAdapter,
+    normalize_min_max,
+    weighted_score_fusion,
+)
 from .services import EmbeddingService, LLMService, LLMServicemanager, RetrievalService
 
 __all__ = [
@@ -86,6 +94,7 @@ __all__ = [
     "AsyncTokenBucket",
     "ChatMessage",
     "ConfigError",
+    "CrossEncoderReranker",
     "DocumentChunk",
     "EmbeddingDimensionError",
     "EmbeddingError",
@@ -125,6 +134,7 @@ __all__ = [
     "PGVectorStoreAdapter",
     "RateLimiter",
     "RedactingFilter",
+    "Reranker",
     "RetrievalError",
     "RetrievalQuery",
     "RetrievalResponse",
@@ -141,6 +151,7 @@ __all__ = [
     "UnsupportedSearchModeError",
     "VectorStoreAdapter",
     "VectorStoreError",
+    "check_postgres_dependencies",
     "close_observability",
     "configure_observability",
     "estimate_tokens",
@@ -150,10 +161,12 @@ __all__ = [
     "get_request_id",
     "get_settings",
     "is_retryable_error",
+    "normalize_min_max",
     "observability_context",
     "redact_data",
     "redact_string",
     "reset_request_id",
     "safe_log",
     "set_request_id",
+    "weighted_score_fusion",
 ]

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+from typing import Any
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -147,16 +148,18 @@ async def test_retrieval_service_unsupported_search_mode_rejected() -> None:
     store = InMemoryVectorStore(dimensions=3)
     service = RetrievalService(store=store)
 
-    # Hybrid search requested but deferred
-    query_hybrid = RetrievalQuery.model_construct(
+    # Unsupported search mode (e.g. 'graph')
+    query_unsupported = RetrievalQuery.model_construct(
         query="test query",
-        search_mode="hybrid",
+        search_mode="graph",
         top_k=5,
     )
     with pytest.raises(UnsupportedSearchModeError) as exc_info:
-        await service.search(query_hybrid)
-    assert "Search mode 'hybrid' is not supported" in str(exc_info.value)
+        await service.search(query_unsupported)
+    assert "Search mode 'graph' is not supported" in str(exc_info.value)
     assert "dense" in exc_info.value.supported_modes
+    assert "sparse" in exc_info.value.supported_modes
+    assert "hybrid" in exc_info.value.supported_modes
 
 
 @pytest.mark.asyncio
@@ -246,3 +249,134 @@ async def test_retrieval_service_index_documents_without_embedding_service_raise
     c1 = DocumentChunk(id="c1", content="No embedding")
     with pytest.raises(RetrievalError, match="missing embeddings without an EmbeddingService"):
         await service.index_documents([c1])
+
+
+@pytest.mark.asyncio
+async def test_retrieval_service_sparse_search(fake_embedding_service: MagicMock) -> None:
+    store = InMemoryVectorStore(dimensions=3)
+    c1 = DocumentChunk(
+        id="c1",
+        content="Postgres full-text search using ts_rank_cd.",
+        embedding=[1.0, 0.0, 0.0],
+    )
+    c2 = DocumentChunk(
+        id="c2",
+        content="Dense vector embeddings in pgvector.",
+        embedding=[0.0, 1.0, 0.0],
+    )
+    await store.upsert([c1, c2])
+
+    service = RetrievalService(store=store, embedding_service=fake_embedding_service)
+
+    # Sparse search should not call embedding_service
+    resp = await service.search(RetrievalQuery(query="ts_rank_cd search", search_mode="sparse"))
+    assert resp.search_mode == "sparse"
+    assert resp.total_results == 1
+    assert resp.results[0].id == "c1"
+    fake_embedding_service.embed_query.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_retrieval_service_hybrid_search(fake_embedding_service: MagicMock) -> None:
+    store = InMemoryVectorStore(dimensions=3)
+    c1 = DocumentChunk(
+        id="c1",
+        content="Python asyncio event loop.",
+        embedding=[1.0, 0.0, 0.0],
+    )
+    c2 = DocumentChunk(
+        id="c2",
+        content="Python asyncio coroutines and tasks.",
+        embedding=[0.8, 0.2, 0.0],
+    )
+    await store.upsert([c1, c2])
+
+    fake_embedding_service.embed_query.return_value = [1.0, 0.0, 0.0]
+    service = RetrievalService(store=store, embedding_service=fake_embedding_service)
+
+    resp = await service.search(
+        RetrievalQuery(
+            query="coroutines event loop",
+            search_mode="hybrid",
+            vector_weight=0.5,
+            keyword_weight=0.5,
+            top_k=2,
+        )
+    )
+    assert resp.search_mode == "hybrid"
+    assert resp.total_results == 2
+    assert resp.results[0].rank == 1
+    fake_embedding_service.embed_query.assert_awaited_once_with("coroutines event loop")
+
+
+@pytest.mark.asyncio
+async def test_retrieval_service_reranking_flow(fake_embedding_service: MagicMock) -> None:
+    store = InMemoryVectorStore(dimensions=3)
+    c1 = DocumentChunk(id="c1", content="Chunk 1", embedding=[1.0, 0.0, 0.0])
+    c2 = DocumentChunk(id="c2", content="Chunk 2", embedding=[0.9, 0.1, 0.0])
+    await store.upsert([c1, c2])
+
+    mock_reranker = MagicMock()
+
+    # Reranker reverses the order: c2 becomes rank 1
+    async def _mock_rerank(q: str, results: list[Any], top_k: int) -> list[Any]:
+        reversed_res = list(reversed(results))[:top_k]
+        for idx, r in enumerate(reversed_res, 1):
+            r.rank = idx
+            r.score = 0.99 if idx == 1 else 0.11
+        return reversed_res
+
+    mock_reranker.rerank = _mock_rerank
+
+    service = RetrievalService(
+        store=store,
+        embedding_service=fake_embedding_service,
+        reranker=mock_reranker,
+    )
+
+    resp = await service.search(
+        RetrievalQuery(
+            query="test query",
+            query_vector=[1.0, 0.0, 0.0],
+            search_mode="dense",
+            rerank=True,
+            rerank_top_k=2,
+        )
+    )
+
+    assert resp.reranked is True
+    assert resp.results[0].id == "c2"
+    assert resp.results[0].score == 0.99
+
+
+@pytest.mark.asyncio
+async def test_retrieval_service_rerank_unavailable_fallback() -> None:
+    store = InMemoryVectorStore(dimensions=3)
+    c1 = DocumentChunk(id="c1", content="Chunk 1", embedding=[1.0, 0.0, 0.0])
+    await store.upsert([c1])
+
+    # No reranker configured, warn_and_continue (default)
+    service = RetrievalService(store=store)
+
+    resp = await service.search(
+        RetrievalQuery(
+            query="test",
+            query_vector=[1.0, 0.0, 0.0],
+            rerank=True,
+            on_rerank_unavailable="warn_and_continue",
+        )
+    )
+    assert resp.reranked is False
+    assert resp.rerank_message is not None
+    assert len(resp.results) == 1
+
+    # on_rerank_unavailable="raise"
+    with pytest.raises(RetrievalError, match="no reranker is configured"):
+        await service.search(
+            RetrievalQuery(
+                query="test",
+                query_vector=[1.0, 0.0, 0.0],
+                rerank=True,
+                on_rerank_unavailable="raise",
+            )
+        )

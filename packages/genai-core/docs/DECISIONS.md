@@ -453,3 +453,49 @@ This document records the architectural decisions, component responsibilities, d
 - **Alternatives Considered**: Keeping a single flat directory for all unit tests and another for integration tests. Rejected as the test suite grew to 18+ test files across multiple distinct services, making test file discovery and selective test execution clumsy.
 - **Impact**: Clean domain isolation, clear separation of concerns, faster test file discovery, and 100% preservation of test assertions and coverage.
 
+---
+
+## 2026-10-19: Hybrid Retrieval, Full-Text Keyword Search & Cross-Encoder Re-ranking
+
+### 1. Unified Search Mode Dispatch (`dense`, `sparse`, `hybrid`)
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/models/retrieval_model/retrieval_query.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/models/retrieval_model/retrieval_query.py)
+  - [`packages/genai-core/src/genai_core/services/retrieval_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/retrieval_service.py)
+- **Decision**: Expanded `search_mode` in `RetrievalQuery` to fully support `"dense"`, `"sparse"`, and `"hybrid"`:
+  - `"dense"`: Evaluates semantic cosine similarity using embedding vectors.
+  - `"sparse"`: Bypasses embedding generation completely and delegates directly to full-text keyword search (`search_keyword`), saving API token costs and execution time.
+  - `"hybrid"`: Concurrently executes vector search and keyword search via `asyncio.gather`.
+- **Alternatives Considered**: Creating separate service classes (e.g. `KeywordRetrievalService`, `HybridRetrievalService`). Rejected because callers benefit from a single, unified service entry point where search mode is declared via query parameters.
+- **Impact**: Clean, unified contract with zero redundant service wrappers.
+
+### 2. Standalone Min-Max Normalization & Weighted Fusion Engine
+- **Location**: [`packages/genai-core/src/genai_core/retrieval/fusion.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/fusion.py)
+- **Decision**: Implemented standalone mathematical functions for score normalization and result fusion:
+  - `normalize_min_max`: Scaled scores linearly to `[0.0, 1.0]`. Identical scores or singletons normalize to `1.0`.
+  - `weighted_score_fusion`: Blends normalized vector and keyword candidate lists using configurable weights (default `0.6` vector, `0.4` keyword). Candidates present in only one channel retain that channel's weighted score.
+- **Alternatives Considered**: Embedding fusion math directly inside `RetrievalService.search`. Rejected because isolating fusion into pure functions ensures deterministic, standalone unit testability without mocking services or stores.
+- **Impact**: 100% testable fusion logic matching Module 09's proven score semantics.
+
+### 3. PostgreSQL Full-Text Search with Dynamic Fallback
+- **Location**: [`packages/genai-core/src/genai_core/retrieval/pgvector_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/pgvector_store.py)
+- **Decision**: Added `search_keyword` using PostgreSQL's `websearch_to_tsquery` and `ts_rank_cd`:
+  - When `search_vector_column` is configured, searches that indexed `tsvector` column directly.
+  - When `search_vector_column` is `None`, dynamically computes `to_tsvector(%s, {text_column}) @@ websearch_to_tsquery(%s, %s)`, allowing instant full-text search on any existing table without database migrations.
+  - Enforced strict regex identifier whitelisting (`^[a-zA-Z_][a-zA-Z0-9_]*$`) on column and language identifiers. All query values are passed strictly as `%s` positional parameters.
+- **Alternatives Considered**: Requiring a pre-existing `tsvector` column on all tables. Rejected because forcing schema migrations on client tables reduces library reusability across existing databases.
+- **Impact**: Flexible, secure full-text search across both existing and dedicated PostgreSQL schemas.
+
+### 4. Modular Cross-Encoder Re-ranking with Non-Wasting Fallback
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/retrieval/protocol.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/protocol.py)
+  - [`packages/genai-core/src/genai_core/retrieval/cross_encoder_reranker.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/cross_encoder_reranker.py)
+  - [`packages/genai-core/src/genai_core/services/retrieval_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/retrieval_service.py)
+- **Decision**:
+  - Defined `@runtime_checkable` `Reranker` protocol.
+  - Implemented `CrossEncoderReranker` using `sentence-transformers.CrossEncoder` (default `cross-encoder/ms-marco-MiniLM-L6-v2`) with lazy loading and `asyncio.to_thread` for non-blocking execution.
+  - Re-ranking is strictly optional (disabled by default) and controlled via `Settings`, `RetrievalService(enable_reranking=...)`, or `RetrievalQuery(rerank=True)`.
+  - Preserved initial retrieval scores in `result.metadata["retrieval_score"]` for complete auditability.
+  - Supported caller-configurable fallback (`on_rerank_unavailable`): when set to `"warn_and_continue"` (default), if re-ranking dependencies are missing or unconfigured, the service logs `RETRIEVAL_RERANK_SKIPPED`, returns un-reranked candidates so retrieval computation is not wasted, sets `response.reranked = False`, and populates `response.rerank_message`.
+- **Alternatives Considered**: Automatically executing re-ranking on every query or failing silently when re-ranking was requested but unavailable. Rejected because re-ranking is computationally expensive and silent failure obscures missing capabilities.
+- **Impact**: Production-grade re-ranking under caller control with zero wasted work on fallback.
+

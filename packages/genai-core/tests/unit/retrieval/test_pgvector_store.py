@@ -336,3 +336,90 @@ async def test_pgvector_adapter_integration_with_retrieval_service() -> None:
     assert response.results[0].content == "Result text from postgres"
     assert response.results[0].score == 0.91
     assert response.results[0].rank == 1
+
+
+@pytest.mark.asyncio
+async def test_pgvector_search_keyword_fallback_to_tsvector() -> None:
+    mock_rows = [
+        ("kw_1", "Keyword search content", json.dumps({"tag": "keyword"}), 0.77),
+    ]
+    conn = _create_mock_connection(rows=mock_rows)
+    adapter = PGVectorStoreAdapter(dimensions=3, connection=conn, language="english")
+
+    res = await adapter.search_keyword(query="full text search", top_k=5, score_threshold=0.5)
+
+    assert len(res) == 1
+    assert res[0].id == "kw_1"
+    assert res[0].content == "Keyword search content"
+    assert res[0].score == 0.77
+    assert res[0].rank == 1
+    assert res[0].metadata == {"tag": "keyword"}
+
+    # Verify executed SQL contains to_tsvector and websearch_to_tsquery
+    cur = conn.cursor.return_value.__aenter__.return_value
+    cur.execute.assert_awaited_once()
+    sql, params = cur.execute.call_args[0]
+    assert "to_tsvector" in sql
+    assert "websearch_to_tsquery" in sql
+    assert "ts_rank_cd" in sql
+    assert "keyword_score >= %s" in sql
+    assert "ORDER BY keyword_score DESC" in sql
+    assert "LIMIT %s" in sql
+    assert "full text search" in params
+
+
+@pytest.mark.asyncio
+async def test_pgvector_search_keyword_with_search_vector_column() -> None:
+    mock_rows = [
+        ("kw_2", "Indexed vector content", json.dumps({}), 0.85),
+    ]
+    conn = _create_mock_connection(rows=mock_rows)
+    adapter = PGVectorStoreAdapter(
+        dimensions=3,
+        connection=conn,
+        search_vector_column="fts_vector",
+        tenant_id_column="tenant_id",
+    )
+
+    res = await adapter.search_keyword(
+        query="indexed search",
+        top_k=2,
+        filters={"tenant_id": "tenant_123", "type": "doc"},
+    )
+
+    assert len(res) == 1
+    assert res[0].id == "kw_2"
+
+    cur = conn.cursor.return_value.__aenter__.return_value
+    sql, params = cur.execute.call_args[0]
+    assert "fts_vector @@ websearch_to_tsquery" in sql
+    assert "tenant_id = %s" in sql
+    assert "@> %s::jsonb" in sql
+    assert "tenant_123" in params
+
+
+@pytest.mark.asyncio
+async def test_pgvector_search_keyword_identifier_validation() -> None:
+    conn = MagicMock()
+    with pytest.raises(ValueError, match="Invalid SQL identifier"):
+        PGVectorStoreAdapter(dimensions=3, connection=conn, search_vector_column="col; DROP TABLE")
+
+    with pytest.raises(ValueError, match="Invalid SQL identifier"):
+        PGVectorStoreAdapter(dimensions=3, connection=conn, language="english; DROP TABLE")
+
+
+@pytest.mark.asyncio
+async def test_pgvector_search_keyword_transient_error() -> None:
+    transient_conn = MagicMock()
+    cur = AsyncMock()
+    cur.execute.side_effect = TimeoutError("Statement timeout exceeded")
+    cursor_cm = MagicMock()
+    cursor_cm.__aenter__ = AsyncMock(return_value=cur)
+    cursor_cm.__aexit__ = AsyncMock(return_value=None)
+    transient_conn.cursor = MagicMock(return_value=cursor_cm)
+
+    adapter = PGVectorStoreAdapter(dimensions=3, connection=transient_conn)
+    with pytest.raises(VectorStoreError) as exc_info:
+        await adapter.search_keyword(query="timeout query")
+
+    assert exc_info.value.retryable is True

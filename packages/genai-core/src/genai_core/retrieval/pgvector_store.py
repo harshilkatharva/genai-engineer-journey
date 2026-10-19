@@ -59,6 +59,8 @@ class PGVectorStoreAdapter:
         metadata_column: str = "metadata",
         tenant_id_column: str | None = None,
         conflict_target: str | None = None,
+        search_vector_column: str | None = None,
+        language: str = "english",
         check_dependencies: bool = False,
     ) -> None:
         if dimensions <= 0:
@@ -97,6 +99,12 @@ class PGVectorStoreAdapter:
             if conflict_target is not None
             else None
         )
+        self.search_vector_column = (
+            _validate_identifier(search_vector_column, "search_vector_column")
+            if search_vector_column is not None
+            else None
+        )
+        self.language = _validate_identifier(language, "language")
 
     @asynccontextmanager
     async def _get_connection(self) -> AsyncIterator[Any]:
@@ -240,6 +248,118 @@ class PGVectorStoreAdapter:
                     content=content,
                     metadata=metadata,
                     score=score,
+                    rank=rank,
+                )
+            )
+
+        return results
+
+    async def search_keyword(
+        self,
+        query: str,
+        top_k: int = 5,
+        filters: dict[str, Any] | None = None,
+        score_threshold: float | None = None,
+    ) -> list[RetrievalResult]:
+        """Perform full-text keyword search using PostgreSQL ts_rank_cd and websearch_to_tsquery."""
+        if top_k <= 0:
+            return []
+
+        if not query.strip():
+            return []
+
+        where_clauses: list[str] = []
+        select_params: list[Any] = []
+        where_params: list[Any] = []
+
+        active_filters = dict(filters) if filters else {}
+
+        if self.tenant_id_column and "tenant_id" in active_filters:
+            where_clauses.append(f"{self.tenant_id_column} = %s")
+            where_params.append(active_filters.pop("tenant_id"))
+
+        if active_filters:
+            where_clauses.append(f"{self.metadata_column} @> %s::jsonb")
+            where_params.append(json.dumps(active_filters))
+
+        if self.search_vector_column:
+            select_rank_expr = (
+                f"ts_rank_cd({self.search_vector_column}, websearch_to_tsquery(%s, %s))"
+            )
+            select_params.extend([self.language, query])
+            where_clauses.append(f"{self.search_vector_column} @@ websearch_to_tsquery(%s, %s)")
+            where_params.extend([self.language, query])
+        else:
+            select_rank_expr = (
+                f"ts_rank_cd(to_tsvector(%s, {self.text_column}), websearch_to_tsquery(%s, %s))"
+            )
+            select_params.extend([self.language, self.language, query])
+            where_clauses.append(
+                f"to_tsvector(%s, {self.text_column}) @@ websearch_to_tsquery(%s, %s)"
+            )
+            where_params.extend([self.language, self.language, query])
+
+        where_sql = f"WHERE {' AND '.join(where_clauses)}" if where_clauses else ""
+
+        outer_where: list[str] = []
+        outer_params: list[Any] = []
+        if score_threshold is not None:
+            outer_where.append("keyword_score >= %s")
+            outer_params.append(score_threshold)
+
+        outer_where_sql = f"WHERE {' AND '.join(outer_where)}" if outer_where else ""
+
+        sql = f"""
+            WITH matched_chunks AS (
+                SELECT
+                    {self.id_column},
+                    {self.text_column},
+                    {self.metadata_column},
+                    {select_rank_expr} AS keyword_score
+                FROM {self.table_name}
+                {where_sql}
+            )
+            SELECT
+                {self.id_column},
+                {self.text_column},
+                {self.metadata_column},
+                keyword_score
+            FROM matched_chunks
+            {outer_where_sql}
+            ORDER BY keyword_score DESC
+            LIMIT %s
+        """
+
+        all_params = tuple(select_params + where_params + outer_params + [top_k])
+
+        try:
+            async with self._get_connection() as conn, conn.cursor() as cur:
+                await cur.execute(sql, all_params)
+                rows = await cur.fetchall()
+        except Exception as err:  # noqa: BLE001 - database adapter boundary converts all failures
+            self._handle_db_error(err, "keyword search")
+
+        results: list[RetrievalResult] = []
+        for rank, row in enumerate(rows, start=1):
+            chunk_id = str(row[0])
+            content = str(row[1])
+            raw_meta = row[2]
+            if isinstance(raw_meta, str):
+                try:
+                    metadata = json.loads(raw_meta)
+                except (json.JSONDecodeError, TypeError, ValueError):
+                    metadata = {}
+            elif isinstance(raw_meta, dict):
+                metadata = raw_meta
+            else:
+                metadata = {}
+            score = float(row[3])
+            results.append(
+                RetrievalResult(
+                    id=chunk_id,
+                    content=content,
+                    metadata=metadata,
+                    score=round(score, 6),
                     rank=rank,
                 )
             )

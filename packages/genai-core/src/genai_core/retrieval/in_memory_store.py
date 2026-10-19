@@ -138,3 +138,70 @@ class InMemoryVectorStore:
             )
 
         return results
+
+    async def search_keyword(
+        self,
+        query: str,
+        top_k: int,
+        filters: dict[str, Any] | None = None,
+        score_threshold: float | None = None,
+    ) -> list[RetrievalResult]:
+        """Search in-memory chunks using keyword token overlap matching."""
+        if top_k <= 0:
+            raise ValueError(f"top_k must be greater than 0, got {top_k}.")
+
+        import re
+
+        query_tokens = set(re.findall(r"\w+", query.lower()))
+        if not query_tokens:
+            return []
+
+        scored_candidates: list[tuple[DocumentChunk, float]] = []
+
+        for chunk in self._chunks.values():
+            if filters:
+                match = True
+                for key, expected_value in filters.items():
+                    actual_val = chunk.metadata.get(key)
+                    if actual_val != expected_value:
+                        match = False
+                        break
+                if not match:
+                    continue
+
+            chunk_tokens = re.findall(r"\w+", chunk.content.lower())
+            if not chunk_tokens:
+                continue
+
+            chunk_tokens_set = set(chunk_tokens)
+            overlap = query_tokens.intersection(chunk_tokens_set)
+            if not overlap:
+                continue
+
+            overlap_ratio = len(overlap) / len(query_tokens)
+            # Frequency factor
+            freq_count = sum(chunk_tokens.count(t) for t in overlap)
+            freq_score = min(1.0, freq_count / max(1, len(chunk_tokens)))
+            score = (overlap_ratio * 0.7) + (freq_score * 0.3)
+
+            if score_threshold is not None and score < score_threshold:
+                continue
+
+            scored_candidates.append((chunk, score))
+
+        scored_candidates.sort(key=lambda item: item[1], reverse=True)
+
+        results: list[RetrievalResult] = []
+        for rank, (chunk, score) in enumerate(scored_candidates[:top_k], 1):
+            results.append(
+                RetrievalResult(
+                    id=chunk.id,
+                    content=chunk.content,
+                    score=round(score, 6),
+                    rank=rank,
+                    metadata=chunk.metadata,
+                    source_id=chunk.source_id,
+                )
+            )
+
+        return results

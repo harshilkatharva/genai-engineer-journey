@@ -33,7 +33,32 @@ class RetrievalQuery(BaseModel):
     )
     search_mode: Literal["dense", "sparse", "hybrid"] = Field(
         default="dense",
-        description="Search mode. Dense is currently supported; sparse and hybrid are planned for future stages.",
+        description="Search mode: 'dense' (vector search), 'sparse' (full-text keyword search), or 'hybrid' (combined dense + sparse).",
+    )
+    vector_weight: float | None = Field(
+        default=None,
+        ge=0.0,
+        le=1.0,
+        description="Optional weight for vector scores in hybrid search (default 0.6).",
+    )
+    keyword_weight: float | None = Field(
+        default=None,
+        ge=0.0,
+        le=1.0,
+        description="Optional weight for keyword scores in hybrid search (default 0.4).",
+    )
+    rerank: bool | None = Field(
+        default=None,
+        description="Whether to execute cross-encoder re-ranking on candidate results.",
+    )
+    rerank_top_k: int | None = Field(
+        default=None,
+        gt=0,
+        description="Number of final results to retain after re-ranking. Defaults to top_k.",
+    )
+    on_rerank_unavailable: Literal["raise", "warn_and_continue"] = Field(
+        default="warn_and_continue",
+        description="Behavior when re-ranking is requested but unavailable ('raise' or 'warn_and_continue').",
     )
 
     @model_validator(mode="after")
@@ -51,6 +76,16 @@ class RetrievalQuery(BaseModel):
             raise ValueError(
                 "Either 'query' (non-empty string) or 'query_vector' (non-empty list of floats) must be provided."
             )
+
+        if self.search_mode in ("sparse", "hybrid") and not has_text:
+            raise ValueError(f"Search mode '{self.search_mode}' requires a text 'query' string.")
+
+        if (
+            self.vector_weight is not None
+            and self.keyword_weight is not None
+            and round(self.vector_weight + self.keyword_weight, 4) != 1.0
+        ):
+            raise ValueError("vector_weight and keyword_weight must sum to 1.0.")
 
         return self
 

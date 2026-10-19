@@ -62,6 +62,14 @@ class RetrievalResponse(BaseModel):
         default="dense",
         description="The search mode utilized to produce these results.",
     )
+    reranked: bool = Field(
+        default=False,
+        description="Indicates whether the results were re-ranked using a cross-encoder.",
+    )
+    rerank_message: str | None = Field(
+        default=None,
+        description="Optional status message if re-ranking was requested but skipped or had warnings.",
+    )
 
     model_config = {
         "extra": "ignore",
