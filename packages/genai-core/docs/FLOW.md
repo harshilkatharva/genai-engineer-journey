@@ -88,17 +88,23 @@ flowchart TD
 ```
 
 ### Component Roles & Responsibilities:
-- **`genai_core.services`**: Unified entry points (`LLMService`, `EmbeddingService`, `RetrievalService`). Validate input, resolve providers/backends, coordinate internal batching, manage fault isolation, and emit observability events.
-- **`genai_core.retrieval`**: Vector store abstractions and reference implementations:
-  - `VectorStoreAdapter`: Runtime-checkable protocol defining `dimensions`, `search`, `upsert`, and `delete`.
-  - `InMemoryVectorStore`: Zero-dependency in-memory reference store using exact cosine similarity, supporting metadata filtering and score thresholding.
-  - `PGVectorStoreAdapter` *(Planned Stage 3)*: PostgreSQL pgvector adapter using connection injection.
+- **`genai_core.services`**: Unified entry points (`LLMService`, `EmbeddingService`, `RetrievalService`, `MemoryService`). Validate input, resolve providers/backends, coordinate internal batching, manage fault isolation, and emit observability events.
+- **`genai_core.retrieval`**: Vector store abstractions, hybrid search, and re-ranking implementations:
+  - `VectorStoreAdapter`: Runtime-checkable protocol defining `dimensions`, `search`, `search_keyword`, `upsert`, and `delete`.
+  - `InMemoryVectorStore`: Zero-dependency in-memory reference store using exact cosine similarity, term-frequency keyword matching, metadata filtering, and score thresholding.
+  - `PGVectorStoreAdapter`: Production PostgreSQL pgvector adapter using connection injection, parameterized `<=>` cosine distance, full-text search (`ts_rank_cd`), and JSONB containment filtering.
+  - `CrossEncoderReranker`: Neural re-ranking adapter (`cross-encoder/ms-marco-MiniLM-L6-v2`) executing in worker threads via `asyncio.to_thread`.
+- **`genai_core.memory`**: Multi-type memory subsystem with pluggable persistence:
+  - `ShortTermMemory`: Conversational history with turn tracking, pinned agent instructions, token budget snapshot pruning via `TokenCounter`, and session inactivity TTL.
+  - `LongTermMemory`: Durable user profile facts and preferences with vector embedding, conflict resolution (`supersedes_ids`), temporal expiration, hybrid cosine similarity + exponential recency decay ranking ($0.65 \times \text{sim} + 0.35 \times \text{recency} - 2.0 \times \text{is\_superseded}$), and automatic knowledge consolidation (`consolidate`).
+  - `EpisodicMemory`: Historical action log with canonical JSON parameter fingerprinting (deterministic SHA-256), idempotency decision checking (`execute` vs `do_not_repeat`), and rolling retention window purging.
+  - `InMemoryMemoryStore` & `PostgresMemoryStore`: Pluggable storage adapters conforming to `MemoryStorageAdapter`.
 - **`genai_core.resilience`**: Shared asynchronous resilience infrastructure (`RateLimiter`, `AsyncTokenBucket`, `RetryPolicy`, `execute_with_retry`, `extract_retry_after`, `estimate_tokens`). Implements in-memory token bucket pacing for RPM/TPM and bounded retries with jitter and deadlines. Reused across embeddings, retrieval, and LLMs.
 - **`genai_core.llm`**: Adapters conforming to `LLMProvider` protocol translating between normalized contracts and vendor SDKs (Google, OpenAI, Anthropic).
 - **`genai_core.embedding`**: Adapters conforming to `EmbeddingProvider` protocol (`LocalEmbeddingProvider`, `OpenAIEmbeddingProvider`, `GoogleEmbeddingProvider`).
 - **`genai_core.observability`**: Reusable logging with caller-isolated outputs, secret/key scrubbing, asynchronous request context propagation, and zero side effects by default.
-- **`genai_core.models`**: Pydantic v2 schemas (`ChatMessage`, `LLMManagerRequest`, `LLMResponseModel`, `EmbeddingRequest`, `EmbeddingResponse`, `DocumentChunk`, `RetrievalQuery`, `RetrievalResult`, `RetrievalResponse`, `ToolSpec`).
-- **`genai_core.exceptions`**: Typed error hierarchies (`LLMError`, `EmbeddingError`, `EmbeddingDimensionError`, `EmbeddingTimeoutError`, `RetrievalError`, `VectorStoreError`, `IncompatibleEmbeddingError`, `UnsupportedSearchModeError`, `RetrievalTimeoutError`).
+- **`genai_core.models`**: Pydantic v2 schemas (`ChatMessage`, `LLMManagerRequest`, `LLMResponseModel`, `EmbeddingRequest`, `EmbeddingResponse`, `DocumentChunk`, `RetrievalQuery`, `RetrievalResult`, `RetrievalResponse`, `ConversationMessage`, `PinnedGoal`, `WorkingContext`, `LongTermMemoryRecord`, `MemoryCandidate`, `ActionEpisode`, `ConsolidationResult`, `ToolSpec`).
+- **`genai_core.exceptions`**: Typed error hierarchies (`LLMError`, `EmbeddingError`, `EmbeddingDimensionError`, `EmbeddingTimeoutError`, `RetrievalError`, `VectorStoreError`, `IncompatibleEmbeddingError`, `UnsupportedSearchModeError`, `RetrievalTimeoutError`, `MemoryError`, `MemoryStorageError`, `MemoryNotFoundError`, `MemoryValidationError`, `MemoryExtractionError`).
 - **`genai_core.core`**: Environment settings loaded via `pydantic-settings` with explicit precedence and fallback defaults.
 
 ---
@@ -470,8 +476,8 @@ flowchart TD
   - `score_threshold` if provided must be bounded between `0.0` and `1.0`.
 - **Search Mode Policy**:
   - The request contract defines `search_mode: Literal["dense", "sparse", "hybrid"] = "dense"`.
-  - In Phase 3, **dense search is exclusively supported**.
-  - Requesting `"sparse"` or `"hybrid"` strictly raises `UnsupportedSearchModeError(mode)` explaining that sparse and hybrid retrieval are planned for a subsequent stage. The system never silently falls back or pretends hybrid retrieval is operating.
+  - Supports `"dense"` (dense vector search), `"sparse"` (full-text keyword search via PostgreSQL / in-memory), and `"hybrid"` (concurrent execution of dense and keyword search with min-max score normalization and weighted fusion).
+  - Any unsupported search mode value strictly raises `UnsupportedSearchModeError(mode)`. The system never silently falls back.
 
 ### 6.2 Embedding Compatibility and Dimension Enforcement
 - **Location**: [`packages/genai-core/src/genai_core/services/retrieval_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/retrieval_service.py)

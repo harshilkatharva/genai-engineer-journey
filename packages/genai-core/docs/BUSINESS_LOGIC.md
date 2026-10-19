@@ -252,7 +252,7 @@ Embeddings are a separate capability from text generation, even when provided by
 - Emits `EMBEDDING_TIMEOUT` when the request deadline or attempt timeout expires.
 - Provider errors emit `EMBEDDING_REQUEST_FAILED` with error details and raise `EmbeddingProviderError`.
 
-**Status:** Completed (Stages 1, 2, and 3 verified by 98 unit tests and package pre-push checks).
+**Status:** Completed (verified by embedding unit tests, live integration tests, and package pre-push checks).
 
 
 ## 7. Implemented capability: retrieval and document abstractions
