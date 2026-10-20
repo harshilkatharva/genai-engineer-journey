@@ -35,12 +35,12 @@ flowchart TD
     Client -->|access config / typed models| MODELS
 
     subgraph ServiceLayer ["Service Orchestration Layer"]
-        LLM --> LLMProviderResolve{Resolve LLM Provider}
-        EMB --> EMBProviderResolve{Resolve Embedding Provider}
-        RET --> RETStoreResolve{VectorStoreAdapter}
+        LLM --> LLMProviderResolve{"Resolve LLM Provider"}
+        EMB --> EMBProviderResolve{"Resolve Embedding Provider"}
+        RET --> RETStoreResolve{"VectorStoreAdapter"}
         RET --> RETEmbedQuery["EmbeddingService.embed_query()"]
         MEM --> MEMSubsystems["ShortTerm / LongTerm / Episodic Subsystems"]
-        MEMSubsystems --> MEMStoreResolve{MemoryStorageAdapter}
+        MEMSubsystems --> MEMStoreResolve{"MemoryStorageAdapter"}
         MEMSubsystems --> MEMEmbedQuery["EmbeddingService.embed_query()"]
     end
 
@@ -118,15 +118,15 @@ flowchart TD
     Client[Client / Caller] -->|LLMManagerRequest or helper methods| LLMService[LLMService]
 
     subgraph Service Layer ["packages/genai-core/src/genai_core/services/llm_services.py"]
-        LLMService --> ProviderResolve{Resolve Provider}
+        LLMService --> ProviderResolve{"Resolve Provider"}
         ProviderResolve -->|Unsupported| ErrorResp[Return LLMManagerResponse with LLMError]
-        ProviderResolve -->|Resolved| RouteType{Schema or Tool/Message?}
+        ProviderResolve -->|Resolved| RouteType{"Schema or Tool/Message?"}
     end
 
     subgraph Provider Adapters ["packages/genai-core/src/genai_core/llm/"]
         RouteType -->|response_schema is set| CompleteStructure[complete_structure]
         RouteType -->|tools or messages| CompleteTool[complete_tool]
-        CompleteStructure --> ProviderImpl{Provider Adapter}
+        CompleteStructure --> ProviderImpl{"Provider Adapter"}
         CompleteTool --> ProviderImpl
 
         ProviderImpl -->|Google| GoogleProvider[GoogleProvider]
@@ -233,7 +233,7 @@ flowchart TD
     subgraph InputValidation ["Request & Input Validation"]
         Ready --> ReceiveReq["Receive EmbeddingRequest or kwargs"]
         ReceiveReq --> CheckEmpty{"Input empty or whitespace?"}
-        CheckEmpty -->|Yes: input=[] or whitespace| RaiseValErr["Raise ValueError"]
+        CheckEmpty -->|"Yes: empty input or whitespace"| RaiseValErr["Raise ValueError"]
         CheckEmpty -->|No| CheckBatchSize{"batch_size <= 0?"}
         CheckBatchSize -->|Yes| RaiseBatchErr["Raise ValueError"]
         CheckBatchSize -->|Valid| SetDeadline["Calculate overall request_deadline"]
@@ -248,7 +248,7 @@ flowchart TD
         RateLimitCheck -->|Capacity Ready| ExecWithRetry["execute_with_retry(provider.embed_batch, retry_policy)"]
         
         subgraph ProviderExecution ["Provider-Specific Dispatch"]
-            ExecWithRetry --> RouteProvider{Active Provider}
+            ExecWithRetry --> RouteProvider{"Active Provider"}
             
             RouteProvider -->|Local| LocalExec["asyncio.to_thread(model.encode, ...)"]
             RouteProvider -->|OpenAI| OpenAIExec["await client.embeddings.create(...)"]
@@ -256,10 +256,10 @@ flowchart TD
         end
 
         ProviderExecution --> Retried{"Transient 429/5xx or timeout?"}
-        Retried -->|Yes: within retry limit| BackoffSleep["Wait with exponential backoff & jitter"]
+        Retried -->|"Yes: within retry limit"| BackoffSleep["Wait with exponential backoff & jitter"]
         BackoffSleep --> LogRetry["safe_log: EMBEDDING_RETRY"]
         LogRetry --> ExecWithRetry
-        Retried -->|No: Permanent 400/401/quota or deadline reached| RaiseError["Raise typed Error / Timeout"]
+        Retried -->|"No: Permanent 400/401/quota or deadline reached"| RaiseError["Raise typed Error / Timeout"]
 
         ProviderExecution --> SuccessBatch["Return batch float vectors"]
         SuccessBatch --> ValidateDim{"Vector count & dim match?"}
@@ -675,14 +675,136 @@ flowchart TD
 
 ---
 
-## 8. Future Services (Planned Architecture)
+## 8. Capability: Tool Subsystem & Orchestration Flow
 
-As `genai-core` expands, additional shared capabilities will connect into the package architecture:
+The Tool subsystem (`genai_core.tools`) provides framework-independent tool definitions, cataloging, safe execution, authorization gating, and bounded multi-turn orchestration coordinated with `LLMService`.
 
-### 8.1 Tool & Agent Orchestration
-- **Location**: `genai_core.agents` / `genai_core.tools`
-- **Role**: Higher-level multi-step tool execution loops, argument dispatching, and agent state machines.
-- **Interconnection**: Dispatches tool definitions (`ToolSpec`) to `LLMService`, executes validated functions under caller control, and reports tool execution steps via `safe_log`.
+### 8.1 Tool Subsystem Architecture Flow
+
+```mermaid
+flowchart TD
+    Caller[Consuming Application / Agent] --> LoopRunner["ToolLoopRunner.run(messages, tools, budget)"]
+    
+    subgraph CatalogBoundary ["Tool Catalog & Discovery"]
+        Registry["ToolRegistry"]
+        BaseTool["BaseTool / FunctionTool (@tool)"]
+        Registry -.->|registers| BaseTool
+        Registry -->|"get_specs(tags, max_risk)"| ToolSpecs["list[ToolSpec]"]
+    end
+
+    subgraph OrchestrationLoop ["Bounded Multi-Turn Loop"]
+        LoopRunner --> BudgetCheck{"budget.can_step()?"}
+        BudgetCheck -->|No| BudgetExit["Return ToolLoopResult (MAX_ITERATIONS / DEADLINE / BUDGET_EXCEEDED)"]
+        BudgetCheck -->|Yes| LLMCall["LLMService.complete_tool(messages, tools=specs)"]
+        
+        LLMCall --> ResponseCheck{"tool_calls in response?"}
+        ResponseCheck -->|No| Finish["Return ToolLoopResult (COMPLETED, final_text)"]
+        ResponseCheck -->|Yes| LoopGuard{"LoopDetector.record_and_check()"}
+        
+        LoopGuard -->|Loop Detected| InjectLoopErr["Append Tool Error (Loop Detected) to Messages"]
+        LoopGuard -->|Safe| RiskGate{"Risk in require_approval_for?"}
+    end
+
+    subgraph HumanInTheLoop ["Authorization & Approval Gating"]
+        RiskGate -->|Yes| ApprovalStore["ApprovalStore.save_request()"]
+        ApprovalStore --> PauseLoop["Pause: Return ToolLoopResult (APPROVAL_REQUIRED)"]
+        PauseLoop -.-> HumanOperator[Operator / User Review]
+        HumanOperator -.-> Decision["ApprovalDecision (approved/rejected)"]
+        Decision --> ResumeLoop["ToolLoopRunner.resume(decision, request, messages)"]
+        ResumeLoop --> BypassedExec["ToolExecutor.execute(bypass_approval=True)"]
+    end
+
+    subgraph ExecutionEngine ["Guarded Tool Executor"]
+        RiskGate -->|No / Approved| Executor["ToolExecutor.execute(call)"]
+        BypassedExec --> Executor
+        Executor --> SchemaVal{"ToolSpec.parse_arguments()"}
+        SchemaVal -->|Invalid| ValErr["ToolResult (VALIDATION_ERROR)"]
+        SchemaVal -->|Valid| GuardedRun["async with semaphore & timeout: tool.run(**args)"]
+        GuardedRun -->|Timeout| TimeoutRes["ToolResult (TIMEOUT)"]
+        GuardedRun -->|Exception| ExcRes["ToolResult (EXECUTION_ERROR)"]
+        GuardedRun -->|Success| TruncateCheck{"len(output) > max_output_chars?"}
+        TruncateCheck -->|Yes| TruncRes["Truncate Output with Indicator"]
+        TruncateCheck -->|No| SuccRes["ToolResult (SUCCESS)"]
+    end
+
+    ValErr --> ConvertMsg["ToolResult.to_chat_message()"]
+    TimeoutRes --> ConvertMsg
+    ExcRes --> ConvertMsg
+    TruncRes --> ConvertMsg
+    SuccRes --> ConvertMsg
+    InjectLoopErr --> ConvertMsg
+    ConvertMsg --> AppendMsg["Append Tool Message to current_messages"]
+    AppendMsg --> BudgetCheck
+```
+
+### 8.2 Bounded Multi-Turn Execution Sequence
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Caller as Consuming Agent
+    participant Runner as ToolLoopRunner
+    participant LLM as LLMService
+    participant Detector as LoopDetector
+    participant Exec as ToolExecutor
+    participant Tool as BaseTool
+
+    Caller->>Runner: run(messages, budget)
+    loop While budget.can_step()
+        Runner->>LLM: complete_tool(messages, tools)
+        LLM-->>Runner: LLMManagerResponse(tool_calls, usage)
+        alt No Tool Calls
+            Runner-->>Caller: ToolLoopResult(status=COMPLETED, final_text)
+        else Tool Calls Returned
+            Runner->>Runner: append assistant message
+            loop For Each ToolCall
+                Runner->>Detector: record_and_check(tool_name, arguments)
+                alt Infinite Loop Detected
+                    Detector-->>Runner: True
+                    Runner->>Runner: append tool error ("Loop detected")
+                else Call Allowed
+                    Runner->>Exec: execute(call)
+                    Exec->>Exec: parse_arguments(schema)
+                    Exec->>Tool: run(**kwargs) (guarded timeout & semaphore)
+                    Tool-->>Exec: raw_output
+                    Exec->>Exec: truncate if > max_output_chars
+                    Exec-->>Runner: ToolResult
+                    Runner->>Runner: append ToolResult.to_chat_message()
+                end
+            end
+        end
+    end
+```
+
+### 8.3 Human-in-the-Loop Approval & Pause/Resume Sequence
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Caller as Consuming Application
+    participant Runner as ToolLoopRunner
+    participant Exec as ToolExecutor
+    participant Store as ApprovalStore
+    actor Operator as Human / External Authority
+
+    Caller->>Runner: run(messages)
+    Runner->>Exec: execute(call)
+    Exec->>Exec: check tool.risk_level in require_approval_for
+    Exec->>Store: save_request(ApprovalRequest)
+    Exec-->>Runner: ToolResult(status=APPROVAL_REQUIRED)
+    Runner-->>Caller: ToolLoopResult(status=APPROVAL_REQUIRED, pending_approval)
+    
+    Note over Caller, Operator: Workflow paused. State persisted.
+    Operator->>Caller: Review and issue ApprovalDecision(approved=True)
+    
+    Caller->>Runner: resume(decision, request, messages)
+    Runner->>Store: record_decision(request_id, decision)
+    Runner->>Exec: execute(call, bypass_approval=True)
+    Exec-->>Runner: ToolResult(status=SUCCESS)
+    Runner->>Runner: append tool message
+    Runner->>Runner: continue loop with remaining budget
+    Runner-->>Caller: ToolLoopResult(status=COMPLETED)
+```
 
 ---
 
@@ -706,7 +828,14 @@ The behavior of `genai-core` is verified through automated unit tests organized 
   - [`test_llm_service.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_llm_service.py), [`test_protocol.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_protocol.py), [`test_tool_spec.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_tool_spec.py), [`test_google_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_google_provider.py), [`test_openai_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_openai_provider.py), [`test_anthropic_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/llm/test_anthropic_provider.py).
 - **Observability unit tests (`tests/unit/observability/`)**:
   - [`test_observability.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/observability/test_observability.py).
+- **Tool unit tests (`tests/unit/tools/`)**:
+  - [`test_tool_definition.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/tools/test_tool_definition.py) validates `BaseTool` subclassing, `@tool` decorator on sync and async callables, custom metadata (risk level, tags, descriptions), automatic Pydantic schema generation from type hints, explicit `args_schema`, and parameterless tools.
+  - [`test_tool_registry.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/tools/test_tool_registry.py) validates thread-safe tool registration, raw callable wrapping, duplicate registration guards, lookup operations, unregistration, clearing, and spec filtering by tags, maximum risk levels, and exclusions.
+  - [`test_tool_executor.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/tools/test_tool_executor.py) validates successful sync and async execution, schema validation error normalization, unregistered tool handling, runtime exception isolation, timeout enforcement, output size truncation with warning indicators, batch execution via `execute_many`, and chat message formatting.
+  - [`test_tool_guards.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/tools/test_tool_guards.py) validates `LoopDetector` consecutive call counting, canonical SHA-256 argument normalization, key-order invariance, reset semantics, `InMemoryApprovalStore` CRUD operations, and risk-based authorization gating with bypass support.
+  - [`test_tool_loop.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/unit/tools/test_tool_loop.py) validates multi-turn bounded execution, immediate text completion, multi-turn tool calling, step budget exhaustion, monotonic deadline timeouts, token budget enforcement, loop detection feedback, and human-in-the-loop approval pause and resume (both approved and rejected branches).
 - **Live integration tests (`tests/integration/`)**:
+  - **Tool integration tests (`tests/integration/tools/`)**: [`test_tool_subsystem_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/tools/test_tool_subsystem_integration.py) validates the complete end-to-end integration of registry, executor, approval store, budget tracking, and bounded loop execution through multiple tool turns, approval pausing on irreversible actions, and resuming upon authorization.
   - **Memory integration tests (`tests/integration/memory/`)**: [`test_postgres_memory_store_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/memory/test_postgres_memory_store_integration.py) validates live PostgreSQL persistence for short-term message ordering and budget pruning, long-term vector search with pgvector cosine distance, in-database recency scoring and supersession penalty, episodic action history lookup, and strict multi-user data isolation.
   - **LLM integration tests (`tests/integration/llm/`)**: [`test_anthropic_provider_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/llm/test_anthropic_provider_integration.py), [`test_google_provider_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/llm/test_google_provider_integration.py), [`test_openai_provider_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/llm/test_openai_provider_integration.py).
   - **Embedding integration tests (`tests/integration/embedding/`)**: [`test_local_embedding_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/embedding/test_local_embedding_integration.py), [`test_google_embedding_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/embedding/test_google_embedding_integration.py), [`test_openai_embedding_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/embedding/test_openai_embedding_integration.py).

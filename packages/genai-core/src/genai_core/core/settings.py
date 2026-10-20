@@ -44,6 +44,13 @@ class Settings(BaseSettings):
     memory_recency_half_life_days: int = 30
     memory_episodic_retention_days: int = 14
 
+    # Tool settings
+    tool_default_timeout_seconds: float = 30.0
+    tool_max_iterations: int = 10
+    tool_max_output_chars: int = 10000
+    tool_max_concurrency: int = 5
+    tool_max_repeated_calls: int = 3
+
     # Integration and API keys
     integration_test: int = 0
     google_api_key: str | None = None

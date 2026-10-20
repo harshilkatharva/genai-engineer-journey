@@ -67,7 +67,32 @@ Production-grade, modular, and resilient Python core package providing unified G
 - **Unified orchestration facade**:
   - `MemoryService`: Coordinates short-term, long-term, and episodic memory with shortcut APIs (`add_message`, `get_working_context`, `remember`, `recall`, `consolidate`, `record_action`, `check_action`, `purge_all`).
 
-### 5. Shared Resilience Subsystem (`genai_core.resilience`)
+### 5. Unified Tool Subsystem (`genai_core.tools`)
+- **Declarative tool definitions**:
+  - `BaseTool` abstract base class and `@tool` decorator supporting sync and async callables.
+  - Automatic Pydantic schema synthesis from function type annotations or explicit `args_schema`.
+  - Clean separation between schema validation (`ToolSpec`) and execution logic.
+- **Thread-safe catalog & discovery (`ToolRegistry`)**:
+  - Thread-safe tool catalog with lock protection (`RLock`).
+  - Three-tier operational risk classification (`RiskLevel.READ_ONLY`, `RiskLevel.REVERSIBLE_WRITE`, `RiskLevel.IRREVERSIBLE`).
+  - Dynamic schema generation filtered by tags, maximum risk levels, and exclusions.
+- **Guarded execution engine (`ToolExecutor`)**:
+  - Process-level schema validation, per-tool timeouts (`asyncio.timeout`), and concurrency limits (`asyncio.Semaphore`).
+  - Output size protection: truncates outputs exceeding `max_output_chars` with clear warnings.
+  - Fault normalization: unknown tools, validation failures, timeouts, and exceptions are normalized into structured `ToolResult` without crashing the application.
+  - Transparent security boundaries: clearly documented process-level bounds without claiming OS-level sandboxing.
+- **Infinite loop & thrashing protection (`LoopDetector`)**:
+  - Deterministic SHA-256 parameter hashing over canonical key-sorted JSON representations.
+  - Detects repeated identical invocations and injects diagnostic feedback into LLM conversation history.
+- **Human-in-the-loop authorization & pause/resume**:
+  - Gated authorization for high-risk operations (`require_approval_for={RiskLevel.IRREVERSIBLE}`).
+  - Persistence protocol (`ApprovalStore`, `InMemoryApprovalStore`) storing pending requests and decisions.
+  - Clean pause/resume: pauses loop when approval is required; resumes upon operator decision (`approved`/`rejected`) while preserving cumulative progress counters.
+- **Bounded multi-turn orchestration loop (`ToolLoopRunner`)**:
+  - Multi-resource budget enforcement: step caps (`max_iterations`), monotonic wall-clock deadlines, and token/cost budgets (`ToolBudget`).
+  - Complete execution auditability in `ToolLoopResult`.
+
+### 6. Shared Resilience Subsystem (`genai_core.resilience`)
 - **Async Rate Limiter (`RateLimiter`)**:
   - Dual in-memory token buckets enforcing Requests Per Minute (RPM) and Tokens Per Minute (TPM).
   - Dynamic pause handling when upstream services return HTTP `Retry-After` headers.
@@ -76,7 +101,7 @@ Production-grade, modular, and resilient Python core package providing unified G
   - Bounded overall deadlines across multi-batch and chained operations.
   - Intelligent classification: retries transient errors (HTTP 408/429/5xx, connection resets), fails fast on permanent errors (400, 401, 403, quota exhaustion, validation failures).
 
-### 6. Caller-Controlled Observability (`genai_core.observability`)
+### 7. Caller-Controlled Observability (`genai_core.observability`)
 - **Zero side-effects by default**: Configured with `logging.NullHandler()`; never creates log directories or files without explicit caller opt-in.
 - **Automated redaction**: Sanitizes API keys (Google, OpenAI, Anthropic), Bearer headers, and sensitive fields before writing logs.
 - **Context tracking**: Async-safe request correlation (`set_request_id`, `observability_context`).
@@ -311,6 +336,79 @@ async def main():
 asyncio.run(main())
 ```
 
+### 4. Tool System & Bounded Orchestration Loop
+
+```python
+import asyncio
+from pydantic import BaseModel, Field
+from genai_core import (
+    ChatMessage,
+    LLMService,
+    RiskLevel,
+    ToolBudget,
+    ToolExecutor,
+    ToolLoopRunner,
+    ToolLoopStatus,
+    ToolRegistry,
+    tool,
+)
+
+
+class FlightQueryArgs(BaseModel):
+    destination: str = Field(description="Destination airport or city code")
+    max_price: float = Field(default=500.0, description="Maximum budget")
+
+
+@tool(args_schema=FlightQueryArgs, risk_level=RiskLevel.READ_ONLY, tags=["travel"])
+def search_flights(destination: str, max_price: float = 500.0) -> list[dict]:
+    """Search available flights for destination under budget."""
+    return [{"flight": "NH101", "to": destination, "price": 420.0}]
+
+
+@tool(name="book_ticket", risk_level=RiskLevel.IRREVERSIBLE, tags=["booking"])
+def book_ticket(flight_number: str) -> dict:
+    """Book ticket - irreversible financial transaction requiring human approval."""
+    return {"status": "confirmed", "booking_ref": "BOOK-992"}
+
+
+async def main():
+    registry = ToolRegistry([search_flights, book_ticket])
+    executor = ToolExecutor(
+        registry=registry,
+        require_approval_for={RiskLevel.IRREVERSIBLE},
+        default_timeout_s=10.0,
+        max_output_chars=5000,
+    )
+    llm_service = LLMService()
+    runner = ToolLoopRunner(llm_service=llm_service, executor=executor)
+
+    # 1. Run loop with multi-resource budget (step caps, tokens, deadline)
+    budget = ToolBudget(max_steps=5, max_tokens=2000)
+    messages = [ChatMessage(role="user", content="Find flights to Tokyo and book NH101.")]
+
+    result = await runner.run(messages=messages, budget=budget)
+
+    # 2. Check if loop paused for approval on risky operation
+    if result.status == ToolLoopStatus.APPROVAL_REQUIRED:
+        print(f"Paused! Approval required for tool: {result.pending_approval.tool_name}")
+        print(f"Arguments: {result.pending_approval.arguments}")
+
+        # 3. Resume with authorized human decision
+        from genai_core import ApprovalDecision
+
+        decision = ApprovalDecision(approved=True, reason="User authorized booking via credit card")
+        final_result = await runner.resume(
+            decision=decision,
+            request=result.pending_approval,
+            messages=result.messages,
+            budget=budget,
+        )
+        print(f"Final Outcome: {final_result.final_text}")
+
+
+asyncio.run(main())
+```
+
 ---
 
 ## Project Structure
@@ -328,24 +426,27 @@ packages/genai-core/
 │   ├── exceptions/           # Strongly-typed exceptions
 │   ├── llm/                  # LLM provider adapters and protocol
 │   ├── memory/               # Short-term, long-term, and episodic memory + store adapters
-│   ├── models/               # Pydantic data models (LLM, embedding, retrieval, memory)
+│   ├── models/               # Pydantic data models (LLM, embedding, retrieval, memory, tools)
 │   ├── observability/        # Logging, redaction, formatting, and tracing
 │   ├── resilience/           # Rate limiting and retry policies
 │   ├── retrieval/            # Vector store protocol, InMemory, PGVector, fusion, and reranker
-│   └── services/             # LLMService, EmbeddingService, RetrievalService, MemoryService
+│   ├── services/             # LLMService, EmbeddingService, RetrievalService, MemoryService
+│   └── tools/                # Tool definitions, registry, executor, loop runner, and guards
 ├── tests/
 │   ├── unit/                 # Fast, isolated unit tests (no live network)
 │   │   ├── embedding/
 │   │   ├── llm/
 │   │   ├── memory/
 │   │   ├── observability/
-│   │   └── retrieval/
+│   │   ├── retrieval/
+│   │   └── tools/
 │   └── integration/          # Live API and service integration tests (gated by INTEGRATION_TEST=1)
 │       ├── embedding/
 │       ├── llm/
 │       ├── memory/
 │       ├── observability/
-│       └── retrieval/
+│       ├── retrieval/
+│       └── tools/
 ├── pyproject.toml
 └── README.md
 ```

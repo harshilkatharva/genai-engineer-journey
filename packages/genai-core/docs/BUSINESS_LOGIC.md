@@ -402,24 +402,57 @@ Knowledge consolidation extracts durable long-term facts, preferences, goals, an
 
 ---
 
-## 9. Planned capability: tool/function-calling primitives
+## 9. Capability: Tool System Architecture (`genai_core.tools`)
 
-Tool/function calling has two distinct parts: the model may **request** a tool call, and application code decides whether and how to **execute** it. A model-generated request is not authorization to run arbitrary code.
+The Tool subsystem provides framework-independent tool definitions, schema extraction, thread-safe registry, guarded execution engine, safety policies, and a bounded multi-turn orchestration loop coordinating with `LLMService`.
 
-If shared tool/function-calling contracts are introduced, they should:
+### 9.1 Separation of Schema and Execution Handlers
+- **Declarative Schema Definition**: Tool interfaces are defined via Pydantic argument models (`args_schema: type[BaseModel]`) or inferred automatically from function type signatures. They export provider-compliant schemas via `ToolSpec` (`to_openai_tool`, `to_anthropic_tool`, `to_google_function_declaration`).
+- **Handler Isolation**: Argument parsing and validation are strictly separated from execution logic. Schema validation runs first via `ToolSpec.parse_arguments`. Execution handlers (`tool.run(**args_dict)`) are invoked only if argument validation succeeds.
 
-- represent tool name, description/schema, arguments, and result consistently;
-- validate that a requested tool exists and that its arguments satisfy the declared schema;
-- normalize provider-specific tool-call representations without erasing meaningful differences;
-- distinguish malformed calls, unknown tools, validation failures, execution failures, and successful results;
-- preserve correlation identifiers where needed to associate tool results with model requests;
-- make timeout, retry, and side-effect concerns explicit.
+### 9.2 Tool Risk Hierarchy & Safety Policies
+- **Operational Risk Classification**:
+  - `RiskLevel.READ_ONLY` (Level 0): Operations with no side effects (e.g., searches, reads, calculations).
+  - `RiskLevel.REVERSIBLE_WRITE` (Level 1): Operations with manageable or undoable side effects (e.g., temporary file writes, draft creations).
+  - `RiskLevel.IRREVERSIBLE` (Level 2): High-impact, destructive, or external operations (e.g., dropping tables, financial transactions, sending external emails).
+- **Authorization Gating**:
+  - Operations classified as `IRREVERSIBLE` (or configured via `require_approval_for`) require explicit caller/operator approval before execution.
+  - When approval is required and no pre-authorized approval checker callback permits execution, tool execution returns `ToolExecutionStatus.APPROVAL_REQUIRED`, creates an `ApprovalRequest`, and saves it to the configured `ApprovalStore`.
+- **Approval Persistence & Pause/Resume Protocol**:
+  - `ApprovalStore` protocol defines explicit interfaces for persisting requests (`save_request`), recording decisions (`record_decision`), and retrieving pending approvals (`list_pending_requests`).
+  - `InMemoryApprovalStore` provides a thread-safe, non-blocking reference implementation.
+  - Pausing: `ToolLoopRunner.run` halts execution immediately upon encountering an unapproved risky tool call, returning `ToolLoopResult(status=ToolLoopStatus.APPROVAL_REQUIRED, pending_approval=...)`.
+  - Resuming: `ToolLoopRunner.resume` accepts an `ApprovalDecision`. If approved (with optional modified arguments), executes the paused call with `bypass_approval=True` and continues the loop; if rejected, injects a tool error message explaining the denial and continues so the LLM can acknowledge the decision. Cumulative step and tool-call counters are preserved.
 
-The consuming application owns the allowlist of available tools, authorization checks, permission boundaries, approval requirements, and the decision to execute a requested tool. Core may provide reusable validation and dispatch primitives, but it must not execute arbitrary names, shell commands, code, or network operations just because model output requests them.
+### 9.3 Execution Safety & Process-Level Isolation
+- **Process-Level Security Notice**:
+  `ToolExecutor` runs within the host Python process. It provides schema validation, per-tool timeouts via `asyncio.timeout`, concurrency limits via `asyncio.Semaphore`, output truncation, and approval checks. It does NOT provide operating-system-level sandboxing, containerization, or memory virtualization. Untrusted shell/code execution must be sandboxed externally.
+- **Output Size Protection**:
+  Tool output strings, JSON, or serialized Pydantic models exceeding `max_output_chars` (default 10,000 characters) are safely truncated with `[TRUNCATED: output exceeded {max_output_chars} characters]` to prevent LLM context window blowout.
+- **Fault Normalization**:
+  Tool execution never raises raw exceptions to crash the runner loop. Failures are normalized into structured `ToolResult` objects:
+  - Unknown/unregistered tools -> `ToolExecutionStatus.EXECUTION_ERROR`
+  - Argument validation failures -> `ToolExecutionStatus.VALIDATION_ERROR`
+  - Handler timeouts -> `ToolExecutionStatus.TIMEOUT`
+  - Uncaught handler exceptions -> `ToolExecutionStatus.EXECUTION_ERROR`
+  - Paused approvals -> `ToolExecutionStatus.APPROVAL_REQUIRED`
+- **Result Representation (`ToolResult`)**:
+  - Structured fields: `call_id`, `tool_name`, `status`, `content`, `error_message`, `latency_ms`, `truncated`.
+  - `.to_chat_message()` converts results into standard `ChatMessage(role="tool", content=..., tool_call_id=..., tool_name=...)` compatible with all supported LLM providers.
 
-Automatic orchestration loops should be introduced only when clearly required and designed with bounded steps, error handling, and termination rules.
+### 9.4 Infinite Loop & Thrashing Protection (`LoopDetector`)
+- Tracks sequential tool invocations via deterministic SHA-256 argument hashes with canonical key-sorted JSON serialization.
+- Detects cyclical or repeated identical invocations exceeding `max_repeated_calls` (default 3 consecutive calls).
+- In the orchestration loop, a detected loop emits `TOOL_LOOP_DETECTED` and feeds an explicit diagnostic error message to the LLM so it can revise its strategy or terminate gracefully.
 
-**Status:** Planned; implement only after a concrete cross-project use case validates the shared contract.
+### 9.5 Bounded Tool Orchestration Loop (`ToolLoopRunner`)
+- Orchestrates multi-turn interactions between `LLMService` and `ToolExecutor`.
+- Enforces strict execution bounds:
+  - `max_iterations`: Step limit (default 10 iterations) terminating with `ToolLoopStatus.MAX_ITERATIONS_REACHED`.
+  - `deadline_monotonic`: Absolute timeout terminating with `ToolLoopStatus.DEADLINE_EXCEEDED`.
+  - `ToolBudget`: Token and cost ceilings terminating with `ToolLoopStatus.BUDGET_EXCEEDED`.
+- Terminal statuses: `COMPLETED`, `MAX_ITERATIONS_REACHED`, `DEADLINE_EXCEEDED`, `BUDGET_EXCEEDED`, `APPROVAL_REQUIRED`, `FAILED`.
+- Full auditability: `ToolLoopResult` returns complete message history, total iterations, total tool calls, and final text output.
 
 ## 10. Framework and orchestration interoperability
 

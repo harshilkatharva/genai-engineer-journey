@@ -43,3 +43,14 @@ class ObservabilityEvent(StrEnum):
     MEMORY_CONSOLIDATION_START = "memory_consolidation_start"
     MEMORY_CONSOLIDATION_SUCCESS = "memory_consolidation_success"
     MEMORY_CONSOLIDATION_FAILED = "memory_consolidation_failed"
+
+    # Tool events
+    TOOL_EXECUTION_START = "tool_execution_start"
+    TOOL_EXECUTION_SUCCESS = "tool_execution_success"
+    TOOL_EXECUTION_FAILED = "tool_execution_failed"
+    TOOL_APPROVAL_REQUIRED = "tool_approval_required"
+    TOOL_APPROVAL_DECISION = "tool_approval_decision"
+    TOOL_LOOP_DETECTED = "tool_loop_detected"
+    TOOL_LOOP_START = "tool_loop_start"
+    TOOL_LOOP_STEP = "tool_loop_step"
+    TOOL_LOOP_COMPLETED = "tool_loop_completed"

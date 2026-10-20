@@ -597,4 +597,50 @@ This document records the architectural decisions, component responsibilities, d
 - **Alternatives Considered**: Storing all extracted candidates and relying solely on post-retrieval filtering. Rejected because conversational consolidation frequently extracts repeated facts across turns, leading to index bloat and redundant embeddings.
 - **Impact**: High-quality, consolidated long-term memory store with clear reporting of created, updated, skipped, and failed items in `ConsolidationResult`.
 
+---
+
+## 2026-10-20: Tool System Architecture, Guarded Execution Engine, and Bounded Orchestration Loop
+
+### 1. Separation of Schema Definition and Execution Handlers
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/tools/base.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/tools/base.py)
+  - [`packages/genai-core/src/genai_core/models/tools_model/tool_spec.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/models/tools_model/tool_spec.py)
+  - [`packages/genai-core/src/genai_core/tools/executor.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/tools/executor.py)
+- **Decision**: Established a strict separation between declarative tool schemas (`ToolSpec` / Pydantic `args_schema`) and runtime execution handlers (`tool.run(**args_dict)`). Provided `BaseTool` and `@tool` decorator supporting both sync and async functions, auto-synthesizing Pydantic models from function type annotations or accepting explicit models. In `ToolExecutor`, argument validation runs first via `ToolSpec.parse_arguments()`; the handler is only invoked if validation succeeds.
+- **Alternatives Considered**: Coupling schema and execution into one monolithic function or letting tool handlers perform ad-hoc validation on un-validated kwargs. Rejected because separating schema from execution enables provider-independent schema serialization (OpenAI, Anthropic, Google Gemini), safe early validation failure reporting without side effects, and clean tool filtering.
+- **Impact**: Framework-independent tool definitions that can be reused across Modules 17–20 and external applications with zero coupling to agent frameworks.
+
+### 2. Thread-Safe Registry with Risk Hierarchy and Filtered Generation
+- **Location**: [`packages/genai-core/src/genai_core/tools/registry.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/tools/registry.py)
+- **Decision**: Implemented `ToolRegistry` protected by `threading.RLock`. Provided three-tier operational risk classification (`RiskLevel.READ_ONLY` < `RiskLevel.REVERSIBLE_WRITE` < `RiskLevel.IRREVERSIBLE`). Implemented `get_specs(tags=..., max_risk=..., exclude=...)` to generate provider schemas filtered dynamically for specific agent personas or risk thresholds.
+- **Alternatives Considered**: Simple Python dictionary without locking or risk filtering. Rejected because multi-threaded or multi-agent environments require safe concurrent tool lookup and dynamic tool pruning based on agent capabilities.
+- **Impact**: Safe, centralized tool cataloging with fine-grained access control and dynamic schema generation.
+
+### 3. Guarded Execution Engine, Output Protection, and Process-Level Isolation
+- **Location**: [`packages/genai-core/src/genai_core/tools/executor.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/tools/executor.py)
+- **Decision**: Implemented `ToolExecutor` managing concurrency bounds via `asyncio.Semaphore`, per-tool timeouts via `asyncio.timeout`, output string truncation with warning markers (`max_output_chars`), and full fault isolation. Uncaught handler exceptions are caught and normalized into `ToolExecutionStatus.EXECUTION_ERROR` rather than terminating the application loop. Explicitly documented that execution provides process-level isolation in Python and does not claim OS-level sandboxing, containerization, or memory virtualization.
+- **Alternatives Considered**: Claiming "sandboxed execution" or attempting naive regex/AST code sandboxing. Rejected because Python cannot securely sandbox arbitrary code without OS-level or container isolation; being transparent about process-level guarantees prevents false security assumptions.
+- **Impact**: Resilient tool execution that protects LLM context windows from blowout and prevents runaway tasks from crashing the agent runtime.
+
+### 4. Canonical Loop Detection via SHA-256 Hashing
+- **Location**: [`packages/genai-core/src/genai_core/tools/guards.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/tools/guards.py)
+- **Decision**: Implemented `LoopDetector` tracking sequential invocations via SHA-256 hashes of canonical key-sorted JSON argument representations. Emits `TOOL_LOOP_DETECTED` when identical calls repeat consecutive times (default 3), injecting diagnostic feedback into the conversation history so the LLM can correct course.
+- **Alternatives Considered**: Comparing raw string argument representations or relying solely on total step limits. Rejected because dictionary key order differences cause identical calls to appear distinct, and waiting for step limits wastes tokens and money on unproductive loops.
+- **Impact**: Early prevention of infinite tool execution loops with actionable feedback provided back to the model.
+
+### 5. Authorization Gating, Approval Persistence, and Pause/Resume Protocol
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/tools/guards.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/tools/guards.py)
+  - [`packages/genai-core/src/genai_core/tools/executor.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/tools/executor.py)
+  - [`packages/genai-core/src/genai_core/tools/loop.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/tools/loop.py)
+- **Decision**: Gated `RiskLevel.IRREVERSIBLE` tools behind human/caller authorization. Defined the `ApprovalStore` protocol for persisting approval requests and decisions, with `InMemoryApprovalStore` as reference implementation. Implemented clean pause/resume semantics in `ToolLoopRunner`: when approval is required, the loop halts, returning `ToolLoopStatus.APPROVAL_REQUIRED` with pending approval details. Calling `runner.resume()` with `ApprovalDecision` executes the approved tool (with optional modified arguments) via `bypass_approval=True`, or records rejection feedback and resumes the loop while preserving cumulative iteration and tool-call accounting.
+- **Alternatives Considered**: Blocking the async event loop with an interactive input prompt, or silently dropping risky calls. Rejected because blocking pauses the entire server process and breaks distributed/stateless workflows, while dropping calls confuses the LLM.
+- **Impact**: True human-in-the-loop governance for high-risk operations with asynchronous pause/resume across UI, CLI, or API boundaries.
+
+### 6. Bounded Orchestration Loop with Multi-Resource Budgets
+- **Location**: [`packages/genai-core/src/genai_core/tools/loop.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/tools/loop.py)
+- **Decision**: Implemented `ToolLoopRunner` binding `LLMService` and `ToolExecutor` into a bounded multi-turn loop. Governed by `ToolBudget` enforcing step limits (`max_iterations`), monotonic wall-clock deadlines (`deadline_monotonic`), and token/cost budgets.
+- **Alternatives Considered**: Unbounded while-loop or tightly coupling to a single framework's agent runner. Rejected because production agents require predictable cost controls, hard deadlines, and provider independence.
+- **Impact**: A predictable, auditable, and bounded agent execution engine returning complete message history and metadata upon completion or termination.
+
 

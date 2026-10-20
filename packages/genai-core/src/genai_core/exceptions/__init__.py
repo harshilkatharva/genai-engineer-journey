@@ -1,4 +1,10 @@
-from . import embedding_exceptions, llm_exceptions, memory_exceptions, retrieval_exceptions
+from . import (
+    embedding_exceptions,
+    llm_exceptions,
+    memory_exceptions,
+    retrieval_exceptions,
+    tool_exceptions,
+)
 from .embedding_exceptions import (
     EmbeddingDimensionError,
     EmbeddingError,
@@ -32,6 +38,16 @@ from .retrieval_exceptions import (
     UnsupportedSearchModeError,
     VectorStoreError,
 )
+from .tool_exceptions import (
+    ToolApprovalRequiredError,
+    ToolBudgetExceededError,
+    ToolError,
+    ToolExecutionError,
+    ToolLoopDetectedError,
+    ToolNotFoundError,
+    ToolTimeoutError,
+    ToolValidationError,
+)
 
 __all__ = [
     "ConfigError",
@@ -57,10 +73,19 @@ __all__ = [
     "MissingExtraDependencyError",
     "RetrievalError",
     "RetrievalTimeoutError",
+    "ToolApprovalRequiredError",
+    "ToolBudgetExceededError",
+    "ToolError",
+    "ToolExecutionError",
+    "ToolLoopDetectedError",
+    "ToolNotFoundError",
+    "ToolTimeoutError",
+    "ToolValidationError",
     "UnsupportedSearchModeError",
     "VectorStoreError",
     "embedding_exceptions",
     "llm_exceptions",
     "memory_exceptions",
     "retrieval_exceptions",
+    "tool_exceptions",
 ]

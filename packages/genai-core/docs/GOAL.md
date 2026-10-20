@@ -115,7 +115,7 @@ The implementation should proceed in validated increments. The sequence below is
 | **Phase 2 — Embedding Service & Shared Resilience** | **Completed** | Full embedding capability across Local (`sentence-transformers`), OpenAI (`text-embedding-3-small`), and Google (`text-embedding-005`), non-blocking thread execution, strict dimension validation (`EmbeddingDimensionError`), internal batch slicing with 1-to-1 order preservation, shared async resilience (`RateLimiter` dual token buckets for RPM/TPM, `RetryPolicy` with backoff/jitter/deadlines, `extract_retry_after`), honest token usage reporting, and full observability integration. |
 | **Phase 3 — Retrieval Abstractions, Hybrid Search & Re-ranking** | **Completed** | Full retrieval subsystem: Core data models (`DocumentChunk`, `RetrievalQuery`, `RetrievalResult`, `RetrievalResponse`), typed exceptions, lifecycle observability events, `VectorStoreAdapter` protocol, zero-dependency `InMemoryVectorStore`, production-grade `PGVectorStoreAdapter` (parameterized `<=>` cosine distance, full-text search via `websearch_to_tsquery` and `ts_rank_cd`, JSONB containment filtering, batch upsert, delete), `RetrievalService` (dense, sparse, and concurrent hybrid search via score fusion), and optional neural re-ranking via `CrossEncoderReranker`. |
 | **Phase 4 — Memory Subsystem & Automatic Knowledge Consolidation** | **Completed** | Unified short-term (turns, pinned goals, token budget pruning), long-term (semantic vector search, recency decay, supersession, purge), and episodic memory (canonical SHA-256 fingerprinting, idempotency checks), pluggable in-memory and PostgreSQL storage adapters, plus automatic knowledge consolidation (dual context input via `session_id` or `WorkingContext`, LLM-driven fact extraction, sensitive data scrubbing, multi-tier deduplication, and structured `ConsolidationResult`). |
-| **Phase 5 — Tool Calling Interoperability** | Planned | Higher-level dispatch and orchestration boundaries. |
+| **Phase 5 — Tool System Architecture & Bounded Orchestration** | **Completed** | Complete tool subsystem: `BaseTool`, `@tool` decorator, `ToolRegistry` with risk and tag filtering, `ToolExecutor` (concurrency semaphore, per-tool timeout, output size truncation, process-level isolation notice, error normalization), `LoopDetector` (canonical hashing), `ApprovalStore` protocol, `InMemoryApprovalStore`, and bounded `ToolLoopRunner` (step caps, deadline, token/cost budgets, pause on approval required, resume on decision). |
 
 ---
 
@@ -223,9 +223,19 @@ Implemented unified memory architecture supporting three distinct memory types w
 
 **Outcome:** Completed. Fully validated with 176 unit tests (100% pass rate), 4 dedicated live PostgreSQL integration tests verifying persistence, vector distance, recency scoring, and user isolation, and passing all pre-push checks (`ruff`, `mypy`).
 
-### Phase 5 — Tool/function-calling primitives and interoperability
+### Phase 5 — Tool system architecture & bounded orchestration
 
-Where useful across multiple projects, normalize tool definitions, tool-call requests, arguments, results, and errors. Keep the decision to execute a tool—and authorization to do so—under the consuming application's control. Add framework integration only when it solves a demonstrated interoperability problem.
+Implemented a production-grade, framework-independent tool execution subsystem in `genai_core.tools`:
+- **Definitions & Schemas**: `BaseTool` abstract base class and `@tool` decorator supporting both sync and async functions, automatic Pydantic schema generation from type hints, or explicit `args_schema`. Clean separation between declarative tool schema (`ToolSpec`) and execution logic (`run`).
+- **Catalog & Discovery (`ToolRegistry`)**: Thread-safe registry (`RLock`) supporting dynamic tool registration, function wrapping, and query filtering by operational risk level, discovery tags, and exclusion lists.
+- **Execution Engine (`ToolExecutor`)**: Isolated tool execution supporting sync functions in thread pools, concurrency limits via `asyncio.Semaphore`, per-tool execution timeouts via `asyncio.timeout`, output size truncation (`max_output_chars`) to prevent context window blowout, and complete error normalization (`VALIDATION_ERROR`, `EXECUTION_ERROR`, `TIMEOUT`). Includes explicit process-level boundary documentation without false claims of OS-level sandboxing.
+- **Safety Policies & Guards (`genai_core.tools.guards`)**:
+  - `LoopDetector`: Deterministic canonical SHA-256 argument hashing to prevent runaway or cyclical identical tool calls.
+  - `ApprovalStore` protocol and reference `InMemoryApprovalStore` for persisting authorization state.
+  - Risk categorization (`RiskLevel.READ_ONLY`, `REVERSIBLE_WRITE`, `IRREVERSIBLE`) with authorization checks gating high-risk operations.
+- **Bounded Orchestration Loop (`ToolLoopRunner`)**: Multi-turn bounded tool execution coordinating `LLMService` and `ToolExecutor` with configurable step caps (`max_iterations`), timeouts, deadlines, and token budgets (`ToolBudget`), with full support for pausing on required approval and resuming with human-in-the-loop decisions.
+
+**Outcome:** Completed. Fully validated with 33 unit and integration tests (208 total unit tests across package, 100% pass rate) and all pre-push checks (`ruff`, `mypy`).
 
 ### Phase 6 — Further shared capabilities
 
