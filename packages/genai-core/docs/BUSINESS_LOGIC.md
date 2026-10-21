@@ -699,8 +699,31 @@ Before adding a component or promoting existing project code into `genai-core`, 
 
 Implement the smallest contract that addresses the use case. Keep the component local if its reusable boundary is not yet clear. Update this document when the behavior changes so that it describes the actual supported contract, not only the original intention.
 
-## 21. Relationship to `GOAL.md`
+## 21. Evaluation Subsystem Business Rules
+- **Contract Definition**:
+  - `EvalSample`: Golden test case with `query_id`, `query`, optional `expected_evidence` (`required` list, `any_of` alternative lists), optional `expected_answer` (`reference`, `acceptable_alternatives`, `disallowed_content`), and optional `expected_tools` list.
+  - `EvalOutput`: Actual execution output containing `query_id`, `answer`, `retrieved_chunk_ids`, `selected_tools`, `tool_calls`, `structured_payload`, and `latency_ms`.
+  - `MetricResult`: Evaluation result with `metric_name`, `score` (0.0 to 1.0), `passed` (boolean), `reason`, and optional diagnostic `details`.
+- **Retrieval Metrics Rules**:
+  - `EvidenceRecallMetric`: All `required` chunks must be retrieved. For each group in `any_of`, at least one chunk must be retrieved. Score is `(satisfied_required + satisfied_any_of) / total_constraints`.
+  - `EvidencePrecisionMetric`: Fraction of retrieved chunks that are relevant (`relevant_retrieved / total_retrieved`).
+  - `HitRateMetric`: Binary 1.0 if any required evidence chunk was retrieved, 0.0 otherwise.
+  - `ReciprocalRankMetric` (MRR): `1.0 / rank` of the first matching relevant chunk in `retrieved_chunk_ids` (1-indexed), 0.0 if not found.
+- **Text & Answer Metrics Rules**:
+  - `ExactMatchMetric`: Compares normalized generated answer against reference and acceptable alternatives.
+  - `normalize_text()`: Standardizes whitespace, removes casing, converts curly quotes to ASCII quotes, and converts em/en dashes to hyphens.
+- **Agent Metrics Rules**:
+  - `ToolSelectionMetric`: Checks if expected tools were invoked. If `match_order=True`, verifies exact sequential order.
+  - `JSONComplianceMetric`: Validates if string output parses as valid JSON, and optionally validates against a Pydantic `target_schema`.
+- **Model-Graded Judge Rules**:
+  - Evaluators (`FaithfulnessEvaluator`, `AnswerRelevanceEvaluator`, `SemanticCorrectnessEvaluator`) use `LLMService.complete_structure` with `JudgeVerdict` response schema.
+  - `JudgeVerdict`: Must return `score` (float 0.0 to 1.0), `passed` (boolean based on threshold), and `reasoning` (objective justification).
+- **Regression Detection Rules**:
+  - `EvalReport.compare(baseline, candidate, tolerance=0.0)` computes `EvalDiff`. A metric is flagged as regressed if `candidate.mean_score < baseline.mean_score - tolerance`.
+
+## 22. Relationship to `GOAL.md`
 
 `GOAL.md` answers why `genai-core` exists, what outcomes matter, what its boundaries are, and how it should evolve.
 
 This document converts that intent into behavioral expectations: who owns each responsibility, how requests and failures should behave, how components compose, and which future capabilities are not yet commitments. If implementation reveals a conflict between the documents, resolve and document the design decision rather than allowing the two specifications to drift.
+

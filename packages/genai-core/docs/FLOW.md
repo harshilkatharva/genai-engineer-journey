@@ -842,4 +842,62 @@ The behavior of `genai-core` is verified through automated unit tests organized 
   - **Embedding integration tests (`tests/integration/embedding/`)**: [`test_local_embedding_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/embedding/test_local_embedding_integration.py), [`test_google_embedding_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/embedding/test_google_embedding_integration.py), [`test_openai_embedding_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/embedding/test_openai_embedding_integration.py).
   - **Retrieval integration tests (`tests/integration/retrieval/`)**: [`test_cross_encoder_reranker_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/retrieval/test_cross_encoder_reranker_integration.py), [`test_pgvector_store_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/retrieval/test_pgvector_store_integration.py), [`test_hybrid_retrieval_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/retrieval/test_hybrid_retrieval_integration.py).
   - **Observability integration tests (`tests/integration/observability/`)**: [`test_observability_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/observability/test_observability_integration.py).
+- **Evaluation integration tests (`tests/integration/evaluation/`)**: [`test_evaluation_integration.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/tests/integration/evaluation/test_evaluation_integration.py) validates the complete end-to-end evaluation pipeline with dataset loading, deterministic metrics, and runner summary generation.
+
+---
+
+## 10. Evaluation Subsystem Execution Flow
+
+The evaluation subsystem provides automated benchmarking and regression detection across retrieval, generation, and agentic workflows.
+
+### 10.1 Live Target Evaluation Flow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Caller as Client / CI Runner
+    participant Runner as EvalRunner
+    participant Sem as asyncio.Semaphore
+    participant Rate as RateLimiter (Optional)
+    participant Target as Target Function / Pipeline
+    participant Metrics as Metric[] / Evaluators
+    participant Report as EvalReport
+
+    Caller->>Runner: run(dataset, target_fn)
+    Runner->>Sem: acquire concurrency slot
+    Runner->>Rate: acquire() token / rpm check
+    Runner->>Target: target_fn(sample)
+    Target-->>Runner: EvalOutput(answer, retrieved_ids, tool_calls, ...)
+    loop For Each Metric
+        Runner->>Metrics: evaluate(sample, output)
+        Metrics-->>Runner: MetricResult(metric_name, score, passed, reason)
+    end
+    Runner->>Sem: release concurrency slot
+    Runner->>Report: EvalReport.from_results(results, dataset_name)
+    Report-->>Caller: EvalReport (summary, pass_rate, to_markdown, compare)
+```
+
+### 10.2 Offline Trace Log Evaluation Flow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Caller as Audit Script / CI
+    participant Runner as EvalRunner
+    participant Disk as Log / JSONL Files
+    participant Metrics as Metric[] / Evaluators
+    participant Report as EvalReport
+
+    Caller->>Runner: evaluate_traces(dataset, trace_path)
+    Runner->>Disk: asyncio.to_thread(_read_trace_file)
+    Disk-->>Runner: trace records (parsed JSON dicts)
+    Runner->>Runner: Match traces to EvalSample by query_id / query text
+    loop For Each Matched Sample
+        Runner->>Metrics: evaluate(sample, extracted_eval_output)
+        Metrics-->>Runner: MetricResult
+    end
+    Runner->>Report: EvalReport.from_results(results)
+    Report-->>Caller: EvalReport
+```
+
 

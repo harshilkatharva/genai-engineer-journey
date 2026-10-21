@@ -698,5 +698,36 @@ This document records the architectural decisions, component responsibilities, d
 - **Alternatives Considered**: Global single-logger tracking. Rejected because multi-logger enterprise applications require isolated handler lifecycle management.
 - **Impact**: Clean error boundary propagation and safe telemetry teardowns.
 
+---
+
+## 2026-10-21: Reusable Evaluation Pipeline Subsystem and Model Architecture
+
+### 1. Architectural Pattern: Protocol-Based Metrics and Decoupled Evaluators
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/evaluation/metrics/base.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/evaluation/metrics/base.py)
+  - [`packages/genai-core/src/genai_core/evaluation/metrics/retrieval.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/evaluation/metrics/retrieval.py)
+  - [`packages/genai-core/src/genai_core/evaluation/metrics/text.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/evaluation/metrics/text.py)
+  - [`packages/genai-core/src/genai_core/evaluation/metrics/agent.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/evaluation/metrics/agent.py)
+  - [`packages/genai-core/src/genai_core/evaluation/evaluators/`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/evaluation/evaluators/)
+- **Decision**: Defined a unified `@runtime_checkable` `Metric` protocol (`async def evaluate(sample: EvalSample, output: EvalOutput) -> MetricResult`). Implemented deterministic metrics (evidence recall/precision, MRR, hit rate, text exact match/accuracy, tool selection, JSON compliance) and model-graded evaluators (faithfulness, answer relevance, semantic correctness) against this single interface.
+- **Alternatives Considered**: Creating separate runner loops for RAG vs agents vs LLM judges. Rejected because downstream pipelines require a single, composable evaluation runner across multi-step systems.
+- **Impact**: Any custom metric or evaluator implementing `evaluate()` can be passed directly to `EvalRunner`.
+
+### 2. Pydantic Model Placement Conforming to Package Patterns
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/models/evaluation_model/`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/models/evaluation_model/)
+  - [`packages/genai-core/src/genai_core/models/__init__.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/models/__init__.py)
+  - [`packages/genai-core/src/genai_core/evaluation/`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/evaluation/)
+- **Decision**: Placed all evaluation Pydantic models (`EvalSample`, `ExpectedEvidence`, `ExpectedAnswer`, `EvalOutput`, `MetricResult`, `JudgeVerdict`, `EvalReport`, `SampleEvalResult`, `MetricSummary`, `EvalDiff`) strictly in `src/genai_core/models/evaluation_model/`, following the existing package architecture pattern (`models/llm_model/`, `models/embedding_model/`, `models/retrieval_model/`, `models/memory_model/`, `models/tools_model/`). Eliminated all model definitions and shim files (`judge_models.py`, `models.py`, `report.py`) from `src/genai_core/evaluation/`.
+- **Alternatives Considered**: Keeping models co-located inside `evaluation/` or leaving shim re-export modules. Rejected to preserve strict repository architectural consistency across all subsystems and prevent circular imports.
+- **Impact**: Clean directory structure with all data contracts centralized in `models/` and re-exported through top-level `genai_core`.
+
+### 3. Concurrency Bounds, Non-Blocking IO, and Live/Offline Dual Execution
+- **Location**: [`packages/genai-core/src/genai_core/evaluation/runner.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/evaluation/runner.py)
+- **Decision**: `EvalRunner` orchestrates evaluation with `asyncio.Semaphore` bounded concurrency and optional `RateLimiter` integration. Supports both live target execution (`runner.run(dataset, target_fn)`) and offline trace log analysis (`runner.evaluate_traces(dataset, trace_path)`), using `asyncio.to_thread` for non-blocking file IO.
+- **Alternatives Considered**: Synchronous serial evaluation or relying exclusively on live target functions. Rejected because production evaluations often evaluate existing log traces offline or require rate-limited parallel runs to prevent LLM quota exhaustion.
+- **Impact**: High-throughput, non-blocking evaluation supporting both live CI runs and historical audit traces.
+
+
 
 

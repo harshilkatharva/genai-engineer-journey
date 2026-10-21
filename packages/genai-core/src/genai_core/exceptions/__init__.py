@@ -1,5 +1,6 @@
 from . import (
     embedding_exceptions,
+    evaluation_exceptions,
     llm_exceptions,
     memory_exceptions,
     retrieval_exceptions,
@@ -12,6 +13,12 @@ from .embedding_exceptions import (
     EmbeddingRateLimitError,
     EmbeddingTimeoutError,
     MissingExtraDependencyError,
+)
+from .evaluation_exceptions import (
+    EvaluationDatasetError,
+    EvaluationError,
+    JudgeEvaluationError,
+    MetricComputationError,
 )
 from .llm_exceptions import (
     ConfigError,
@@ -57,8 +64,11 @@ __all__ = [
     "EmbeddingProviderError",
     "EmbeddingRateLimitError",
     "EmbeddingTimeoutError",
+    "EvaluationDatasetError",
+    "EvaluationError",
     "GenAIMemoryError",
     "IncompatibleEmbeddingError",
+    "JudgeEvaluationError",
     "LLMAuthenticationError",
     "LLMConnectionError",
     "LLMContentFilterError",
@@ -72,6 +82,7 @@ __all__ = [
     "MemoryNotFoundError",
     "MemoryStorageError",
     "MemoryValidationError",
+    "MetricComputationError",
     "MissingExtraDependencyError",
     "RetrievalError",
     "RetrievalTimeoutError",
@@ -86,6 +97,7 @@ __all__ = [
     "UnsupportedSearchModeError",
     "VectorStoreError",
     "embedding_exceptions",
+    "evaluation_exceptions",
     "llm_exceptions",
     "memory_exceptions",
     "retrieval_exceptions",
