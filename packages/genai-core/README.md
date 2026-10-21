@@ -108,6 +108,24 @@ Production-grade, modular, and resilient Python core package providing unified G
 - **Context tracking**: Async-safe request correlation (`set_request_id`, `observability_context`).
 - **Fault-tolerant dispatch**: `safe_log` prevents logging errors from interrupting primary GenAI workflows.
 
+### 8. Reusable Evaluation Subsystem (`genai_core.evaluation`)
+- **Protocol-driven evaluation metrics (`Metric`)**:
+  - Deterministic retrieval metrics: `EvidenceRecallMetric` (with `required` and `any_of` groups), `EvidencePrecisionMetric`, `HitRateMetric`, `ReciprocalRankMetric` (MRR).
+  - Deterministic text metrics: `ExactMatchMetric`, `AnswerAccuracyMetric` with unicode-normalized comparison (`normalize_text`).
+  - Deterministic agent metrics: `ToolSelectionMetric` (ordered or set-based), `JSONComplianceMetric` (with optional Pydantic schema validation).
+- **Model-graded evaluators (LLM-as-a-Judge)**:
+  - `FaithfulnessEvaluator`: Hallucination detection against retrieved context.
+  - `AnswerRelevanceEvaluator`: Assessment of answer completeness and relevance to the question.
+  - `SemanticCorrectnessEvaluator`: Semantic equivalence evaluation against ground-truth references.
+  - Type-safe structured output enforcement via `JudgeVerdict`.
+- **High-throughput bounded runner (`EvalRunner`)**:
+  - Concurrency control via `asyncio.Semaphore` and optional `RateLimiter` integration.
+  - Dual execution modes: Live target pipeline execution (`run()`) and offline trace log auditing (`evaluate_traces()`).
+- **Reporting & regression diffing (`EvalReport`)**:
+  - Aggregate statistics (mean, min, max, pass rate) per metric and overall.
+  - Markdown report generation (`to_markdown()`) and JSON export (`to_json()`, `save()`).
+  - Automated regression detection (`EvalReport.compare(baseline, candidate, tolerance)`).
+
 ---
 
 ## Installation
