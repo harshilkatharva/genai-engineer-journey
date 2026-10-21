@@ -3,6 +3,7 @@ from __future__ import annotations
 import contextlib
 import logging
 import sys
+from collections import defaultdict
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from typing import Any
@@ -12,7 +13,7 @@ from .formatters import JsonFormatter, TextFormatter
 from .redactor import RedactingFilter
 
 # Track managed handlers to allow clean reconfiguration and shutdown
-_managed_handlers: list[logging.Handler] = []
+_managed_handlers: dict[str, list[logging.Handler]] = defaultdict(list)
 
 
 def _parse_level(level: str | int) -> int:
@@ -46,7 +47,7 @@ def configure_observability(config: ObservabilityConfig | None = None) -> loggin
     cfg = config or ObservabilityConfig()
     target_logger = logging.getLogger(cfg.logger_name)
 
-    # Clean up any previously managed handlers
+    # Clean up any previously managed handlers for this specific logger
     close_observability(target_logger.name)
 
     target_logger.setLevel(_parse_level(cfg.log_level))
@@ -86,7 +87,7 @@ def configure_observability(config: ObservabilityConfig | None = None) -> loggin
         if redacting_filter:
             file_handler.addFilter(redacting_filter)
         target_logger.addHandler(file_handler)
-        _managed_handlers.append(file_handler)
+        _managed_handlers[target_logger.name].append(file_handler)
 
     # Configure console handler if requested
     if cfg.console:
@@ -95,23 +96,22 @@ def configure_observability(config: ObservabilityConfig | None = None) -> loggin
         if redacting_filter:
             console_handler.addFilter(redacting_filter)
         target_logger.addHandler(console_handler)
-        _managed_handlers.append(console_handler)
+        _managed_handlers[target_logger.name].append(console_handler)
 
     return target_logger
 
 
 def close_observability(logger_name: str = "genai_core") -> None:
-    """Close and detach all managed handlers, restoring a clean state."""
+    """Close and detach all managed handlers for the given logger, restoring a clean state."""
     target_logger = logging.getLogger(logger_name)
 
-    for handler in _managed_handlers:
+    handlers = _managed_handlers.pop(logger_name, [])
+    for handler in handlers:
         with contextlib.suppress(Exception):
             handler.flush()
             handler.close()
         if handler in target_logger.handlers:
             target_logger.removeHandler(handler)
-
-    _managed_handlers.clear()
 
     # Retain NullHandler if no handlers exist
     if not target_logger.handlers:

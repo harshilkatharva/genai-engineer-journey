@@ -255,6 +255,40 @@ async def test_pgvector_adapter_upsert_validation_and_execution() -> None:
 
 
 @pytest.mark.asyncio
+async def test_pgvector_adapter_upsert_with_tenant_id() -> None:
+    conn = _create_mock_connection(rowcount=2)
+    adapter = PGVectorStoreAdapter(
+        dimensions=3,
+        connection=conn,
+        tenant_id_column="tenant_id",
+    )
+
+    valid_chunks = [
+        DocumentChunk(
+            id="c1",
+            content="Text 1",
+            embedding=[1.0, 0.0, 0.0],
+            metadata={"tenant_id": "tenant-abc", "a": 1},
+        ),
+        DocumentChunk(
+            id="c2",
+            content="Text 2",
+            embedding=[0.0, 1.0, 0.0],
+            metadata={"tenant_id": "tenant-xyz", "b": 2},
+        ),
+    ]
+    count = await adapter.upsert(valid_chunks)
+    assert count == 2
+
+    cur = await conn.cursor().__aenter__()
+    assert cur.executemany.called
+    sql_text, rows = cur.executemany.call_args[0]
+    assert "tenant_id" in sql_text
+    assert rows[0][4] == "tenant-abc"
+    assert rows[1][4] == "tenant-xyz"
+
+
+@pytest.mark.asyncio
 async def test_pgvector_adapter_delete_execution() -> None:
     conn = _create_mock_connection(rowcount=3)
     adapter = PGVectorStoreAdapter(dimensions=3, connection=conn)

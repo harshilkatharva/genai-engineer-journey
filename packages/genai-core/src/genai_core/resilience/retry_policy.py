@@ -10,7 +10,6 @@ from typing import Any
 
 from ..exceptions import (
     EmbeddingDimensionError,
-    EmbeddingTimeoutError,
     IncompatibleEmbeddingError,
     MissingExtraDependencyError,
     UnsupportedSearchModeError,
@@ -135,6 +134,7 @@ async def execute_with_retry[T](
     *,
     deadline: float | None = None,
     on_retry: Callable[[int, Exception, float], None] | None = None,
+    timeout_exception_class: type[Exception] = TimeoutError,
 ) -> T:
     """Execute an async coroutine with retries, exponential backoff, jitter, and deadline."""
     effective_deadline = (
@@ -146,7 +146,7 @@ async def execute_with_retry[T](
         now = time.monotonic()
         remaining_deadline = effective_deadline - now
         if remaining_deadline <= 0:
-            raise EmbeddingTimeoutError("Embedding request deadline exceeded.")
+            raise timeout_exception_class("Request deadline exceeded.")
 
         attempt_timeout = min(remaining_deadline, policy.timeout_seconds)
 
@@ -154,8 +154,8 @@ async def execute_with_retry[T](
             return await asyncio.wait_for(operation(), timeout=attempt_timeout)
         except TimeoutError as err:
             if attempt >= policy.max_retries:
-                raise EmbeddingTimeoutError(
-                    f"Embedding request attempt timed out after {attempt_timeout:.1f}s."
+                raise timeout_exception_class(
+                    f"Request attempt timed out after {attempt_timeout:.1f}s."
                 ) from err
 
             attempt += 1
@@ -167,7 +167,7 @@ async def execute_with_retry[T](
                 backoff += random.uniform(0, 0.5 * backoff)
 
             if time.monotonic() + backoff >= effective_deadline:
-                raise EmbeddingTimeoutError(
+                raise timeout_exception_class(
                     "Overall deadline exceeded before retry backoff completed."
                 ) from err
 
@@ -193,7 +193,7 @@ async def execute_with_retry[T](
                     backoff += random.uniform(0, 0.5 * backoff)
 
             if time.monotonic() + backoff >= effective_deadline:
-                raise EmbeddingTimeoutError(
+                raise timeout_exception_class(
                     "Overall deadline exceeded before retry backoff completed."
                 ) from err
 

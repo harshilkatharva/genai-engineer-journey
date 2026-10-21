@@ -95,9 +95,23 @@ class LLMService:
 
         try:
             if request.response_schema is not None:
-                prompt = request.prompt or (
-                    request.messages[-1].content if request.messages else ""
-                )
+                if request.prompt:
+                    prompt = request.prompt
+                elif request.messages:
+                    system_parts = [m.content for m in request.messages if m.role == "system"]
+                    other_messages = [m for m in request.messages if m.role != "system"]
+                    parts: list[str] = []
+                    if system_parts:
+                        parts.append("\n\n".join(system_parts))
+                    if len(other_messages) == 1:
+                        parts.append(other_messages[0].content)
+                    elif len(other_messages) > 1:
+                        parts.append(
+                            "\n".join(f"{m.role.capitalize()}: {m.content}" for m in other_messages)
+                        )
+                    prompt = "\n\n".join(parts) if parts else ""
+                else:
+                    prompt = ""
                 response = await provider.complete_structure(
                     prompt=prompt, response_schema=request.response_schema
                 )

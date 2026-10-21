@@ -7,12 +7,14 @@ import pytest
 
 from genai_core.models import (
     ChatMessage,
+    LLMError,
     LLMManagerResponse,
     ToolCall,
 )
 from genai_core.services.llm_services import LLMService
 from genai_core.tools import (
     ApprovalDecision,
+    ApprovalRequest,
     InMemoryApprovalStore,
     RiskLevel,
     ToolBudget,
@@ -32,11 +34,16 @@ def sample_executor():
     def add(a: int, b: int) -> int:
         return a + b
 
+    @tool(name="echo")
+    def echo(message: str) -> str:
+        return message
+
     @tool(name="drop_db", risk_level=RiskLevel.IRREVERSIBLE)
     def drop_db(db_name: str) -> str:
         return f"Database {db_name} dropped"
 
     registry.register(add)
+    registry.register(echo)
     registry.register(drop_db)
 
     store = InMemoryApprovalStore()
@@ -277,3 +284,98 @@ async def test_tool_loop_approval_rejection_resume(sample_executor: ToolExecutor
     tool_msgs = [m for m in resume_result.messages if m.role == "tool"]
     assert len(tool_msgs) == 1
     assert "Production drops are prohibited" in tool_msgs[0].content
+
+
+@pytest.mark.asyncio
+async def test_tool_loop_llm_provider_error_fails(sample_executor: ToolExecutor):
+    mock_llm = AsyncMock(spec=LLMService)
+    mock_llm.complete_tool.return_value = LLMManagerResponse(
+        error=LLMError(provider="anthropic", code="auth_error", message="Invalid API key")
+    )
+    runner = ToolLoopRunner(llm_service=mock_llm, executor=sample_executor)
+    res = await runner.run([ChatMessage(role="user", content="hello")])
+
+    assert res.status == ToolLoopStatus.FAILED
+    assert res.final_text is None
+    assert "auth_error: Invalid API key" in (res.error_message or "")
+
+
+@pytest.mark.asyncio
+async def test_tool_loop_approval_checked_once():
+    check_count = 0
+
+    async def custom_checker(request: ApprovalRequest) -> bool:
+        nonlocal check_count
+        check_count += 1
+        return True
+
+    registry = ToolRegistry()
+
+    @tool(name="risky_op", risk_level=RiskLevel.IRREVERSIBLE)
+    def risky_op(x: int) -> int:
+        return x * 2
+
+    registry.register(risky_op)
+    store = InMemoryApprovalStore()
+    executor = ToolExecutor(
+        registry=registry,
+        approval_store=store,
+        approval_checker=custom_checker,
+        require_approval_for=[RiskLevel.IRREVERSIBLE],
+    )
+
+    mock_llm = AsyncMock(spec=LLMService)
+    turn1 = LLMManagerResponse(tool_calls=[ToolCall(id="c1", name="risky_op", arguments={"x": 5})])
+    turn2 = LLMManagerResponse(text="Done: 10", tool_calls=[])
+    mock_llm.complete_tool.side_effect = [turn1, turn2]
+
+    runner = ToolLoopRunner(llm_service=mock_llm, executor=executor)
+    result = await runner.run([ChatMessage(role="user", content="run risky")])
+
+    assert result.status == ToolLoopStatus.COMPLETED
+    assert result.final_text == "Done: 10"
+    assert check_count == 1  # Verified: checked exactly once, no double check
+
+
+@pytest.mark.asyncio
+async def test_tool_loop_parallel_tool_calls_preserved_across_approval(
+    sample_executor: ToolExecutor,
+):
+    mock_llm = AsyncMock(spec=LLMService)
+    # Turn 1 emits parallel calls: drop_db (irreversible) and echo (read-only)
+    turn1 = LLMManagerResponse(
+        tool_calls=[
+            ToolCall(id="call_drop", name="drop_db", arguments={"db_name": "staging"}),
+            ToolCall(id="call_echo", name="echo", arguments={"message": "parallel executed"}),
+        ]
+    )
+    turn2 = LLMManagerResponse(
+        text="Staging dropped and echo finished.",
+        tool_calls=[],
+    )
+    mock_llm.complete_tool.side_effect = [turn1, turn2]
+
+    runner = ToolLoopRunner(llm_service=mock_llm, executor=sample_executor)
+    pause_result = await runner.run([ChatMessage(role="user", content="Do tasks")])
+
+    assert pause_result.status == ToolLoopStatus.APPROVAL_REQUIRED
+    assert pause_result.pending_approval is not None
+    assert pause_result.pending_approval.tool_name == "drop_db"
+    assert len(pause_result.remaining_tool_calls) == 1
+    assert pause_result.remaining_tool_calls[0].name == "echo"
+
+    # Resume the loop
+    decision = ApprovalDecision(approved=True, reason="Approved for staging")
+    resume_result = await runner.resume(
+        decision=decision,
+        request=pause_result.pending_approval,
+        messages=pause_result.messages,
+        remaining_tool_calls=pause_result.remaining_tool_calls,
+    )
+
+    assert resume_result.status == ToolLoopStatus.COMPLETED
+    assert resume_result.final_text == "Staging dropped and echo finished."
+    tool_msgs = [m for m in resume_result.messages if m.role == "tool"]
+    assert len(tool_msgs) == 2
+    assert "Database staging dropped" in tool_msgs[0].content
+    assert "parallel executed" in tool_msgs[1].content

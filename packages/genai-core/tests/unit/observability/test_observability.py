@@ -423,3 +423,19 @@ async def test_llm_service_stream_observability(tmp_path: Path) -> None:
     assert start_ev["provider"] == "google"
     assert success_ev["provider"] == "google"
     assert "latency_ms" in success_ev
+
+
+def test_close_observability_selective_logger() -> None:
+    logger_a = configure_observability(ObservabilityConfig(logger_name="logger_a", console=True))
+    logger_b = configure_observability(ObservabilityConfig(logger_name="logger_b", console=True))
+    assert len(logger_a.handlers) > 0
+    assert len(logger_b.handlers) > 0
+
+    close_observability("logger_a")
+    assert len(logger_a.handlers) == 1
+    assert isinstance(logger_a.handlers[0], logging.NullHandler)
+    assert any(not isinstance(h, logging.NullHandler) for h in logger_b.handlers)
+
+    close_observability("logger_b")
+    assert len(logger_b.handlers) == 1
+    assert isinstance(logger_b.handlers[0], logging.NullHandler)

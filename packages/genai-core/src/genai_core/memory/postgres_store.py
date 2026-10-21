@@ -95,11 +95,11 @@ class PostgresMemoryStore(MemoryStorageAdapter):
         self.schema = _validate_identifier(schema, "schema")
         self.table_prefix = _validate_identifier(table_prefix, "table_prefix")
 
-        self.short_term_messages_table = f"{self.table_prefix}st_messages"
-        self.short_term_goals_table = f"{self.table_prefix}st_goals"
-        self.short_term_sessions_table = f"{self.table_prefix}st_sessions"
-        self.long_term_table = f"{self.table_prefix}lt_records"
-        self.episodic_table = f"{self.table_prefix}ep_episodes"
+        self.short_term_messages_table = f"{self.schema}.{self.table_prefix}st_messages"
+        self.short_term_goals_table = f"{self.schema}.{self.table_prefix}st_goals"
+        self.short_term_sessions_table = f"{self.schema}.{self.table_prefix}st_sessions"
+        self.long_term_table = f"{self.schema}.{self.table_prefix}lt_records"
+        self.episodic_table = f"{self.schema}.{self.table_prefix}ep_episodes"
 
         self._connection = connection
         self._connection_pool = connection_pool
@@ -134,6 +134,7 @@ class PostgresMemoryStore(MemoryStorageAdapter):
         """Create required vector extension, tables, and indexes."""
         stmts = [
             "CREATE EXTENSION IF NOT EXISTS vector;",
+            f"CREATE SCHEMA IF NOT EXISTS {self.schema};",
             f"""
             CREATE TABLE IF NOT EXISTS {self.short_term_sessions_table} (
                 user_id text NOT NULL,
@@ -156,7 +157,7 @@ class PostgresMemoryStore(MemoryStorageAdapter):
             );
             """,
             f"""
-            CREATE INDEX IF NOT EXISTS {self.short_term_messages_table}_idx
+            CREATE INDEX IF NOT EXISTS {self.table_prefix}st_messages_idx
                 ON {self.short_term_messages_table} (user_id, session_id, created_at ASC);
             """,
             f"""
@@ -170,7 +171,7 @@ class PostgresMemoryStore(MemoryStorageAdapter):
             );
             """,
             f"""
-            CREATE INDEX IF NOT EXISTS {self.short_term_goals_table}_idx
+            CREATE INDEX IF NOT EXISTS {self.table_prefix}st_goals_idx
                 ON {self.short_term_goals_table} (user_id, session_id, pinned_at ASC);
             """,
             f"""
@@ -190,7 +191,7 @@ class PostgresMemoryStore(MemoryStorageAdapter):
             );
             """,
             f"""
-            CREATE INDEX IF NOT EXISTS {self.long_term_table}_user_idx
+            CREATE INDEX IF NOT EXISTS {self.table_prefix}lt_records_user_idx
                 ON {self.long_term_table} (user_id, created_at DESC);
             """,
             f"""
@@ -209,11 +210,11 @@ class PostgresMemoryStore(MemoryStorageAdapter):
             );
             """,
             f"""
-            CREATE INDEX IF NOT EXISTS {self.episodic_table}_lookup_idx
+            CREATE INDEX IF NOT EXISTS {self.table_prefix}ep_episodes_lookup_idx
                 ON {self.episodic_table} (user_id, action_type, parameter_hash, occurred_at DESC);
             """,
             f"""
-            CREATE INDEX IF NOT EXISTS {self.episodic_table}_expiry_idx
+            CREATE INDEX IF NOT EXISTS {self.table_prefix}ep_episodes_expiry_idx
                 ON {self.episodic_table} (expires_at);
             """,
         ]
@@ -592,11 +593,11 @@ class PostgresMemoryStore(MemoryStorageAdapter):
                similarity,
                exp(-ln(2) * GREATEST(
                    0.0, extract(epoch FROM (now() - created_at)) / 86400.0
-               ) / %s) AS recency_score,
+               ) / GREATEST(1.0, %s)) AS recency_score,
                (0.65 * similarity)
                + (0.35 * exp(-ln(2) * GREATEST(
                    0.0, extract(epoch FROM (now() - created_at)) / 86400.0
-               ) / %s))
+               ) / GREATEST(1.0, %s)))
                - CASE WHEN eff_superseded THEN 2.0 ELSE 0.0 END AS rank_score
         FROM scored
         WHERE (%s OR NOT eff_superseded)
@@ -604,6 +605,7 @@ class PostgresMemoryStore(MemoryStorageAdapter):
         ORDER BY rank_score DESC, created_at DESC
         LIMIT %s
         """
+        effective_half_life = max(1.0, float(half_life_days))
         async with self._connection_context() as conn, conn.cursor() as cur:
             await cur.execute(
                 query,
@@ -614,8 +616,8 @@ class PostgresMemoryStore(MemoryStorageAdapter):
                     cat_str,
                     vector_val,
                     candidate_limit,
-                    half_life_days,
-                    half_life_days,
+                    effective_half_life,
+                    effective_half_life,
                     include_superseded,
                     similarity_threshold,
                     top_k,

@@ -175,11 +175,43 @@ class OpenAIProvider(LLMProvider):
         if self.temperature is not None:
             request_options["temperature"] = self.temperature
 
+        input_items: list[dict[str, Any]] = []
+        for message in messages:
+            if message.role == "tool":
+                input_items.append(
+                    {
+                        "type": "function_call_output",
+                        "call_id": message.tool_call_id or "",
+                        "output": message.content,
+                    }
+                )
+            elif message.role == "assistant":
+                if message.content:
+                    input_items.append({"role": "assistant", "content": message.content})
+                for tc in message.tool_calls:
+                    args_str = (
+                        json.dumps(tc.arguments)
+                        if isinstance(tc.arguments, dict)
+                        else str(tc.arguments)
+                    )
+                    input_items.append(
+                        {
+                            "type": "function_call",
+                            "call_id": tc.id,
+                            "name": tc.name,
+                            "arguments": args_str,
+                        }
+                    )
+                if not message.content and not message.tool_calls:
+                    input_items.append({"role": "assistant", "content": ""})
+            else:
+                input_items.append({"role": message.role, "content": message.content})
+
         response = await self.client.responses.create(
             model=self.model,
             input=cast(
                 ResponseInputParam,
-                [message.model_dump(exclude_none=True) for message in messages],
+                input_items,
             ),
             **cast(Any, request_options),
         )

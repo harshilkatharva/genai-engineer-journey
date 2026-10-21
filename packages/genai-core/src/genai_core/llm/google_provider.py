@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import inspect
 import json
 import time
+import uuid
 from collections.abc import AsyncIterator
+from typing import Any
 
 from google import genai
 from google.genai import types
@@ -32,7 +35,13 @@ class GoogleProvider(LLMProvider):
             else "gemini-3.5-flash-lite"
         )
         self.temperature = (
-            temperature if temperature is not None else (settings.default_llm_temperature or 0.2)
+            temperature
+            if temperature is not None
+            else (
+                settings.default_llm_temperature
+                if settings.default_llm_temperature is not None
+                else 0.2
+            )
         )
 
     async def complete_structure(
@@ -183,9 +192,30 @@ class GoogleProvider(LLMProvider):
                     )
                 )
                 continue
+            if message.role == "assistant":
+                if message.tool_calls:
+                    parts: list[types.Part] = []
+                    if message.content:
+                        parts.append(types.Part(text=message.content))
+                    for tc in message.tool_calls:
+                        parts.append(
+                            types.Part.from_function_call(
+                                name=tc.name,
+                                args=tc.arguments if isinstance(tc.arguments, dict) else {},
+                            )
+                        )
+                    contents.append(types.Content(role="model", parts=parts))
+                else:
+                    contents.append(
+                        types.Content(
+                            role="model",
+                            parts=[types.Part(text=message.content)],
+                        )
+                    )
+                continue
             contents.append(
                 types.Content(
-                    role="model" if message.role == "assistant" else "user",
+                    role="user",
                     parts=[types.Part(text=message.content)],
                 )
             )
@@ -196,13 +226,13 @@ class GoogleProvider(LLMProvider):
         )
         calls: list[ToolCall] = []
         for candidate in getattr(response, "candidates", []) or []:
-            parts = candidate.content.parts if candidate and candidate.content else None
-            for part in parts or []:
+            candidate_parts = candidate.content.parts if candidate and candidate.content else None
+            for part in candidate_parts or []:
                 function_call = getattr(part, "function_call", None)
                 if function_call and getattr(function_call, "name", None):
                     calls.append(
                         ToolCall(
-                            id=f"google-{len(calls) + 1}",
+                            id=f"call_{uuid.uuid4().hex[:12]}",
                             name=function_call.name,
                             arguments=dict(getattr(function_call, "args", {}) or {}),
                         )
@@ -219,17 +249,38 @@ class GoogleProvider(LLMProvider):
         )
 
     async def stream(self, messages: list[ChatMessage] | str) -> AsyncIterator[str]:
-        import inspect
-
+        system_instruction: str | None = None
         if isinstance(messages, str):
-            contents = [messages]
+            contents: list[types.Content] = [
+                types.Content(role="user", parts=[types.Part(text=messages)])
+            ]
         else:
-            contents = [m.content for m in messages if m.role != "system"]
+            system_parts = [m.content for m in messages if m.role == "system"]
+            if system_parts:
+                system_instruction = "\n".join(system_parts)
+            contents = [
+                types.Content(
+                    role="model" if m.role == "assistant" else "user",
+                    parts=[types.Part(text=m.content)],
+                )
+                for m in messages
+                if m.role != "system"
+            ]
             if not contents:
-                contents = [m.content for m in messages]
+                contents = [types.Content(role="user", parts=[types.Part(text="")])]
+
+        config = (
+            types.GenerateContentConfig(system_instruction=system_instruction)
+            if system_instruction
+            else None
+        )
+        kwargs: dict[str, Any] = {}
+        if config is not None:
+            kwargs["config"] = config
         stream_or_coro = self.client.aio.models.generate_content_stream(
             model=self.model,
             contents=contents,
+            **kwargs,
         )
         if inspect.isawaitable(stream_or_coro):
             response = await stream_or_coro

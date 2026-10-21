@@ -643,4 +643,60 @@ This document records the architectural decisions, component responsibilities, d
 - **Alternatives Considered**: Unbounded while-loop or tightly coupling to a single framework's agent runner. Rejected because production agents require predictable cost controls, hard deadlines, and provider independence.
 - **Impact**: A predictable, auditable, and bounded agent execution engine returning complete message history and metadata upon completion or termination.
 
+---
+
+## 2026-10-21: Package Bug Remediation and Provider Contract Harmonization
+
+### 1. Multi-Turn Tool Calling Protocol Alignment
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/llm/anthropic_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/llm/anthropic_provider.py)
+  - [`packages/genai-core/src/genai_core/llm/google_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/llm/google_provider.py)
+  - [`packages/genai-core/src/genai_core/llm/openai_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/llm/openai_provider.py)
+- **Decision**: Harmonized native multi-turn tool-calling message schemas across all three providers:
+  - Anthropic: Formatted assistant turns containing tool calls as structured content blocks with `type: "tool_use"`, `id`, `name`, and parsed `input`. Formatted tool results in conversation turns as `user` messages containing `type: "tool_result"`, matching Claude API specifications.
+  - Google Gemini: Emitted assistant tool calls using `types.Part.from_function_call(name=..., args=...)` with unique call IDs (`call_<uuid>`). Mapped tool execution results to `types.Part.from_function_response(name=..., response={"result": ...})`.
+  - OpenAI: Handled Responses API structures with `type: "function_call"` for assistant tool turns and `type: "function_call_output"` for tool turns.
+- **Alternatives Considered**: Flattening tool results into unformatted plain text. Rejected because all three frontier model APIs reject malformed tool sequences or lose function call provenance.
+- **Impact**: Multi-turn tool execution works transparently across Anthropic, Google Gemini, and OpenAI without provider schema rejections.
+
+### 2. Tool Loop LLM Failure Handling and Parallel Tool Preservation
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/tools/loop.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/tools/loop.py)
+  - [`packages/genai-core/src/genai_core/tools/models.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/tools/models.py)
+- **Decision**:
+  - In `ToolLoopRunner.run()`, checked `response.error` from `LLMService.complete_tool()`. When an LLM error occurs (such as authentication or rate limiting), immediately terminate the loop with `ToolLoopStatus.FAILED` and record the error message instead of treating it as successful empty completion.
+  - When an approval request is triggered in a turn with multiple tool calls, preserve unexecuted tool calls in `ToolLoopResult.remaining_tool_calls`. Upon `runner.resume()`, execute the approved call with `bypass_approval=True`, execute the queued remaining tool calls, and continue the loop.
+- **Alternatives Considered**: Dropping unexecuted parallel calls or re-querying the LLM after each approval. Rejected because dropping calls loses model intent and re-querying duplicates previous tool requests.
+- **Impact**: Resilient tool execution that halts appropriately on provider failures and correctly preserves parallel batch executions across human approval interruptions.
+
+### 3. Luhn Algorithm Validation for Sensitive Credit Card Data
+- **Location**: [`packages/genai-core/src/genai_core/memory/extraction.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/memory/extraction.py)
+- **Decision**: Added an explicit `_is_luhn_valid()` checksum validation to the 13–19 digit credit card regex in memory consolidation.
+- **Alternatives Considered**: Pure regex matching without checksum validation. Rejected because regex alone matches valid 13-digit Unix timestamps and database entity identifiers, causing false-positive validation errors during memory extraction.
+- **Impact**: Protects sensitive credit cards from memory persistence while allowing standard timestamps and sequence IDs to be processed without error.
+
+### 4. Storage Safety and Isolation Fixes
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/memory/postgres_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/memory/postgres_store.py)
+  - [`packages/genai-core/src/genai_core/retrieval/pgvector_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/pgvector_store.py)
+  - [`packages/genai-core/src/genai_core/retrieval/in_memory_store.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/retrieval/in_memory_store.py)
+- **Decision**:
+  - Schema qualification: Explicitly prefixed table creation and queries in `PostgresMemoryStore` with `f"{self.schema}."` and ensured `CREATE SCHEMA IF NOT EXISTS` is called during initialization.
+  - Division by zero guard: Guarded half-life recency decay calculations against zero half-life days (`effective_half_life = max(1.0, float(half_life_days))`).
+  - Tenant ID handling: Included `tenant_id_column` in `PGVectorStoreAdapter.upsert()` SQL columns, conflict update statements, and parameter tuples when multi-tenancy is enabled.
+  - Concurrency locking: Protected `InMemoryVectorStore` mutations and reads with `asyncio.Lock` to eliminate race conditions under concurrent async tasks.
+- **Alternatives Considered**: Relying on caller search path configuration for Postgres schemas. Rejected because multi-tenant production setups require explicit table qualification to avoid namespace collisions.
+- **Impact**: Production-grade isolation and thread safety across both persistent PostgreSQL and in-memory storage adapters.
+
+### 5. Decoupled Resilience Timeouts and Scoped Observability Lifecycle
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/resilience/retry_policy.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/resilience/retry_policy.py)
+  - [`packages/genai-core/src/genai_core/observability/logger.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/observability/logger.py)
+- **Decision**:
+  - Decoupled `execute_with_retry` timeout exception mapping by accepting `timeout_exception_class: type[Exception] = TimeoutError`, allowing services to raise domain-specific timeout errors (e.g. `EmbeddingTimeoutError`, `RetrievalTimeoutError`).
+  - Keyed managed logging handlers by `logger_name` in `_managed_handlers`, ensuring `close_observability(logger_name)` only flushes and detaches handlers associated with that specific logger rather than wiping global logger configurations.
+- **Alternatives Considered**: Global single-logger tracking. Rejected because multi-logger enterprise applications require isolated handler lifecycle management.
+- **Impact**: Clean error boundary propagation and safe telemetry teardowns.
+
+
 

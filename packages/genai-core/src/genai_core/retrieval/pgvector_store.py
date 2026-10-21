@@ -402,32 +402,44 @@ class PGVectorStoreAdapter:
                 )
 
         conflict_col = self.conflict_target or self.id_column
+        cols = [self.id_column, self.text_column, self.embedding_column, self.metadata_column]
+        val_placeholders = ["%s", "%s", "%s", "%s::jsonb"]
+        update_clauses = [
+            f"{self.text_column} = EXCLUDED.{self.text_column}",
+            f"{self.embedding_column} = EXCLUDED.{self.embedding_column}",
+            f"{self.metadata_column} = EXCLUDED.{self.metadata_column}",
+        ]
+
+        if self.tenant_id_column:
+            cols.append(self.tenant_id_column)
+            val_placeholders.append("%s")
+            update_clauses.append(f"{self.tenant_id_column} = EXCLUDED.{self.tenant_id_column}")
+
         sql = f"""
             INSERT INTO {self.table_name} (
-                {self.id_column},
-                {self.text_column},
-                {self.embedding_column},
-                {self.metadata_column}
+                {", ".join(cols)}
             )
-            VALUES (%s, %s, %s, %s::jsonb)
+            VALUES ({", ".join(val_placeholders)})
             ON CONFLICT ({conflict_col})
             DO UPDATE SET
-                {self.text_column} = EXCLUDED.{self.text_column},
-                {self.embedding_column} = EXCLUDED.{self.embedding_column},
-                {self.metadata_column} = EXCLUDED.{self.metadata_column}
+                {", ".join(update_clauses)}
         """
 
         rows: list[tuple[Any, ...]] = []
         for chunk in chunks:
             assert chunk.embedding is not None
-            rows.append(
-                (
-                    chunk.id,
-                    chunk.content,
-                    _to_vector_param(chunk.embedding),
-                    json.dumps(chunk.metadata),
+            row_items: list[Any] = [
+                chunk.id,
+                chunk.content,
+                _to_vector_param(chunk.embedding),
+                json.dumps(chunk.metadata),
+            ]
+            if self.tenant_id_column:
+                tenant_val = chunk.metadata.get(self.tenant_id_column) or chunk.metadata.get(
+                    "tenant_id"
                 )
-            )
+                row_items.append(tenant_val)
+            rows.append(tuple(row_items))
 
         try:
             async with self._get_connection() as conn:

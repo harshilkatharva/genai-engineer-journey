@@ -276,6 +276,7 @@ class EmbeddingService:
                     self.retry_policy,
                     deadline=request_deadline,
                     on_retry=_on_retry,
+                    timeout_exception_class=EmbeddingTimeoutError,
                 )
 
                 if len(batch_vectors) != len(batch):

@@ -4,6 +4,7 @@ from .llm_manager_response import LLMManagerResponse
 from .llm_response_model import (
     ChatMessage,
     LLMError,
+    LLMErrorInfo,
     LLMResponseModel,
     ToolCall,
 )
@@ -11,6 +12,7 @@ from .llm_response_model import (
 __all__ = [
     "ChatMessage",
     "LLMError",
+    "LLMErrorInfo",
     "LLMManagerRequest",
     "LLMManagerResponse",
     "LLMResponseModel",

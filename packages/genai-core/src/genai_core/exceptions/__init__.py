@@ -25,6 +25,7 @@ from .llm_exceptions import (
     LLMValidationError,
 )
 from .memory_exceptions import (
+    GenAIMemoryError,
     MemoryError,
     MemoryExtractionError,
     MemoryNotFoundError,
@@ -56,6 +57,7 @@ __all__ = [
     "EmbeddingProviderError",
     "EmbeddingRateLimitError",
     "EmbeddingTimeoutError",
+    "GenAIMemoryError",
     "IncompatibleEmbeddingError",
     "LLMAuthenticationError",
     "LLMConnectionError",

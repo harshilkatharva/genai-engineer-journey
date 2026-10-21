@@ -5,6 +5,9 @@ class MemoryError(Exception):
     """Base exception for all memory-related operations in genai-core."""
 
 
+GenAIMemoryError = MemoryError
+
+
 class MemoryStorageError(MemoryError):
     """Raised when an error occurs in a memory storage adapter or database operation."""
 

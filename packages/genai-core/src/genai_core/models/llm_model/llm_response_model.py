@@ -10,6 +10,7 @@ class ChatMessage(BaseModel):
     content: str
     tool_call_id: str | None = None
     tool_name: str | None = None
+    tool_calls: list[ToolCall] = Field(default_factory=list)
 
 
 class ToolCall(BaseModel):
@@ -18,12 +19,15 @@ class ToolCall(BaseModel):
     arguments: Any = Field(default_factory=dict)
 
 
-class LLMError(BaseModel):
+class LLMErrorInfo(BaseModel):
     provider: str
     code: str
     message: str
     status_code: int | None = None
     retryable: bool = False
+
+
+LLMError = LLMErrorInfo
 
 
 class LLMResponseModel(BaseModel):

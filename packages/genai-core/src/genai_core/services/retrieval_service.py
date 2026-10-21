@@ -199,6 +199,7 @@ class RetrievalService:
                 _do_search,
                 self.retry_policy,
                 deadline=request_deadline,
+                timeout_exception_class=RetrievalTimeoutError,
             )
 
             reranked = False

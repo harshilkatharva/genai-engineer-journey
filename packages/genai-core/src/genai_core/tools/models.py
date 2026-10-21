@@ -8,7 +8,7 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from ..models.llm_model.llm_response_model import ChatMessage
+from ..models.llm_model.llm_response_model import ChatMessage, ToolCall
 
 
 class RiskLevel(StrEnum):
@@ -164,5 +164,6 @@ class ToolLoopResult(BaseModel):
     iterations: int = 0
     total_tool_calls: int = 0
     pending_approval: ApprovalRequest | None = None
+    remaining_tool_calls: list[ToolCall] = Field(default_factory=list)
     error_message: str | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)

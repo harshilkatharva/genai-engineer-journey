@@ -1,4 +1,4 @@
-from .core import Settings, get_settings
+from .core import Settings, get_settings, reset_settings
 from .embedding import (
     EmbeddingProvider,
     GoogleEmbeddingProvider,
@@ -12,6 +12,7 @@ from .exceptions import (
     EmbeddingProviderError,
     EmbeddingRateLimitError,
     EmbeddingTimeoutError,
+    GenAIMemoryError,
     IncompatibleEmbeddingError,
     LLMAuthenticationError,
     LLMConnectionError,
@@ -78,6 +79,7 @@ from .models import (
     EmbeddingRequest,
     EmbeddingResponse,
     LLMError,
+    LLMErrorInfo,
     LLMManagerRequest,
     LLMManagerResponse,
     LLMResponseModel,
@@ -190,6 +192,7 @@ __all__ = [
     "EmbeddingTimeoutError",
     "EpisodicMemory",
     "FunctionTool",
+    "GenAIMemoryError",
     "GoogleEmbeddingProvider",
     "GoogleProvider",
     "HeuristicTokenCounter",
@@ -202,6 +205,7 @@ __all__ = [
     "LLMConnectionError",
     "LLMContentFilterError",
     "LLMError",
+    "LLMErrorInfo",
     "LLMException",
     "LLMInvalidResponseError",
     "LLMManagerRequest",
@@ -294,6 +298,7 @@ __all__ = [
     "redact_data",
     "redact_string",
     "reset_request_id",
+    "reset_settings",
     "safe_log",
     "set_request_id",
     "tool",

@@ -68,3 +68,8 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
+
+
+def reset_settings() -> None:
+    """Clear the cached settings instance, allowing re-initialization with new environment variables."""
+    get_settings.cache_clear()

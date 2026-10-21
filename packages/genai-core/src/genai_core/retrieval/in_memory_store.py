@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import math
 from typing import Any
 
@@ -35,6 +36,7 @@ class InMemoryVectorStore:
             raise ValueError(f"dimensions must be greater than 0, got {dimensions}.")
         self._dimensions = dimensions
         self._chunks: dict[str, DocumentChunk] = {}
+        self._lock = asyncio.Lock()
 
         if chunks:
             self._upsert_sync(chunks)
@@ -66,16 +68,18 @@ class InMemoryVectorStore:
 
     async def upsert(self, chunks: list[DocumentChunk]) -> int:
         """Add or update document chunks in the in-memory store."""
-        return self._upsert_sync(chunks)
+        async with self._lock:
+            return self._upsert_sync(chunks)
 
     async def delete(self, chunk_ids: list[str]) -> int:
         """Delete document chunks by ID."""
-        deleted = 0
-        for cid in chunk_ids:
-            if cid in self._chunks:
-                del self._chunks[cid]
-                deleted += 1
-        return deleted
+        async with self._lock:
+            deleted = 0
+            for cid in chunk_ids:
+                if cid in self._chunks:
+                    del self._chunks[cid]
+                    deleted += 1
+            return deleted
 
     async def search(
         self,
@@ -97,47 +101,48 @@ class InMemoryVectorStore:
         if top_k <= 0:
             raise ValueError(f"top_k must be greater than 0, got {top_k}.")
 
-        scored_candidates: list[tuple[DocumentChunk, float]] = []
+        async with self._lock:
+            scored_candidates: list[tuple[DocumentChunk, float]] = []
 
-        for chunk in self._chunks.values():
-            if chunk.embedding is None:
-                continue
-
-            # Apply metadata filters if provided
-            if filters:
-                match = True
-                for key, expected_value in filters.items():
-                    actual_val = chunk.metadata.get(key)
-                    if actual_val != expected_value:
-                        match = False
-                        break
-                if not match:
+            for chunk in self._chunks.values():
+                if chunk.embedding is None:
                     continue
 
-            similarity = _cosine_similarity(query_vector, chunk.embedding)
+                # Apply metadata filters if provided
+                if filters:
+                    match = True
+                    for key, expected_value in filters.items():
+                        actual_val = chunk.metadata.get(key)
+                        if actual_val != expected_value:
+                            match = False
+                            break
+                    if not match:
+                        continue
 
-            if score_threshold is not None and similarity < score_threshold:
-                continue
+                similarity = _cosine_similarity(query_vector, chunk.embedding)
 
-            scored_candidates.append((chunk, similarity))
+                if score_threshold is not None and similarity < score_threshold:
+                    continue
 
-        # Sort descending by score
-        scored_candidates.sort(key=lambda item: item[1], reverse=True)
+                scored_candidates.append((chunk, similarity))
 
-        results: list[RetrievalResult] = []
-        for rank, (chunk, score) in enumerate(scored_candidates[:top_k], 1):
-            results.append(
-                RetrievalResult(
-                    id=chunk.id,
-                    content=chunk.content,
-                    score=round(score, 6),
-                    rank=rank,
-                    metadata=chunk.metadata,
-                    source_id=chunk.source_id,
+            # Sort descending by score
+            scored_candidates.sort(key=lambda item: item[1], reverse=True)
+
+            results: list[RetrievalResult] = []
+            for rank, (chunk, score) in enumerate(scored_candidates[:top_k], 1):
+                results.append(
+                    RetrievalResult(
+                        id=chunk.id,
+                        content=chunk.content,
+                        score=round(score, 6),
+                        rank=rank,
+                        metadata=chunk.metadata,
+                        source_id=chunk.source_id,
+                    )
                 )
-            )
 
-        return results
+            return results
 
     async def search_keyword(
         self,
@@ -156,52 +161,53 @@ class InMemoryVectorStore:
         if not query_tokens:
             return []
 
-        scored_candidates: list[tuple[DocumentChunk, float]] = []
+        async with self._lock:
+            scored_candidates: list[tuple[DocumentChunk, float]] = []
 
-        for chunk in self._chunks.values():
-            if filters:
-                match = True
-                for key, expected_value in filters.items():
-                    actual_val = chunk.metadata.get(key)
-                    if actual_val != expected_value:
-                        match = False
-                        break
-                if not match:
+            for chunk in self._chunks.values():
+                if filters:
+                    match = True
+                    for key, expected_value in filters.items():
+                        actual_val = chunk.metadata.get(key)
+                        if actual_val != expected_value:
+                            match = False
+                            break
+                    if not match:
+                        continue
+
+                chunk_tokens = re.findall(r"\w+", chunk.content.lower())
+                if not chunk_tokens:
                     continue
 
-            chunk_tokens = re.findall(r"\w+", chunk.content.lower())
-            if not chunk_tokens:
-                continue
+                chunk_tokens_set = set(chunk_tokens)
+                overlap = query_tokens.intersection(chunk_tokens_set)
+                if not overlap:
+                    continue
 
-            chunk_tokens_set = set(chunk_tokens)
-            overlap = query_tokens.intersection(chunk_tokens_set)
-            if not overlap:
-                continue
+                overlap_ratio = len(overlap) / len(query_tokens)
+                # Frequency factor
+                freq_count = sum(chunk_tokens.count(t) for t in overlap)
+                freq_score = min(1.0, freq_count / max(1, len(chunk_tokens)))
+                score = (overlap_ratio * 0.7) + (freq_score * 0.3)
 
-            overlap_ratio = len(overlap) / len(query_tokens)
-            # Frequency factor
-            freq_count = sum(chunk_tokens.count(t) for t in overlap)
-            freq_score = min(1.0, freq_count / max(1, len(chunk_tokens)))
-            score = (overlap_ratio * 0.7) + (freq_score * 0.3)
+                if score_threshold is not None and score < score_threshold:
+                    continue
 
-            if score_threshold is not None and score < score_threshold:
-                continue
+                scored_candidates.append((chunk, score))
 
-            scored_candidates.append((chunk, score))
+            scored_candidates.sort(key=lambda item: item[1], reverse=True)
 
-        scored_candidates.sort(key=lambda item: item[1], reverse=True)
-
-        results: list[RetrievalResult] = []
-        for rank, (chunk, score) in enumerate(scored_candidates[:top_k], 1):
-            results.append(
-                RetrievalResult(
-                    id=chunk.id,
-                    content=chunk.content,
-                    score=round(score, 6),
-                    rank=rank,
-                    metadata=chunk.metadata,
-                    source_id=chunk.source_id,
+            results: list[RetrievalResult] = []
+            for rank, (chunk, score) in enumerate(scored_candidates[:top_k], 1):
+                results.append(
+                    RetrievalResult(
+                        id=chunk.id,
+                        content=chunk.content,
+                        score=round(score, 6),
+                        rank=rank,
+                        metadata=chunk.metadata,
+                        source_id=chunk.source_id,
+                    )
                 )
-            )
 
-        return results
+            return results

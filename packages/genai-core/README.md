@@ -58,7 +58,7 @@ Production-grade, modular, and resilient Python core package providing unified G
   - Caller-controlled extraction of durable user facts, preferences, and goals from conversation history using `LLMService`.
   - Dual context source support: retrieve turns from `short_term` via `session_id`, or pass a caller-provided `WorkingContext` slice (mutually exclusive).
   - Customizable prompts via `custom_prompt_template`.
-  - Sensitive information scrubbing (`validate_memory_content`) guarding against credential, token, SSN, and card leaks.
+  - Sensitive information scrubbing (`validate_memory_content`) guarding against credential, token, SSN, and payment card leaks (with Luhn checksum validation).
   - Multi-tier deduplication (exact matching and semantic cosine thresholding) and supersession tracking.
   - Returns structured `ConsolidationResult` reporting created, updated, skipped, and failed memory records.
 - **Pluggable storage adapters (`MemoryStorageAdapter`)**:
@@ -87,9 +87,10 @@ Production-grade, modular, and resilient Python core package providing unified G
 - **Human-in-the-loop authorization & pause/resume**:
   - Gated authorization for high-risk operations (`require_approval_for={RiskLevel.IRREVERSIBLE}`).
   - Persistence protocol (`ApprovalStore`, `InMemoryApprovalStore`) storing pending requests and decisions.
-  - Clean pause/resume: pauses loop when approval is required; resumes upon operator decision (`approved`/`rejected`) while preserving cumulative progress counters.
+  - Clean pause/resume: pauses loop when approval is required; resumes upon operator decision (`approved`/`rejected`) while preserving cumulative progress counters and remaining queued tool calls.
 - **Bounded multi-turn orchestration loop (`ToolLoopRunner`)**:
   - Multi-resource budget enforcement: step caps (`max_iterations`), monotonic wall-clock deadlines, and token/cost budgets (`ToolBudget`).
+  - Robust failure handling: halts immediately with `ToolLoopStatus.FAILED` upon LLM provider errors (e.g. rate limits, auth errors) rather than masking them as completions.
   - Complete execution auditability in `ToolLoopResult`.
 
 ### 6. Shared Resilience Subsystem (`genai_core.resilience`)
@@ -401,6 +402,7 @@ async def main():
             decision=decision,
             request=result.pending_approval,
             messages=result.messages,
+            remaining_tool_calls=result.remaining_tool_calls,
             budget=budget,
         )
         print(f"Final Outcome: {final_result.final_text}")

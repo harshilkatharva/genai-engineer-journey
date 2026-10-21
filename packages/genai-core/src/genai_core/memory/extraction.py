@@ -40,16 +40,33 @@ DEFAULT_EXTRACTION_USER_PROMPT_TEMPLATE = (
     "Extract durable memory candidates matching the requested schema."
 )
 
+
+def _is_luhn_valid(number_str: str) -> bool:
+    """Validate a numeric string with the Luhn checksum formula."""
+    digits = [int(c) for c in number_str if c.isdigit()]
+    if len(digits) < 13 or len(digits) > 19:
+        return False
+    checksum = 0
+    reverse_digits = digits[::-1]
+    for i, d in enumerate(reverse_digits):
+        if i % 2 == 1:
+            doubled = d * 2
+            checksum += doubled - 9 if doubled > 9 else doubled
+        else:
+            checksum += d
+    return checksum % 10 == 0
+
+
 # Sensitive credential and identifier regex patterns
-_SENSITIVE_PATTERNS = (
+_STANDARD_SENSITIVE_PATTERNS = (
     re.compile(
         r"(?i)\b(?:password|passwd|secret|api[_\s-]?key|access[_\s-]?token|auth[_\s-]?token)"
         r"\b.{0,16}(?:\bis\b|=|:)\s*\S+"
     ),
     re.compile(r"\b(?:sk-[A-Za-z0-9_-]{16,}|AKIA[0-9A-Z]{16})\b"),
     re.compile(r"\b\d{3}-\d{2}-\d{4}\b"),  # US SSN
-    re.compile(r"\b(?:\d[ -]*?){13,19}\b"),  # Credit card
 )
+_CREDIT_CARD_CANDIDATE = re.compile(r"\b(?:\d[ -]*?){13,19}\b")
 
 
 def validate_memory_content(text: str) -> None:
@@ -58,8 +75,15 @@ def validate_memory_content(text: str) -> None:
     Raises:
         MemoryExtractionError: If text matches sensitive patterns.
     """
-    for pattern in _SENSITIVE_PATTERNS:
+    for pattern in _STANDARD_SENSITIVE_PATTERNS:
         if pattern.search(text):
+            raise MemoryExtractionError(
+                "Refusing to extract or store content containing credential or sensitive identifier data."
+            )
+    for match in _CREDIT_CARD_CANDIDATE.finditer(text):
+        candidate = match.group(0)
+        digits_only = re.sub(r"\D", "", candidate)
+        if _is_luhn_valid(digits_only):
             raise MemoryExtractionError(
                 "Refusing to extract or store content containing credential or sensitive identifier data."
             )

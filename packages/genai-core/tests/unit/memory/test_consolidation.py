@@ -315,6 +315,13 @@ async def test_sensitive_content_validation_and_skipping(
     with pytest.raises(MemoryExtractionError, match="Refusing to extract or store"):
         validate_memory_content("The user password is secret_password_123")
 
+    # Non-Luhn digit sequences (e.g. timestamps, epoch ms) should not be blocked as credit cards
+    validate_memory_content("Session started at timestamp 1697800000000 in UTC.")
+
+    # Valid Luhn card sequence should be blocked
+    with pytest.raises(MemoryExtractionError, match="Refusing to extract or store"):
+        validate_memory_content("Card number is 4000123456789017")
+
     # LLM extracts sensitive content
     mock_llm_service.complete.return_value = LLMManagerResponse(
         structured_response=MemoryExtractionOutput(

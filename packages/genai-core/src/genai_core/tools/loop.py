@@ -132,6 +132,24 @@ class ToolLoopRunner:
                     error_message=msg,
                 )
 
+            if response.error is not None:
+                err_msg = f"{response.error.code}: {response.error.message}"
+                safe_log(
+                    _logger,
+                    40,  # ERROR
+                    f"LLM provider error: {err_msg}",
+                    event=ObservabilityEvent.TOOL_LOOP_COMPLETED,
+                    status=ToolLoopStatus.FAILED,
+                    iteration=iteration,
+                )
+                return ToolLoopResult(
+                    status=ToolLoopStatus.FAILED,
+                    messages=current_messages,
+                    iterations=iteration,
+                    total_tool_calls=total_tool_calls,
+                    error_message=err_msg,
+                )
+
             input_tokens = response.usage.get("input_tokens", 0) if response.usage else 0
             output_tokens = response.usage.get("output_tokens", 0) if response.usage else 0
             active_budget.record_step(tokens=(input_tokens + output_tokens))
@@ -163,10 +181,11 @@ class ToolLoopRunner:
                 ChatMessage(
                     role="assistant",
                     content=response.text or "",
+                    tool_calls=response.tool_calls,
                 )
             )
 
-            for call in response.tool_calls:
+            for idx, call in enumerate(response.tool_calls):
                 total_tool_calls += 1
 
                 # Loop detection guard
@@ -207,17 +226,18 @@ class ToolLoopRunner:
                         call, tool_instance, args_dict
                     )
                     if not approved and approval_req is not None:
-                        # Pause loop for external / human authorization
+                        # Pause loop for external / human authorization, preserving remaining sibling calls
                         return ToolLoopResult(
                             status=ToolLoopStatus.APPROVAL_REQUIRED,
                             messages=current_messages,
                             iterations=iteration,
                             total_tool_calls=total_tool_calls,
                             pending_approval=approval_req,
+                            remaining_tool_calls=response.tool_calls[idx + 1 :],
                         )
 
                 # Tool Execution
-                result = await self.executor.execute(call)
+                result = await self.executor.execute(call, bypass_approval=True)
                 current_messages.append(result.to_chat_message())
 
             # Budget checks after step completion
@@ -282,6 +302,7 @@ class ToolLoopRunner:
         timeout_s: float | None = None,
         initial_iterations: int = 0,
         initial_tool_calls: int = 0,
+        remaining_tool_calls: list[ToolCall] | None = None,
     ) -> ToolLoopResult:
         """Resume execution of a paused tool loop after human or caller authorization decision."""
         if self.executor.approval_store is not None:
@@ -320,6 +341,40 @@ class ToolLoopRunner:
                 tool_name=request.tool_name,
             )
             current_messages.append(rejection_message)
+
+        # Process any unexecuted sibling tool calls from the same turn
+        calls_queue = list(remaining_tool_calls or [])
+        while calls_queue:
+            call = calls_queue.pop(0)
+            initial_tool_calls += 1
+
+            tool_instance = self.executor.registry.get(call.name)
+            if (
+                tool_instance is not None
+                and tool_instance.risk_level in self.executor.require_approval_for
+            ):
+                spec = tool_instance.to_spec()
+                parsed_args, _ = spec.parse_arguments(call.arguments)
+                args_dict = (
+                    parsed_args.model_dump()
+                    if isinstance(parsed_args, BaseModel)
+                    else (parsed_args or {})
+                )
+                approved, approval_req = await self.executor._check_approval(
+                    call, tool_instance, args_dict
+                )
+                if not approved and approval_req is not None:
+                    return ToolLoopResult(
+                        status=ToolLoopStatus.APPROVAL_REQUIRED,
+                        messages=current_messages,
+                        iterations=initial_iterations,
+                        total_tool_calls=initial_tool_calls,
+                        pending_approval=approval_req,
+                        remaining_tool_calls=calls_queue,
+                    )
+
+            result = await self.executor.execute(call, bypass_approval=True)
+            current_messages.append(result.to_chat_message())
 
         # Continue loop with remaining steps
         return await self.run(

@@ -421,8 +421,8 @@ The Tool subsystem provides framework-independent tool definitions, schema extra
 - **Approval Persistence & Pause/Resume Protocol**:
   - `ApprovalStore` protocol defines explicit interfaces for persisting requests (`save_request`), recording decisions (`record_decision`), and retrieving pending approvals (`list_pending_requests`).
   - `InMemoryApprovalStore` provides a thread-safe, non-blocking reference implementation.
-  - Pausing: `ToolLoopRunner.run` halts execution immediately upon encountering an unapproved risky tool call, returning `ToolLoopResult(status=ToolLoopStatus.APPROVAL_REQUIRED, pending_approval=...)`.
-  - Resuming: `ToolLoopRunner.resume` accepts an `ApprovalDecision`. If approved (with optional modified arguments), executes the paused call with `bypass_approval=True` and continues the loop; if rejected, injects a tool error message explaining the denial and continues so the LLM can acknowledge the decision. Cumulative step and tool-call counters are preserved.
+  - Pausing: `ToolLoopRunner.run` halts execution immediately upon encountering an unapproved risky tool call, returning `ToolLoopResult(status=ToolLoopStatus.APPROVAL_REQUIRED, pending_approval=..., remaining_tool_calls=...)`. Any subsequent unexecuted tool calls from the current turn are preserved in `remaining_tool_calls`.
+  - Resuming: `ToolLoopRunner.resume` accepts an `ApprovalDecision` and optional `remaining_tool_calls`. If approved (with optional modified arguments), executes the paused call with `bypass_approval=True`, executes any queued `remaining_tool_calls`, and continues the loop; if rejected, injects a tool error message explaining the denial and continues so the LLM can acknowledge the decision. Cumulative step and tool-call counters are preserved.
 
 ### 9.3 Execution Safety & Process-Level Isolation
 - **Process-Level Security Notice**:
@@ -451,8 +451,9 @@ The Tool subsystem provides framework-independent tool definitions, schema extra
   - `max_iterations`: Step limit (default 10 iterations) terminating with `ToolLoopStatus.MAX_ITERATIONS_REACHED`.
   - `deadline_monotonic`: Absolute timeout terminating with `ToolLoopStatus.DEADLINE_EXCEEDED`.
   - `ToolBudget`: Token and cost ceilings terminating with `ToolLoopStatus.BUDGET_EXCEEDED`.
+- LLM Provider Failure Handling: When `LLMService.complete_tool()` returns an error (e.g. HTTP 401 unauthorized, HTTP 429 rate limits, server errors), the loop immediately halts with `ToolLoopStatus.FAILED` and sets `error_message` rather than treating it as a successful completion.
 - Terminal statuses: `COMPLETED`, `MAX_ITERATIONS_REACHED`, `DEADLINE_EXCEEDED`, `BUDGET_EXCEEDED`, `APPROVAL_REQUIRED`, `FAILED`.
-- Full auditability: `ToolLoopResult` returns complete message history, total iterations, total tool calls, and final text output.
+- Full auditability: `ToolLoopResult` returns complete message history, total iterations, total tool calls, remaining unexecuted tool calls (if paused), and final text output.
 
 ## 10. Framework and orchestration interoperability
 

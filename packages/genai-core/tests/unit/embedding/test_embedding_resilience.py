@@ -186,6 +186,9 @@ async def test_execute_with_retry_times_out_when_deadline_exceeded() -> None:
         return "too late"
 
     with pytest.raises(EmbeddingTimeoutError):
+        await execute_with_retry(_slow_op, policy, timeout_exception_class=EmbeddingTimeoutError)
+
+    with pytest.raises(TimeoutError):
         await execute_with_retry(_slow_op, policy)
 
 

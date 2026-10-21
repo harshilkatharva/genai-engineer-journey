@@ -5,6 +5,7 @@ from .embedding_model import (
 from .llm_model import (
     ChatMessage,
     LLMError,
+    LLMErrorInfo,
     LLMManagerRequest,
     LLMManagerResponse,
     LLMResponseModel,
@@ -52,6 +53,7 @@ __all__ = [
     "EmbeddingRequest",
     "EmbeddingResponse",
     "LLMError",
+    "LLMErrorInfo",
     "LLMManagerRequest",
     "LLMManagerResponse",
     "LLMResponseModel",

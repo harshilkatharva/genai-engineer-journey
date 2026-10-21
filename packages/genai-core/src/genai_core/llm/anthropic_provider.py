@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import re
 import time
 from collections.abc import AsyncIterator
 from typing import Any, cast
@@ -109,7 +110,9 @@ class AnthropicProvider(LLMProvider):
 
             if text:
                 try:
-                    parsed_json = json.loads(text)
+                    clean_text = re.sub(r"^```(?:json)?\s*", "", text.strip())
+                    clean_text = re.sub(r"\s*```$", "", clean_text).strip()
+                    parsed_json = json.loads(clean_text)
                     validated_output = response_schema.model_validate(parsed_json)
                     latency = (time.perf_counter() - start) * 1000
                     return LLMResponseModel(
@@ -154,14 +157,51 @@ class AnthropicProvider(LLMProvider):
         tool_choice: ToolChoice | None = None,
     ) -> LLMResponseModel:
         system = "\n".join(message.content for message in messages if message.role == "system")
-        request_messages = cast(
-            list[MessageParam],
-            [
-                {"role": message.role, "content": message.content}
-                for message in messages
-                if message.role != "system"
-            ],
-        )
+        request_messages: list[dict[str, Any]] = []
+        for message in messages:
+            if message.role == "system":
+                continue
+            if message.role == "assistant":
+                if message.tool_calls:
+                    content_blocks: list[dict[str, Any]] = []
+                    if message.content:
+                        content_blocks.append({"type": "text", "text": message.content})
+                    for tc in message.tool_calls:
+                        content_blocks.append(
+                            {
+                                "type": "tool_use",
+                                "id": tc.id,
+                                "name": tc.name,
+                                "input": tc.arguments if isinstance(tc.arguments, dict) else {},
+                            }
+                        )
+                    request_messages.append({"role": "assistant", "content": content_blocks})
+                else:
+                    request_messages.append({"role": "assistant", "content": message.content})
+            elif message.role == "tool":
+                tool_block = {
+                    "type": "tool_result",
+                    "tool_use_id": message.tool_call_id or "",
+                    "content": message.content,
+                }
+                # Check if preceding message was a user turn containing tool results
+                if (
+                    request_messages
+                    and request_messages[-1].get("role") == "user"
+                    and isinstance(request_messages[-1].get("content"), list)
+                ):
+                    user_blocks = request_messages[-1]["content"]
+                    if (
+                        user_blocks
+                        and isinstance(user_blocks[0], dict)
+                        and user_blocks[0].get("type") == "tool_result"
+                    ):
+                        user_blocks.append(tool_block)
+                        continue
+                request_messages.append({"role": "user", "content": [tool_block]})
+            else:
+                request_messages.append({"role": "user", "content": message.content})
+
         start = time.perf_counter()
         request_options: dict[str, Any] = {
             "tools": [tool.to_anthropic_tool() for tool in tools or []]
@@ -175,7 +215,7 @@ class AnthropicProvider(LLMProvider):
             model=self.model,
             max_tokens=self.max_tokens,
             system=system if system else Omit(),
-            messages=request_messages,
+            messages=cast(list[MessageParam], request_messages),
             **cast(Any, request_options),
         )
         calls = [
@@ -205,13 +245,18 @@ class AnthropicProvider(LLMProvider):
 
     async def stream(self, messages: list[ChatMessage] | str) -> AsyncIterator[str]:
         if isinstance(messages, str):
-            content = messages
+            system = None
+            request_messages: list[dict[str, Any]] = [{"role": "user", "content": messages}]
         else:
-            content = messages[-1].content if messages else ""
+            system = "\n".join(m.content for m in messages if m.role == "system")
+            request_messages = [
+                {"role": m.role, "content": m.content} for m in messages if m.role != "system"
+            ]
         async with self.client.messages.stream(
             model=self.model,
             max_tokens=self.max_tokens,
-            messages=[{"role": "user", "content": content}],
+            system=system if system else Omit(),
+            messages=cast(list[MessageParam], request_messages),
         ) as stream:
             async for text in stream.text_stream:
                 yield text

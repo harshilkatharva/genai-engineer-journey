@@ -792,16 +792,17 @@ sequenceDiagram
     Exec->>Exec: check tool.risk_level in require_approval_for
     Exec->>Store: save_request(ApprovalRequest)
     Exec-->>Runner: ToolResult(status=APPROVAL_REQUIRED)
-    Runner-->>Caller: ToolLoopResult(status=APPROVAL_REQUIRED, pending_approval)
+    Runner-->>Caller: ToolLoopResult(status=APPROVAL_REQUIRED, pending_approval, remaining_tool_calls)
     
-    Note over Caller, Operator: Workflow paused. State persisted.
+    Note over Caller, Operator: Workflow paused. State and remaining calls queued.
     Operator->>Caller: Review and issue ApprovalDecision(approved=True)
     
-    Caller->>Runner: resume(decision, request, messages)
+    Caller->>Runner: resume(decision, request, messages, remaining_tool_calls)
     Runner->>Store: record_decision(request_id, decision)
     Runner->>Exec: execute(call, bypass_approval=True)
     Exec-->>Runner: ToolResult(status=SUCCESS)
     Runner->>Runner: append tool message
+    Runner->>Exec: execute remaining queued calls (if any)
     Runner->>Runner: continue loop with remaining budget
     Runner-->>Caller: ToolLoopResult(status=COMPLETED)
 ```
