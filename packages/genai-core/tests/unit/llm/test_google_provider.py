@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 from genai_core.exceptions import LLMValidationError
 from genai_core.llm import GoogleProvider
-from genai_core.models import ChatMessage
+from genai_core.models import ChatMessage, ToolCall
 
 
 class CitySchema(BaseModel):
@@ -15,11 +15,17 @@ class CitySchema(BaseModel):
 
 
 class FakeGoogleModels:
-    def __init__(self, response_text: str = "Done", function_call: Any = None) -> None:
+    def __init__(
+        self,
+        response_text: str = "Done",
+        function_call: Any = None,
+        thought_signature: Any = None,
+    ) -> None:
         self.contents: Any = None
         self.config: Any = None
         self.response_text = response_text
         self.function_call = function_call
+        self.thought_signature = thought_signature
         self.call_history: list[dict[str, Any]] = []
 
     async def generate_content(self, *, model: Any, contents: Any, config: Any) -> Any:
@@ -28,7 +34,12 @@ class FakeGoogleModels:
         self.call_history.append({"contents": contents, "config": config})
         parts = []
         if self.function_call:
-            parts.append(SimpleNamespace(function_call=self.function_call))
+            parts.append(
+                SimpleNamespace(
+                    function_call=self.function_call,
+                    thought_signature=self.thought_signature,
+                )
+            )
         candidates = [SimpleNamespace(content=SimpleNamespace(parts=parts))] if parts else []
         usage = SimpleNamespace(prompt_token_count=15, candidates_token_count=10)
         return SimpleNamespace(
@@ -199,3 +210,90 @@ async def test_google_provider_stream() -> None:
         chunks.append(chunk)
 
     assert "".join(chunks) == "Hello world"
+
+
+@pytest.mark.asyncio
+async def test_google_provider_complete_tool_captures_thought_signature() -> None:
+    fake_func_call = SimpleNamespace(id="call-123", name="lookup_weather", args={"city": "Paris"})
+    models = FakeGoogleModels(
+        response_text="",
+        function_call=fake_func_call,
+        thought_signature=b"test-sig-bytes",
+    )
+    client = cast(Any, SimpleNamespace(aio=SimpleNamespace(models=models)))
+    provider = GoogleProvider(client=client, min_call_interval=0.0)
+
+    response = await provider.complete_tool([ChatMessage(role="user", content="Weather?")])
+
+    assert response.text is None
+    assert len(response.tool_calls) == 1
+    assert response.tool_calls[0].name == "lookup_weather"
+    assert response.tool_calls[0].thought_signature == b"test-sig-bytes"
+
+
+@pytest.mark.asyncio
+async def test_google_provider_complete_tool_reconstructs_thought_signature() -> None:
+    models = FakeGoogleModels(response_text="Final Answer")
+    client = cast(Any, SimpleNamespace(aio=SimpleNamespace(models=models)))
+    provider = GoogleProvider(client=client, min_call_interval=0.0)
+
+    messages = [
+        ChatMessage(role="user", content="Lookup ticket"),
+        ChatMessage(
+            role="assistant",
+            content="Looking up",
+            tool_calls=[
+                ToolCall(
+                    id="call_t1",
+                    name="lookup_ticket",
+                    arguments={"ticket_id": "T1"},
+                    thought_signature=b"sig-roundtrip",
+                )
+            ],
+        ),
+        ChatMessage(
+            role="tool",
+            tool_name="lookup_ticket",
+            tool_call_id="call_t1",
+            content='{"status": "open"}',
+        ),
+    ]
+
+    response = await provider.complete_tool(messages)
+
+    assert response.text == "Final Answer"
+    assert len(models.contents) == 3
+    model_content = models.contents[1]
+    assert model_content.role == "model"
+    assert len(model_content.parts) == 2
+    assert model_content.parts[0].text == "Looking up"
+    fc_part = model_content.parts[1]
+    assert fc_part.function_call.name == "lookup_ticket"
+    assert fc_part.function_call.args == {"ticket_id": "T1"}
+    assert fc_part.thought_signature == b"sig-roundtrip"
+
+
+@pytest.mark.asyncio
+async def test_google_provider_complete_tool_429_backoff() -> None:
+    class FlakyRateLimitModels:
+        def __init__(self) -> None:
+            self.attempts = 0
+
+        async def generate_content(self, *, model: Any, contents: Any, config: Any) -> Any:
+            self.attempts += 1
+            if self.attempts == 1:
+                raise RuntimeError(
+                    "429 RESOURCE_EXHAUSTED: Rate limit reached. Please retry in 0.01s."
+                )
+            return SimpleNamespace(
+                candidates=[],
+                usage_metadata=SimpleNamespace(prompt_token_count=5, candidates_token_count=5),
+                text="Recovered from 429",
+                model_version="gemini-3.5-flash-lite",
+            )
+
+    client = cast(Any, SimpleNamespace(aio=SimpleNamespace(models=FlakyRateLimitModels())))
+    provider = GoogleProvider(client=client, min_call_interval=0.0)
+
+    response = await provider.complete_tool([ChatMessage(role="user", content="Hi")])
+    assert response.text == "Recovered from 429"

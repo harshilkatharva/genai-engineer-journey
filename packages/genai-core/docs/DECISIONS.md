@@ -728,6 +728,34 @@ This document records the architectural decisions, component responsibilities, d
 - **Alternatives Considered**: Synchronous serial evaluation or relying exclusively on live target functions. Rejected because production evaluations often evaluate existing log traces offline or require rate-limited parallel runs to prevent LLM quota exhaustion.
 - **Impact**: High-throughput, non-blocking evaluation supporting both live CI runs and historical audit traces.
 
+---
+
+## 2026-10-22: Gemini Thought Signature Preservation, Call Pacing, and 429 Adaptive Backoff
+
+### 1. Cryptographic `thought_signature` Preservation Across Conversation Turns
+- **Locations**:
+  - [`packages/genai-core/src/genai_core/models/llm_model/llm_response_model.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/models/llm_model/llm_response_model.py)
+  - [`packages/genai-core/src/genai_core/llm/google_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/llm/google_provider.py)
+- **Problem**: Google Gemini reasoning and thinking models (such as `gemini-3.5-flash-lite`, `gemini-3.8-flash`, and other `gemini-2.x/3.x` models) enforce that function calls emitted on Turn 1 return cryptographic `part.thought_signature` bytes. On Turn 2, when the tool response is passed back with the conversation history, Google's API strictly requires that the `model` message's `function_call` part includes the original `thought_signature`. Omitting this signature caused Google API to fail with `400 INVALID_ARGUMENT: Function call is missing a thought_signature in functionCall parts`.
+- **Decision**:
+  - Added an optional `thought_signature: bytes | str | None = None` field to `ToolCall`.
+  - In `GoogleProvider.complete_tool()`, extract `part.thought_signature` from response candidate parts and store it on `ToolCall`. Also populate an internal provider cache `self._thought_signatures: dict[str, bytes | str]` keyed by tool call id and name for fallback lookup.
+  - When reconstructing `message.role == "assistant"` messages containing `tool_calls` for Google API's `types.Content`, construct `types.Part(function_call=fn_call, thought_signature=sig_bytes)`, safely decoding base64 strings or passing raw bytes.
+- **Alternatives Considered**:
+  - Storing signatures solely in an ephemeral provider dictionary. Rejected because if a stateless caller persists `ChatMessage` or `ToolCall` and instantiates a new provider instance, the signature would be lost unless attached to `ToolCall`.
+  - Storing signatures as string only. Rejected because Google's SDK `types.Part` requires `bytes | None`. Supporting `bytes | str | None` with automatic base64/byte normalization provides both SDK type correctness and serialization safety.
+- **Impact**: Multi-turn tool loops with Gemini 3.5/3.8 now execute seamlessly across all conversation turns without `400 INVALID_ARGUMENT` errors.
+
+### 2. Request Call Pacing and 429 Adaptive Backoff
+- **Location**: [`packages/genai-core/src/genai_core/llm/google_provider.py`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/llm/google_provider.py)
+- **Problem**: Gemini free tier enforces a strict 15 RPM (Requests Per Minute) rate limit. Rapid multi-step tool-calling loops frequently burst and trigger `429 RESOURCE_EXHAUSTED`.
+- **Decision**:
+  - Enforce minimum call interval pacing via `min_call_interval` (default 3.0s, configurable in `GoogleProvider.__init__`). If `monotonic() - _last_call_time < min_call_interval`, `GoogleProvider` sleeps for the remaining duration before making the call.
+  - Implemented 4-attempt adaptive retry backoff specifically handling `429`, `quota`, or `resource_exhausted` errors. Parses Google's suggested `retry in X.Xs` duration from error messages with a safety buffer, falling back to exponential backoff (`5.0 * (attempt + 1)`).
+- **Alternatives Considered**: Relying purely on client-level manual delays. Rejected because rapid tool-calling loops in agents should be resilient out of the box against common provider RPM limits.
+- **Impact**: Free-tier rate limits and bursts are smoothly paced and recovered from automatically without terminating active agent runs.
+
+
 
 
 
