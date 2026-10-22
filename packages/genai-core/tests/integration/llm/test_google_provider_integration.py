@@ -124,3 +124,50 @@ async def test_google_stream_live() -> None:
     full_text = "".join(chunks)
     assert len(chunks) > 0
     assert "hello" in full_text.lower()
+
+
+class TicketLookupArgs(BaseModel):
+    ticket_id: str
+
+
+@pytest.mark.integration
+@pytest.mark.asyncio
+async def test_google_multi_turn_tool_calling_with_thought_signature_live() -> None:
+    api_key = _get_google_api_key()
+    if not api_key:
+        pytest.skip("GOOGLE_API_KEY is not set")
+
+    provider = GoogleProvider(api_key=api_key, model="gemini-3.5-flash-lite")
+    tool = ToolSpec(
+        name="lookup_ticket",
+        description="Lookup customer ticket details",
+        argument_model=TicketLookupArgs,
+    )
+
+    try:
+        # Turn 1: Gemini calls lookup_ticket
+        resp1 = await provider.complete_tool(
+            messages=[ChatMessage(role="user", content="What is the status of ticket T-1001?")],
+            tools=[tool],
+        )
+        assert resp1.tool_calls, "Expected tool call on Turn 1"
+        assert resp1.tool_calls[0].name == "lookup_ticket"
+
+        # Turn 2: Return tool result back with thought_signature preserved
+        resp2 = await provider.complete_tool(
+            messages=[
+                ChatMessage(role="user", content="What is the status of ticket T-1001?"),
+                ChatMessage(role="assistant", content="", tool_calls=resp1.tool_calls),
+                ChatMessage(
+                    role="tool",
+                    tool_name="lookup_ticket",
+                    tool_call_id=resp1.tool_calls[0].id,
+                    content='{"ticket_id": "T-1001", "status": "resolved"}',
+                ),
+            ],
+            tools=[tool],
+        )
+        assert resp2.text, "Expected text answer on Turn 2"
+        assert "resolved" in resp2.text.lower()
+    except Exception as exc:  # noqa: BLE001
+        _handle_google_error(exc)

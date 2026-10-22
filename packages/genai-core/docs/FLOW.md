@@ -158,7 +158,9 @@ flowchart TD
      - **If `request.response_schema is None`**: builds messages and calls `await provider.complete_tool(messages=messages, tools=request.tools, tool_choice=request.tool_choice)`.
 
 ### 2.2 Provider Adapters
-- **Google Gemini (`GoogleProvider`)**: Uses `google-genai` SDK. Supports native JSON schema constraints, function calling declarations, and delta streaming.
+- **Google Gemini (`GoogleProvider`)**: Uses `google-genai` SDK. Supports native JSON schema constraints, function calling declarations, delta streaming, and multi-turn tool execution:
+  - **Thought Signature Flow**: When reasoning models (Gemini 3.5 Flash Lite, Gemini 3.8 Flash) trigger function calls, extracts `part.thought_signature` bytes, stores them on `ToolCall.thought_signature`, and caches them in `_thought_signatures`. In Turn 2, when reconstructing `message.role == "assistant"` with tool calls, attaches `types.Part(function_call=..., thought_signature=sig_bytes)` so Google's API receives the required cryptographic signature.
+  - **Pacing & Backoff Flow**: Enforces minimum inter-request interval (`min_call_interval`, default 3.0s) to adhere to 15 RPM free-tier quotas. Catches `429` / `quota` / `resource_exhausted` errors and performs adaptive backoff by extracting suggested `retry in X.Xs` wait durations.
 - **OpenAI (`OpenAIProvider`)**: Uses `openai` SDK v1+. Supports strict structured schema responses (`text={"format": ...}`), tool schemas via `FunctionToolParam`, and event stream deltas.
 - **Anthropic Claude (`AnthropicProvider`)**: Uses `anthropic` SDK. Extracts text blocks for JSON schema validation, maps tools into Anthropic tool specs, and streams text deltas.
 
