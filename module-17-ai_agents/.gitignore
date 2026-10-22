@@ -31,3 +31,6 @@ logs/
 
 # agent files
 .github/
+
+# transcripts
+transcripts/

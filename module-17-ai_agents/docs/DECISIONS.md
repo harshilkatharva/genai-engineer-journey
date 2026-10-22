@@ -43,3 +43,26 @@
 - **Decision:** Create `scripts/run_eval.py` executing `run_benchmark()` with `deterministic_mock_target`, printing a clean human-readable table with pass/fail breakdown per goal and aggregate KPIs.
 - **Impact:** Enables instant reproducible evaluation without incurring API costs or requiring network access, verifiable in CI/CD and pre-push pipelines.
 
+## 2026-10-22: Realistic PostgreSQL Integration and Gemini 3.5 Evaluation
+
+### Decision 8: Database Seeding & Schema Architecture for Live Support Data
+- **Context:** Live testing required actual relational tables in PostgreSQL for customer profiles (`support_customers`) and tickets (`support_tickets`), combined with vector-indexed documents (`document_chunks`) and persistent memory records (`memory_lt_records`, `memory_ep_episodes`).
+- **Decision:** Implement `src/research_and_support_agent/data/db_store.py` for asynchronous CRUD operations using `psycopg`, and `src/research_and_support_agent/data/seed.py` for idempotent seeding with upsert statements (`ON CONFLICT`). Provide CLI script `scripts/seed_data.py`.
+- **Alternatives Considered:** Raw SQL migrations vs. application-level table bootstrap. Chose `init_support_tables` with `CREATE TABLE IF NOT EXISTS` so tests and scripts self-initialize without external migration tools.
+- **Impact:** Allows seamless database seeding and safe reruns without corrupting existing user records or failing on duplicate keys.
+
+### Decision 9: Native Gemini 3.5 / 3.8 Support via `genai-core` Thought Signature Preservation
+- **Context:** Google Gemini 3.5 and 3.8 reasoning models (`gemini-3.5-flash-lite`, `gemini-3.8-flash`) mandate cryptographic thought signatures (`Part.thought_signature`) generated during multi-step tool calls. Omitting these signatures in subsequent turns causes Google API 400 validation errors. Additionally, free-tier quotas enforce a 15 RPM ceiling.
+- **Decision:** The dedicated AI agent updated `packages/genai-core`'s `ToolCall` and `GoogleProvider` to capture `thought_signature` on Turn 1, reconstruct it in subsequent `assistant` function call turns, enforce configurable request interval pacing (`min_call_interval`), and implement adaptive 429 retry backoff. Module 17 completely removed its temporary local wrapper (`GeminiLiveProvider`) and consumes `GoogleProvider` directly from `packages/genai-core`.
+- **Alternatives Considered:** Retaining a local wrapper in Module 17. Rejected because reusable LLM infrastructure belongs exclusively in `genai-core`.
+- **Impact:** Module 17 maintains zero custom LLM code, strictly adhering to the architectural boundary rule while fully supporting Gemini 3.5 and 3.8 models natively.
+
+### Decision 10: Interactive Dual-Mode Evaluation Benchmark
+- **Context:** The benchmark script needed to support both deterministic offline testing for CI/CD and live realistic evaluation against PostgreSQL, Gemini LLM, and DuckDuckGo web search. The user requested an interactive CLI prompt when running `run_eval.py` without flags.
+- **Decision:** Updated `scripts/run_eval.py` to prompt the user with two explicit options:
+  1. `1. deterministic_mock eval` (Offline, zero cost, deterministic mock target)
+  2. `2. realistic eval run` (Live PostgreSQL database, Gemini 3.5 Flash Lite, DuckDuckGo search)
+  Also preserved `--mock` and `--live` CLI flags for automated or non-interactive execution.
+- **Impact:** Provides an intuitive developer experience while maintaining automated pipeline compatibility.
+
+

@@ -20,6 +20,8 @@ PRICING_TABLE: dict[str, ModelPrice] = {
     "gemini-1.5-flash-8b": ModelPrice(0.0375, 0.15),
     "gemini-1.5-pro": ModelPrice(1.25, 5.00),
     "gemini-2.0-flash": ModelPrice(0.10, 0.40),
+    "gemini-3.5-flash-lite": ModelPrice(0.075, 0.30),
+    "gemini-3.8-flash": ModelPrice(0.10, 0.40),
     # OpenAI Models
     "gpt-4o-mini": ModelPrice(0.15, 0.60),
     "gpt-4o": ModelPrice(2.50, 10.00),

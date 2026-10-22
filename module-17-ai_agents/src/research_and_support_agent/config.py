@@ -12,8 +12,12 @@ class AgentConfig:
     """Runtime configuration for bounded agent execution, memory, and storage."""
 
     # Model & Provider
-    default_model: str = "gemini-1.5-flash"
-    default_provider: str = "google"
+    default_model: str = field(
+        default_factory=lambda: os.getenv("DEFAULT_LLM_MODEL", "gemini-3.5-flash-lite")
+    )
+    default_provider: str = field(
+        default_factory=lambda: os.getenv("DEFAULT_LLM_PROVIDER", "google")
+    )
 
     # Execution Bounds
     default_max_steps: int = 10
