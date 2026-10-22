@@ -17,6 +17,7 @@ class ToolCall(BaseModel):
     id: str
     name: str
     arguments: Any = Field(default_factory=dict)
+    thought_signature: bytes | str | None = None
 
 
 class LLMErrorInfo(BaseModel):

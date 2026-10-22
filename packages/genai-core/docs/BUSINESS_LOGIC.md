@@ -182,6 +182,16 @@ Retries must have a limit and must not form unbounded loops. Backoff and provide
 
 Streaming, automatic tool execution, automatic retries beyond the basic safe policy, caching, routing across many providers, prompt management systems, tracing platforms, and complex fallback chains are **not required by default**. Add them only when a module use case justifies their cost and the behavior can be specified and tested clearly.
 
+### 5.9 Gemini Multi-Turn Tool Calling & Cryptographic Thought Signatures
+- **Cryptographic Signature Requirement**: Newer Gemini reasoning models (`gemini-3.5-flash-lite`, `gemini-3.8-flash`) require preserving `thought_signature` bytes across turns. Without passing `thought_signature` in Turn 2 `model` function-call parts, Google's API rejects requests with `400 INVALID_ARGUMENT`.
+- **Model Contract**: `ToolCall` includes an optional `thought_signature: bytes | str | None = None` field.
+- **Provider Translation**: `GoogleProvider` captures `part.thought_signature` on Turn 1 and reconstructs `types.Part(function_call=..., thought_signature=sig_bytes)` on Turn 2, decoding base64 strings if necessary.
+
+### 5.10 Request Pacing and Adaptive 429 Backoff
+- **Free-Tier Call Pacing**: `GoogleProvider` enforces a minimum inter-call interval (`min_call_interval=3.0` seconds) to avoid bursting past Gemini free-tier 15 RPM limits.
+- **Adaptive 429 Backoff**: Intercepts `429`, `quota`, and `resource_exhausted` errors, extracts Google's suggested `retry in X.Xs` duration from the error message, and applies backoff up to 4 attempts before escalating to callers.
+
+
 ## 6. Implemented capability: embeddings
 
 Embeddings are a separate capability from text generation, even when provided by the same vendor. The service is implemented via [`EmbeddingService`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/services/embedding_service.py) with the following confirmed business rules:

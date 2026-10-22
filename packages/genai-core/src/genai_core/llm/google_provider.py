@@ -1,7 +1,11 @@
 from __future__ import annotations
 
+import asyncio
+import base64
+import binascii
 import inspect
 import json
+import re
 import time
 import uuid
 from collections.abc import AsyncIterator
@@ -26,6 +30,7 @@ class GoogleProvider(LLMProvider):
         model: str | None = None,
         temperature: float | None = None,
         api_key: str | None = None,
+        min_call_interval: float = 3.0,
     ) -> None:
         settings = get_settings()
         self.client = client or genai.Client(api_key=api_key or settings.google_api_key)
@@ -43,6 +48,9 @@ class GoogleProvider(LLMProvider):
                 else 0.2
             )
         )
+        self.min_call_interval = min_call_interval
+        self._last_call_time: float = 0.0
+        self._thought_signatures: dict[str, bytes | str] = {}
 
     async def complete_structure(
         self,
@@ -198,12 +206,25 @@ class GoogleProvider(LLMProvider):
                     if message.content:
                         parts.append(types.Part(text=message.content))
                     for tc in message.tool_calls:
-                        parts.append(
-                            types.Part.from_function_call(
-                                name=tc.name,
-                                args=tc.arguments if isinstance(tc.arguments, dict) else {},
-                            )
+                        sig = getattr(tc, "thought_signature", None)
+                        if sig is None:
+                            sig = self._thought_signatures.get(
+                                tc.id
+                            ) or self._thought_signatures.get(f"{tc.name}_{tc.id}")
+                        sig_bytes: bytes | None = None
+                        if isinstance(sig, bytes):
+                            sig_bytes = sig
+                        elif isinstance(sig, str):
+                            try:
+                                sig_bytes = base64.b64decode(sig, validate=True)
+                            except (ValueError, binascii.Error):
+                                sig_bytes = sig.encode("utf-8")
+                        fn_call = types.FunctionCall(
+                            name=tc.name,
+                            args=tc.arguments if isinstance(tc.arguments, dict) else {},
+                            id=tc.id if tc.id else None,
                         )
+                        parts.append(types.Part(function_call=fn_call, thought_signature=sig_bytes))
                     contents.append(types.Content(role="model", parts=parts))
                 else:
                     contents.append(
@@ -220,21 +241,54 @@ class GoogleProvider(LLMProvider):
                 )
             )
 
+        # Enforce minimum call interval (pacing) between successive requests
+        if self.min_call_interval > 0.0 and self._last_call_time > 0.0:
+            elapsed = time.monotonic() - self._last_call_time
+            if elapsed < self.min_call_interval:
+                await asyncio.sleep(self.min_call_interval - elapsed)
+
         start = time.perf_counter()
-        response = await self.client.aio.models.generate_content(
-            model=self.model, contents=contents, config=config
-        )
+        response = None
+        for attempt in range(4):
+            try:
+                self._last_call_time = time.monotonic()
+                response = await self.client.aio.models.generate_content(
+                    model=self.model, contents=contents, config=config
+                )
+                break
+            except Exception as exc:
+                err_str = str(exc)
+                if (
+                    "429" in err_str
+                    or "quota" in err_str.lower()
+                    or "resource_exhausted" in err_str.lower()
+                ) and attempt < 3:
+                    match = re.search(r"retry in ([0-9\.]+)s", err_str, re.IGNORECASE)
+                    wait_sec = float(match.group(1)) + 1.5 if match else (5.0 * (attempt + 1))
+                    await asyncio.sleep(wait_sec)
+                    continue
+                raise
+
+        if response is None:
+            raise RuntimeError("Google API generation failed without response")
+
         calls: list[ToolCall] = []
         for candidate in getattr(response, "candidates", []) or []:
             candidate_parts = candidate.content.parts if candidate and candidate.content else None
             for part in candidate_parts or []:
                 function_call = getattr(part, "function_call", None)
                 if function_call and getattr(function_call, "name", None):
+                    sig = getattr(part, "thought_signature", None)
+                    call_id = getattr(function_call, "id", None) or f"call_{uuid.uuid4().hex[:12]}"
+                    if sig is not None:
+                        self._thought_signatures[call_id] = sig
+                        self._thought_signatures[f"{function_call.name}_{call_id}"] = sig
                     calls.append(
                         ToolCall(
-                            id=f"call_{uuid.uuid4().hex[:12]}",
+                            id=call_id,
                             name=function_call.name,
                             arguments=dict(getattr(function_call, "args", {}) or {}),
+                            thought_signature=sig,
                         )
                     )
         usage = getattr(response, "usage_metadata", None)
