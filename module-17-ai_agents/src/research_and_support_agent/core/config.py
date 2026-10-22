@@ -44,11 +44,9 @@ class AgentConfig:
 
     # Paths
     transcripts_dir: Path = field(
-        default_factory=lambda: Path(__file__).resolve().parent.parent.parent / "transcripts"
+        default_factory=lambda: Path(__file__).resolve().parents[3] / "transcripts"
     )
-    data_dir: Path = field(
-        default_factory=lambda: Path(__file__).resolve().parent.parent.parent / "data"
-    )
+    data_dir: Path = field(default_factory=lambda: Path(__file__).resolve().parents[3] / "data")
 
 
 def get_agent_config() -> AgentConfig:

@@ -1,7 +1,7 @@
 """Module 17: Bounded Research and Support Agent."""
 
 from .agent import AgentRunResult, BoundedAgent
-from .config import AgentConfig, get_agent_config
+from .core.config import AgentConfig, get_agent_config
 from .hitl.authorization import AuthorizationValidator
 from .hitl.postgres_store import PostgresApprovalStore
 from .memory.manager import AgentMemoryManager

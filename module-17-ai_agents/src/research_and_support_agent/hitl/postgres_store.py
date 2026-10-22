@@ -252,6 +252,10 @@ class PostgresApprovalStore(ApprovalStore):
 
         return None
 
+    async def list_pending(self) -> list[ApprovalRequest]:
+        """List all requests awaiting decision (alias for list_pending_requests)."""
+        return await self.list_pending_requests()
+
     async def list_pending_requests(self) -> list[ApprovalRequest]:
         """List all requests awaiting decision."""
         if self._db_initialized:
