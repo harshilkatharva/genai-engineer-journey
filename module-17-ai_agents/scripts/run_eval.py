@@ -36,7 +36,7 @@ from genai_core import (
 from genai_core.models.evaluation_model import EvalOutput, EvalSample
 
 from research_and_support_agent.agent import BoundedAgent
-from research_and_support_agent.config import AgentConfig
+from research_and_support_agent.core.config import AgentConfig
 from research_and_support_agent.data.db_store import load_customer_accounts, load_support_tickets
 from research_and_support_agent.data.seed import seed_test_environment
 from research_and_support_agent.eval.runner import format_benchmark_summary, run_benchmark
