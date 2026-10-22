@@ -49,9 +49,28 @@ Build a plain-Python, bounded research and support agent that combines internal 
 ### Milestone 4: Evaluation Benchmark & Quality Gates
 - [x] Curate 15 benchmark goal scenarios in `src/research_and_support_agent/eval/dataset.py`.
 - [x] Implement runnable benchmark runner (`scripts/run_eval.py`) reporting:
-  - Success Rate: 100%
+  - Success Rate: 100% (Mock) / 93.3% (Live API)
   - Mean Steps: 1.4 steps / goal
   - Mean Cost: $0.000044 USD / goal
 - [x] Add unit and integration tests covering all tools, limits, memory, and approval workflows (28/28 tests passing).
 - [x] Run `ruff check`, `ruff format`, `mypy src tests`, and `pytest` via `scripts/pre_push.sh` (100% passing).
+
+### Milestone 5: Database Seeding & Interactive Dual-Mode Evaluation
+- [x] Implement PostgreSQL tables (`support_customers`, `support_tickets`) and async operations in `db_store.py`.
+- [x] Implement idempotent data seeding in `src/research_and_support_agent/data/seed.py` and CLI script `scripts/seed_data.py`.
+- [x] Utilize `genai_core.GoogleProvider` supporting `gemini-3.5-flash-lite` and `gemini-3.8-flash` with native `thought_signature` and rate pacing.
+- [x] Provide interactive user selection in `scripts/run_eval.py`:
+  - `1. deterministic_mock eval`
+  - `2. realistic eval run`
+- [x] Support CLI overrides (`--live` and `--mock`) for non-interactive execution.
+
+### Milestone 6: Source Restructuring & Modular Test Architecture
+- [x] Separate `models.py` into `src/research_and_support_agent/models/domain.py` and `models/__init__.py`.
+- [x] Separate `config.py` into `src/research_and_support_agent/core/config.py` and `core/__init__.py`.
+- [x] Reorganize test suite into domain-focused subpackages (`tests/unit/{agent,config,data,eval,hitl,memory,models,telemetry,tools}/` and `tests/integration/{agent,eval,hitl,memory}/`).
+- [x] Add end-to-end integration tests running real `EvalSample` flows (`goal_01_ticket_status`, `goal_02_customer_lookup`, `goal_03_kb_retrieval`).
+- [x] Implement conditional integration test hook in `tests/conftest.py` requiring `INTEGRATION_TEST=1` in `.env` / environment.
+- [x] Expand unit coverage to 58 tests (all passing) and integration coverage to 14 tests (72 total passing, 0 type errors across 61 files).
+
+
 

@@ -17,6 +17,7 @@ from genai_core import (
 from research_and_support_agent.agent import BoundedAgent
 
 
+@pytest.mark.integration
 @pytest.mark.asyncio
 async def test_step_budget_exhaustion(agent: BoundedAgent) -> None:
     """Verify agent terminates cleanly with MAX_ITERATIONS_REACHED when step cap is hit."""
@@ -39,6 +40,7 @@ async def test_step_budget_exhaustion(agent: BoundedAgent) -> None:
     assert budget.is_step_budget_exhausted() is True
 
 
+@pytest.mark.integration
 @pytest.mark.asyncio
 async def test_wall_clock_deadline_exhaustion(agent: BoundedAgent) -> None:
     """Verify agent halts cleanly when the wall-clock deadline passes."""
@@ -64,6 +66,7 @@ async def test_wall_clock_deadline_exhaustion(agent: BoundedAgent) -> None:
     assert budget.is_deadline_exceeded() is True
 
 
+@pytest.mark.integration
 @pytest.mark.asyncio
 async def test_token_budget_exhaustion(agent: BoundedAgent) -> None:
     """Verify agent halts cleanly when cumulative token usage exceeds limit."""
@@ -84,6 +87,7 @@ async def test_token_budget_exhaustion(agent: BoundedAgent) -> None:
     assert budget.current_tokens >= 100
 
 
+@pytest.mark.integration
 @pytest.mark.asyncio
 async def test_cost_budget_exhaustion(agent: BoundedAgent) -> None:
     """Verify agent halts cleanly when cumulative cost exceeds limit."""
@@ -105,6 +109,7 @@ async def test_cost_budget_exhaustion(agent: BoundedAgent) -> None:
     assert budget.is_cost_budget_exhausted() is True
 
 
+@pytest.mark.integration
 @pytest.mark.asyncio
 async def test_repeated_loop_detection(agent: BoundedAgent) -> None:
     """Verify LoopDetector catches 3 identical consecutive tool calls and injects guidance."""

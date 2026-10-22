@@ -22,7 +22,7 @@ from genai_core import (
 )
 from genai_core.observability import ObservabilityEvent, get_logger, safe_log
 
-from .config import AgentConfig, get_agent_config
+from .core.config import AgentConfig, get_agent_config
 from .hitl.authorization import AuthorizationValidator
 from .hitl.postgres_store import PostgresApprovalStore
 from .memory.manager import AgentMemoryManager

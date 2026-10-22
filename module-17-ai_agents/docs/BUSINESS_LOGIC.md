@@ -55,7 +55,8 @@ Pricing is calculated per completed LLM step based on model ID:
 
 | Model Family | Prompt Tokens (per 1M) | Completion Tokens (per 1M) |
 |---|---|---|
-| `gemini-1.5-flash` / default | $0.075 | $0.30 |
+| `gemini-3.5-flash-lite` (Default) | $0.075 | $0.30 |
+| `gemini-1.5-flash` | $0.075 | $0.30 |
 | `gemini-1.5-pro` | $1.25 | $5.00 |
 | `gpt-4o-mini` | $0.15 | $0.60 |
 | `gpt-4o` | $2.50 | $10.00 |
@@ -65,9 +66,27 @@ If usage is not reported by the provider or in mock tests, costs are reported ho
 
 ---
 
-## 5. Storage Defaults
+## 5. Storage Defaults & Schemas
 
-- **Persistent Memory:** PostgreSQL via Docker (`DATABASE_CONNECTION_CONVERSATION_URL` or `postgres://postgres:postgres@127.0.0.1:5432/ai_search`).
+- **Persistent Memory Store:** PostgreSQL tables `memory_lt_records` (long-term facts with 384-dimensional pgvector embeddings) and `memory_ep_episodes` (episodic action logs with idempotency keys).
+- **Relational Domain Store:** PostgreSQL tables `support_customers` (accounts, tiers, balances, risk flags) and `support_tickets` (tickets, statuses, priority, history).
+- **Knowledge-Base Vector Store:** PostgreSQL table `document_chunks` (384-dimensional embeddings of policy docs via `PGVectorStoreAdapter`).
+- **Approval Store:** `PostgresApprovalStore` (`agent_approval_requests` table) storing HITL requests, statuses, and decisions in PostgreSQL, with `InMemoryApprovalStore` for isolated unit tests.
 - **Working Memory:** In-memory store provided by `genai-core` (`InMemoryMemoryStore`).
-- **Approval Store:** `PostgresApprovalStore` storing requests and decisions in PostgreSQL, with `InMemoryApprovalStore` for unit tests.
-- **Internal Knowledge Base:** `RetrievalService` with `InMemoryVectorStore` seeded with policy articles.
+
+---
+
+## 6. Evaluation Execution Modes
+
+When running `scripts/run_eval.py` interactively, two options are presented:
+1. `1. deterministic_mock eval`: Offline deterministic mock mode, suitable for fast CI/CD validation without API costs or external network dependencies.
+2. `2. realistic eval run`: Live mode connecting to local PostgreSQL, executing real Google Gemini 3.5 Flash Lite API calls, DuckDuckGo web search queries, vector similarity lookups, and HITL authorization flows.
+
+---
+
+## 7. Test Execution & Integration Gating Policy
+
+- **Unit Tests:** Fast, isolated unit tests run by default with zero external dependencies (`pytest tests/unit/` or zero-argument `pytest`).
+- **Integration Tests:** Integration tests under `tests/integration/` or marked `@pytest.mark.integration` execute ONLY when `INTEGRATION_TEST=1` (or `true`, `yes`, `on`) is present in the environment or `.env` file.
+- **Pre-Push Quality Gate:** Running `./scripts/pre_push.sh` verifies formatting, typing, linting, and runs unit tests. When `INTEGRATION_TEST=1` is exported, integration tests are verified in the quality gate as well.
+

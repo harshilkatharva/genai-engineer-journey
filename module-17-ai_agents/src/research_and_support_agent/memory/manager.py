@@ -133,11 +133,32 @@ class AgentMemoryManager:
         }
 
     async def delete_longterm_specific(self, user_id: str, record_id: str) -> dict[str, Any]:
-        """Delete a specific long-term memory record by ID."""
-        success = await self.memory_service.long_term.delete(
-            user_id=user_id,
-            record_id=record_id,
-        )
+        """Delete a specific long-term memory record by ID or alias."""
+        import uuid
+
+        target_id = record_id
+        try:
+            uuid.UUID(record_id)
+        except (ValueError, AttributeError):
+            target_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, record_id))
+
+        try:
+            success = await self.memory_service.long_term.delete(
+                user_id=user_id,
+                record_id=target_id,
+            )
+        except Exception:  # noqa: BLE001
+            success = False
+
+        if not success and target_id != record_id:
+            try:
+                success = await self.memory_service.long_term.delete(
+                    user_id=user_id,
+                    record_id=record_id,
+                )
+            except Exception:  # noqa: BLE001
+                success = False
+
         return {
             "user_id": user_id,
             "record_id": record_id,

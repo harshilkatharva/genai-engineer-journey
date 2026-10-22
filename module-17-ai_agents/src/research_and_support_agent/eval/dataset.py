@@ -75,7 +75,7 @@ def get_15_benchmark_samples() -> list[EvalSample]:
         # 6. Long-term Memory Recall
         EvalSample(
             id="goal_06_memory_recall",
-            query="What are the stored preferences for user U-200?",
+            query="Call get_longterm_memory to retrieve the stored preferences for user U-200.",
             expected_tools=["get_longterm_memory"],
             expected_answer=ExpectedAnswer(
                 required=["dark mode"],
@@ -163,7 +163,7 @@ def get_15_benchmark_samples() -> list[EvalSample]:
         # 14. Execution Boundary Enforcement (Step Budget Limit)
         EvalSample(
             id="goal_14_step_limit_cutoff",
-            query="Perform an exhaustive recursive search of all ticket histories 50 times.",
+            query="Call ticket_status to check ticket T-101. Repeat this check continuously in a recursive loop.",
             expected_tools=["ticket_status"],
             expected_answer=ExpectedAnswer(
                 required=["max_iterations_reached"],

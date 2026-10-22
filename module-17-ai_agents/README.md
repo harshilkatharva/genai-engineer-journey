@@ -27,8 +27,12 @@ The Bounded Research and Support Agent is designed to solve real-world enterpris
 ```
 module-17-ai_agents/
 ├── src/research_and_support_agent/
-│   ├── config.py             # Agent runtime configuration & budgets
-│   ├── models.py             # Domain models (CustomerAccount, SupportTicket, Reversals)
+│   ├── core/                 # Agent configuration & runtime defaults
+│   │   ├── __init__.py
+│   │   └── config.py
+│   ├── models/               # Domain models (CustomerAccount, SupportTicket, Reversals)
+│   │   ├── __init__.py
+│   │   └── domain.py
 │   ├── agent.py              # BoundedAgent orchestrator wrapping ToolLoopRunner
 │   ├── tools/
 │   │   ├── read_only.py      # 6 Read-only tools (search_kb, web_search, lookup, etc.)
@@ -44,6 +48,9 @@ module-17-ai_agents/
 │   ├── telemetry/
 │   │   ├── pricing.py        # Token pricing rate cards (Gemini, OpenAI, Claude)
 │   │   └── transcript.py     # Structured JSON run transcripts with PII redaction
+│   ├── data/
+│   │   ├── db_store.py       # Async PostgreSQL relational operations (customers, tickets)
+│   │   └── seed.py           # Idempotent seed data for customers, tickets, KB docs
 │   └── eval/
 │       ├── dataset.py        # 15 benchmark goal scenarios (EvalDataset)
 │       ├── metrics.py        # Step, cost, and keyword compliance evaluators
@@ -54,11 +61,25 @@ module-17-ai_agents/
 │   ├── FLOW.md
 │   └── BUSINESS_LOGIC.md
 ├── scripts/
-│   ├── pre_push.sh           # Linting, formatting, type checking, and test runner
+│   ├── pre_push.sh           # Linting, formatting, type checking, and unit test runner
+│   ├── seed_data.py          # Standalone database seeding script
 │   └── run_eval.py           # Runnable 15-goal evaluation benchmark script
 ├── tests/
-│   ├── unit/                 # Domain tools, pricing, sanitizer, authorization, transcripts
-│   └── integration/          # Boundaries, memory, HITL pause/resume, eval benchmark
+│   ├── unit/                 # 58 modular unit tests across 9 domains
+│   │   ├── agent/            # Agent orchestrator & budget overrides
+│   │   ├── config/           # Config limits & singleton behavior
+│   │   ├── data/             # PostgreSQL domain store & seed integrity
+│   │   ├── eval/             # EvalDataset & metrics evaluators
+│   │   ├── hitl/             # PostgresApprovalStore & authorization
+│   │   ├── memory/           # MemoryManager recall & deletions
+│   │   ├── models/           # Domain entity validation & state transitions
+│   │   ├── telemetry/        # PricingCalculator & transcript redactions
+│   │   └── tools/            # Read-only, reversible, irreversible, & sanitizers
+│   └── integration/          # 14 integration tests (gated by INTEGRATION_TEST=1)
+│       ├── agent/            # Boundaries & real EvalSample flow execution
+│       ├── eval/             # 15-goal benchmark run
+│       ├── hitl/             # Pause & resume with modified arguments
+│       └── memory/           # Pre-turn recall injection & episodic block
 ├── docker-compose.yml        # PostgreSQL 16 + pgvector container
 └── pyproject.toml            # Dependencies and tool configurations
 ```
@@ -122,54 +143,107 @@ The agent enforces 5 strict runtime constraints:
 
 ---
 
-## 6. Local Setup & Docker Instructions
+## 6. Local Setup, Database Seeding & Evaluation
 
 ### Prerequisites
 - Python 3.12+
 - `uv` package manager
 - Docker and Docker Compose (for PostgreSQL + pgvector)
+- Google Gemini API Key (`GOOGLE_API_KEY`) for live realistic evaluations
 
-### 1. Launch PostgreSQL with Docker
+### 1. Environment Configuration
+Create a `.env` file in `module-17-ai_agents/` (or set environment variables in your shell):
+```bash
+# Google Gemini API Key (Required for Option 2: realistic eval run)
+GOOGLE_API_KEY=your_gemini_api_key_here
+
+# Default LLM Model (Default: gemini-3.5-flash-lite)
+DEFAULT_LLM_MODEL=gemini-3.5-flash-lite
+
+# PostgreSQL Connection URL
+DATABASE_CONNECTION_CONVERSATION_URL=postgresql://postgres:postgres@127.0.0.1:5432/ai_search
+```
+
+### 2. Launch PostgreSQL Container
 ```bash
 docker compose up -d
 ```
-This spins up PostgreSQL 16 on port `5432` with the `pgvector` extension, initializing `research_agent_db`.
+This starts PostgreSQL with the `pgvector` extension enabled on `localhost:5432`.
 
-### 2. Install Dependencies
+### 3. Install Dependencies
 ```bash
 uv sync
 ```
 
-### 3. Run Quality Gates (Pre-push verification)
+### 4. Seed Database with Test Data
+Populate the PostgreSQL database with idempotent sample data (safe to run repeatedly without duplicate records):
+```bash
+uv run python scripts/seed_data.py
+```
+This script seeds:
+- **`support_customers`**: Customers `C-101` (Gold, $1250 balance), `C-102` (Standard), `C-103` (Platinum, refund candidate), `C-104` (Flagged risk account).
+- **`support_tickets`**: Tickets `T-1001` (Active/Open), `T-1002` (Hardware Replacement, In-Progress), `T-1003` (Urgent Escalation, Pending).
+- **`document_chunks`**: Vector-indexed knowledge-base articles (384-dimensional embeddings generated with `sentence-transformers/all-MiniLM-L6-v2`) covering Refund Policies, Tier Escalation Matrix, and Memory Retention Rules.
+- **`memory_lt_records`**: Long-term memories for `U-200` (Dark mode preference), `U-300` (Record `rec_99`), `U-400` (Bulk delete target), and `U-EXPIRED` (Purge testing).
+- **`memory_ep_episodes`**: Episodic action records with idempotency hashes (e.g. `REFUND_C-103_50.00`).
+
+### 5. Run the 15-Goal Benchmark Evaluation
+Execute the runner script:
+```bash
+uv run python scripts/run_eval.py
+```
+When executed without flags, the script presents an interactive selection prompt:
+```
+================================================================================
+MODULE 17: BOUNDED RESEARCH & SUPPORT AGENT EVALUATION
+================================================================================
+Select evaluation option:
+1. deterministic_mock eval
+2. realistic eval run
+--------------------------------------------------------------------------------
+Enter choice (1 or 2): 
+```
+
+- **Option 1 (`deterministic_mock eval`):** Executes all 15 benchmark goals against an offline, deterministic mock agent. Fast, safe for CI/CD, and incurs zero API cost (100% success rate).
+- **Option 2 (`realistic eval run`):** Connects to local PostgreSQL, makes actual calls to Google Gemini (`gemini-3.5-flash-lite` or `gemini-3.8-flash` via `genai-core`), searches the live web using DuckDuckGo, tests vector retrieval, and verifies human-in-the-loop approvals (100% live success rate).
+
+You can also bypass the prompt using CLI flags:
+```bash
+# Run offline mock benchmark
+uv run python scripts/run_eval.py --mock
+
+# Run realistic live benchmark with PostgreSQL and Gemini API
+uv run python scripts/run_eval.py --live
+```
+
+### 6. Run Quality Gates & Tests
+
+#### Unit Tests (Default, Fast, Zero External Dependencies)
+```bash
+uv run pytest tests/unit/
+```
+Runs 58 domain-focused unit tests in ~0.5 seconds. Integration tests are automatically skipped unless enabled.
+
+#### Integration Tests (Requires `INTEGRATION_TEST=1`)
+```bash
+# In your terminal:
+INTEGRATION_TEST=1 uv run pytest
+
+# Or add to your .env file:
+# INTEGRATION_TEST=1
+uv run pytest
+```
+Runs all 72 tests (58 unit tests + 14 integration tests, including end-to-end `EvalSample` flow runs against real domain schemas).
+
+#### Pre-push Verification
 ```bash
 ./scripts/pre_push.sh
 ```
 Runs:
 1. `ruff check .` (Linting)
 2. `ruff format --check .` (Formatting)
-3. `mypy src tests` (Type checking)
-4. `pytest -v` (Full unit & integration test suite)
-
-### 4. Run the 15-Goal Benchmark Evaluation
-```bash
-uv run python scripts/run_eval.py
-```
-
-Sample output:
-```
-================================================================================
-MODULE 17: BOUNDED RESEARCH & SUPPORT AGENT BENCHMARK REPORT
-================================================================================
-Total Goals Evaluated: 15
-Passed Samples:        15
---------------------------------------------------------------------------------
-Key Performance Indicators (KPIs):
-  • Success Rate:      100.0%
-  • Mean Steps:        1.4 steps / goal
-  • Mean Cost:         $0.000044 USD / goal
-  • Total Run Cost:    $0.000660 USD
-================================================================================
-```
+3. `mypy src tests` (Type checking across all 61 source files)
+4. `pytest -v` (Unit test suite verification)
 
 ---
 
