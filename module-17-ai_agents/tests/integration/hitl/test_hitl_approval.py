@@ -15,6 +15,7 @@ from genai_core import (
 from research_and_support_agent.agent import BoundedAgent
 
 
+@pytest.mark.integration
 @pytest.mark.asyncio
 async def test_hitl_pause_and_resume_with_modified_arguments(agent: BoundedAgent) -> None:
     """Verify execution pauses for irreversible tool, persists request, and resumes upon approval."""
@@ -74,6 +75,7 @@ async def test_hitl_pause_and_resume_with_modified_arguments(agent: BoundedAgent
     assert agent.account_store["C-101"].balance_usd == 140.0
 
 
+@pytest.mark.integration
 @pytest.mark.asyncio
 async def test_hitl_rejection_flow(agent: BoundedAgent) -> None:
     """Verify execution pauses and handles operator rejection gracefully."""

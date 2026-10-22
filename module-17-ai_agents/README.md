@@ -27,8 +27,12 @@ The Bounded Research and Support Agent is designed to solve real-world enterpris
 ```
 module-17-ai_agents/
 ├── src/research_and_support_agent/
-│   ├── config.py             # Agent runtime configuration & budgets
-│   ├── models.py             # Domain models (CustomerAccount, SupportTicket, Reversals)
+│   ├── core/                 # Agent configuration & runtime defaults
+│   │   ├── __init__.py
+│   │   └── config.py
+│   ├── models/               # Domain models (CustomerAccount, SupportTicket, Reversals)
+│   │   ├── __init__.py
+│   │   └── domain.py
 │   ├── agent.py              # BoundedAgent orchestrator wrapping ToolLoopRunner
 │   ├── tools/
 │   │   ├── read_only.py      # 6 Read-only tools (search_kb, web_search, lookup, etc.)
@@ -44,6 +48,9 @@ module-17-ai_agents/
 │   ├── telemetry/
 │   │   ├── pricing.py        # Token pricing rate cards (Gemini, OpenAI, Claude)
 │   │   └── transcript.py     # Structured JSON run transcripts with PII redaction
+│   ├── data/
+│   │   ├── db_store.py       # Async PostgreSQL relational operations (customers, tickets)
+│   │   └── seed.py           # Idempotent seed data for customers, tickets, KB docs
 │   └── eval/
 │       ├── dataset.py        # 15 benchmark goal scenarios (EvalDataset)
 │       ├── metrics.py        # Step, cost, and keyword compliance evaluators
@@ -54,11 +61,25 @@ module-17-ai_agents/
 │   ├── FLOW.md
 │   └── BUSINESS_LOGIC.md
 ├── scripts/
-│   ├── pre_push.sh           # Linting, formatting, type checking, and test runner
+│   ├── pre_push.sh           # Linting, formatting, type checking, and unit test runner
+│   ├── seed_data.py          # Standalone database seeding script
 │   └── run_eval.py           # Runnable 15-goal evaluation benchmark script
 ├── tests/
-│   ├── unit/                 # Domain tools, pricing, sanitizer, authorization, transcripts
-│   └── integration/          # Boundaries, memory, HITL pause/resume, eval benchmark
+│   ├── unit/                 # 58 modular unit tests across 9 domains
+│   │   ├── agent/            # Agent orchestrator & budget overrides
+│   │   ├── config/           # Config limits & singleton behavior
+│   │   ├── data/             # PostgreSQL domain store & seed integrity
+│   │   ├── eval/             # EvalDataset & metrics evaluators
+│   │   ├── hitl/             # PostgresApprovalStore & authorization
+│   │   ├── memory/           # MemoryManager recall & deletions
+│   │   ├── models/           # Domain entity validation & state transitions
+│   │   ├── telemetry/        # PricingCalculator & transcript redactions
+│   │   └── tools/            # Read-only, reversible, irreversible, & sanitizers
+│   └── integration/          # 14 integration tests (gated by INTEGRATION_TEST=1)
+│       ├── agent/            # Boundaries & real EvalSample flow execution
+│       ├── eval/             # 15-goal benchmark run
+│       ├── hitl/             # Pause & resume with modified arguments
+│       └── memory/           # Pre-turn recall injection & episodic block
 ├── docker-compose.yml        # PostgreSQL 16 + pgvector container
 └── pyproject.toml            # Dependencies and tool configurations
 ```
@@ -195,15 +216,34 @@ uv run python scripts/run_eval.py --mock
 uv run python scripts/run_eval.py --live
 ```
 
-### 6. Run Quality Gates (Pre-push verification)
+### 6. Run Quality Gates & Tests
+
+#### Unit Tests (Default, Fast, Zero External Dependencies)
+```bash
+uv run pytest tests/unit/
+```
+Runs 58 domain-focused unit tests in ~0.5 seconds. Integration tests are automatically skipped unless enabled.
+
+#### Integration Tests (Requires `INTEGRATION_TEST=1`)
+```bash
+# In your terminal:
+INTEGRATION_TEST=1 uv run pytest
+
+# Or add to your .env file:
+# INTEGRATION_TEST=1
+uv run pytest
+```
+Runs all 72 tests (58 unit tests + 14 integration tests, including end-to-end `EvalSample` flow runs against real domain schemas).
+
+#### Pre-push Verification
 ```bash
 ./scripts/pre_push.sh
 ```
 Runs:
 1. `ruff check .` (Linting)
 2. `ruff format --check .` (Formatting)
-3. `mypy src tests` (Type checking)
-4. `pytest -v` (Full unit & integration test suite - 28/28 passing)
+3. `mypy src tests` (Type checking across all 61 source files)
+4. `pytest -v` (Unit test suite verification)
 
 ---
 

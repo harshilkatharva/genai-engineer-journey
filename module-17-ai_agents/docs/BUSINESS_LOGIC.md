@@ -81,3 +81,12 @@ If usage is not reported by the provider or in mock tests, costs are reported ho
 When running `scripts/run_eval.py` interactively, two options are presented:
 1. `1. deterministic_mock eval`: Offline deterministic mock mode, suitable for fast CI/CD validation without API costs or external network dependencies.
 2. `2. realistic eval run`: Live mode connecting to local PostgreSQL, executing real Google Gemini 3.5 Flash Lite API calls, DuckDuckGo web search queries, vector similarity lookups, and HITL authorization flows.
+
+---
+
+## 7. Test Execution & Integration Gating Policy
+
+- **Unit Tests:** Fast, isolated unit tests run by default with zero external dependencies (`pytest tests/unit/` or zero-argument `pytest`).
+- **Integration Tests:** Integration tests under `tests/integration/` or marked `@pytest.mark.integration` execute ONLY when `INTEGRATION_TEST=1` (or `true`, `yes`, `on`) is present in the environment or `.env` file.
+- **Pre-Push Quality Gate:** Running `./scripts/pre_push.sh` verifies formatting, typing, linting, and runs unit tests. When `INTEGRATION_TEST=1` is exported, integration tests are verified in the quality gate as well.
+

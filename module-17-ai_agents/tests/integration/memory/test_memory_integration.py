@@ -11,6 +11,7 @@ from research_and_support_agent.agent import BoundedAgent
 from research_and_support_agent.memory.manager import AgentMemoryManager
 
 
+@pytest.mark.integration
 @pytest.mark.asyncio
 async def test_preturn_memory_recall_context_injection(
     agent: BoundedAgent,
@@ -36,6 +37,7 @@ async def test_preturn_memory_recall_context_injection(
     assert "German invoices" in sys_content
 
 
+@pytest.mark.integration
 @pytest.mark.asyncio
 async def test_episodic_action_logging_and_idempotency_block(
     agent: BoundedAgent,
@@ -58,6 +60,7 @@ async def test_episodic_action_logging_and_idempotency_block(
     assert "Duplicate action detected" in res2["error"]
 
 
+@pytest.mark.integration
 @pytest.mark.asyncio
 async def test_memory_deletion_tools(
     agent: BoundedAgent,

@@ -65,4 +65,22 @@
   Also preserved `--mock` and `--live` CLI flags for automated or non-interactive execution.
 - **Impact:** Provides an intuitive developer experience while maintaining automated pipeline compatibility.
 
+### Decision 11: Source Code Restructuring, Modular Test Architecture, and Conditional Integration Testing
+- **Context:** The codebase needed better organization following conventions from `packages/genai-core` and `module-09-rag`. Flat test files (`tests/unit/test_domain_tools.py`, etc.) and top-level `models.py` / `config.py` needed modular separation into dedicated subdirectories. Additionally, integration tests needed to run conditionally based on `INTEGRATION_TEST=1` in `.env` or the environment, and real `EvalSample` flow tests were required.
+- **Decision:**
+  1. **Source Restructuring:**
+     - Moved `models.py` to `src/research_and_support_agent/models/domain.py` with `models/__init__.py`.
+     - Moved `config.py` to `src/research_and_support_agent/core/config.py` with `core/__init__.py`.
+     - Updated all imports across `src/`, `scripts/`, and `tests/`.
+  2. **Modular Test Architecture:**
+     - Split unit tests into focused domain folders: `tests/unit/agent/`, `tests/unit/config/`, `tests/unit/data/`, `tests/unit/eval/`, `tests/unit/hitl/`, `tests/unit/memory/`, `tests/unit/models/`, `tests/unit/telemetry/`, and `tests/unit/tools/`.
+     - Split integration tests into `tests/integration/agent/`, `tests/integration/eval/`, `tests/integration/hitl/`, and `tests/integration/memory/`.
+     - Created `tests/integration/agent/test_eval_sample_flow.py` running real `EvalSample` instances (`goal_01_ticket_status`, `goal_02_customer_lookup`, `goal_03_kb_retrieval`) from the 15-goal benchmark.
+  3. **Conditional Integration Hook:**
+     - Configured `pytest_collection_modifyitems` in `tests/conftest.py` reading `.env` and environment for `INTEGRATION_TEST`.
+     - When `INTEGRATION_TEST` is not in `("1", "true", "yes", "on")`, all tests under `tests/integration/` or marked `@pytest.mark.integration` are automatically skipped.
+- **Alternatives Considered:** Using pytest custom CLI options (`--integration`). Rejected in favor of `.env` / environment variable `INTEGRATION_TEST=1` to allow standard zero-argument `pytest` or `pre_push.sh` executions to automatically run fast unit tests while permitting CI or explicit integration runs via `INTEGRATION_TEST=1 pytest`.
+- **Impact:** Clean domain-driven directory layout, 0 type issues across 61 files, 58 fast unit tests running in ~0.5s, and 14 comprehensive integration tests running on-demand when `INTEGRATION_TEST=1` is provided (72 total tests).
+
+
 

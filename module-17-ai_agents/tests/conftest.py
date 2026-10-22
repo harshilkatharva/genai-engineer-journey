@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import os
 from typing import Any
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
+from dotenv import load_dotenv
 from genai_core import (
     DocumentChunk,
     InMemoryMemoryStore,
@@ -16,7 +18,7 @@ from genai_core import (
 )
 
 from research_and_support_agent.agent import BoundedAgent
-from research_and_support_agent.config import AgentConfig
+from research_and_support_agent.core.config import AgentConfig
 from research_and_support_agent.hitl.postgres_store import PostgresApprovalStore
 from research_and_support_agent.memory.manager import AgentMemoryManager
 from research_and_support_agent.models import (
@@ -26,6 +28,23 @@ from research_and_support_agent.models import (
     TicketStatus,
 )
 from research_and_support_agent.telemetry.pricing import PricingCalculator
+
+load_dotenv()
+
+
+def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
+    """Conditionally skip integration tests unless INTEGRATION_TEST=1 is configured."""
+    flag = os.getenv("INTEGRATION_TEST", "").strip().lower()
+    run_integration = flag in ("1", "true", "yes", "on")
+
+    skip_integration = pytest.mark.skip(
+        reason="Integration tests skipped. Set INTEGRATION_TEST=1 in .env to run them."
+    )
+    for item in items:
+        item_path_str = str(item.fspath)
+        is_integration = "/integration" in item_path_str or "integration" in item.keywords
+        if is_integration and not run_integration:
+            item.add_marker(skip_integration)
 
 
 @pytest.fixture

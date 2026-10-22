@@ -10,6 +10,7 @@ from genai_core.models.evaluation_model import EvalOutput, EvalSample
 from research_and_support_agent.eval.runner import format_benchmark_summary, run_benchmark
 
 
+@pytest.mark.integration
 @pytest.mark.asyncio
 async def test_15_goals_benchmark_execution() -> None:
     """Verify that all 15 benchmark goals run and report success rate, mean steps, and mean cost."""

@@ -64,4 +64,13 @@ Build a plain-Python, bounded research and support agent that combines internal 
   - `2. realistic eval run`
 - [x] Support CLI overrides (`--live` and `--mock`) for non-interactive execution.
 
+### Milestone 6: Source Restructuring & Modular Test Architecture
+- [x] Separate `models.py` into `src/research_and_support_agent/models/domain.py` and `models/__init__.py`.
+- [x] Separate `config.py` into `src/research_and_support_agent/core/config.py` and `core/__init__.py`.
+- [x] Reorganize test suite into domain-focused subpackages (`tests/unit/{agent,config,data,eval,hitl,memory,models,telemetry,tools}/` and `tests/integration/{agent,eval,hitl,memory}/`).
+- [x] Add end-to-end integration tests running real `EvalSample` flows (`goal_01_ticket_status`, `goal_02_customer_lookup`, `goal_03_kb_retrieval`).
+- [x] Implement conditional integration test hook in `tests/conftest.py` requiring `INTEGRATION_TEST=1` in `.env` / environment.
+- [x] Expand unit coverage to 58 tests (all passing) and integration coverage to 14 tests (72 total passing, 0 type errors across 61 files).
+
+
 
