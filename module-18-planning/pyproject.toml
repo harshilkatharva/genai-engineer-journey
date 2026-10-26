@@ -30,10 +30,12 @@ dependencies = [
     "langgraph>=1.2.15",
     "langchain-google-genai>=4.4.2",
     "genai-core",
+    "module-17-ai-agents",
 ]
 
 [tool.uv.sources]
 genai-core = { path = "../packages/genai-core", editable = true }
+module-17-ai-agents = { path = "../module-17-ai_agents", editable = true }
 
 [dependency-groups]
 dev = [
@@ -73,6 +75,8 @@ warn_unused_configs = true
 module = [
     "genai_core",
     "genai_core.*",
+    "research_and_support_agent",
+    "research_and_support_agent.*",
     "bs4",
     "bs4.*",
 ]

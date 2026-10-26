@@ -1665,6 +1665,69 @@ wheels = [
 ]
 
 [[package]]
+name = "module-17-ai-agents"
+version = "0.1.0"
+source = { editable = "../module-17-ai_agents" }
+dependencies = [
+    { name = "anthropic" },
+    { name = "asyncpg" },
+    { name = "dotenv" },
+    { name = "fastapi" },
+    { name = "genai-core" },
+    { name = "google" },
+    { name = "google-genai" },
+    { name = "httpx2" },
+    { name = "ipykernel" },
+    { name = "langchain-google-genai" },
+    { name = "langgraph" },
+    { name = "mcp" },
+    { name = "openai" },
+    { name = "pgvector" },
+    { name = "psycopg", extra = ["binary"] },
+    { name = "pydantic" },
+    { name = "pydantic-settings" },
+    { name = "sentence-transformers" },
+    { name = "tiktoken" },
+    { name = "uuid" },
+    { name = "uvicorn" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "anthropic", specifier = ">=0.125.0" },
+    { name = "asyncpg", specifier = ">=0.31.0" },
+    { name = "dotenv", specifier = ">=0.9.9" },
+    { name = "fastapi", specifier = ">=0.141.1" },
+    { name = "genai-core", editable = "../packages/genai-core" },
+    { name = "google", specifier = ">=3.0.0" },
+    { name = "google-genai", specifier = ">=2.19.0" },
+    { name = "httpx2", specifier = ">=2.10.0" },
+    { name = "ipykernel", specifier = ">=7.3.0" },
+    { name = "langchain-google-genai", specifier = ">=4.4.2" },
+    { name = "langgraph", specifier = ">=1.2.15" },
+    { name = "mcp", specifier = ">=2.2.0" },
+    { name = "openai", specifier = ">=3.3.1" },
+    { name = "pgvector", specifier = ">=0.5.0" },
+    { name = "psycopg", extras = ["binary"], specifier = ">=3.3.4" },
+    { name = "pydantic", specifier = ">=2.13.5" },
+    { name = "pydantic-settings", specifier = ">=2.15.0" },
+    { name = "sentence-transformers", specifier = ">=5.7.0" },
+    { name = "tiktoken", specifier = ">=0.13.0" },
+    { name = "uuid", specifier = ">=1.30" },
+    { name = "uvicorn", specifier = ">=0.52.3" },
+]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "mypy", specifier = ">=2.3.0" },
+    { name = "pre-commit", specifier = ">=4.6.1" },
+    { name = "pytest", specifier = ">=9.1.1" },
+    { name = "pytest-asyncio", specifier = ">=1.4.0" },
+    { name = "respx", specifier = ">=0.23.1" },
+    { name = "ruff", specifier = ">=0.16.0" },
+]
+
+[[package]]
 name = "module-18-planning"
 version = "0.1.0"
 source = { editable = "." }
@@ -1681,6 +1744,7 @@ dependencies = [
     { name = "langchain-google-genai" },
     { name = "langgraph" },
     { name = "mcp" },
+    { name = "module-17-ai-agents" },
     { name = "openai" },
     { name = "pgvector" },
     { name = "psycopg", extra = ["binary"] },
@@ -1716,6 +1780,7 @@ requires-dist = [
     { name = "langchain-google-genai", specifier = ">=4.4.2" },
     { name = "langgraph", specifier = ">=1.2.15" },
     { name = "mcp", specifier = ">=2.2.0" },
+    { name = "module-17-ai-agents", editable = "../module-17-ai_agents" },
     { name = "openai", specifier = ">=3.3.1" },
     { name = "pgvector", specifier = ">=0.5.0" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.3.4" },

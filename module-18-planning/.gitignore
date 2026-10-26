@@ -34,3 +34,6 @@ logs/
 
 # transcripts
 transcripts/
+
+# vs code settings
+.vscode/
