@@ -16,7 +16,7 @@ uv run --directory "$MODULE_DIR" ruff format --check .
 
 # 3. Mypy type-checking
 echo "--> Checking mypy types..."
-uv run --directory "$MODULE_DIR" mypy src tests
+uv run --directory "$MODULE_DIR" mypy .
 
 # 4. Pytest test suite
 echo "--> Running test suite..."
