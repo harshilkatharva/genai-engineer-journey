@@ -20,6 +20,6 @@ uv run --directory "$MODULE_DIR" mypy .
 
 # 4. Pytest test suite
 echo "--> Running test suite..."
-uv run --directory "$MODULE_DIR" pytest -v
+uv run --directory "$MODULE_DIR" pytest -v tests/
 
 echo "=== All module-18-plan_and_execute_research_assistant checks passed successfully! ==="
