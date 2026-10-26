@@ -1,0 +1,81 @@
+{
+  "goal": "Build and deploy a containerized FastAPI microservice with PostgreSQL and automated CI/CD pipeline on AWS",
+  "steps": [
+    {
+      "id": "step_1",
+      "description": "Develop the FastAPI microservice application code with database connection logic and endpoints",
+      "tool_name_hint": "Pytest + Ruff + VSCode",
+      "depends_on": null,
+      "success_criteria": "FastAPI application is fully written with main.py, models.py, requirements.txt, and passing unit tests",
+      "status": "completed",
+      "result_summary": "Completed 'step_1' using IDE / File System. Artifacts generated and verified criteria: FastAPI application is fully written with main.py, models.py, requirements.txt, and passing unit tests | [Verified] Programmatic OK | Checker Model: The execution output confirms that all required artifacts (main.py, models.py, requirements.txt) and passing unit tests have been successfully generated and verified for the FastAPI microservice application.",
+      "attempts": 1
+    },
+    {
+      "id": "step_2",
+      "description": "Create a multi-stage Dockerfile for containerizing the FastAPI application",
+      "tool_name_hint": "Docker",
+      "depends_on": [
+        "step_1"
+      ],
+      "success_criteria": "Dockerfile builds successfully and the container runs locally with the FastAPI app responding",
+      "status": "completed",
+      "result_summary": "Completed 'step_2' using Docker. Artifacts generated and verified criteria: Dockerfile builds successfully and the container runs locally with the FastAPI app responding | [Verified] Programmatic OK | Checker Model: The execution output confirms that the Dockerfile was successfully created, built, and verified by running the container locally with the FastAPI application responding.",
+      "attempts": 1
+    },
+    {
+      "id": "step_3",
+      "description": "Define Docker Compose setup for local testing of FastAPI and PostgreSQL database",
+      "tool_name_hint": "Docker Compose",
+      "depends_on": [
+        "step_2"
+      ],
+      "success_criteria": "docker-compose up spins up both the FastAPI container and PostgreSQL instance, successfully connecting them",
+      "status": "completed",
+      "result_summary": "Completed 'step_3' using Docker Compose. Artifacts generated and verified criteria: docker-compose up spins up both the FastAPI container and PostgreSQL instance, successfully connecting them | [Verified] Programmatic OK | Checker Model: The execution output confirms that the Docker Compose setup has been completed, artifacts generated, and the criteria of successfully spinning up both the FastAPI container and PostgreSQL instance with a connection has been verified.",
+      "attempts": 1
+    },
+    {
+      "id": "step_4",
+      "description": "Provision AWS infrastructure (RDS PostgreSQL instance, ECS cluster/task definition, and ECR repository) using Terraform",
+      "tool_name_hint": "Terraform / AWS CLI",
+      "depends_on": null,
+      "success_criteria": "Terraform apply completes without error, creating the ECR repository, RDS database, and ECS service infrastructure",
+      "status": "completed",
+      "result_summary": "Completed 'step_4' using Terraform / AWS CLI. Artifacts generated and verified criteria: Terraform apply completes without error, creating the ECR repository, RDS database, and ECS service infrastructure | [Verified] Programmatic OK | Checker Model: The actual execution output explicitly confirms that the Terraform apply completed without error and successfully created the ECR repository, RDS database, and ECS service infrastructure, directly satisfying the required success criteria.",
+      "attempts": 1
+    },
+    {
+      "id": "step_5",
+      "description": "Create a GitHub Actions CI/CD pipeline workflow file for building, testing, pushing to ECR, and deploying to ECS",
+      "tool_name_hint": "GitHub Actions",
+      "depends_on": [
+        "step_2",
+        "step_4"
+      ],
+      "success_criteria": "Workflow YAML is valid and configured with necessary AWS credentials and environment secrets",
+      "status": "completed",
+      "result_summary": "Completed 'step_5' using GitHub Actions. Artifacts generated and verified criteria: Workflow YAML is valid and configured with necessary AWS credentials and environment secrets | [Verified] Programmatic OK | Checker Model: The execution output confirms that the GitHub Actions CI/CD pipeline workflow file was successfully created, is valid, and is properly configured with the necessary AWS credentials and environment secrets as required by the success criteria.",
+      "attempts": 1
+    },
+    {
+      "id": "step_6",
+      "description": "Trigger the CI/CD pipeline by pushing code to GitHub and verifying the deployment on AWS ECS",
+      "tool_name_hint": "Git / AWS Console",
+      "depends_on": [
+        "step_5"
+      ],
+      "success_criteria": "Pipeline runs successfully through all stages and the FastAPI microservice is publicly accessible via the AWS ALB endpoint",
+      "status": "completed",
+      "result_summary": "Completed 'step_6' using Git / AWS Console. Artifacts generated and verified criteria: Pipeline runs successfully through all stages and the FastAPI microservice is publicly accessible via the AWS ALB endpoint | [Verified] Programmatic OK | Checker Model: The actual execution output explicitly confirms that the pipeline ran successfully through all stages and the FastAPI microservice was verified to be publicly accessible via the AWS ALB endpoint, matching all required success criteria.",
+      "attempts": 1
+    }
+  ],
+  "version": 1,
+  "assumptions": [
+    "AWS account with appropriate permissions is available",
+    "GitHub repository is configured for storing source code and running Actions",
+    "Terraform state management backend is accessible",
+    "Reviewer verified AWS IAM permissions are active"
+  ]
+}
