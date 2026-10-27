@@ -32,7 +32,7 @@ This planner also serves as the extensible foundation for:
   - Self-dependency and cycle detection using 3-state Depth-First Search (`UNVISITED`, `VISITING`, `VISITED`).
   - Referential integrity check (all dependencies exist).
   - Root step reachability check.
-- [x] Add comprehensive unit tests in `tests/unit/test_plan_validator.py` covering valid plans, direct/indirect cycles, duplicate IDs, missing dependencies, and self-dependencies.
+- [x] Add comprehensive unit tests in `tests/unit/planning/test_plan_validator.py` covering valid plans, direct/indirect cycles, duplicate IDs, missing dependencies, and self-dependencies.
 
 ### Milestone 2: Structured Plan Generation, Automated Repair & Memory Integration
 - [x] Implement `PlanGenerator` utilizing `genai_core.LLMService.complete_structure` with Pydantic `Plan` schema.
@@ -41,7 +41,7 @@ This planner also serves as the extensible foundation for:
   - Recall user preferences and domain constraints from `genai_core.LongTermMemory` via `search_longterm()`.
   - Record completed plan episodes in `genai_core.EpisodicMemory` for auditability and idempotency.
   - Support configurable episodic past plan retrieval (`enable_episodic_similarity_search`) with graceful zero-shot fallback.
-- [x] Add unit tests in `tests/unit/test_plan_generator.py` and `tests/unit/test_memory_integration.py`.
+- [x] Add unit tests in `tests/unit/planning/test_plan_generator.py` and `tests/unit/memory/test_memory_manager.py`.
 
 ### Milestone 3: Human Plan Review Gateway & Immutable Plan Versioning
 - [ ] Implement `HumanPlanReviewGateway`:
@@ -54,7 +54,7 @@ This planner also serves as the extensible foundation for:
   - Persist human-edited plans as `version=2`, `parent_version=1`, `created_by="human_reviewer"`.
   - Persist dynamic replans as `version=N+1`, `parent_version=N`, `created_by="replanner"`.
 - [ ] Implement `RunRecordStore` protocol and `FileRunRecordStore` persisting full run lifecycles (`runs/run_<id>.json`).
-- [ ] Add unit tests in `tests/unit/test_human_review.py` and `tests/unit/test_run_records.py`.
+- [ ] Add unit tests in `tests/unit/review/test_human_review.py` and `tests/unit/storage/test_run_records.py`.
 
 ### Milestone 4: Async DAG Scheduler, Module 17 Step Execution & Dual Verification
 - [ ] Implement pure Python `DAGScheduler` using `asyncio`:
@@ -69,7 +69,7 @@ This planner also serves as the extensible foundation for:
   - **Programmatic Verifier:** Validates completion status, non-empty deliverable, minimum length, and deterministic regex/JSON rules.
   - **Model-Based Judge Verifier:** Evaluates whether actual output satisfies `step.success_criteria` using `LLMService.complete_structure` with `StepJudgeVerdict` (threshold >= 0.85).
 - [ ] Support step-level retries up to `max_step_retries` (default: 2) with verification feedback before declaring step failure.
-- [ ] Add unit tests in `tests/unit/test_dag_scheduler.py` and `tests/unit/test_verification.py`.
+- [ ] Add unit tests in `tests/unit/scheduling/test_dag_scheduler.py` and `tests/unit/verification/test_verification.py`.
 
 ### Milestone 5: Concurrency-Safe Dynamic Replanning & Failure Recovery
 - [ ] Implement `ReplanningEngine`:
@@ -80,13 +80,13 @@ This planner also serves as the extensible foundation for:
   - Generate replacement/remedial steps for remaining unfulfilled objectives, re-validating the full DAG.
   - Link new plan version (`version=parent_version+1`, `parent_version=current_version`).
   - Enforce global replanning limit (`max_replans=3`) to prevent thrashing.
-- [ ] Add unit tests in `tests/unit/test_replanning.py` verifying state isolation, sibling settling, and work preservation.
+- [ ] Add unit tests in `tests/unit/replanning/test_replanning.py` verifying state isolation, sibling settling, and work preservation.
 
 ### Milestone 6: Run-Wide Budget Tracking & Orchestrator Facade
 - [ ] Implement `RunBudget` tracking aggregate token consumption, total cost ($ USD), and wall-clock deadline across all lifecycle phases (planning, human review, parallel step execution, verification, retries, and replanning).
 - [ ] Implement `PlanAndExecuteAssistant` facade coordinating initialization, memory recall, planning, review, scheduling, replanning, synthesis, and run persistence.
 - [ ] Ensure future extensibility contracts (`PlanReflector` protocol for Module 19, `StepExecutor` protocol for Module 20) are cleanly decoupled.
-- [ ] Add unit tests in `tests/unit/test_assistant.py` and `tests/unit/test_run_budget.py`.
+- [ ] Add unit tests in `tests/unit/orchestration/test_assistant.py` and `tests/unit/budget/test_run_budget.py`.
 
 ### Milestone 7: 10-Goal Fair Comparative Evaluation Suite
 - [ ] Curate 10 benchmark goals covering multi-source research, complex operations, and error recovery in `eval/dataset.py`.
