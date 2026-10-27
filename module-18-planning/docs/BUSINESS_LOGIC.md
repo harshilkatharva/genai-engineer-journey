@@ -46,14 +46,19 @@ class PlanStep(BaseModel):
     attempts: int = Field(default=0, description="Number of execution attempts")
     error_message: str | None = Field(default=None, description="Error detail if failed")
 
+
 class Plan(BaseModel):
     goal: str = Field(description="Top-level user objective")
     steps: list[PlanStep] = Field(description="List of planned steps forming a DAG")
     version: int = Field(default=1, description="Monotonically increasing plan version")
     parent_version: int | None = Field(default=None, description="Version ID of predecessor plan")
     created_by: str = Field(default="planner_llm")  # "planner_llm", "human_reviewer", "replanner"
-    assumptions: list[str] = Field(default_factory=list, description="Explicit planning assumptions")
-    change_summary: str | None = Field(default=None, description="Summary of edits from parent version")
+    assumptions: list[str] = Field(
+        default_factory=list, description="Explicit planning assumptions"
+    )
+    change_summary: str | None = Field(
+        default=None, description="Summary of edits from parent version"
+    )
     created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
 ```
 
@@ -354,6 +359,7 @@ Module 18 defines clean Protocol boundaries to ensure future modules integrate w
 ```python
 class PlanReflector(Protocol):
     """Module 19 Hook: Critiques and improves plans prior to human review or execution."""
+
     async def reflect_on_plan(self, plan: Plan, context: dict[str, Any]) -> Plan: ...
 ```
 - In Module 18, `reflector` defaults to `None`. When provided in Module 19, `PlanGenerator` passes generated plans through `reflector.reflect_on_plan()` before presenting them to the human review gateway.
@@ -362,6 +368,7 @@ class PlanReflector(Protocol):
 ```python
 class StepExecutor(Protocol):
     """Module 20 Hook: Routes step execution to specialist agents based on domain or tool hints."""
+
     async def execute_step(
         self,
         step: PlanStep,
