@@ -69,6 +69,7 @@ class Module17StepExecutor(StepExecutor):
         self,
         step: PlanStep,
         predecessor_context: dict[str, str],
+        user_id: str | None = None,
         retry_feedback: str | None = None,
     ) -> str:
         """Assemble structured prompt for the step execution."""
@@ -77,6 +78,9 @@ class Module17StepExecutor(StepExecutor):
             f"OBJECTIVE: {step.description}",
             f"SUCCESS CRITERIA: {step.success_criteria}",
         ]
+
+        if user_id:
+            lines.append(f"TARGET USER / ENTITY CONTEXT: {user_id}")
 
         if step.tool_name_hint:
             lines.append(f"RECOMMENDED TOOL HINT: {step.tool_name_hint}")
@@ -120,6 +124,7 @@ class Module17StepExecutor(StepExecutor):
         query = self.format_step_prompt(
             step=step,
             predecessor_context=predecessor_context,
+            user_id=user_id,
             retry_feedback=retry_feedback,
         )
 
@@ -148,6 +153,8 @@ class Module17StepExecutor(StepExecutor):
             error_msg = getattr(result, "error_message", None)
 
             step_status = StepStatus.COMPLETED if is_success else StepStatus.FAILED
+            if not is_success and not output_text and error_msg:
+                output_text = f"Execution failed: {error_msg}"
 
             return StepExecutionOutput(
                 step_id=step.id,

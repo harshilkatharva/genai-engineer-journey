@@ -11,6 +11,7 @@ from genai_core import ObservabilityEvent, safe_log
 
 from ..core import AssistantConfig, get_assistant_config
 from ..models import (
+    BudgetExceededError,
     Plan,
     PlanStep,
     RunBudget,
@@ -236,10 +237,22 @@ class DAGScheduler:
         # Main orchestration loop
         try:
             while True:
-                # 1. Clean up completed tasks from active_tasks map
+                # 1. Clean up completed tasks from active_tasks map and inspect exceptions
                 done_task_ids = [s_id for s_id, t in active_tasks.items() if t.done()]
                 for s_id in done_task_ids:
-                    del active_tasks[s_id]
+                    t = active_tasks.pop(s_id)
+                    exc = t.exception()
+                    if exc is not None:
+                        if isinstance(exc, BudgetExceededError):
+                            raise exc
+                        step_status[s_id] = StepStatus.FAILED
+                        step_obj = next((s for s in plan.steps if s.id == s_id), None)
+                        if step_obj:
+                            step_obj.status = StepStatus.FAILED
+                            step_obj.error_message = str(exc)
+                        if failed_step_id is None:
+                            failed_step_id = s_id
+                            error_message = str(exc)
 
                 # 2. Check for failure condition
                 if failed_step_id is not None or any(

@@ -24,6 +24,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..",
 from dotenv import load_dotenv
 
 from plan_and_execute_research_assistant.eval import (
+    create_live_benchmark_targets,
     deterministic_mock_planned_target,
     deterministic_mock_reactive_target,
     get_10_benchmark_goals,
@@ -61,6 +62,17 @@ async def main() -> None:
         ),
         help="PostgreSQL connection URL for live mode",
     )
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=None,
+        help="Limit evaluation to the first N benchmark goals.",
+    )
+    parser.add_argument(
+        "--goal-ids",
+        default=None,
+        help="Comma-separated list of goal IDs to evaluate (e.g. G-01,G-02).",
+    )
     args = parser.parse_args()
 
     # Determine execution mode: CLI flags or interactive prompt
@@ -90,9 +102,15 @@ async def main() -> None:
     print(f"MODULE 18: RUNNING COMPARATIVE BENCHMARK EVALUATION [Mode: {mode_label}]")
     print("================================================================================")
 
+    samples = get_10_benchmark_goals()
+    if args.goal_ids:
+        target_ids = {gid.strip() for gid in args.goal_ids.split(",") if gid.strip()}
+        samples = [s for s in samples if str(s.id) in target_ids]
+    if args.limit:
+        samples = samples[: args.limit]
+
     if not is_live:
         # Offline / deterministic mock benchmark execution
-        samples = get_10_benchmark_goals()
         print(f"Evaluating {len(samples)} curated benchmark goals under deterministic mocks...\n")
 
         report = await run_comparative_benchmark(
@@ -107,21 +125,30 @@ async def main() -> None:
         return
 
     # Live execution mode
-    api_key = os.getenv("GEMINI_API_KEY")
+    api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
     if not api_key:
-        print("ERROR: GEMINI_API_KEY environment variable is required for live evaluation.")
+        print(
+            "ERROR: GOOGLE_API_KEY or GEMINI_API_KEY environment variable is required for live evaluation."
+        )
         sys.exit(1)
 
-    print("Connecting to live services and executing benchmark (Planned vs. Reactive)...")
-    # Live execution delegates to live targets with identical budgets
-    samples = get_10_benchmark_goals()
+    print(
+        f"Connecting to live services and executing benchmark (Planned vs. Reactive) using model '{args.model}'..."
+    )
+    planned_target, reactive_target = await create_live_benchmark_targets(
+        api_key=api_key,
+        db_url=args.db_url,
+        model=args.model,
+    )
+    print(f"Evaluating {len(samples)} goals with live Gemini LLM and PostgreSQL...\n")
     report = await run_comparative_benchmark(
         samples=samples,
-        planned_target=deterministic_mock_planned_target,  # fallback if services unavailable
-        reactive_target=deterministic_mock_reactive_target,
-        max_concurrency=2,
+        planned_target=planned_target,
+        reactive_target=reactive_target,
+        max_concurrency=1,
     )
     print(report.format_comparison_table())
+    print("\nLive benchmark completed successfully.")
 
 
 if __name__ == "__main__":

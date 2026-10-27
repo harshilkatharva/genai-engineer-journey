@@ -217,3 +217,21 @@
   1. Relying solely on unit mocks: Rejected because mocks do not catch LLM prompt schema drift, model deprecations (such as `gemini-2.0-flash`), or database connection nuances.
   2. Running integration tests in default `pre_push.sh`: Rejected because live tests require network access, API tokens, and running Docker containers; guarded under `INTEGRATION_TEST=1` fixture gates.
 - **Impact:** 100% verified compatibility across live LLM services, pgvector databases, reactive agents, and DAG planning orchestrators with 13 out of 13 integration tests passing.
+
+---
+
+### Decision 18: Live Comparative Benchmark Runner Architecture & Robust Execution Guardrails
+- **Context:** Executing the 10-goal comparative benchmark against real Gemini API credentials and PostgreSQL database revealed runtime operational requirements:
+  1. Real multi-turn agent tool execution (combining SentenceTransformers embedding inference, DuckDuckGo web search, and Gemini generation) requires up to 30-40 seconds per turn; the default 30.0s deadline in `AgentConfig` caused premature `BUDGET_EXHAUSTED` timeouts during live execution.
+  2. When a step task raised `BudgetExceededError`, unretrieved task exceptions inside Python's `asyncio.wait(FIRST_COMPLETED)` loop resulted in silent task termination without updating step statuses, misleading the scheduler into detecting a false `DAGDeadlockError`.
+  3. Goals requiring customer and ticket entity resolution (e.g. `C-101`, `T-101`) generated generic step instructions like "Lookup customer account", which caused the underlying `BoundedAgent` to prompt the user for customer IDs instead of using the goal's target entity.
+- **Decision:**
+  1. Live Benchmark Runner (`src/plan_and_execute_research_assistant/eval/live_runner.py`): Implemented `create_live_benchmark_targets` instantiating candidate and baseline targets with live `GoogleProvider` (`gemini-3.5-flash-lite`), live PostgreSQL database stores, and real-time terminal progress reporting.
+  2. Execution Deadlines & Token Budgets: Configured `AgentConfig` with `default_timeout_seconds=90.0`, `default_max_tokens=30_000`, and `default_max_cost_usd=0.25` for live agent execution, and raised `RunBudget` to 60,000 tokens and 240.0s total wall-clock timeout.
+  3. Scheduler Exception Propagation: In `DAGScheduler._orchestrate_step_execution`, explicitly inspected `task.exception()` on completed tasks. If `isinstance(exc, BudgetExceededError)`, the exception is re-raised immediately to halt the run cleanly; otherwise, the step is marked `FAILED` to trigger sibling settling and replanning.
+  4. Entity Context Propagation: Added `TARGET USER / ENTITY CONTEXT: {user_id}` in `Module17StepExecutor.format_step_prompt` and added rule 8 to `build_planning_prompt` DAG invariants instructing the LLM to explicitly preserve entity identifiers in step descriptions.
+  5. Flexible Benchmark CLI: Enhanced `scripts/run_eval.py` with `--limit <N>` and `--goal-ids <G-01,G-02>` flags to allow running full or partial benchmarks interactively or in automated pipelines.
+- **Alternatives Considered:**
+  1. Re-executing failed steps indefinitely: Rejected because budget limits are absolute hard invariants.
+  2. Suppressing entity context: Rejected because interactive prompts inside autonomous plan steps violate automated benchmark execution.
+- **Impact:** Reliable live evaluation execution with zero false deadlocks, clear entity context passing to underlying agents, and robust budget deadline enforcement across candidate and baseline systems.

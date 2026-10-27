@@ -7,6 +7,7 @@ from .dataset import (
     create_10_goals_dataset,
     get_10_benchmark_goals,
 )
+from .live_runner import create_live_benchmark_targets
 from .metrics import (
     BenchmarkSummaryStats,
     ComparativeBenchmarkReport,
@@ -24,6 +25,7 @@ __all__ = [
     "ComparativeBenchmarkReport",
     "SystemEvalResult",
     "create_10_goals_dataset",
+    "create_live_benchmark_targets",
     "deterministic_mock_planned_target",
     "deterministic_mock_reactive_target",
     "get_10_benchmark_goals",

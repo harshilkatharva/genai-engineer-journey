@@ -73,6 +73,7 @@ def build_planning_prompt(
             "5. NO CYCLES: The dependency graph must be a strictly valid Directed Acyclic Graph (DAG).",
             "6. Every step must define concrete, measurable 'success_criteria' to be verified programmatically and by an evaluation judge.",
             "7. Ensure at least one entry step has no dependencies.",
+            "8. Specificity: Ensure step descriptions explicitly preserve entity identifiers (e.g. customer IDs like 'C-101', ticket IDs like 'T-101') from the goal.",
             "",
             "Generate the complete structured Plan adhering to the Plan schema.",
         ]
