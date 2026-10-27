@@ -98,10 +98,18 @@ This planner also serves as the extensible foundation for:
   - Support both interactive CLI prompt and non-interactive `--mock` / `--live` modes.
 - [x] Add integration tests in `tests/integration/test_eval_benchmark.py` (gated by `INTEGRATION_TEST=1`).
 
+### Integration Test Suite: Live Providers, Tools & PostgreSQL
+- [x] Provision PostgreSQL 17 with `pgvector` container via `docker-compose.yml`.
+- [x] Implement and execute live integration test suite (13 tests total) against real Google Gemini models (`gemini-3.5-flash-lite`) and PostgreSQL:
+  - `tests/integration/test_live_genai_core.py`: Live `LLMService` structure/text and `MemoryService` LTM/episodic operations.
+  - `tests/integration/test_live_module17_agent.py`: Live `BoundedAgent` querying customer accounts, tickets, and pgvector knowledge base.
+  - `tests/integration/test_live_planning_components.py`: Live `PlanGenerator` DAG decomposition, `StepVerifier` dual-gate model judge, and `ReplanningEngine` dynamic recovery.
+  - `tests/integration/test_live_assistant_e2e.py`: Live end-to-end `PlanAndExecuteAssistant` multi-step run with final deliverable synthesis, human review rejection gating, and `RunBudget` deadline enforcement.
+
 ### Milestone 8: Pre-Push Quality Gate, Typing & Documentation
-- [ ] Verify `pre_push.sh` runs cleanly:
+- [x] Verify `pre_push.sh` runs cleanly:
   - `ruff check .` with zero errors.
   - `ruff format --check .` with zero diffs.
-  - `mypy src tests` with zero type errors.
-  - `pytest` with 100% unit tests passing.
-- [ ] Confirm documentation files in `docs/` reflect verified codebase state.
+  - `mypy src tests` with zero type errors (checked 82 source files).
+  - `pytest` with 100% unit tests passing (91 unit tests passed).
+- [ ] Final verification and user sign-off on documentation files.

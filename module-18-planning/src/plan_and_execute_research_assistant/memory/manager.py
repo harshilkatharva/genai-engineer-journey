@@ -53,11 +53,20 @@ class PlanningMemoryManager:
 
         limit = top_k if top_k is not None else self.config.max_recalled_preferences
         try:
-            results = await self.memory_service.search_longterm(
-                user_id=user_id.strip(),
-                query=query.strip(),
-                limit=limit,
-            )
+            if hasattr(self.memory_service, "search_longterm"):
+                results = await self.memory_service.search_longterm(
+                    user_id=user_id.strip(),
+                    query=query.strip(),
+                    limit=limit,
+                )
+            elif hasattr(self.memory_service, "recall"):
+                results = await self.memory_service.recall(
+                    user_id=user_id.strip(),
+                    query=query.strip(),
+                    top_k=limit,
+                )
+            else:
+                results = []
             preferences: list[str] = []
             for r in results:
                 # Handle MemorySearchResult where content lives on r.record.content

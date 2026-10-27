@@ -420,3 +420,27 @@ class StepExecutor(Protocol):
 ```
 - In Module 18, the default implementation is `Module17StepExecutor`, routing all steps to `BoundedAgent`.
 - In Module 20, a `SpecialistAgentRouter` can implement `StepExecutor` to dispatch code steps, research steps, and database steps to specialized agents based on `step.tool_name_hint`.
+
+---
+
+## 12. Live Provider & Database Integration Architecture
+
+### 12.1 Live LLM Provider Configuration
+- **Provider:** Google Gemini API via `genai_core.GoogleProvider`.
+- **Active Model:** `gemini-3.5-flash-lite` (designated default due to deprecation of `gemini-2.0-flash` for new users).
+- **Fallback Models:** `gemini-3.8-flash`.
+
+### 12.2 Containerized Database Architecture
+- **Engine:** PostgreSQL 17 with `pgvector` extension via `module-18-planning/docker-compose.yml`.
+- **Connection URL:** `postgresql://postgres:postgres@127.0.0.1:5432/ai_search`.
+- **Managed Schemas:**
+  - `support_customers`: Customer CRM profile (ID, name, email, tier, balance, risk flag).
+  - `support_tickets`: Support tickets (ID, customer ID, subject, status, priority, description).
+  - `document_chunks`: pgvector semantic embeddings for knowledge base retrieval (384-dimensional `all-MiniLM-L6-v2`).
+  - `memory_lt_records`: Long-term preference records for personalization.
+  - `memory_ep_episodes`: Episodic execution memory for past plan recall and audit logging.
+
+### 12.3 Test Suite Partitioning
+- **Unit Tests (`tests/unit/`):** Purely isolated, 0 external network calls, fast execution (`pytest tests/unit/`), executed during pre-push quality gates.
+- **Mock Integration Tests (`tests/integration/test_eval_benchmark.py`):** Deterministic mock execution for fast 10-goal benchmarking.
+- **Live Integration Tests (`tests/integration/test_live_*.py`):** Gated by `INTEGRATION_TEST=1`, executed against real Gemini API and PostgreSQL containers.

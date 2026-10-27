@@ -200,3 +200,20 @@
   1. Live-only benchmark execution: Rejected because external network latency, API credit consumption, and provider downtime make CI/CD pipelines flaky and slow.
   2. Evaluating Module 18 in isolation: Rejected because without a head-to-head baseline, absolute metrics cannot empirically demonstrate the architectural advantages of DAG planning over reactive agents.
 - **Impact:** Repeatable, fair, and automated comparative benchmarking demonstrating that DAG planning achieves a 10% higher completion rate, lower latency via concurrent step execution, and robust recovery from execution failures.
+
+---
+
+### Decision 17: Live Provider & PostgreSQL Integration Test Architecture (Real Gemini & Containerized Database)
+- **Context:** Prior to Milestone 8 final sign-off, the system required end-to-end integration tests validating that `genai-core` services (`LLMService`, `MemoryService`), `module-17` (`BoundedAgent`), and `module-18` planning components (`PlanGenerator`, `StepVerifier`, `ReplanningEngine`, `PlanAndExecuteAssistant`) execute successfully against real LLM providers (`GoogleProvider` using `gemini-3.5-flash-lite`) and live PostgreSQL database instances.
+- **Decision:**
+  1. Containerized PostgreSQL Infrastructure: Provisioned `docker-compose.yml` deploying `pgvector/pgvector:pg17` on port 5432 with schemas for support accounts (`support_customers`), tickets (`support_tickets`), vector knowledge bases (`document_chunks`), long-term memory records (`memory_lt_records`), and episodic memory (`memory_ep_episodes`).
+  2. Dedicated Live Test Modules:
+     - `tests/integration/test_live_genai_core.py`: Tests live `LLMService` structure and text completions, along with `PostgresMemoryStore` LTM preference recall and episodic action logging.
+     - `tests/integration/test_live_module17_agent.py`: Tests `BoundedAgent` executing live tool calls against PostgreSQL data stores (`lookup_customer_account`, `ticket_status`, and `search_knowledge_base`).
+     - `tests/integration/test_live_planning_components.py`: Tests `PlanGenerator` decomposing realistic research goals into valid DAGs, `StepVerifier` dual-gate model judge with semantic scoring, and `ReplanningEngine` work preservation and subgraph replacement.
+     - `tests/integration/test_live_assistant_e2e.py`: Tests the complete `PlanAndExecuteAssistant` facade end-to-end: multi-step DAG generation, bounded execution via `DAGScheduler`, dual verification, LLM deliverable synthesis, episodic recording, human review rejection gating, and `RunBudget` deadline enforcement.
+  3. Strict Relative Imports & Package Isolation: Kept all imports across `module-18` strictly relative (`..core`, `..models`, `..planning`), leaving `packages/genai-core` and `module-17-ai_agents` completely untouched.
+- **Alternatives Considered:**
+  1. Relying solely on unit mocks: Rejected because mocks do not catch LLM prompt schema drift, model deprecations (such as `gemini-2.0-flash`), or database connection nuances.
+  2. Running integration tests in default `pre_push.sh`: Rejected because live tests require network access, API tokens, and running Docker containers; guarded under `INTEGRATION_TEST=1` fixture gates.
+- **Impact:** 100% verified compatibility across live LLM services, pgvector databases, reactive agents, and DAG planning orchestrators with 13 out of 13 integration tests passing.

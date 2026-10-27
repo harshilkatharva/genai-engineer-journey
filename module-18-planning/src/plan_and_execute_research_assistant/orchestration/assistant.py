@@ -320,11 +320,21 @@ class PlanAndExecuteAssistant:
             )
 
             try:
-                raw_synth = await self.llm_service.complete(prompt=synth_prompt)
-                synth_text = getattr(raw_synth, "content", "") or str(raw_synth)
+                from genai_core import LLMManagerRequest
+
+                synth_req = LLMManagerRequest(prompt=synth_prompt)
+                raw_synth = await self.llm_service.complete(synth_req)
+                synth_text = (
+                    getattr(raw_synth, "text", None)
+                    or getattr(raw_synth, "content", None)
+                    or str(raw_synth)
+                )
                 # Track token usage from synthesis
-                usage = getattr(raw_synth, "usage", None)
-                tokens = getattr(usage, "total_tokens", 0) if usage else 0
+                usage = getattr(raw_synth, "usage", {}) or {}
+                if isinstance(usage, dict):
+                    tokens = int(usage.get("output_tokens", 0)) + int(usage.get("input_tokens", 0))
+                else:
+                    tokens = getattr(usage, "total_tokens", 0)
                 cost = getattr(raw_synth, "cost_usd", 0.0)
                 active_budget.record_usage(tokens=tokens, cost_usd=cost)
             except Exception as synth_exc:  # noqa: BLE001
