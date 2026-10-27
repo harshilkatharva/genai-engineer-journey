@@ -27,3 +27,7 @@ class CircularDependencyError(PlanValidationError):
 
 class UnreachablePlanError(PlanValidationError):
     """Raised when a plan contains no entry step with empty dependencies to begin execution."""
+
+
+class PlanGenerationError(Exception):
+    """Raised when structured plan generation fails or exhausts repair retries."""

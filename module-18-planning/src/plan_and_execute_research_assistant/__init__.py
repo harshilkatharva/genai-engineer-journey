@@ -1,5 +1,7 @@
 """Module 18: Plan-and-Execute Research Assistant."""
 
+from .core import AssistantConfig, get_assistant_config
+from .memory import PlanningMemoryManager
 from .models import (
     BudgetExceededError,
     Plan,
@@ -21,35 +23,50 @@ from .planning import (
     DuplicateStepIdError,
     EmptyPlanError,
     MissingDependencyError,
+    PlanGenerationError,
+    PlanGenerator,
+    PlanRepairer,
     PlanValidationError,
     PlanValidator,
     SelfDependencyError,
     UnreachablePlanError,
+    build_planning_prompt,
+    build_repair_prompt,
     validate_plan,
 )
+from .protocols import StepExecutor
 
 __all__ = [
+    "AssistantConfig",
     "BudgetExceededError",
     "CircularDependencyError",
     "DuplicateStepIdError",
     "EmptyPlanError",
     "MissingDependencyError",
     "Plan",
+    "PlanGenerationError",
+    "PlanGenerator",
+    "PlanRepairer",
     "PlanReviewDecision",
     "PlanReviewRequest",
     "PlanStep",
     "PlanValidationError",
     "PlanValidator",
     "PlanVersion",
+    "PlanningMemoryManager",
     "ReviewAction",
     "RunBudget",
     "RunRecord",
     "RunStatus",
     "SelfDependencyError",
     "StepExecutionRecord",
+    "StepExecutor",
     "StepJudgeVerdict",
     "StepStatus",
     "StepVerificationResult",
     "UnreachablePlanError",
+    "build_planning_prompt",
+    "build_repair_prompt",
+    "get_assistant_config",
     "validate_plan",
 ]

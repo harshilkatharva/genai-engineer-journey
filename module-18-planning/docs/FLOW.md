@@ -21,19 +21,27 @@ sequenceDiagram
     
     rect rgb(240, 245, 255)
     Note over Assistant,Mem: Phase 1: Context & Memory Retrieval
-    Assistant->>Mem: search_longterm(user_id, query=goal) [Preferences/Constraints]
-    Assistant->>Mem: get_similar_past_plans(user_id, goal) [Past Plan Episodes]
-    Mem-->>Assistant: Long-term preferences + similar past plan episodes
+    Assistant->>Mem: get_user_preferences(user_id, query=goal) [LTM Constraints]
+    alt Config: enable_episodic_similarity_search == True
+        Assistant->>Mem: get_similar_past_plans(user_id, goal) [Episodic Blueprint]
+        Mem-->>Assistant: Recalled past plan episodes
+    else Config: enable_episodic_similarity_search == False (Default)
+        Assistant->>Mem: Bypasses episodic retrieval (Zero-Shot Planning)
+    end
+    Mem-->>Assistant: Long-term preferences + optional past plan blueprints
     end
 
     rect rgb(245, 240, 255)
-    Note over Assistant,Validator: Phase 2: Plan Generation & DAG Validation
-    Assistant->>Planner: generate_plan(goal, context, preferences, past_plans)
+    Note over Assistant,Validator: Phase 2: Plan Generation & Automated Repair Loop
+    Assistant->>Executor: get_available_capabilities() [Dynamic Tool Discovery]
+    Executor-->>Assistant: Capability map {name: description}
+    Assistant->>Planner: generate_plan(goal, context, preferences, past_plans, capabilities)
     Planner->>Planner: complete_structure(Plan) via LLMService
     Planner->>Validator: validate_plan(plan)
     alt Validation Fails (Cycle, missing dependency, duplicate IDs)
         Validator-->>Planner: PlanValidationError (Cycle trace / missing ID)
-        Planner->>Planner: retry_with_critique(error, max_retries=3)
+        Planner->>Planner: PlanRepairer.repair_plan(invalid_plan, error, retries <= 3)
+        Planner->>Validator: Re-validate repaired plan
     end
     Validator-->>Assistant: Validated Plan v1 (DAG confirmed)
     Assistant->>Store: save_plan_version(run_id, v1, author="planner_llm")
@@ -119,7 +127,36 @@ flowchart TD
 
 ---
 
-## 3. Core Domain Data Model Relationships
+## 3. Plan Generation, Automated Repair & Memory Integration Flow (Milestone 2 Implementation)
+
+```mermaid
+flowchart TD
+    Start[User Submits Goal] --> MemLTM[Query Long-Term Preferences via search_longterm]
+    Start --> MemCheck{enable_episodic_similarity_search?}
+    MemCheck -- True --> MemEpisodic[Recall Past Plan Episodes]
+    MemCheck -- False --> ZeroShot[Skip Past Plan Retrieval / Zero-Shot]
+    
+    MemLTM --> CapQuery[Query StepExecutor.get_available_capabilities]
+    MemEpisodic --> CapQuery
+    ZeroShot --> CapQuery
+
+    CapQuery --> PromptGen[Build Planning Prompt with Goal, Capabilities, Preferences & Few-Shot Blueprints]
+    PromptGen --> LLMGen[LLMService.complete_structure(Plan)]
+    
+    LLMGen --> Validate{PlanValidator.validate_plan}
+    Validate -- Valid DAG --> ReturnPlan[Return Validated Plan v1]
+    
+    Validate -- PlanValidationError --> RepairCheck{Attempt <= max_planning_retries?}
+    RepairCheck -- Yes --> BuildRepairPrompt[Build Repair Prompt with Diagnostic Stack Trace]
+    BuildRepairPrompt --> LLMRepair[LLMService.complete_structure(Plan)]
+    LLMRepair --> Validate
+    
+    RepairCheck -- No --> FailPlan[Raise PlanGenerationError exhausted retries]
+```
+
+---
+
+## 4. Core Domain Data Model Relationships
 
 ```mermaid
 classDiagram

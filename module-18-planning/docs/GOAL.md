@@ -35,13 +35,13 @@ This planner also serves as the extensible foundation for:
 - [x] Add comprehensive unit tests in `tests/unit/test_plan_validator.py` covering valid plans, direct/indirect cycles, duplicate IDs, missing dependencies, and self-dependencies.
 
 ### Milestone 2: Structured Plan Generation, Automated Repair & Memory Integration
-- [ ] Implement `PlanGenerator` utilizing `genai_core.LLMService.complete_structure` with Pydantic `Plan` schema.
-- [ ] Implement `PlanRepairer` capturing `PlanValidationError` stack traces and re-prompting the LLM with structured critique up to `max_planning_retries` (default: 3).
-- [ ] Implement `PlanningMemoryManager`:
+- [x] Implement `PlanGenerator` utilizing `genai_core.LLMService.complete_structure` with Pydantic `Plan` schema.
+- [x] Implement `PlanRepairer` capturing `PlanValidationError` stack traces and re-prompting the LLM with structured critique up to `max_planning_retries` (default: 3).
+- [x] Implement `PlanningMemoryManager`:
   - Recall user preferences and domain constraints from `genai_core.LongTermMemory` via `search_longterm()`.
   - Record completed plan episodes in `genai_core.EpisodicMemory` for auditability and idempotency.
-  - Define the consumer contract for semantic similarity search over episodic memory (`search_episodes`), to be provided by `genai-core`.
-- [ ] Add unit tests in `tests/unit/test_plan_generator.py` and `tests/unit/test_memory_integration.py`.
+  - Support configurable episodic past plan retrieval (`enable_episodic_similarity_search`) with graceful zero-shot fallback.
+- [x] Add unit tests in `tests/unit/test_plan_generator.py` and `tests/unit/test_memory_integration.py`.
 
 ### Milestone 3: Human Plan Review Gateway & Immutable Plan Versioning
 - [ ] Implement `HumanPlanReviewGateway`:

@@ -103,3 +103,18 @@
 - **Decision:** Execute 3-state Depth-First Search (`_UNVISITED`, `_VISITING`, `_VISITED`) cycle detection prior to root reachability verification.
 - **Alternatives Considered:** Checking root reachability first (`any(not s.depends_on for s in steps)`). Rejected because it would raise a generic `UnreachablePlanError` on cyclic subgraphs instead of diagnosing the exact directed cycle path (e.g. `step_a -> step_b -> step_a`), depriving the automated repair loop and human reviewer of actionable feedback.
 - **Impact:** Guarantees precise cycle tracing in error messages, optimizing the prompt repair loop when feeding validation failures back to `PlanRepairer`.
+
+---
+
+### Decision 11: Dynamic Capability Discovery via StepExecutor & Config-Gated Episodic Retrieval
+- **Context:**
+  1. The Planner LLM needs to know what tools and capabilities exist to assign appropriate `PlanStep.tool_name_hint` values. Hardcoding tool names in prompt strings tightly couples planning to Module 17 tools and breaks when Module 20 introduces multiple heterogeneous specialist agents.
+  2. Semantic vector similarity search for episodic memory (`search_episodes`) is planned for future `genai-core` releases but is not currently available. We must define the workflow and consumer interface without waiting for or modifying `genai-core`.
+- **Decision:**
+  1. Add `get_available_capabilities() -> dict[str, str]` to the `StepExecutor` protocol. When `PlanGenerator` initializes, it queries the executor (or executor router) for available capabilities and injects the dynamic capability catalogue directly into `build_planning_prompt` and `build_repair_prompt`.
+  2. Implement a config-based toggle `enable_episodic_similarity_search: bool = False` in `AssistantConfig`. When False (default), `PlanningMemoryManager.get_similar_past_plans` short-circuits gracefully, returning an empty list to avoid unnecessary recency queries or latency overhead (zero-shot planning). When True, it queries semantic search if an async search function is provided, falling back to recent `ActionEpisode`s filtered by `action_type="plan_execution"`. When `genai-core` adds semantic episodic search, only a configuration toggle change is required.
+- **Alternatives Considered:**
+  1. Manually maintaining tool name constants in Module 18: Rejected because it duplicates tool registries and violates open-closed extensibility for Module 20.
+  2. Implementing local vector embeddings for episodes inside Module 18: Rejected because episodic vector indexing is an infrastructure concern owned strictly by `packages/genai-core`.
+- **Impact:** Clean decoupling of planner prompting from underlying agent implementations, full forward compatibility with Module 20, zero wasted token spend on un-indexed episodic memory, and single-flag enablement when `genai-core` releases episodic vector search.
+
