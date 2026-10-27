@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Protocol, runtime_checkable
 
-from plan_and_execute_research_assistant.models import RunRecord
+from ..models import RunRecord
 
 
 @runtime_checkable

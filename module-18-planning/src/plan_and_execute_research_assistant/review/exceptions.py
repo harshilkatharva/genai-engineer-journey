@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from plan_and_execute_research_assistant.planning.exceptions import PlanValidationError
+    from ..planning.exceptions import PlanValidationError
 
 
 class PlanRejectedError(Exception):

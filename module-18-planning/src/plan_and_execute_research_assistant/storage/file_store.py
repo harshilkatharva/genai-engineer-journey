@@ -8,9 +8,9 @@ from pathlib import Path
 
 from genai_core import safe_log
 
-from plan_and_execute_research_assistant.core import AssistantConfig, get_assistant_config
-from plan_and_execute_research_assistant.models import RunRecord
-from plan_and_execute_research_assistant.storage.protocol import RunRecordStore
+from ..core import AssistantConfig, get_assistant_config
+from ..models import RunRecord
+from .protocol import RunRecordStore
 
 _logger = logging.getLogger("plan_and_execute_research_assistant.storage")
 
