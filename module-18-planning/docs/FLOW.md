@@ -218,10 +218,95 @@ flowchart TD
 
 ---
 
-## 6. Core Domain Data Model Relationships
+## 6. Run-Wide Budget Tracking & Orchestrator Facade Lifecycle (Milestone 6 Implementation)
+
+```mermaid
+flowchart TD
+    Start(["Start Assistant.run(goal, user_id)"]) --> InitBudget["Initialize RunBudget<br/>start_timer()"]
+    InitBudget --> InitRecord["Create RunRecord (INITIALIZING)<br/>save_run()"]
+    
+    InitRecord --> CheckB1{"RunBudget.check_budget()"}
+    CheckB1 -- "Budget Exceeded" --> FailBudget["Set RunStatus.FAILED<br/>Finalize and return AssistantRunResult"]
+    CheckB1 -- "OK" --> Phase1["Phase 1: Memory & Context Retrieval<br/>get_user_preferences() & capabilities"]
+    
+    Phase1 --> CheckB2{"RunBudget.check_budget()"}
+    CheckB2 -- "Budget Exceeded" --> FailBudget
+    CheckB2 -- "OK" --> Phase2["Phase 2: Plan Generation & Repair Loop<br/>RunStatus.PLANNING"]
+    
+    Phase2 --> CheckB3{"RunBudget.check_budget()"}
+    CheckB3 -- "Budget Exceeded" --> FailBudget
+    CheckB3 -- "OK" --> Phase3["Phase 3: Human Review Gateway<br/>RunStatus.REVIEW_PENDING"]
+    
+    Phase3 --> ReviewDecision{"Review Decision"}
+    ReviewDecision -- "REJECT" --> RejectRun["Set RunStatus.CANCELLED<br/>Finalize and return AssistantRunResult"]
+    ReviewDecision -- "APPROVE / MODIFY" --> SavePlan["Update current_plan<br/>save_run()"]
+    
+    SavePlan --> CheckB4{"RunBudget.check_budget()"}
+    CheckB4 -- "Budget Exceeded" --> FailBudget
+    CheckB4 -- "OK" --> Phase4["Phase 4: Concurrent DAG Execution<br/>DAGScheduler.execute_plan()"]
+    
+    Phase4 --> SchedStatus{"StepStatus"}
+    SchedStatus -- "COMPLETED" --> CheckReflector{"Reflector configured?"}
+    SchedStatus -- "FAILED" --> CheckCeiling{"replan_count < max_replans?"}
+    
+    CheckCeiling -- "No (Ceiling Exceeded)" --> FailReplan["Set RunStatus.FAILED<br/>Finalize and return AssistantRunResult"]
+    CheckCeiling -- "Yes" --> ReplanPhase["ReplanningEngine.replan()<br/>RunStatus.REPLANNING"]
+    ReplanPhase --> Phase4
+    
+    CheckReflector -- "Yes" --> ReflectHook["PlanReflector.reflect()<br/>Log reflection critique & score"]
+    CheckReflector -- "No" --> Phase5
+    ReflectHook --> Phase5["Phase 5: Synthesis & Persistence<br/>Synthesize final deliverable"]
+    
+    Phase5 --> RecordMemory["record_plan_episode()<br/>Episodic memory stored"]
+    RecordMemory --> Finalize["_finalize_run()<br/>Atomic file save<br/>RunStatus.COMPLETED"]
+    Finalize --> End(["Return AssistantRunResult"])
+```
+
+---
+
+## 7. Core Domain Data Model Relationships
 
 ```mermaid
 classDiagram
+    class PlanAndExecuteAssistant {
+        +LLMService llm_service
+        +StepExecutor executor
+        +PlanningMemoryManager memory_manager
+        +RunRecordStore store
+        +HumanPlanReviewGateway review_gateway
+        +StepVerifier verifier
+        +DAGScheduler scheduler
+        +ReplanningEngine replanner
+        +PlanGenerator plan_generator
+        +PlanReflector reflector
+        +AssistantConfig config
+        +run(goal, user_id, budget, decision_provider, context) AssistantRunResult
+    }
+
+    class AssistantRunResult {
+        +str run_id
+        +RunStatus status
+        +str final_deliverable
+        +Plan plan
+        +RunRecord run_record
+        +int total_tokens
+        +float total_cost_usd
+        +float duration_ms
+        +str error_message
+    }
+
+    class PlanReflector {
+        <<protocol>>
+        +reflect(plan, step_executions, user_id) ReflectionResult
+    }
+
+    class ReflectionResult {
+        +bool should_replan
+        +str critique
+        +List~str~ suggested_improvements
+        +float score
+    }
+
     class Plan {
         +str goal
         +List~PlanStep~ steps
@@ -299,6 +384,10 @@ classDiagram
         +List~str~ missing_criteria
     }
 
+    PlanAndExecuteAssistant ..> AssistantRunResult : returns
+    PlanAndExecuteAssistant ..> PlanReflector : optional hook
+    PlanReflector ..> ReflectionResult : returns
+    PlanAndExecuteAssistant ..> RunBudget : governs
     Plan "1" *-- "*" PlanStep : contains
     RunRecord "1" *-- "*" Plan : plan_versions
     RunRecord "1" *-- "*" StepExecutionRecord : step_executions

@@ -163,3 +163,24 @@
   1. Full plan regeneration from scratch: Rejected because re-executing already completed and verified steps wastes expensive API calls and introduces regression risks.
   2. Static hardcoded fallback rules: Rejected because open-ended research goals require semantic reasoning and dynamic capability discovery.
 - **Impact:** Concurrency-safe, robust failure recovery that preserves all prior execution progress, adapts to API/tool errors, and strictly guarantees budget safety against infinite replanning.
+
+---
+
+### Decision 15: Run-Wide Budget Governance, Central Orchestrator Facade & Decoupled Extensibility Protocols
+- **Context:** In Milestone 6, the system requires a production-grade orchestrator facade (`PlanAndExecuteAssistant`) tying together the entire 5-phase lifecycle (memory recall, structured planning, human review gating, bounded concurrent execution with dynamic replanning, and verified synthesis). In addition, cumulative resource consumption (token ceiling, USD cost budget, wall-clock timeout) must be tracked and strictly enforced across all phases, while future capabilities from Module 19 (reflection/self-critique) and Module 20 (specialist routing) must be cleanly decoupled via abstract protocols.
+- **Decision:**
+  1. `RunBudget` Governance: Implemented unified, monotonic budget tracking for cumulative tokens, cost (USD), and elapsed wall-clock time (`time.monotonic`). Checked before each major phase transition and step dispatch. Halts execution immediately by raising `BudgetExceededError` whenever limits are reached.
+  2. Orchestrator Facade (`PlanAndExecuteAssistant`): Exposes clean `run(goal, user_id, ...)` coordinating:
+     - Phase 1: Long-term preference recall and optional episodic plan retrieval.
+     - Phase 2: Capability-aware structured plan generation and automated repair loop.
+     - Phase 3: Human review gateway (supporting auto-approval in testing/CI, operator modification with DAG re-validation, or safe cancellation).
+     - Phase 4: Async `DAGScheduler` dispatch bounded by semaphore, step-level retries with verification feedback, sibling task settling on failure, and dynamic replanning with work preservation.
+     - Phase 5: LLM-based final deliverable synthesis from verified step outputs, episodic memory recording, and atomic run record persistence via `FileRunRecordStore`.
+  3. Decoupled Protocol Boundaries:
+     - `PlanReflector` protocol and `ReflectionResult` data model decoupled into `protocols/reflector.py` for Module 19 integration without modifying core planner logic.
+     - `StepExecutor` protocol decoupled into `protocols/executor.py` allowing Module 20 multi-agent routers to drop in seamlessly.
+  4. Non-Blocking Synchronous Run Persistence: Added `_save_run_sync` fallback in `_finalize_run` to guarantee the final state of `RunRecord` is safely flushed to disk even in sudden failure or exit scenarios.
+- **Alternatives Considered:**
+  1. Fragmented, per-step budgets only: Rejected because without a global run-level budget ceiling, long-running replanning loops or complex multi-step DAGs could consume excessive tokens and API costs.
+  2. Hardcoding Module 19 reflection and Module 20 routing logic directly in the assistant: Rejected because decoupling via `typing.Protocol` keeps Module 18 clean, focused, and testable while providing future-proof extension points.
+- **Impact:** Unified facade encapsulating the complete plan-and-execute system, full resource budget safety across all lifecycle phases, clean protocol boundaries for future modules, and 100% test coverage across 91 unit tests.

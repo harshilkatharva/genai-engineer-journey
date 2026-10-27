@@ -19,6 +19,11 @@ from .models import (
     StepStatus,
     StepVerificationResult,
 )
+from .orchestration import (
+    AssistantRunResult,
+    PlanAndExecuteAssistant,
+    build_synthesis_prompt,
+)
 from .planning import (
     CircularDependencyError,
     DuplicateStepIdError,
@@ -35,7 +40,7 @@ from .planning import (
     build_repair_prompt,
     validate_plan,
 )
-from .protocols import StepExecutor
+from .protocols import PlanReflector, ReflectionResult, StepExecutor
 from .replanning import (
     ReplanningEngine,
     ReplanningError,
@@ -55,6 +60,7 @@ from .verification import StepVerifier, build_judge_prompt
 
 __all__ = [
     "AssistantConfig",
+    "AssistantRunResult",
     "BudgetExceededError",
     "CircularDependencyError",
     "DAGDeadlockError",
@@ -66,8 +72,10 @@ __all__ = [
     "MissingDependencyError",
     "Module17StepExecutor",
     "Plan",
+    "PlanAndExecuteAssistant",
     "PlanGenerationError",
     "PlanGenerator",
+    "PlanReflector",
     "PlanRejectedError",
     "PlanRepairer",
     "PlanReviewDecision",
@@ -77,6 +85,7 @@ __all__ = [
     "PlanValidator",
     "PlanVersion",
     "PlanningMemoryManager",
+    "ReflectionResult",
     "ReplanResult",
     "ReplanningEngine",
     "ReplanningError",
@@ -102,6 +111,7 @@ __all__ = [
     "build_planning_prompt",
     "build_repair_prompt",
     "build_replanning_prompt",
+    "build_synthesis_prompt",
     "get_assistant_config",
     "validate_plan",
 ]

@@ -60,6 +60,37 @@ class Plan(BaseModel):
         default=None, description="Summary of edits from parent version"
     )
     created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+
+
+class AssistantRunResult(BaseModel):
+    """Consolidated outcome returned by PlanAndExecuteAssistant."""
+
+    run_id: str = Field(description="Unique execution run identifier")
+    status: RunStatus = Field(description="Final execution lifecycle status")
+    final_deliverable: str | None = Field(
+        default=None, description="Synthesized final deliverable text"
+    )
+    plan: Plan = Field(description="Final Plan DAG associated with the run")
+    run_record: RunRecord = Field(description="Full audit record containing all step traces")
+    total_tokens: int = Field(default=0, ge=0, description="Cumulative tokens consumed")
+    total_cost_usd: float = Field(
+        default=0.0, ge=0.0, description="Cumulative cost incurred in USD"
+    )
+    duration_ms: float = Field(
+        default=0.0, ge=0.0, description="Total wall-clock execution time in ms"
+    )
+    error_message: str | None = Field(default=None, description="Error detail if execution failed")
+
+
+class ReflectionResult(BaseModel):
+    """Structured result returned by a PlanReflector evaluation."""
+
+    should_replan: bool = Field(description="Whether reflection advises replanning")
+    critique: str = Field(description="Detailed reflection analysis and critique")
+    suggested_improvements: list[str] = Field(
+        default_factory=list, description="Specific recommendations for plan revision"
+    )
+    score: float = Field(default=1.0, ge=0.0, le=1.0, description="Plan execution quality score")
 ```
 
 ---
@@ -270,9 +301,9 @@ Module 18 introduces a global, run-wide budget envelope (`RunBudget`) that spans
 | `max_replans` | 3 replans | Maximum replanning cycles per overall run. |
 
 ### 7.2 Budget Exhaustion Behavior
-- Before dispatching any step or invoking any LLM call (planning, verification, replanning), the orchestrator checks `RunBudget.is_exhausted()`.
-- If cumulative tokens exceed `max_total_tokens` or cost exceeds `max_total_cost_usd`, all pending tasks are canceled, running tasks are aborted, and the run halts with `RunStatus.FAILED` (`BUDGET_EXCEEDED`).
-- If wall-clock time exceeds `total_timeout_seconds`, the run halts immediately with `RunStatus.FAILED` (`DEADLINE_EXCEEDED`).
+- Before dispatching any step or invoking any LLM call (planning, verification, replanning, reflection, deliverable synthesis), the orchestrator checks `RunBudget.check_budget()`.
+- If cumulative tokens exceed `max_total_tokens`, cumulative cost exceeds `max_total_cost_usd`, or wall-clock time exceeds `total_timeout_seconds`, `RunBudget.check_budget()` raises `BudgetExceededError`.
+- The assistant catches `BudgetExceededError`, logs an observability error event, stamps `run_record.status = RunStatus.FAILED` with error message `"Budget exceeded: ..."`, flushes the run record atomically via `FileRunRecordStore`, and returns `AssistantRunResult`.
 
 ---
 
@@ -362,12 +393,18 @@ Module 18 defines clean Protocol boundaries to ensure future modules integrate w
 
 ### 11.1 Module 19: Plan Reflection Protocol
 ```python
+@runtime_checkable
 class PlanReflector(Protocol):
-    """Module 19 Hook: Critiques and improves plans prior to human review or execution."""
+    """Module 19 Hook: Evaluates plan execution and generates reflective critique."""
 
-    async def reflect_on_plan(self, plan: Plan, context: dict[str, Any]) -> Plan: ...
+    async def reflect(
+        self,
+        plan: Plan,
+        step_executions: dict[str, list[StepExecutionRecord]],
+        user_id: str,
+    ) -> ReflectionResult: ...
 ```
-- In Module 18, `reflector` defaults to `None`. When provided in Module 19, `PlanGenerator` passes generated plans through `reflector.reflect_on_plan()` before presenting them to the human review gateway.
+- In Module 18, `reflector` defaults to `None`. When provided in Module 19, `PlanAndExecuteAssistant` passes the final plan and step execution history to `reflector.reflect()` prior to deliverable synthesis.
 
 ### 11.2 Module 20: Specialist Agent Delegation Protocol
 ```python

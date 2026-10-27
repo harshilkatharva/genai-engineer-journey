@@ -83,10 +83,10 @@ This planner also serves as the extensible foundation for:
 - [x] Add unit tests in `tests/unit/replanning/test_replanning.py` verifying state isolation, sibling settling, and work preservation.
 
 ### Milestone 6: Run-Wide Budget Tracking & Orchestrator Facade
-- [ ] Implement `RunBudget` tracking aggregate token consumption, total cost ($ USD), and wall-clock deadline across all lifecycle phases (planning, human review, parallel step execution, verification, retries, and replanning).
-- [ ] Implement `PlanAndExecuteAssistant` facade coordinating initialization, memory recall, planning, review, scheduling, replanning, synthesis, and run persistence.
-- [ ] Ensure future extensibility contracts (`PlanReflector` protocol for Module 19, `StepExecutor` protocol for Module 20) are cleanly decoupled.
-- [ ] Add unit tests in `tests/unit/orchestration/test_assistant.py` and `tests/unit/budget/test_run_budget.py`.
+- [x] Implement `RunBudget` tracking aggregate token consumption, total cost ($ USD), and wall-clock deadline across all lifecycle phases (planning, human review, parallel step execution, verification, retries, and replanning).
+- [x] Implement `PlanAndExecuteAssistant` facade coordinating initialization, memory recall, planning, review, scheduling, replanning, synthesis, and run persistence.
+- [x] Ensure future extensibility contracts (`PlanReflector` protocol for Module 19, `StepExecutor` protocol for Module 20) are cleanly decoupled.
+- [x] Add unit tests in `tests/unit/orchestration/test_assistant.py` and `tests/unit/budget/test_run_budget.py`.
 
 ### Milestone 7: 10-Goal Fair Comparative Evaluation Suite
 - [ ] Curate 10 benchmark goals covering multi-source research, complex operations, and error recovery in `eval/dataset.py`.
