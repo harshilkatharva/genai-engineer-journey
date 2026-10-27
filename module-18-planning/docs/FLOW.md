@@ -156,7 +156,44 @@ flowchart TD
 
 ---
 
-## 4. Core Domain Data Model Relationships
+## 4. Async DAG Execution & Dual Verification Flow (Milestone 4 Implementation)
+
+```mermaid
+flowchart TD
+    Start[DAGScheduler.execute_plan] --> TopoCheck[Identify READY Steps: All depends_on in step_results]
+    TopoCheck --> ActiveCheck{All Steps COMPLETED or FAILED?}
+    ActiveCheck -- Yes --> FinalResult[Return SchedulerExecutionResult]
+    ActiveCheck -- No --> SiblingCheck{Failed Step Detected?}
+    
+    SiblingCheck -- Yes --> SettleWait[Await Active Sibling Tasks via asyncio.gather]
+    SettleWait --> RecordSiblings[Cache Successful Sibling Outputs]
+    RecordSiblings --> ReturnFailed[Return Status FAILED with failed_step_id]
+
+    SiblingCheck -- No --> ConcurrencyGate[Acquire asyncio.Semaphore max_concurrency]
+    ConcurrencyGate --> RunStep[Module17StepExecutor.execute_step with predecessor_context]
+    
+    RunStep --> Gate1{Gate 1: Programmatic Verifier}
+    Gate1 -- Status!=COMPLETED or Text < 20 chars --> Gate1Fail[Programmatic Check Failed]
+    Gate1 -- Passed --> Gate2{Gate 2: LLM Judge Verifier}
+    
+    Gate2 --> ScoreEval{is_satisfied and score >= 0.85?}
+    ScoreEval -- Passed --> StepDone[Record Result & Mark COMPLETED]
+    StepDone --> ReleaseSem[Release Semaphore & Update Dependency Graph]
+    ReleaseSem --> TopoCheck
+
+    Gate1Fail --> RetryCheck{Attempt <= max_step_retries?}
+    ScoreEval -- Failed --> RetryCheck
+    
+    RetryCheck -- Yes --> BuildFeedback[Format retry_feedback from Reasoning & Missing Criteria]
+    BuildFeedback --> RunStep
+    
+    RetryCheck -- No --> StepFail[Mark Step FAILED with error_message]
+    StepFail --> ReleaseSem
+```
+
+---
+
+## 5. Core Domain Data Model Relationships
 
 ```mermaid
 classDiagram

@@ -1,6 +1,7 @@
 """Module 18: Plan-and-Execute Research Assistant."""
 
 from .core import AssistantConfig, get_assistant_config
+from .execution import Module17StepExecutor, StepExecutionOutput
 from .memory import PlanningMemoryManager
 from .models import (
     BudgetExceededError,
@@ -36,17 +37,27 @@ from .planning import (
 )
 from .protocols import StepExecutor
 from .review import HumanPlanReviewGateway, PlanRejectedError, ReviewValidationError
+from .scheduling import (
+    DAGDeadlockError,
+    DAGScheduler,
+    SchedulerExecutionResult,
+    StepExecutionError,
+)
 from .storage import FileRunRecordStore, RunRecordStore
+from .verification import StepVerifier, build_judge_prompt
 
 __all__ = [
     "AssistantConfig",
     "BudgetExceededError",
     "CircularDependencyError",
+    "DAGDeadlockError",
+    "DAGScheduler",
     "DuplicateStepIdError",
     "EmptyPlanError",
     "FileRunRecordStore",
     "HumanPlanReviewGateway",
     "MissingDependencyError",
+    "Module17StepExecutor",
     "Plan",
     "PlanGenerationError",
     "PlanGenerator",
@@ -65,13 +76,18 @@ __all__ = [
     "RunRecord",
     "RunRecordStore",
     "RunStatus",
+    "SchedulerExecutionResult",
     "SelfDependencyError",
+    "StepExecutionError",
+    "StepExecutionOutput",
     "StepExecutionRecord",
     "StepExecutor",
     "StepJudgeVerdict",
     "StepStatus",
     "StepVerificationResult",
+    "StepVerifier",
     "UnreachablePlanError",
+    "build_judge_prompt",
     "build_planning_prompt",
     "build_repair_prompt",
     "get_assistant_config",

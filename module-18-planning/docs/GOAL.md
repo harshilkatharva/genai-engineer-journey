@@ -57,19 +57,19 @@ This planner also serves as the extensible foundation for:
 - [x] Add unit tests in `tests/unit/review/test_human_review.py` and `tests/unit/storage/test_run_records.py`.
 
 ### Milestone 4: Async DAG Scheduler, Module 17 Step Execution & Dual Verification
-- [ ] Implement pure Python `DAGScheduler` using `asyncio`:
+- [x] Implement pure Python `DAGScheduler` using `asyncio`:
   - Continuously resolve dependency readiness: transition steps to `READY` when all predecessor steps are `COMPLETED`.
   - Dispatch ready independent steps concurrently via `asyncio.create_task`.
   - Enforce concurrency cap strictly using `asyncio.Semaphore(max_concurrency)` (default: 3).
   - Aggregate predecessor outputs and inject context into downstream dependent steps.
-- [ ] Implement `Module17StepExecutor` conforming to `StepExecutor` protocol:
+- [x] Implement `Module17StepExecutor` conforming to `StepExecutor` protocol:
   - Wrap `research_and_support_agent.BoundedAgent`.
   - Package step instructions, predecessor summaries, tool hints, and step-level budgets.
-- [ ] Implement `StepVerifier` combining two independent gates:
+- [x] Implement `StepVerifier` combining two independent gates:
   - **Programmatic Verifier:** Validates completion status, non-empty deliverable, minimum length, and deterministic regex/JSON rules.
   - **Model-Based Judge Verifier:** Evaluates whether actual output satisfies `step.success_criteria` using `LLMService.complete_structure` with `StepJudgeVerdict` (threshold >= 0.85).
-- [ ] Support step-level retries up to `max_step_retries` (default: 2) with verification feedback before declaring step failure.
-- [ ] Add unit tests in `tests/unit/scheduling/test_dag_scheduler.py` and `tests/unit/verification/test_verification.py`.
+- [x] Support step-level retries up to `max_step_retries` (default: 2) with verification feedback before declaring step failure.
+- [x] Add unit tests in `tests/unit/scheduling/test_dag_scheduler.py` and `tests/unit/verification/test_verification.py`.
 
 ### Milestone 5: Concurrency-Safe Dynamic Replanning & Failure Recovery
 - [ ] Implement `ReplanningEngine`:

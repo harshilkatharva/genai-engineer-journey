@@ -129,6 +129,21 @@
 - **Alternatives Considered:**
   1. In-place plan mutation: Rejected because mutating plans destroys provenance and makes tracking human interventions impossible.
   2. External database (PostgreSQL/SQLite) for run records: Rejected because Module 18 specification requires lightweight, file-based persistence (`runs/run_<id>.json`), while the `RunRecordStore` protocol ensures future stores can be plugged in without changing domain logic.
-- **Impact:** Complete provenance tracking across plan versions, clean CI test automation, and robust local filesystem persistence.
 
+---
 
+### Decision 13: Asynchronous DAG Scheduling, Dual Verification Gates & Concurrency-Safe Sibling Settling
+- **Context:** Milestone 4 requires dispatching independent plan steps concurrently bounded by a semaphore, verifying step deliverables against strict success criteria, and handling step failures gracefully without corrupting or abandoning running parallel sibling tasks.
+- **Decision:**
+  1. Pure-Python `DAGScheduler`: Implemented topological dependency readiness resolution using `asyncio.Semaphore(max_concurrency)` (default: 3) to execute independent steps in parallel. Downstream steps receive verified predecessor deliverables dynamically injected into their execution prompts.
+  2. Dual Verification Architecture:
+     - **Gate 1 (Programmatic Assertions):** Fast, deterministic verification asserting execution status is `COMPLETED`, deliverable text is non-empty, and text length satisfies minimum threshold ($\ge 20$ characters). Invalid outputs fail fast without incurring LLM API costs.
+     - **Gate 2 (Model-Based Judge):** Structured evaluation (`StepJudgeVerdict`) via `LLMService.complete_structure` evaluating semantic criteria satisfaction with confidence score threshold $\ge 0.85$.
+  3. Step-Level Self-Correction: Steps failing verification are retried locally up to `max_step_retries` (default: 2) with verification reasoning and missing criteria injected as `retry_feedback`.
+  4. Concurrency-Safe Sibling Settling: When a step exhausts retries and fails, the scheduler immediately stops launching new tasks, awaits currently running sibling tasks via `asyncio.gather(*active_tasks.values(), return_exceptions=True)` to settle cleanly without abrupt cancellation, and records any successful sibling outputs into the cache to avoid wasting computation.
+  5. Event-Free Async Orchestration: Used `asyncio.wait(active_tasks.values(), return_when=asyncio.FIRST_COMPLETED)` instead of `asyncio.Event` to eliminate race conditions when mock tasks or rapid operations complete synchronously.
+- **Alternatives Considered:**
+  1. External orchestration frameworks (e.g. Temporal, Prefect): Rejected because pure `asyncio` is self-contained, lightweight, and requires no external daemon or database infrastructure.
+  2. Immediate sibling cancellation (`task.cancel()`): Rejected because abrupt task cancellation discards completed or near-completed tool work, wasting tokens, incurring side-effects, and leaving the plan in an inconsistent state.
+  3. Single LLM-only verification: Rejected because programmatic gate short-circuits empty, short, or crashed outputs instantly with zero token consumption.
+- **Impact:** Robust asynchronous DAG execution, bounded concurrency, two-tier verification filtering, preserved computation across parallel failures, and clean handoff to Milestone 5 dynamic replanning.

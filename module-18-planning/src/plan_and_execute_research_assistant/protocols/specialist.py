@@ -23,6 +23,7 @@ class StepExecutor(Protocol):
         step: PlanStep,
         predecessor_context: dict[str, str],
         user_id: str,
+        retry_feedback: str | None = None,
     ) -> Any:
         """Execute an individual plan step within the executor's bounded loop.
 
@@ -30,6 +31,7 @@ class StepExecutor(Protocol):
             step: The PlanStep to execute.
             predecessor_context: Mapping of predecessor step ID to its verified result summary.
             user_id: User identifier for authorization and memory context.
+            retry_feedback: Optional feedback from previous failed verification attempt.
 
         Returns:
             Step execution result / AgentRunResult.
