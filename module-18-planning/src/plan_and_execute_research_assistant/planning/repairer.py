@@ -146,3 +146,21 @@ class PlanRepairer:
             f"Failed to generate a valid DAG plan after {retries} repair retries. "
             f"Last validation error: {current_error}"
         )
+
+    async def repair_plan(
+        self,
+        invalid_plan: Plan | dict[str, Any] | str,
+        error: Exception,
+        goal: str | None = None,
+        capabilities: dict[str, str] | None = None,
+        user_preferences: list[str] | None = None,
+        max_retries: int | None = None,
+    ) -> Plan:
+        """Alias for repair providing flexible signature for replanner and generators."""
+        resolved_goal = str(goal or getattr(invalid_plan, "goal", "") or "")
+        return await self.repair(
+            goal=resolved_goal,
+            invalid_plan=invalid_plan,
+            initial_error=error,
+            max_retries=max_retries,
+        )

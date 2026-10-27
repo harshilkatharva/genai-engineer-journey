@@ -147,3 +147,19 @@
   2. Immediate sibling cancellation (`task.cancel()`): Rejected because abrupt task cancellation discards completed or near-completed tool work, wasting tokens, incurring side-effects, and leaving the plan in an inconsistent state.
   3. Single LLM-only verification: Rejected because programmatic gate short-circuits empty, short, or crashed outputs instantly with zero token consumption.
 - **Impact:** Robust asynchronous DAG execution, bounded concurrency, two-tier verification filtering, preserved computation across parallel failures, and clean handoff to Milestone 5 dynamic replanning.
+
+---
+
+### Decision 14: Dynamic Subgraph Replanning, Immutable Work Preservation & Replanning Ceilings
+- **Context:** When an execution step exhausts local retries and fails verification, the system must recover and formulate an alternative strategy to achieve the user's overall goal without repeating completed work or thrashing in infinite loops.
+- **Decision:**
+  1. Implemented `ReplanningEngine`: Coordinates targeted subgraph revision when a step fails after exhausting retries.
+  2. Programmatic Work Preservation Invariant: All steps marked `COMPLETED` prior to replanning (including any settled parallel siblings that finished while the failed step was running) are locked as immutable dependencies. They retain their original IDs, descriptions, `status=COMPLETED`, and cached deliverables. If the LLM's candidate plan omits or alters completed steps, the engine programmatically restores them before DAG validation.
+  3. Failure Critique & Capability Injection: The replanning prompt incorporates the top-level goal, immutable completed steps with verified outputs, the failed step's verifiable criteria and failure reason, remaining unfulfilled steps, and available tools/capabilities.
+  4. DAG Validation & Automated Repair Loop: The revised candidate plan is verified via `PlanValidator`. If structural errors or cycles are detected, `PlanRepairer.repair_plan(...)` repairs the plan DAG automatically.
+  5. Anti-Thrashing Replanning Ceiling: Enforces `max_replans` (default: 3). If replanning attempts reach the ceiling, execution halts with `ReplanningLimitExceededError` to prevent runaway token costs and infinite execution loops.
+  6. Immutable Version Stamping: The revised plan is stamped with `version = current_plan.version + 1`, `parent_version = current_plan.version`, `created_by = "replanner"`, and `change_summary = f"Replanned after failure of step '{failed_step_id}': {failure_reason}"`.
+- **Alternatives Considered:**
+  1. Full plan regeneration from scratch: Rejected because re-executing already completed and verified steps wastes expensive API calls and introduces regression risks.
+  2. Static hardcoded fallback rules: Rejected because open-ended research goals require semantic reasoning and dynamic capability discovery.
+- **Impact:** Concurrency-safe, robust failure recovery that preserves all prior execution progress, adapts to API/tool errors, and strictly guarantees budget safety against infinite replanning.

@@ -36,6 +36,13 @@ from .planning import (
     validate_plan,
 )
 from .protocols import StepExecutor
+from .replanning import (
+    ReplanningEngine,
+    ReplanningError,
+    ReplanningLimitExceededError,
+    ReplanResult,
+    build_replanning_prompt,
+)
 from .review import HumanPlanReviewGateway, PlanRejectedError, ReviewValidationError
 from .scheduling import (
     DAGDeadlockError,
@@ -70,6 +77,10 @@ __all__ = [
     "PlanValidator",
     "PlanVersion",
     "PlanningMemoryManager",
+    "ReplanResult",
+    "ReplanningEngine",
+    "ReplanningError",
+    "ReplanningLimitExceededError",
     "ReviewAction",
     "ReviewValidationError",
     "RunBudget",
@@ -90,6 +101,7 @@ __all__ = [
     "build_judge_prompt",
     "build_planning_prompt",
     "build_repair_prompt",
+    "build_replanning_prompt",
     "get_assistant_config",
     "validate_plan",
 ]

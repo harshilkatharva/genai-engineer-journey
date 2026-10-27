@@ -72,7 +72,7 @@ This planner also serves as the extensible foundation for:
 - [x] Add unit tests in `tests/unit/scheduling/test_dag_scheduler.py` and `tests/unit/verification/test_verification.py`.
 
 ### Milestone 5: Concurrency-Safe Dynamic Replanning & Failure Recovery
-- [ ] Implement `ReplanningEngine`:
+- [x] Implement `ReplanningEngine`:
   - Triggered when a step fails after exhausting step-level retries.
   - **Concurrency-Safe Sibling Handling:** Await or settle currently running sibling steps; collect completed outputs into the execution cache; do not cancel or discard valid completed work.
   - **Work Preservation:** Retain all `COMPLETED` steps as immutable dependencies with their cached outputs; never re-execute them.
@@ -80,7 +80,7 @@ This planner also serves as the extensible foundation for:
   - Generate replacement/remedial steps for remaining unfulfilled objectives, re-validating the full DAG.
   - Link new plan version (`version=parent_version+1`, `parent_version=current_version`).
   - Enforce global replanning limit (`max_replans=3`) to prevent thrashing.
-- [ ] Add unit tests in `tests/unit/replanning/test_replanning.py` verifying state isolation, sibling settling, and work preservation.
+- [x] Add unit tests in `tests/unit/replanning/test_replanning.py` verifying state isolation, sibling settling, and work preservation.
 
 ### Milestone 6: Run-Wide Budget Tracking & Orchestrator Facade
 - [ ] Implement `RunBudget` tracking aggregate token consumption, total cost ($ USD), and wall-clock deadline across all lifecycle phases (planning, human review, parallel step execution, verification, retries, and replanning).
