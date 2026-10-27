@@ -21,18 +21,18 @@ This planner also serves as the extensible foundation for:
 ## 3. Scope & Milestones
 
 ### Milestone 1: Domain Models, DAG Validation & Structural Integrity
-- [ ] Implement core Pydantic domain models:
+- [x] Implement core Pydantic domain models:
   - `PlanStep`, `Plan`, `PlanVersion`, `StepStatus`, `RunStatus`.
   - `PlanReviewRequest`, `PlanReviewDecision`, `ReviewAction`.
   - `StepVerificationResult`, `StepJudgeVerdict`.
   - `RunRecord`, `StepExecutionRecord`, `RunBudget`.
-- [ ] Implement structural `PlanValidator`:
+- [x] Implement structural `PlanValidator`:
   - Non-empty plan validation (>= 1 step).
   - Unique step ID validation.
   - Self-dependency and cycle detection using 3-state Depth-First Search (`UNVISITED`, `VISITING`, `VISITED`).
   - Referential integrity check (all dependencies exist).
   - Root step reachability check.
-- [ ] Add comprehensive unit tests in `tests/unit/test_plan_validator.py` covering valid plans, direct/indirect cycles, duplicate IDs, missing dependencies, and self-dependencies.
+- [x] Add comprehensive unit tests in `tests/unit/test_plan_validator.py` covering valid plans, direct/indirect cycles, duplicate IDs, missing dependencies, and self-dependencies.
 
 ### Milestone 2: Structured Plan Generation, Automated Repair & Memory Integration
 - [ ] Implement `PlanGenerator` utilizing `genai_core.LLMService.complete_structure` with Pydantic `Plan` schema.

@@ -95,3 +95,11 @@
   2. `StepExecutor` protocol in `protocols/specialist.py`: Abstracts step execution. In Module 18, `Module17StepExecutor` implements this protocol; in Module 20, a `SpecialistAgentRouter` can implement it to route steps to domain-specific agents.
 - **Alternatives Considered:** Hardcoding direct calls to `BoundedAgent` inside `DAGScheduler`. Rejected because it would require major refactoring when specialist agents are introduced in Module 20.
 - **Impact:** Decouples orchestration from execution, ensuring Module 18 is 100% extensible for upcoming modules with zero architectural debt.
+
+---
+
+### Decision 10: Structural Reachability and Depth-First Search Cycle Detection Order
+- **Context:** Milestone 1 introduces `PlanValidator` verifying DAG validity. A closed dependency loop (e.g. $A \to B \to A$) represents both a cycle and an absence of unblocked root steps.
+- **Decision:** Execute 3-state Depth-First Search (`_UNVISITED`, `_VISITING`, `_VISITED`) cycle detection prior to root reachability verification.
+- **Alternatives Considered:** Checking root reachability first (`any(not s.depends_on for s in steps)`). Rejected because it would raise a generic `UnreachablePlanError` on cyclic subgraphs instead of diagnosing the exact directed cycle path (e.g. `step_a -> step_b -> step_a`), depriving the automated repair loop and human reviewer of actionable feedback.
+- **Impact:** Guarantees precise cycle tracing in error messages, optimizing the prompt repair loop when feeding validation failures back to `PlanRepairer`.
