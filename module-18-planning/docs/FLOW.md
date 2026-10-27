@@ -192,7 +192,33 @@ flowchart TD
 
 ---
 
-## 5. Core Domain Data Model Relationships
+## 5. Dynamic Replanning & Failure Recovery Flow (Milestone 5 Implementation)
+
+```mermaid
+flowchart TD
+    Trigger["Step Failure Detected (exhausted retries)"] --> CheckCeiling{"replan_count >= max_replans?"}
+    CheckCeiling -- "Yes" --> CeilExceeded["Raise ReplanningLimitExceededError (Halt Run)"]
+    CheckCeiling -- "No" --> BudgetCheck{"RunBudget exhausted?"}
+    BudgetCheck -- "Yes" --> BudgetExceeded["Raise BudgetExceededError (Halt Run)"]
+    BudgetCheck -- "No" --> CollectWork["Collect Settled Siblings and Cache Outputs"]
+    
+    CollectWork --> LockCompleted["Lock Completed Steps as Immutable (Work Preservation)"]
+    LockCompleted --> BuildPrompt["Build Replanning Prompt (Goal, Critique, Completed Deliverables, Capabilities)"]
+    BuildPrompt --> LLMReplan["LLMService.complete_structure(Plan)"]
+    
+    LLMReplan --> Reconcile["Programmatically Reconcile Completed Steps and Cached Summaries"]
+    Reconcile --> ValidateDAG{"PlanValidator.validate(candidate_plan)"}
+    
+    ValidateDAG -- "Valid DAG" --> StampVersion["Stamp version=N+1, parent_version=N, created_by='replanner'"]
+    ValidateDAG -- "PlanValidationError" --> RepairLoop["PlanRepairer.repair_plan(candidate_plan, error)"]
+    RepairLoop --> ValidateDAG
+    
+    StampVersion --> ReturnResult["Return ReplanResult and Resume DAG Scheduler"]
+```
+
+---
+
+## 6. Core Domain Data Model Relationships
 
 ```mermaid
 classDiagram
