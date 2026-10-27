@@ -393,3 +393,30 @@ classDiagram
     RunRecord "1" *-- "*" StepExecutionRecord : step_executions
     StepExecutionRecord "1" o-- "1" StepVerificationResult : verification
 ```
+
+---
+
+## 8. Comparative Evaluation Benchmark Flow (Milestone 7 Implementation)
+
+```mermaid
+flowchart TD
+    Start(["Start scripts/run_eval.py"]) --> ModeSelect{"Mode: CLI Flag or Prompt?"}
+    ModeSelect -- "--mock or choice 1" --> MockMode["Deterministic Mock Runner<br/>Zero API cost and Safe for CI"]
+    ModeSelect -- "--live or choice 2" --> LiveMode["Live Service Runner<br/>PostgreSQL and Gemini 3.5 Flash Lite"]
+    
+    MockMode --> LoadDataset["Load 10 Benchmark Goals<br/>get_10_benchmark_goals()"]
+    LiveMode --> LoadDataset
+    
+    LoadDataset --> DispatchPlanned["Run Module 18 Planned Assistant<br/>40k tokens and $0.25 USD cap"]
+    LoadDataset --> DispatchReactive["Run Module 17 Reactive Baseline<br/>40k tokens and $0.25 USD cap"]
+    
+    DispatchPlanned --> PlannedRes["Collect Planned Metrics<br/>Completion, Steps, Latency, Cost, Replans"]
+    DispatchReactive --> ReactiveRes["Collect Reactive Metrics<br/>Completion, Steps, Latency, Cost"]
+    
+    PlannedRes --> ComputeMetrics["BenchmarkSummaryStats.compute()"]
+    ReactiveRes --> ComputeMetrics
+    
+    ComputeMetrics --> CompReport["ComparativeBenchmarkReport<br/>format_comparison_table()"]
+    CompReport --> Output(["Print Head-to-Head KPI Report"])
+```
+

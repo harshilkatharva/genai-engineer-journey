@@ -1,6 +1,15 @@
 """Module 18: Plan-and-Execute Research Assistant."""
 
 from .core import AssistantConfig, get_assistant_config
+from .eval import (
+    BENCHMARK_GOALS,
+    BenchmarkSummaryStats,
+    ComparativeBenchmarkReport,
+    SystemEvalResult,
+    create_10_goals_dataset,
+    get_10_benchmark_goals,
+    run_comparative_benchmark,
+)
 from .execution import Module17StepExecutor, StepExecutionOutput
 from .memory import PlanningMemoryManager
 from .models import (
@@ -59,10 +68,13 @@ from .storage import FileRunRecordStore, RunRecordStore
 from .verification import StepVerifier, build_judge_prompt
 
 __all__ = [
+    "BENCHMARK_GOALS",
     "AssistantConfig",
     "AssistantRunResult",
+    "BenchmarkSummaryStats",
     "BudgetExceededError",
     "CircularDependencyError",
+    "ComparativeBenchmarkReport",
     "DAGDeadlockError",
     "DAGScheduler",
     "DuplicateStepIdError",
@@ -106,12 +118,16 @@ __all__ = [
     "StepStatus",
     "StepVerificationResult",
     "StepVerifier",
+    "SystemEvalResult",
     "UnreachablePlanError",
     "build_judge_prompt",
     "build_planning_prompt",
     "build_repair_prompt",
     "build_replanning_prompt",
     "build_synthesis_prompt",
+    "create_10_goals_dataset",
+    "get_10_benchmark_goals",
     "get_assistant_config",
+    "run_comparative_benchmark",
     "validate_plan",
 ]

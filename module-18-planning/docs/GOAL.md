@@ -89,14 +89,14 @@ This planner also serves as the extensible foundation for:
 - [x] Add unit tests in `tests/unit/orchestration/test_assistant.py` and `tests/unit/budget/test_run_budget.py`.
 
 ### Milestone 7: 10-Goal Fair Comparative Evaluation Suite
-- [ ] Curate 10 benchmark goals covering multi-source research, complex operations, and error recovery in `eval/dataset.py`.
-- [ ] Implement runnable evaluation script `scripts/run_eval.py`:
+- [x] Curate 10 benchmark goals covering multi-source research, complex operations, and error recovery in `eval/dataset.py`.
+- [x] Implement runnable evaluation script `scripts/run_eval.py`:
   - Run both candidate (**Module 18 Planned Assistant**) and baseline (**Module 17 Reactive BoundedAgent**) under identical configurations.
   - Enforce equal total token ($40k$) and cost ($0.25$) caps and identical models (`gemini-3.5-flash-lite`).
   - Evaluate final deliverables using identical model-based judge criteria.
   - Report comparative metrics: Completion Rate (%), Steps/Turns, Total Cost ($ USD), Latency (s), and Replanning Count.
   - Support both interactive CLI prompt and non-interactive `--mock` / `--live` modes.
-- [ ] Add integration tests in `tests/integration/test_eval_benchmark.py` (gated by `INTEGRATION_TEST=1`).
+- [x] Add integration tests in `tests/integration/test_eval_benchmark.py` (gated by `INTEGRATION_TEST=1`).
 
 ### Milestone 8: Pre-Push Quality Gate, Typing & Documentation
 - [ ] Verify `pre_push.sh` runs cleanly:
