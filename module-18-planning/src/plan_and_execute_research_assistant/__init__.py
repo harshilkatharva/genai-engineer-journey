@@ -35,6 +35,8 @@ from .planning import (
     validate_plan,
 )
 from .protocols import StepExecutor
+from .review import HumanPlanReviewGateway, PlanRejectedError, ReviewValidationError
+from .storage import FileRunRecordStore, RunRecordStore
 
 __all__ = [
     "AssistantConfig",
@@ -42,10 +44,13 @@ __all__ = [
     "CircularDependencyError",
     "DuplicateStepIdError",
     "EmptyPlanError",
+    "FileRunRecordStore",
+    "HumanPlanReviewGateway",
     "MissingDependencyError",
     "Plan",
     "PlanGenerationError",
     "PlanGenerator",
+    "PlanRejectedError",
     "PlanRepairer",
     "PlanReviewDecision",
     "PlanReviewRequest",
@@ -55,8 +60,10 @@ __all__ = [
     "PlanVersion",
     "PlanningMemoryManager",
     "ReviewAction",
+    "ReviewValidationError",
     "RunBudget",
     "RunRecord",
+    "RunRecordStore",
     "RunStatus",
     "SelfDependencyError",
     "StepExecutionRecord",

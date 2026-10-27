@@ -44,17 +44,17 @@ This planner also serves as the extensible foundation for:
 - [x] Add unit tests in `tests/unit/planning/test_plan_generator.py` and `tests/unit/memory/test_memory_manager.py`.
 
 ### Milestone 3: Human Plan Review Gateway & Immutable Plan Versioning
-- [ ] Implement `HumanPlanReviewGateway`:
+- [x] Implement `HumanPlanReviewGateway`:
   - Present proposed plans (steps, dependencies, criteria) for operator review.
   - Support three operator actions: `APPROVE`, `MODIFY`, `REJECT`.
   - Re-validate modified plans through `PlanValidator`.
   - Provide configurable review bypass (`auto_approve_review=True`) for automated evaluation and CI pipelines.
-- [ ] Implement immutable plan versioning:
+- [x] Implement immutable plan versioning:
   - Tag initial plan as `version=1`, `parent_version=None`, `created_by="planner_llm"`.
   - Persist human-edited plans as `version=2`, `parent_version=1`, `created_by="human_reviewer"`.
   - Persist dynamic replans as `version=N+1`, `parent_version=N`, `created_by="replanner"`.
-- [ ] Implement `RunRecordStore` protocol and `FileRunRecordStore` persisting full run lifecycles (`runs/run_<id>.json`).
-- [ ] Add unit tests in `tests/unit/review/test_human_review.py` and `tests/unit/storage/test_run_records.py`.
+- [x] Implement `RunRecordStore` protocol and `FileRunRecordStore` persisting full run lifecycles (`runs/run_<id>.json`).
+- [x] Add unit tests in `tests/unit/review/test_human_review.py` and `tests/unit/storage/test_run_records.py`.
 
 ### Milestone 4: Async DAG Scheduler, Module 17 Step Execution & Dual Verification
 - [ ] Implement pure Python `DAGScheduler` using `asyncio`:

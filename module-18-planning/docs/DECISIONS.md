@@ -118,3 +118,17 @@
   2. Implementing local vector embeddings for episodes inside Module 18: Rejected because episodic vector indexing is an infrastructure concern owned strictly by `packages/genai-core`.
 - **Impact:** Clean decoupling of planner prompting from underlying agent implementations, full forward compatibility with Module 20, zero wasted token spend on un-indexed episodic memory, and single-flag enablement when `genai-core` releases episodic vector search.
 
+---
+
+### Decision 12: Immutable Plan Versioning & Atomic Run Record Filesystem Persistence
+- **Context:** Human plan reviews allow approval, modification, or rejection. When a plan is modified, predecessor plans must be preserved immutably for auditability, debugging, and comparative evaluation. In addition, automated test suites and benchmarks need a zero-friction bypass (`auto_approve_review=True`). Furthermore, run records must be written to disk reliably without race conditions or file corruption if a process terminates abruptly.
+- **Decision:**
+  1. In `HumanPlanReviewGateway`, human modifications increment plan `version = parent_version + 1`, record `parent_version`, set `created_by = "human_reviewer"`, and record operator `change_summary`. Rejections raise `PlanRejectedError` containing the reviewer ID and explicit critique.
+  2. Implement `auto_approve_review` flag in `AssistantConfig`, allowing automated testing, CI pipelines, and benchmarks to bypass operator prompts while preserving `created_by="planner_llm"`.
+  3. In `FileRunRecordStore`, implement atomic write operations via temporary files (`run_{run_id}.tmp`) followed by atomic rename (`replace`), preventing partial JSON writes from being read by concurrent processes or surviving crashes as corrupt files.
+- **Alternatives Considered:**
+  1. In-place plan mutation: Rejected because mutating plans destroys provenance and makes tracking human interventions impossible.
+  2. External database (PostgreSQL/SQLite) for run records: Rejected because Module 18 specification requires lightweight, file-based persistence (`runs/run_<id>.json`), while the `RunRecordStore` protocol ensures future stores can be plugged in without changing domain logic.
+- **Impact:** Complete provenance tracking across plan versions, clean CI test automation, and robust local filesystem persistence.
+
+

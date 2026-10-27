@@ -109,6 +109,11 @@ class PlanValidator:
 
         return True
 
+    @classmethod
+    def validate_plan(cls, plan: Plan) -> bool:
+        """Alias for validate to support both naming styles."""
+        return cls.validate(plan)
+
 
 def validate_plan(plan: Plan) -> bool:
     """Convenience functional wrapper around PlanValidator.validate."""
