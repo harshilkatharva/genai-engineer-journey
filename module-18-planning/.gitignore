@@ -37,6 +37,3 @@ transcripts/
 
 # vs code settings
 .vscode/
-
-# Run storage
-runs/

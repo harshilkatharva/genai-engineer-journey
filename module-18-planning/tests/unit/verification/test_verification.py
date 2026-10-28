@@ -228,3 +228,55 @@ async def test_verify_step_llm_exception_handled_gracefully(
     assert result.passed is False
     assert result.model_passed is False
     assert "Judge API quota exceeded" in result.reasoning
+
+
+def test_build_judge_prompt_includes_negative_findings_instruction(
+    sample_step: PlanStep,
+) -> None:
+    """Verify build_judge_prompt contains explicit rules for negative findings & resource absence."""
+    prompt = build_judge_prompt(
+        step_description=sample_step.description,
+        success_criteria=sample_step.success_criteria,
+        output_text="Requested record was not found in database.",
+        tool_hint=sample_step.tool_name_hint,
+    )
+    assert "HANDLING NEGATIVE FINDINGS & RESOURCE ABSENCE" in prompt
+    assert "VALID AND SUCCESSFUL FACTUAL FINDING" in prompt
+    assert "Do NOT penalize the agent" in prompt
+    assert "not found" in prompt
+
+
+@pytest.mark.asyncio
+async def test_verify_step_negative_finding_verified(
+    mock_llm_service: MagicMock,
+) -> None:
+    """Verify step passes when tool returns negative finding and judge confirms absence."""
+    step = PlanStep(
+        id="step_lookup_absent",
+        description="Lookup status for record R-999",
+        tool_name_hint="record_status",
+        success_criteria="Record R-999 details are retrieved",
+    )
+    verdict = StepJudgeVerdict(
+        is_satisfied=True,
+        score=0.95,
+        reasoning="The agent queried record_status and conclusively confirmed R-999 does not exist in system records.",
+        missing_criteria=[],
+    )
+    mock_llm_service.complete_structure.return_value = LLMManagerResponse(
+        structured_response=verdict,
+        model="gemini-3.5-flash-lite",
+    )
+
+    verifier = StepVerifier(llm_service=mock_llm_service)
+    result = await verifier.verify_step(
+        step=step,
+        output_text="Record R-999 could not be found in the system after querying record_status.",
+        execution_status=StepStatus.COMPLETED,
+    )
+
+    assert result.passed is True
+    assert result.programmatic_passed is True
+    assert result.model_passed is True
+    assert result.score == 0.95
+    assert "conclusively confirmed R-999 does not exist" in result.reasoning

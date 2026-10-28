@@ -163,6 +163,7 @@ async def run_comparative_benchmark(
         Callable[[EvalSample], Awaitable[SystemEvalResult]] | None
     ) = deterministic_mock_reactive_target,
     max_concurrency: int = 3,
+    pause_between_goals_seconds: float = 30.0,
 ) -> ComparativeBenchmarkReport:
     """Execute head-to-head evaluation benchmark comparing Planned and Reactive systems.
 
@@ -171,6 +172,7 @@ async def run_comparative_benchmark(
         planned_target: Target runner for Module 18 Planned Assistant.
         reactive_target: Target runner for Module 17 Reactive BoundedAgent.
         max_concurrency: Maximum parallel goal evaluations.
+        pause_between_goals_seconds: Cooldown duration in seconds to pause after each goal evaluation.
 
     Returns:
         ComparativeBenchmarkReport containing individual results and side-by-side KPI analysis.
@@ -189,10 +191,9 @@ async def run_comparative_benchmark(
                 # Ensure latency stamped if not populated by mock
                 if res.latency_s <= 0.0:
                     res.latency_s = round(time.monotonic() - start_t, 3)
-                return res
             except Exception as exc:  # noqa: BLE001
                 elapsed = round(time.monotonic() - start_t, 3)
-                return SystemEvalResult(
+                res = SystemEvalResult(
                     system_name=getattr(target_fn, "__name__", "Target"),
                     goal_id=str(sample.id),
                     category=sample.metadata.get("category", "unknown"),
@@ -205,6 +206,16 @@ async def run_comparative_benchmark(
                     deliverable="",
                     error_message=str(exc),
                 )
+
+            # Pause after each goal evaluation to prevent LLM API rate limits and quotas
+            if pause_between_goals_seconds > 0.0:
+                print(
+                    f"  [Cooldown] Pausing {pause_between_goals_seconds:.0f}s after goal {sample.id} ({res.system_name})...",
+                    flush=True,
+                )
+                await asyncio.sleep(pause_between_goals_seconds)
+
+            return res
 
     # Execute Planned Assistant across all goals
     planned_fn = planned_target or deterministic_mock_planned_target

@@ -54,16 +54,20 @@ class Module17StepExecutor(StepExecutor):
         if registry is None:
             return {}
 
+        caps: dict[str, str] = {}
         list_tools_fn = getattr(registry, "list_tools", None)
         if callable(list_tools_fn):
             tools = list_tools_fn()
-            return {getattr(t, "name", str(t)): getattr(t, "description", "") for t in tools}
+            caps = {getattr(t, "name", str(t)): getattr(t, "description", "") for t in tools}
+        else:
+            tools_dict = getattr(registry, "tools", None)
+            if isinstance(tools_dict, dict):
+                caps = {name: getattr(tool, "description", "") for name, tool in tools_dict.items()}
 
-        tools_dict = getattr(registry, "tools", None)
-        if isinstance(tools_dict, dict):
-            return {name: getattr(tool, "description", "") for name, tool in tools_dict.items()}
+        if not self.config.enable_episodic_similarity_search:
+            caps = {name: desc for name, desc in caps.items() if "episodic" not in name.lower()}
 
-        return {}
+        return caps
 
     def format_step_prompt(
         self,

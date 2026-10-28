@@ -63,19 +63,19 @@ def get_10_benchmark_goals() -> list[EvalSample]:
         # G-03: Operations (Gated operational sequence requiring inspection before write)
         EvalSample(
             id="G-03",
-            query="Resolve high-priority ticket T-102 and update customer account tier if eligible.",
+            query="Resolve high-priority ticket T-102 for customer C-102 and update customer account tier if eligible.",
             expected_tools=["ticket_status", "update_ticket_status", "lookup_customer_account"],
             expected_evidence=ExpectedEvidence(required=["T-102", "resolved"]),
             expected_answer=ExpectedAnswer(
                 required=["T-102", "resolved"],
                 reference=(
                     "High-priority ticket T-102 inspected and updated to RESOLVED. "
-                    "Associated customer account eligibility verified for tier upgrade."
+                    "Associated customer account C-102 eligibility verified for tier upgrade."
                 ),
             ),
             metadata={
                 "category": "operations",
-                "user_id": "operator_admin",
+                "user_id": "C-102",
                 "test_focus": "Gated sequence requiring inspection before status write",
             },
         ),
@@ -179,38 +179,42 @@ def get_10_benchmark_goals() -> list[EvalSample]:
         # G-09: Operations (Verification of prerequisites prior to irreversible action)
         EvalSample(
             id="G-09",
-            query="Prepare refund execution: verify customer eligibility, calculate prorated refund amount, and record audit log.",
-            expected_tools=["lookup_customer_account", "calculate_refund", "search_knowledge_base"],
-            expected_evidence=ExpectedEvidence(required=["eligibility", "refund"]),
+            query="Prepare refund execution for customer C-102: verify customer eligibility, calculate prorated refund amount, and record audit log.",
+            expected_tools=[
+                "lookup_customer_account",
+                "search_knowledge_base",
+                "save_longterm_memory",
+            ],
+            expected_evidence=ExpectedEvidence(required=["C-102", "eligibility", "refund"]),
             expected_answer=ExpectedAnswer(
-                required=["eligibility", "refund", "amount"],
+                required=["C-102", "eligibility", "refund", "amount"],
                 reference=(
-                    "Customer eligibility verified against active subscription period. "
+                    "Customer C-102 eligibility verified against active subscription period. "
                     "Prorated refund amount calculated and audit log entry staged."
                 ),
             ),
             metadata={
                 "category": "operations",
-                "user_id": "billing_auditor",
+                "user_id": "C-102",
                 "test_focus": "Verification of eligibility prerequisites prior to irreversible action",
             },
         ),
         # G-10: Mixed (Multi-hop reasoning where subsequent step depends on initial discovery)
         EvalSample(
             id="G-10",
-            query="Root-cause analysis for system incident: search error log chunks, query incident ticket, and draft postmortem.",
+            query="Root-cause analysis for system incident on ticket T-103: search knowledge-base guidelines, query incident ticket, and draft postmortem.",
             expected_tools=["search_knowledge_base", "ticket_status"],
-            expected_evidence=ExpectedEvidence(required=["incident", "root-cause"]),
+            expected_evidence=ExpectedEvidence(required=["T-103", "incident", "root-cause"]),
             expected_answer=ExpectedAnswer(
-                required=["incident", "root-cause", "postmortem"],
+                required=["T-103", "incident", "root-cause", "postmortem"],
                 reference=(
-                    "Discovered connection pool exhaustion in error log chunks correlating with spike in ticket T-105. "
+                    "Discovered kernel crash panic escalation in documentation correlating with incident ticket T-103. "
                     "Drafted incident postmortem detailing root cause, timeline, and mitigation steps."
                 ),
             ),
             metadata={
                 "category": "mixed",
-                "user_id": "sre_engineer",
+                "user_id": "C-102",
                 "test_focus": "Multi-hop reasoning where subsequent step depends on initial discovery",
             },
         ),

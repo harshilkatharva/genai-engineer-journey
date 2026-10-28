@@ -221,6 +221,10 @@ Semantic evaluation using `genai_core.LLMService.complete_structure`:
   ```
 - **Threshold Rule:** The step passes model verification if:
   $$\text{verdict.is\_satisfied} == \text{True} \quad \land \quad \text{verdict.score} \ge 0.85$$
+- **Negative Findings & Resource Absence Rule:** For inquiry, query, search, retrieval, lookup, or audit steps across any capability or tool (databases, vector stores, external APIs, web search, memory):
+  - Conclusively establishing and clearly documenting that a requested entity, record, document, identifier, account, or piece of information does **not exist**, is **not found** (e.g. 404, not found, or empty search result), or is absent from system records is a **valid and successful factual finding** about the real-world state of the data.
+  - The model judge evaluates the step as satisfied (`is_satisfied = True`, `score >= 0.85`) when the absence is clearly documented, rather than failing the step.
+  - Verification fails (`is_satisfied = False`) only if the agent encountered an unhandled execution crash, returned empty/too-short text, hallucinated fictitious data, or failed to perform the required inquiry action.
 
 ### 5.3 Step-Level Retries
 - If verification fails (either programmatic or model judge), the step is not immediately escalated to replanning.
@@ -361,6 +365,7 @@ To prevent evaluation bias, both systems are benchmarked under strictly equivale
 3. **Equalized Resource Caps:** Both systems are constrained by identical total token ($40,000$ tokens) and cost ($0.25$ USD) budgets per goal.
 4. **Identical Tool & Database State:** Both systems share access to the same 16 tools, identical PostgreSQL seed tables (`support_customers`, `support_tickets`), and the same knowledge base chunks.
 5. **Uniform Success Criteria:** A single, neutral model-based judge (`genai_core.LLMService.complete_structure`) evaluates the final output of both systems against identical ground-truth reference requirements.
+6. **Inter-Goal Cooldown (Rate Limiting Protection):** To prevent LLM API rate limits (TPM/RPM exhaustion) during sequential evaluation, the system pauses 30 seconds after each goal evaluation for both Planned and Reactive systems. To ensure benchmark integrity, the goal latency metric is stamped immediately upon execution completion *before* initiating the 30-second cooldown.
 
 ### 10.2 The 10 Curated Benchmark Goals
 
@@ -368,14 +373,14 @@ To prevent evaluation bias, both systems are benchmarked under strictly equivale
 | :--- | :--- | :--- | :--- |
 | **G-01** | Research | Compare HNSW and IVFFlat vector indexing algorithms in terms of latency, build time, and recall. | Parallel independent research branches joining at synthesis. |
 | **G-02** | Operations | Investigate customer account C-101, inspect recent billing tickets, verify refund policy, and draft customer response. | Strict sequential order dependencies across DB and KB. |
-| **G-03** | Operations | Resolve high-priority ticket T-102 and update customer account tier if eligible. | Gated operational sequence requiring inspection before status write. |
+| **G-03** | Operations | Resolve high-priority ticket T-102 for customer C-102 and update customer account tier if eligible. | Gated operational sequence requiring inspection before status write. |
 | **G-04** | Research | Perform security audit comparing internal knowledge-base guidelines with public OWASP Top 10 web vulnerabilities. | Multi-query KB retrieval combined with external web search. |
 | **G-05** | Mixed | Diagnose customer churn risk for customer C-104 using ticket history, stored memory preferences, and account tier. | Multi-tier reasoning combining database and long-term memory. |
 | **G-06** | Resilience | Retrieve documentation for an ambiguous query requiring dynamic replanning after initial verification failure. | Tests verifier detecting insufficient output and triggering replan. |
 | **G-07** | Operations | Batch status and resolution audit across tickets T-101, T-103, and T-105 with a single consolidated executive brief. | 3 independent parallel fetch steps merging into 1 synthesis step. |
 | **G-08** | Research | Analyze pricing models and SLA terms for three cloud vector databases from web sources with a markdown comparison matrix. | Multi-source web search with structured table deliverable. |
-| **G-09** | Operations | Prepare refund execution: verify customer eligibility, calculate prorated refund amount, and record audit log. | Verification of eligibility prerequisites prior to irreversible action. |
-| **G-10** | Mixed | Root-cause analysis for system incident: search error log chunks, query incident ticket, and draft postmortem. | Multi-hop reasoning where subsequent step depends on initial discovery. |
+| **G-09** | Operations | Prepare refund execution for customer C-102: verify customer eligibility, calculate prorated refund amount, and record audit log. | Verification of eligibility prerequisites prior to irreversible action. |
+| **G-10** | Mixed | Root-cause analysis for system incident on ticket T-103: search knowledge-base guidelines, query incident ticket, and draft postmortem. | Multi-hop reasoning where subsequent step depends on initial discovery. |
 
 ### 10.3 Evaluation Metrics
 The benchmark CLI (`scripts/run_eval.py`) computes and reports:

@@ -54,6 +54,7 @@ async def test_run_comparative_benchmark_mock_mode() -> None:
         planned_target=deterministic_mock_planned_target,
         reactive_target=deterministic_mock_reactive_target,
         max_concurrency=4,
+        pause_between_goals_seconds=0.0,
     )
 
     # 1. Planned Assistant assertions

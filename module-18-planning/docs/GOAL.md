@@ -97,6 +97,7 @@ This planner also serves as the extensible foundation for:
   - Report comparative metrics: Completion Rate (%), Steps/Turns, Total Cost ($ USD), Latency (s), and Replanning Count.
   - Support both interactive CLI prompt and non-interactive `--mock` / `--live` modes with `--limit` and `--goal-ids` flags.
 - [x] Implement `create_live_benchmark_targets` in `src/plan_and_execute_research_assistant/eval/live_runner.py` wiring real Gemini API (`gemini-3.5-flash-lite`), live PostgreSQL database stores, pgvector retrieval, and real-time terminal progress.
+- [x] Implement inter-goal cooldown (30s) in `eval/runner.py` and `--pause-between-goals` CLI flag in `scripts/run_eval.py` to protect against LLM API rate limits while preserving accurate latency measurements.
 - [x] Add integration tests in `tests/integration/test_eval_benchmark.py` (gated by `INTEGRATION_TEST=1`).
 
 ### Integration Test Suite: Live Providers, Tools & PostgreSQL

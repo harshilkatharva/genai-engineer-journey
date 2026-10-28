@@ -27,7 +27,7 @@ from research_and_support_agent.data.db_store import (
 from research_and_support_agent.hitl.postgres_store import PostgresApprovalStore
 from research_and_support_agent.memory.manager import AgentMemoryManager
 
-from ..core import AssistantConfig
+from ..core import AssistantConfig, get_assistant_config
 from ..execution import Module17StepExecutor
 from ..memory import PlanningMemoryManager
 from ..models import RunBudget, RunStatus, StepStatus
@@ -49,7 +49,8 @@ _logger = logging.getLogger("plan_and_execute_research_assistant.eval.live_runne
 async def create_live_benchmark_targets(
     api_key: str,
     db_url: str = "postgresql://postgres:postgres@127.0.0.1:5432/ai_search",
-    model: str = "gemini-3.5-flash-lite",
+    model: str | None = None,
+    config: AssistantConfig | None = None,
 ) -> tuple[
     Callable[[EvalSample], Awaitable[SystemEvalResult]],
     Callable[[EvalSample], Awaitable[SystemEvalResult]],
@@ -59,12 +60,16 @@ async def create_live_benchmark_targets(
     Args:
         api_key: Google Gemini API key.
         db_url: PostgreSQL connection URL.
-        model: Model identifier (defaults to gemini-3.5-flash-lite).
+        model: Optional model identifier override (falls back to config.default_model).
+        config: Optional AssistantConfig instance (falls back to get_assistant_config()).
 
     Returns:
         Tuple of (live_planned_target, live_reactive_target).
     """
-    provider = GoogleProvider(api_key=api_key, model=model)
+    effective_config = config or get_assistant_config()
+    target_model = model or effective_config.default_model
+
+    provider = GoogleProvider(api_key=api_key, model=target_model)
     llm = LLMService(providers={"google": provider}, default_provider="google")
     emb = EmbeddingService(
         provider=LocalEmbeddingProvider(model="sentence-transformers/all-MiniLM-L6-v2")
@@ -84,11 +89,11 @@ async def create_live_benchmark_targets(
     agent_mem_mgr = AgentMemoryManager(memory_service=memory_service)
 
     agent_config = AgentConfig(
-        default_model=model,
-        default_max_steps=6,
-        default_timeout_seconds=90.0,
-        default_max_tokens=30_000,
-        default_max_cost_usd=0.25,
+        default_model=target_model,
+        default_max_steps=effective_config.default_step_max_iterations + 1,
+        default_timeout_seconds=min(90.0, effective_config.default_timeout_seconds),
+        default_max_tokens=effective_config.max_total_tokens,
+        default_max_cost_usd=effective_config.max_total_cost_usd,
     )
 
     # 1. Module 17 Reactive BoundedAgent
@@ -103,26 +108,58 @@ async def create_live_benchmark_targets(
     )
 
     # 2. Module 18 Planned Assistant
-    config = AssistantConfig(
-        default_model=model,
-        max_concurrency=2,
-        auto_approve_review=True,
-    )
-    executor = Module17StepExecutor(agent=bounded_agent, config=config)
-    planning_mem = PlanningMemoryManager(memory_service=memory_service, config=config)
+    if not effective_config.enable_episodic_similarity_search:
+        for t_name in [
+            "get_episodic_memory",
+            "delete_episodic_memory_all",
+            "delete_episodic_memory_episodes",
+        ]:
+            if hasattr(bounded_agent, "tool_registry") and bounded_agent.tool_registry:
+                bounded_agent.tool_registry.unregister(t_name)
+
+    # Ensure benchmark seed memory and ticket for C-104 are present
+    try:
+        from genai_core.models.memory_model import MemoryCategory
+
+        existing_ltm = await memory_service.long_term.view(user_id="C-104")
+        if not existing_ltm:
+            await memory_service.remember(
+                user_id="C-104",
+                content="Customer C-104 requires rapid SLA turnaround, escalation on billing disputes, and proactive communication.",
+                category=MemoryCategory.PREFERENCE,
+            )
+    except Exception as exc:  # noqa: BLE001
+        _logger.warning("Could not pre-seed C-104 memory: %s", exc)
+
+    if "T-104" not in tickets:
+        from research_and_support_agent.models import SupportTicket, TicketStatus
+
+        tickets["T-104"] = SupportTicket(
+            ticket_id="T-104",
+            customer_id="C-104",
+            title="Repeated billing turnaround delay",
+            description="Customer expressed concern regarding turnaround delay and requested immediate SLA review.",
+            status=TicketStatus.OPEN,
+            assigned_team="tier1_support",
+            priority="high",
+            history=[{"action": "created", "note": "Billing turnaround ticket opened"}],
+        )
+
+    executor = Module17StepExecutor(agent=bounded_agent, config=effective_config)
+    planning_mem = PlanningMemoryManager(memory_service=memory_service, config=effective_config)
     plan_generator = PlanGenerator(
         llm_service=llm,
         validator=PlanValidator(),
         memory_manager=planning_mem,
         step_executor=executor,
-        config=config,
+        config=effective_config,
     )
-    verifier = StepVerifier(llm_service=llm, config=config)
-    replanner = ReplanningEngine(llm_service=llm, config=config)
+    verifier = StepVerifier(llm_service=llm, config=effective_config)
+    replanner = ReplanningEngine(llm_service=llm, config=effective_config)
     scheduler = DAGScheduler(
         executor=executor,
         verifier=verifier,
-        config=config,
+        config=effective_config,
     )
     assistant = PlanAndExecuteAssistant(
         llm_service=llm,
@@ -132,7 +169,7 @@ async def create_live_benchmark_targets(
         replanner=replanner,
         plan_generator=plan_generator,
         verifier=verifier,
-        config=config,
+        config=effective_config,
     )
 
     async def live_planned_target(sample: EvalSample) -> SystemEvalResult:
@@ -142,9 +179,9 @@ async def create_live_benchmark_targets(
         start_t = time.monotonic()
         try:
             budget = RunBudget(
-                max_total_tokens=60_000,
-                max_total_cost_usd=0.35,
-                total_timeout_seconds=240.0,
+                max_total_tokens=effective_config.max_total_tokens,
+                max_total_cost_usd=effective_config.max_total_cost_usd,
+                total_timeout_seconds=effective_config.default_timeout_seconds,
             )
             user_id = sample.metadata.get("user_id") or f"eval_user_{g_id}"
             result = await assistant.run(goal=sample.query, user_id=user_id, budget=budget)

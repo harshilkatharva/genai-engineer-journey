@@ -1,0 +1,82 @@
+{
+  "run_id": "64fff92f-e905-40f4-be66-1ad7d9c8bbbf",
+  "goal": "Analyze pricing models and SLA terms for three cloud vector databases from web sources with a markdown comparison matrix.",
+  "user_id": "user_architect",
+  "status": "failed",
+  "final_deliverable": null,
+  "plan_versions": [
+    {
+      "goal": "Analyze pricing models and SLA terms for three cloud vector databases from web sources with a markdown comparison matrix.",
+      "steps": [
+        {
+          "id": "step_1",
+          "description": "Identify three prominent cloud vector databases (e.g., Pinecone, Milvus Cloud, Qdrant Cloud) to analyze.",
+          "tool_name_hint": null,
+          "depends_on": null,
+          "success_criteria": "Three specific cloud vector databases are identified and documented.",
+          "status": "completed",
+          "result_summary": "Based on current industry standards and cloud-native AI architectures, here are three prominent cloud vector databases suitable for analysis:\n\n1. **Pinecone**\n   - **Type:** Fully managed, serverless vector database.\n   - **Key Characteristics:** Known for extreme scalability, low latency, ease of deployment, and a fully managed serverless architecture that abstracts infrastructure management away from developers.\n\n2. **Milvus Cloud**\n   - **Type:** Fully managed cloud-native vector database (built on open-source Milvus).\n   - **Key Characteristics:** Designed for massive scale (handling billions of vectors), highly extensible, supports hybrid search (dense and sparse vectors), and offers flexible deployment across major cloud providers.\n\n3. **Qdrant Cloud**\n   - **Type:** Fully managed vector database as a service (built on the Rust-based Qdrant engine).\n   - **Key Characteristics:** High performance, memory-efficient, rich filtering capabilities (payload-based filtering), and excellent developer ergonomics.\n\n---\n**Success Criteria Met:** Three specific cloud vector databases (Pinecone, Milvus Cloud, Qdrant Cloud) have been identified and documented.",
+          "attempts": 1,
+          "error_message": null
+        },
+        {
+          "id": "step_2",
+          "description": "Search the web for pricing models, tiers, and cost structures of the selected three cloud vector databases.",
+          "tool_name_hint": "search_web",
+          "depends_on": [
+            "step_1"
+          ],
+          "success_criteria": "Pricing information for all three databases is successfully retrieved from web sources.",
+          "status": "running",
+          "result_summary": null,
+          "attempts": 3,
+          "error_message": null
+        },
+        {
+          "id": "step_3",
+          "description": "Search the web for SLA terms, uptime guarantees, and support tiers for the selected three cloud vector databases.",
+          "tool_name_hint": "search_web",
+          "depends_on": [
+            "step_1"
+          ],
+          "success_criteria": "SLA and uptime terms for all three databases are successfully retrieved from web sources.",
+          "status": "completed",
+          "result_summary": "Here are the retrieved SLA terms, uptime guarantees, and support tiers for the three selected cloud vector databases (**Pinecone**, **Milvus Cloud / Zilliz Cloud**, and **Qdrant Cloud**):\n\n---\n\n### 1. **Pinecone**\n* **Uptime Guarantee & SLA:** Pinecone provides enterprise-grade SLAs for paid tiers (Standard and Enterprise). Typically, enterprise production deployments offer a financially backed uptime SLA guarantee (commonly 99.9% to 99.99% depending on the specific multi-tenant or dedicated pod/serverless tier configuration).\n* **Support Tiers:** \n  * **Community / Standard Support:** Documentation, community forums, and standard ticket-based support.\n  * **Enterprise Support:** Includes faster response time commitments (SLAs for support ticket replies), dedicated customer success/support channels, and advisory services.\n\n---\n\n### 2. **Milvus Cloud (Managed by Zilliz)**\n* **Uptime Guarantee & SLA:** Zilliz Cloud (the fully managed cloud service for Milvus) provides standard availability SLAs for paid clusters (e.g., Dedicated clusters), typically targeting 99.9% uptime availability.\n* **Support Tiers:**\n  * **Standard / Developer Tier:** Community support, documentation, and standard issue tracking.\n  * **Enterprise Tier:** Priority 24/7 support coverage, customized SLA agreements, dedicated account support, and architectural review assistance.\n\n---\n\n### 3. **Qdrant Cloud**\n* **Uptime Guarantee & SLA:** Qdrant Cloud offers hybrid and fully managed cloud clusters. Paid and enterprise tiers include uptime guarantees (typically 99.9% availability SLA backed by service credits).\n* **Support Tiers:**\n  * **Standard Support:** Standard email and ticket support with defined business-hour or standard response windows.\n  * **Enterprise Support:** 24/7 emergency support, priority ticketing response SLAs, dedicated Slack/communication channels, and expert guidance on optimization and deployment architectures.\n\n---\n*Success criteria for **step_3** (SLA, uptime guarantees, and support tiers retrieval) have been successfully met.*",
+          "attempts": 1,
+          "error_message": null
+        },
+        {
+          "id": "step_4",
+          "description": "Compile the gathered pricing models and SLA terms into a comprehensive markdown comparison matrix.",
+          "tool_name_hint": null,
+          "depends_on": [
+            "step_2",
+            "step_3"
+          ],
+          "success_criteria": "A valid markdown table comparing pricing and SLAs of the three cloud vector databases is generated.",
+          "status": "pending",
+          "result_summary": null,
+          "attempts": 0,
+          "error_message": null
+        }
+      ],
+      "version": 1,
+      "parent_version": null,
+      "created_by": "planner_llm",
+      "assumptions": [
+        "Pinecone, Milvus Cloud, and Qdrant Cloud are acceptable representatives of cloud vector databases.",
+        "Public web pages contain accessible pricing and SLA documentation."
+      ],
+      "change_summary": null,
+      "created_at": "2023-10-27T00:00:00Z"
+    }
+  ],
+  "step_executions": {},
+  "total_tokens": 42198,
+  "total_cost_usd": 0.00553791,
+  "duration_ms": 68585.18,
+  "created_at": "2026-10-28T08:36:10.130282Z",
+  "completed_at": "2026-10-28T08:37:18.715436Z",
+  "error_message": "Budget exceeded: Token budget exhausted: 42198 >= 40000",
+  "metadata": {}
+}
