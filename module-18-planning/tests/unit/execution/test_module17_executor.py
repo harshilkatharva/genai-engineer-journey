@@ -109,3 +109,34 @@ async def test_execute_step_success() -> None:
     assert output.output_text == "Account C-104 has balance $0.0 and active risk flag."
     assert output.tokens_used == 250
     assert output.cost_usd == 0.0001
+
+
+@pytest.mark.asyncio
+async def test_execute_step_truncates_web_search_output() -> None:
+    """Verify web-retrieved output exceeding max_web_retrieved_tokens is truncated with tiktoken."""
+    from plan_and_execute_research_assistant.core.tokens import count_tokens
+
+    config = AssistantConfig(max_web_retrieved_tokens=100)
+    agent = MagicMock()
+    mock_result = MagicMock()
+    mock_result.status = "completed"
+    # Create output with ~300 tokens
+    mock_result.final_text = "web document word " * 150
+    mock_result.total_tokens = 500
+    mock_result.total_cost_usd = 0.001
+    mock_result.error_message = None
+    agent.run = AsyncMock(return_value=mock_result)
+
+    executor = Module17StepExecutor(agent=agent, config=config)
+    step = PlanStep(
+        id="step_web",
+        description="Search web for pricing",
+        tool_name_hint="search_web",
+        success_criteria="Pricing retrieved",
+    )
+    output = await executor.execute_step(step=step, predecessor_context={}, user_id="user_test")
+
+    assert output.status == StepStatus.COMPLETED
+    assert "truncated to 100 tokens limit" in output.output_text
+    prefix = output.output_text.split("\n... [Web-retrieved response truncated")[0]
+    assert count_tokens(prefix) <= 100

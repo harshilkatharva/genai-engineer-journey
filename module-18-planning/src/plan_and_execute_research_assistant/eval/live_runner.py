@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import time
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 import psycopg
 from genai_core import (
@@ -27,7 +27,7 @@ from research_and_support_agent.data.db_store import (
 from research_and_support_agent.hitl.postgres_store import PostgresApprovalStore
 from research_and_support_agent.memory.manager import AgentMemoryManager
 
-from ..core import AssistantConfig, get_assistant_config
+from ..core import AssistantConfig, get_assistant_config, truncate_to_tokens
 from ..execution import Module17StepExecutor
 from ..memory import PlanningMemoryManager
 from ..models import RunBudget, RunStatus, StepStatus
@@ -88,12 +88,14 @@ async def create_live_benchmark_targets(
     retrieval = RetrievalService(store=pg_vector, embedding_service=emb)
     agent_mem_mgr = AgentMemoryManager(memory_service=memory_service)
 
+    web_limit_chars = effective_config.max_web_retrieved_tokens * 4
     agent_config = AgentConfig(
         default_model=target_model,
         default_max_steps=effective_config.default_step_max_iterations + 1,
         default_timeout_seconds=min(90.0, effective_config.default_timeout_seconds),
         default_max_tokens=effective_config.max_total_tokens,
         default_max_cost_usd=effective_config.max_total_cost_usd,
+        web_search_max_chars=web_limit_chars,
     )
 
     # 1. Module 17 Reactive BoundedAgent
@@ -107,15 +109,36 @@ async def create_live_benchmark_targets(
         config=agent_config,
     )
 
+    # Align ToolExecutor max_output_chars with the 5K token limit
+    if hasattr(bounded_agent, "executor") and bounded_agent.executor:
+        bounded_agent.executor.max_output_chars = web_limit_chars
+
     # 2. Module 18 Planned Assistant
-    if not effective_config.enable_episodic_similarity_search:
-        for t_name in [
-            "get_episodic_memory",
-            "delete_episodic_memory_all",
-            "delete_episodic_memory_episodes",
-        ]:
-            if hasattr(bounded_agent, "tool_registry") and bounded_agent.tool_registry:
+    if hasattr(bounded_agent, "tool_registry") and bounded_agent.tool_registry:
+        if not effective_config.enable_episodic_similarity_search:
+            for t_name in [
+                "get_episodic_memory",
+                "delete_episodic_memory_all",
+                "delete_episodic_memory_episodes",
+            ]:
                 bounded_agent.tool_registry.unregister(t_name)
+
+        # Enforce 5K token limit on web search responses
+        sw_tool = bounded_agent.tool_registry.get("search_web")
+        if sw_tool is not None:
+            orig_run = sw_tool.run
+
+            async def bounded_search_web(*args: Any, **kwargs: Any) -> str:
+                raw_res = await orig_run(*args, **kwargs)
+                res_str = str(raw_res)
+                truncated_res, _ = truncate_to_tokens(
+                    text=res_str,
+                    max_tokens=effective_config.max_web_retrieved_tokens,
+                    suffix=f"\n... [Web-retrieved data truncated to {effective_config.max_web_retrieved_tokens} tokens limit]",
+                )
+                return truncated_res
+
+            sw_tool.run = bounded_search_web  # type: ignore[method-assign]
 
     # Ensure benchmark seed memory and ticket for C-104 are present
     try:

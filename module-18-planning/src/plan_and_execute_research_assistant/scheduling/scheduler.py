@@ -62,6 +62,7 @@ class DAGScheduler:
         plan: Plan,
         user_id: str,
         budget: RunBudget | None = None,
+        step_records_collector: dict[str, list[StepExecutionRecord]] | None = None,
     ) -> SchedulerExecutionResult:
         """Execute all steps in the plan DAG respecting dependencies and concurrency limits.
 
@@ -69,6 +70,8 @@ class DAGScheduler:
             plan: Validated Plan DAG to execute.
             user_id: User identifier.
             budget: Optional RunBudget for token/cost/timeout enforcement.
+            step_records_collector: Optional live collector dictionary to stream StepExecutionRecord
+                instances immediately as each attempt completes (prevents telemetry loss on budget exhaustion).
 
         Returns:
             SchedulerExecutionResult detailing final status, output summaries, and telemetry.
@@ -183,6 +186,10 @@ class DAGScheduler:
                         error_message=verification.reasoning if not verification.passed else None,
                     )
                     step_records[step.id].append(record)
+                    if step_records_collector is not None:
+                        if step.id not in step_records_collector:
+                            step_records_collector[step.id] = []
+                        step_records_collector[step.id].append(record)
 
                     if verification.passed:
                         step_status[step.id] = StepStatus.COMPLETED
@@ -244,6 +251,9 @@ class DAGScheduler:
                     exc = t.exception()
                     if exc is not None:
                         if isinstance(exc, BudgetExceededError):
+                            for active_t in active_tasks.values():
+                                if not active_t.done():
+                                    active_t.cancel()
                             raise exc
                         step_status[s_id] = StepStatus.FAILED
                         step_obj = next((s for s in plan.steps if s.id == s_id), None)

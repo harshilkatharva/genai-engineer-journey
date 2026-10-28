@@ -68,6 +68,11 @@ class AssistantConfig(BaseSettings):
     default_timeout_seconds: float = Field(
         default=180.0, gt=0.0, description="Maximum wall-clock execution duration in seconds"
     )
+    max_web_retrieved_tokens: int = Field(
+        default=5000,
+        ge=100,
+        description="Maximum token ceiling for web-retrieved data and search tool responses",
+    )
 
     # Verification Thresholds
     verification_threshold: float = Field(

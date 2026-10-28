@@ -233,13 +233,16 @@ class PlanAndExecuteAssistant:
                     plan=current_plan,
                     user_id=user_id,
                     budget=active_budget,
+                    step_records_collector=run_record.step_executions,
                 )
 
-                # Merge step execution records and cache outputs
+                # Merge step execution records (avoiding duplicates if streamed in real time) and cache outputs
                 for s_id, recs in sched_result.step_records.items():
                     if s_id not in run_record.step_executions:
                         run_record.step_executions[s_id] = []
-                    run_record.step_executions[s_id].extend(recs)
+                    for r in recs:
+                        if r not in run_record.step_executions[s_id]:
+                            run_record.step_executions[s_id].append(r)
 
                 all_step_results.update(sched_result.step_results)
 

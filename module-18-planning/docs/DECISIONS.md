@@ -298,5 +298,28 @@
   2. Pausing only once between systems: Rejected because evaluating 10 goals in sequence under a single system depletes per-minute token buckets (TPM).
 - **Impact:** Clean rate limit mitigation across live benchmark runs with zero benchmark latency skew and sub-3-second automated test execution.
 
+---
+
+### Decision 23: Real-Time Step Telemetry Streaming & 5K Tiktoken Web Retrieval Limit
+- **Context:**
+  1. Telemetry Loss on Budget Exhaustion: When runs breached global token or cost limits (e.g. `run_64fff92f` reaching 42,198 tokens during `step_2`), `DAGScheduler` raised `BudgetExceededError`, which aborted `execute_plan` without returning. Because `assistant.py` previously transferred step records only after `execute_plan` completed, all `StepExecutionRecord` instances accumulated prior to the breach were discarded, leaving `step_executions` completely empty (`{}`).
+  2. Web Search Payload Bloat: Web search steps (`search_web`) against dense technical documentation yielded large responses that multiplied token consumption across multi-turn agent iterations and predecessor context chains, accelerating budget exhaustion.
+- **Decision:**
+  1. Real-Time Telemetry Streaming:
+     - Enhanced `DAGScheduler.execute_plan` to accept an optional `step_records_collector: dict[str, list[StepExecutionRecord]]`.
+     - In `_run_single_step`, immediately upon building each `StepExecutionRecord` after execution and verification, appended it directly to `step_records_collector[step.id]`.
+     - In `assistant.py`, passed `step_records_collector=run_record.step_executions`, ensuring every attempt across all plan versions is saved to disk even if `BudgetExceededError` terminates the run abruptly.
+     - On `BudgetExceededError`, explicitly cancelled running sibling asyncio tasks before re-raising.
+  2. Tiktoken-Powered 5K Token Limit on Web-Retrieved Content:
+     - Added `src/plan_and_execute_research_assistant/core/tokens.py` implementing `count_tokens` and `truncate_to_tokens` using `tiktoken` (`cl100k_base` encoding).
+     - Added `max_web_retrieved_tokens: int = 5000` to `AssistantConfig`.
+     - In `Module17StepExecutor.execute_step`, truncated any web-retrieved output exceeding 5,000 tokens using `truncate_to_tokens`, appending `... [Web-retrieved response truncated to 5000 tokens limit]`.
+     - In `create_live_benchmark_targets` (`live_runner.py`), wrapped `search_web` in `bounded_agent.tool_registry` to enforce the 5K token boundary at the tool execution level for both Planned Assistant and Reactive BoundedAgent.
+- **Alternatives Considered:**
+  1. Relying on simple character estimation: Rejected because character counts drift significantly on code, tables, and URLs; `tiktoken` guarantees exact token window safety.
+  2. Only truncating in post-processing: Rejected because huge intermediate tool outputs inside `BoundedAgent` cause immediate token budget exhaustion during agent turns.
+- **Impact:** 100% telemetry retention across all completed step attempts even upon budget termination, and strict 5K token boundedness for all web-retrieved data.
+
+
 
 

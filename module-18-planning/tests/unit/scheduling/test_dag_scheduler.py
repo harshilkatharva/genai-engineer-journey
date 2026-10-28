@@ -374,3 +374,47 @@ async def test_scheduler_budget_recording(
     assert result.status == StepStatus.COMPLETED
     assert budget.current_tokens == 2500
     assert budget.current_cost_usd == 0.015
+
+
+@pytest.mark.asyncio
+async def test_scheduler_step_records_collector_preserves_executions_on_budget_exceeded(
+    mock_executor: MagicMock, mock_verifier: MagicMock
+) -> None:
+    from plan_and_execute_research_assistant.models import BudgetExceededError
+    from plan_and_execute_research_assistant.models.run_record import StepExecutionRecord
+
+    plan = Plan(
+        goal="Budget exceeded test",
+        steps=[
+            PlanStep(id="s1", description="Task 1", success_criteria="Done"),
+            PlanStep(id="s2", description="Task 2", depends_on=["s1"], success_criteria="Done"),
+        ],
+    )
+
+    mock_executor.execute_step.return_value = StepExecutionOutput(
+        step_id="s1",
+        output_text="Output that exceeds budget immediately.",
+        status=StepStatus.COMPLETED,
+        tokens_used=5000,
+        cost_usd=0.05,
+    )
+
+    # Budget cap is 1,000 tokens; step uses 5,000 tokens so next budget check / record will raise BudgetExceededError
+    budget = RunBudget(max_total_tokens=1000, max_total_cost_usd=0.10)
+    collector: dict[str, list[StepExecutionRecord]] = {}
+
+    scheduler = DAGScheduler(executor=mock_executor, verifier=mock_verifier)
+
+    with pytest.raises(BudgetExceededError, match="Token budget exhausted"):
+        await scheduler.execute_plan(
+            plan=plan,
+            user_id="user_test",
+            budget=budget,
+            step_records_collector=collector,
+        )
+
+    # Telemetry was preserved in real time despite the exception!
+    assert "s1" in collector
+    assert len(collector["s1"]) == 1
+    assert collector["s1"][0].step_id == "s1"
+    assert collector["s1"][0].tokens_used == 5000

@@ -366,6 +366,7 @@ To prevent evaluation bias, both systems are benchmarked under strictly equivale
 4. **Identical Tool & Database State:** Both systems share access to the same 16 tools, identical PostgreSQL seed tables (`support_customers`, `support_tickets`), and the same knowledge base chunks.
 5. **Uniform Success Criteria:** A single, neutral model-based judge (`genai_core.LLMService.complete_structure`) evaluates the final output of both systems against identical ground-truth reference requirements.
 6. **Inter-Goal Cooldown (Rate Limiting Protection):** To prevent LLM API rate limits (TPM/RPM exhaustion) during sequential evaluation, the system pauses 30 seconds after each goal evaluation for both Planned and Reactive systems. To ensure benchmark integrity, the goal latency metric is stamped immediately upon execution completion *before* initiating the 30-second cooldown.
+7. **Web Retrieval Token Ceiling (5,000 Tokens):** All web-retrieved data and search tool responses (`search_web`) are strictly bounded to a maximum of 5,000 tokens using `tiktoken` (`cl100k_base` encoding). Any web content exceeding 5,000 tokens is truncated with a defensive marker to prevent intermediate payload bloat from exhausting token budgets.
 
 ### 10.2 The 10 Curated Benchmark Goals
 

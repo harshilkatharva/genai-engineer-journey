@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Any
 from genai_core import ObservabilityEvent, safe_log
 from pydantic import BaseModel, Field
 
-from ..core import AssistantConfig, get_assistant_config
+from ..core import AssistantConfig, get_assistant_config, truncate_to_tokens
 from ..models import PlanStep, StepStatus
 from ..protocols.specialist import StepExecutor
 
@@ -155,6 +155,19 @@ class Module17StepExecutor(StepExecutor):
             tokens_used = getattr(result, "total_tokens", 0) or 0
             cost_usd = getattr(result, "total_cost_usd", 0.0) or 0.0
             error_msg = getattr(result, "error_message", None)
+
+            # Enforce 5K token limit on web-retrieved data / response using tiktoken
+            is_web_step = (
+                step.tool_name_hint == "search_web"
+                or "search_web" in str(step.description).lower()
+                or "web" in str(step.description).lower()
+            )
+            if is_web_step and output_text:
+                output_text, _ = truncate_to_tokens(
+                    text=output_text,
+                    max_tokens=self.config.max_web_retrieved_tokens,
+                    suffix=f"\n... [Web-retrieved response truncated to {self.config.max_web_retrieved_tokens} tokens limit]",
+                )
 
             step_status = StepStatus.COMPLETED if is_success else StepStatus.FAILED
             if not is_success and not output_text and error_msg:
