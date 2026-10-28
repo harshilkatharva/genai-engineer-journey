@@ -48,7 +48,8 @@ def test_build_judge_prompt(sample_step: PlanStep) -> None:
     )
     assert "Extract support ticket resolution times" in prompt
     assert "average resolution time per priority tier" in prompt
-    assert "Priority P1: 4.2h" in prompt
+    assert "<deliverable>\nPriority P1: 4.2h" in prompt
+    assert "</deliverable>" in prompt
     assert "ticket_analytics" in prompt
 
 

@@ -373,3 +373,45 @@ async def test_replan_llm_failure_raises_replanning_error(sample_failed_plan: Pl
         )
 
     assert "Replanning LLM invocation failed" in str(exc_info.value)
+
+
+@pytest.mark.asyncio
+async def test_replan_records_budget_usage_with_dict_usage(
+    sample_failed_plan: Plan,
+) -> None:
+    """Verify replan extracts usage when usage is returned as a dict (PLN-013)."""
+    mock_llm = MagicMock()
+    revised_candidate = Plan(
+        goal=sample_failed_plan.goal,
+        steps=[
+            PlanStep(id="step_1", description="Fetch", success_criteria="Done"),
+            PlanStep(
+                id="step_2_alt",
+                description="Query modern API",
+                depends_on=["step_1"],
+                success_criteria="Done",
+            ),
+        ],
+    )
+
+    mock_resp = MagicMock()
+    mock_resp.structured_response = revised_candidate
+    mock_resp.usage = {"total_tokens": 520, "input_tokens": 320, "output_tokens": 200}
+    mock_resp.cost_usd = 0.0075
+    mock_llm.complete_structure = AsyncMock(return_value=mock_resp)
+
+    budget = RunBudget(max_total_tokens=10000, max_total_cost_usd=1.0)
+    budget.start_timer()
+
+    engine = ReplanningEngine(llm_service=mock_llm)
+    await engine.replan(
+        current_plan=sample_failed_plan,
+        failed_step_id="step_2",
+        failure_reason="API crashed",
+        step_results={"step_1": "Verified"},
+        replan_count=0,
+        budget=budget,
+    )
+
+    assert budget.current_tokens == 520
+    assert budget.current_cost_usd == pytest.approx(0.0075)

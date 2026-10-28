@@ -191,9 +191,14 @@ class ReplanningEngine:
 
         # Record usage if available
         if budget is not None:
-            usage = getattr(raw_response, "usage", None)
-            tokens = getattr(usage, "total_tokens", 0) if usage else 0
-            cost = getattr(raw_response, "cost_usd", 0.0)
+            usage = getattr(raw_response, "usage", {}) or {}
+            if isinstance(usage, dict):
+                tokens = int(usage.get("total_tokens", 0)) or (
+                    int(usage.get("output_tokens", 0)) + int(usage.get("input_tokens", 0))
+                )
+            else:
+                tokens = getattr(usage, "total_tokens", 0)
+            cost = float(getattr(raw_response, "cost_usd", 0.0) or 0.0)
             budget.record_usage(tokens=tokens, cost_usd=cost)
 
         # 6. Programmatically Enforce Work Preservation Invariant

@@ -28,7 +28,9 @@ def build_judge_prompt(
         [
             "",
             "ACTUAL DELIVERABLE PRODUCED BY AGENT:",
+            "<deliverable>",
             output_text.strip(),
+            "</deliverable>",
             "",
             "EVALUATION INSTRUCTIONS:",
             "1. Evaluate whether the actual deliverable satisfies the step objective and verifiable success criteria.",

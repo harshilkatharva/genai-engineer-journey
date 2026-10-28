@@ -423,5 +423,35 @@
   2. Blocking synchronous input on the event loop: Rejected; wrapped input prompt in `asyncio.to_thread` to prevent stalling the async event loop during operator review.
 - **Impact:** Complete immutability of historical plan versions, full protocol compliance for pluggable async storage backends, proactive cancellation of deadline-breaching tasks, and out-of-the-box interactive CLI plan inspection.
 
+---
+
+### Decision 28: Judge Deliverable Tag Fencing, Predecessor Context Ceiling, Root `.env` Aliases & Plan Version Snapshot Immutability 
+- **Context:**
+  1. Unfenced Deliverable in Judge Prompt & Unbounded Predecessor Context (PLN-011): In `verification/prompts.py`, `output_text.strip()` was directly placed in the prompt without XML or markdown delimiter tags, exposing the evaluation judge to prompt injection or structural confusion. In `execution/module17_executor.py`, predecessor step summaries were injected without token ceilings, risking prompt context explosion on long multi-step DAGs.
+  2. `env_prefix="ASSISTANT_"` in `AssistantConfig` (PLN-012): Root `.env` environment variables (`DEFAULT_LLM_MODEL`, `MAX_CONCURRENCY`, `DEFAULT_MODEL`, etc.) were ignored unless explicitly prefixed with `ASSISTANT_`.
+  3. Replanning Token Usage Extraction on Dictionary Formats (PLN-013): In `ReplanningEngine.replan`, token usage extraction assumed an object structure with `getattr(usage, "total_tokens", 0)`. When `genai_core` returned usage as a dictionary, it evaluated to `0`, causing replanning token usage to be under-reported in the run budget.
+  4. In-Place Plan Step Mutation Mutating Initial Plan Snapshot in `run_record.plan_versions` (PLN-014): In `PlanAndExecuteAssistant.run`, `run_record.plan_versions.append(initial_plan)` appended the mutable plan instance by reference. When the scheduler mutated step statuses in-place (`step.status = StepStatus.COMPLETED`), `plan_versions[0]` was mutated retroactively, destroying the pre-execution snapshot.
+- **Decision:**
+  1. Deliverable XML Tag Fencing & Predecessor Context Token Ceiling (PLN-011):
+     - In `verification/prompts.py`, wrapped `output_text.strip()` inside `<deliverable>...</deliverable>` tags.
+     - In `execution/module17_executor.py`, truncated each predecessor dependency summary to a 1,000-token ceiling using `truncate_to_tokens(summary, max_tokens=1000)`.
+  2. Pydantic `AliasChoices` for Root `.env` Fallbacks (PLN-012):
+     - In `AssistantConfig`, added `validation_alias=AliasChoices(...)` for `default_model`, `default_provider`, `max_concurrency`, `default_step_max_iterations`, `max_total_tokens`, `max_total_cost_usd`, and `default_timeout_seconds`, prioritizing `ASSISTANT_*` while supporting root `.env` keys.
+  3. Dict-Resilient Usage Extraction in Replanning Engine (PLN-013):
+     - In `ReplanningEngine.replan`, aligned usage parsing with `PlanGenerator` and `PlanRepairer`, extracting tokens and cost seamlessly from both dictionary and object formats.
+  4. Deep Copy Snapshotting for `run_record.plan_versions` (PLN-014):
+     - In `PlanAndExecuteAssistant.run`, appended `initial_plan.model_copy(deep=True)`, `approved_plan.model_copy(deep=True)`, and `new_plan.model_copy(deep=True)` to `run_record.plan_versions`, guaranteeing that historical plan versions remain immutable audit snapshots.
+  5. Test Coverage:
+     - `test_build_judge_prompt` updated for `<deliverable>` tags in `tests/unit/verification/test_verification.py`.
+     - `test_format_step_prompt_truncates_large_predecessor_context` added in `tests/unit/execution/test_module17_executor.py`.
+     - `test_assistant_config_root_env_aliases` added in `tests/unit/core/test_config.py`.
+     - `test_replan_records_budget_usage_with_dict_usage` added in `tests/unit/replanning/test_replanning.py`.
+     - `test_assistant_preserves_immutable_initial_plan_in_plan_versions` added in `tests/unit/orchestration/test_assistant.py`.
+- **Alternatives Considered:**
+  1. Removing `env_prefix="ASSISTANT_"` entirely: Rejected because retaining `ASSISTANT_` prefix ensures namespace isolation when running in environments with mixed agent configurations.
+  2. Freezing `PlanStep` Pydantic models completely (`frozen=True`): Rejected because the scheduler updates step status, timing, and result summaries dynamically during step lifecycle transitions.
+- **Impact:** Robust prompt injection defense in step judge verification, bounded predecessor token propagation, seamless `.env` variable loading, accurate replanning budget tracking, and reliable historical plan version auditing.
+
+
 
 

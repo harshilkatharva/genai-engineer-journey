@@ -174,3 +174,22 @@ async def test_execute_step_approval_required_is_success() -> None:
     assert "execute_refund" in output.output_text
     assert "req_12345" in output.output_text
     assert "paused for human authorization" in output.output_text
+
+
+def test_format_step_prompt_truncates_large_predecessor_context() -> None:
+    """Verify format_step_prompt truncates large predecessor summaries to 1,000 tokens per dep (PLN-011)."""
+    agent = MagicMock()
+    executor = Module17StepExecutor(agent=agent)
+    step = PlanStep(
+        id="step_2",
+        description="Synthesize results",
+        success_criteria="Synthesis complete",
+    )
+    huge_summary = "word " * 2500  # ~2500 tokens
+    prompt = executor.format_step_prompt(
+        step=step,
+        predecessor_context={"step_1": huge_summary},
+        user_id="user_test",
+    )
+    assert "[step_1]:" in prompt
+    assert "truncated to 1,000 tokens limit" in prompt

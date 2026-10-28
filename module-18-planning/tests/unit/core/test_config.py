@@ -50,3 +50,19 @@ def test_get_assistant_config_singleton() -> None:
     cfg1 = get_assistant_config()
     cfg2 = get_assistant_config()
     assert cfg1 is cfg2
+
+
+def test_assistant_config_root_env_aliases() -> None:
+    """Verify standard root .env variables (e.g. DEFAULT_LLM_MODEL, MAX_CONCURRENCY) are honored (PLN-012)."""
+    env = {
+        "DEFAULT_LLM_MODEL": "gemini-test-root",
+        "DEFAULT_LLM_PROVIDER": "anthropic",
+        "MAX_CONCURRENCY": "8",
+        "MAX_TOOL_ITERATIONS": "9",
+    }
+    with patch.dict(os.environ, env):
+        config = AssistantConfig()
+        assert config.default_model == "gemini-test-root"
+        assert config.default_provider == "anthropic"
+        assert config.max_concurrency == 8
+        assert config.default_step_max_iterations == 9

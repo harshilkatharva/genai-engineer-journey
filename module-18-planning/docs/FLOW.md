@@ -169,11 +169,13 @@ flowchart TD
     RecordSiblings --> ReturnFailed["Return Status FAILED with failed_step_id"]
 
     SiblingCheck -- "No" --> ConcurrencyGate["Acquire asyncio.Semaphore(max_concurrency)"]
-    ConcurrencyGate --> RunStep["Module17StepExecutor.execute_step with predecessor_context"]
+    ConcurrencyGate --> ContextCeiling["Truncate predecessor summaries to 1,000 tokens ceiling"]
+    ContextCeiling --> RunStep["Module17StepExecutor.execute_step with predecessor_context"]
     
     RunStep --> Gate1{"Gate 1: Programmatic Verifier"}
     Gate1 -- "Status!=COMPLETED or Text < 20 chars" --> Gate1Fail["Programmatic Check Failed"]
-    Gate1 -- "Passed" --> Gate2{"Gate 2: LLM Judge Verifier"}
+    Gate1 -- "Passed" --> DelimFence["Enclose output_text in <deliverable> XML tags"]
+    DelimFence --> Gate2{"Gate 2: LLM Judge Verifier"}
     
     Gate2 --> ScoreEval{"is_satisfied and score >= 0.85?"}
     ScoreEval -- "Passed" --> StepDone["Record Result and Mark COMPLETED"]
@@ -206,7 +208,8 @@ flowchart TD
     LockCompleted --> BuildPrompt["Build Replanning Prompt (Goal, Critique, Completed Deliverables, Capabilities)"]
     BuildPrompt --> LLMReplan["LLMService.complete_structure(Plan)"]
     
-    LLMReplan --> Reconcile["Programmatically Reconcile Completed Steps and Cached Summaries"]
+    LLMReplan --> RecordUsage["Extract usage (dict/object) & RunBudget.record_usage()"]
+    RecordUsage --> Reconcile["Programmatically Reconcile Completed Steps and Cached Summaries"]
     Reconcile --> ValidateDAG{"PlanValidator.validate(candidate_plan)"}
     
     ValidateDAG -- "Valid DAG" --> StampVersion["Stamp version=N+1, parent_version=N, created_by='replanner'"]
@@ -231,7 +234,7 @@ flowchart TD
     
     Phase1 --> CheckB2{"RunBudget.check_budget()"}
     CheckB2 -- "Budget Exceeded" --> FailBudget
-    CheckB2 -- "OK" --> Phase2["Phase 2: Plan Generation & Repair Loop<br/>RunStatus.PLANNING"]
+    CheckB2 -- "OK" --> Phase2["Phase 2: Plan Generation & Repair Loop<br/>Archive initial_plan.model_copy(deep=True)<br/>RunStatus.PLANNING"]
     
     Phase2 --> CheckB3{"RunBudget.check_budget()"}
     CheckB3 -- "Budget Exceeded" --> FailBudget
@@ -239,7 +242,7 @@ flowchart TD
     
     Phase3 --> ReviewDecision{"Review Decision"}
     ReviewDecision -- "REJECT" --> RejectRun["Set RunStatus.CANCELLED<br/>Finalize and return AssistantRunResult"]
-    ReviewDecision -- "APPROVE / MODIFY" --> SavePlan["Update current_plan<br/>save_run()"]
+    ReviewDecision -- "APPROVE / MODIFY" --> SavePlan["Update current_plan<br/>Archive approved_plan.model_copy(deep=True)<br/>save_run()"]
     
     SavePlan --> CheckB4{"RunBudget.check_budget()"}
     CheckB4 -- "Budget Exceeded" --> FailBudget
@@ -250,7 +253,7 @@ flowchart TD
     SchedStatus -- "FAILED" --> CheckCeiling{"replan_count < max_replans?"}
     
     CheckCeiling -- "No (Ceiling Exceeded)" --> FailReplan["Set RunStatus.FAILED<br/>Finalize and return AssistantRunResult"]
-    CheckCeiling -- "Yes" --> ReplanPhase["ReplanningEngine.replan()<br/>RunStatus.REPLANNING"]
+    CheckCeiling -- "Yes" --> ReplanPhase["ReplanningEngine.replan()<br/>Archive new_plan.model_copy(deep=True)<br/>RunStatus.REPLANNING"]
     ReplanPhase --> Phase4
     
     CheckReflector -- "Yes" --> ReflectHook["PlanReflector.reflect()<br/>Log reflection critique & score"]

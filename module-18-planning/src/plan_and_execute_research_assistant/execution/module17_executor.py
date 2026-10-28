@@ -92,7 +92,12 @@ class Module17StepExecutor(StepExecutor):
         if predecessor_context:
             lines.append("\nPREDECESSOR CONTEXT (Completed Dependency Outputs):")
             for dep_id, summary in predecessor_context.items():
-                lines.append(f"- [{dep_id}]: {summary}")
+                truncated_summary, _ = truncate_to_tokens(
+                    text=summary,
+                    max_tokens=1000,
+                    suffix="... [Predecessor output truncated to 1,000 tokens limit]",
+                )
+                lines.append(f"- [{dep_id}]: {truncated_summary}")
 
         if retry_feedback:
             lines.append(

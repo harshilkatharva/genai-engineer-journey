@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from typing import Any
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
@@ -546,3 +547,56 @@ async def test_assistant_finalizes_run_with_pure_async_store(
     assert not hasattr(pure_async_store, "_save_run_sync")
     # Verify save_run was called asynchronously
     assert pure_async_store.save_run.await_count >= 1
+
+
+@pytest.mark.asyncio
+async def test_assistant_preserves_immutable_initial_plan_in_plan_versions(
+    mock_llm_service: MagicMock,
+    sample_valid_plan: Plan,
+) -> None:
+    """Verify that run_record.plan_versions[0] preserves pre-execution pending status (PLN-014)."""
+    mock_executor = MagicMock()
+    mock_executor.get_available_capabilities = MagicMock(return_value={"tool_a": "Tool A"})
+
+    mock_mem = MagicMock()
+    mock_mem.get_user_preferences = AsyncMock(return_value=[])
+    mock_mem.record_plan_episode = AsyncMock()
+
+    mock_store = MagicMock()
+    mock_store.save_run = AsyncMock()
+
+    mock_generator = MagicMock()
+    # sample_valid_plan has steps with status=PENDING
+    assert sample_valid_plan.steps[0].status == StepStatus.PENDING
+    mock_generator.generate_plan = AsyncMock(return_value=sample_valid_plan)
+
+    async def fake_scheduler_run(plan: Plan, **kwargs: Any) -> SchedulerExecutionResult:
+        # Scheduler mutates executed plan's steps in-place
+        for s in plan.steps:
+            s.status = StepStatus.COMPLETED
+            s.result_summary = f"Completed {s.id}"
+        return SchedulerExecutionResult(
+            status=StepStatus.COMPLETED,
+            step_results={s.id: s.result_summary or "" for s in plan.steps},
+        )
+
+    mock_scheduler = MagicMock()
+    mock_scheduler.execute_plan.side_effect = fake_scheduler_run
+
+    assistant = PlanAndExecuteAssistant(
+        llm_service=mock_llm_service,
+        executor=mock_executor,
+        memory_manager=mock_mem,
+        store=mock_store,
+        plan_generator=mock_generator,
+        scheduler=mock_scheduler,
+        config=AssistantConfig(auto_approve_review=True),
+    )
+
+    result = await assistant.run(goal="Test plan_versions immutability", user_id="user_immut")
+
+    assert result.status == RunStatus.COMPLETED
+    # The active/returned plan has completed steps
+    assert result.plan.steps[0].status == StepStatus.COMPLETED
+    # But plan_versions[0] MUST retain its pristine pre-execution snapshot (PENDING)
+    assert result.run_record.plan_versions[0].steps[0].status == StepStatus.PENDING

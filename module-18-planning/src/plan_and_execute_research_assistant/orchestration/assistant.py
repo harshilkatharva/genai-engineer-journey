@@ -190,7 +190,7 @@ class PlanAndExecuteAssistant:
                 context=context,
                 budget=active_budget,
             )
-            run_record.plan_versions.append(initial_plan)
+            run_record.plan_versions.append(initial_plan.model_copy(deep=True))
             current_plan = initial_plan
             await self.store.save_run(run_record)
 
@@ -215,7 +215,7 @@ class PlanAndExecuteAssistant:
 
             current_plan = approved_plan
             if current_plan.version > initial_plan.version:
-                run_record.plan_versions.append(current_plan)
+                run_record.plan_versions.append(current_plan.model_copy(deep=True))
             await self.store.save_run(run_record)
 
             # -------------------------------------------------------------
@@ -290,7 +290,7 @@ class PlanAndExecuteAssistant:
 
                 replan_count = replan_res.replan_count
                 current_plan = replan_res.new_plan
-                run_record.plan_versions.append(current_plan)
+                run_record.plan_versions.append(current_plan.model_copy(deep=True))
                 run_record.status = RunStatus.EXECUTING
                 await self.store.save_run(run_record)
 
