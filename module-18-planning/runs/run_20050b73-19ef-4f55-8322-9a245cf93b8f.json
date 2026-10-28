@@ -1,0 +1,242 @@
+{
+  "run_id": "20050b73-19ef-4f55-8322-9a245cf93b8f",
+  "goal": "Analyze pricing models and SLA terms for three cloud vector databases from web sources with a markdown comparison matrix.",
+  "user_id": "user_architect",
+  "status": "failed",
+  "final_deliverable": null,
+  "plan_versions": [
+    {
+      "goal": "Analyze pricing models and SLA terms for three cloud vector databases from web sources with a markdown comparison matrix.",
+      "steps": [
+        {
+          "id": "step_1",
+          "description": "Identify three prominent cloud vector databases (e.g., Pinecone, Milvus Cloud, Qdrant Cloud) to analyze.",
+          "tool_name_hint": null,
+          "depends_on": null,
+          "success_criteria": "Three specific cloud vector database names are selected and documented.",
+          "status": "completed",
+          "result_summary": "To fulfill the objective for **step_1**, here are three prominent cloud vector databases chosen for analysis:\n\n1. **Pinecone** (Fully managed, serverless vector database known for high performance and ease of use)\n2. **Milvus Cloud** (Managed service for Milvus, a highly scalable open-source vector database)\n3. **Qdrant Cloud** (Managed cloud service for Qdrant, featuring high-performance vector search with Rust and rich filtering capabilities)\n\nThese three specific cloud vector database names are now selected and documented.",
+          "attempts": 1,
+          "error_message": null
+        },
+        {
+          "id": "step_2",
+          "description": "Search the web for pricing models and SLA documentation for the first selected cloud vector database.",
+          "tool_name_hint": "search_web",
+          "depends_on": [
+            "step_1"
+          ],
+          "success_criteria": "Retrieved pricing tiers and SLA uptime guarantees for the first database.",
+          "status": "running",
+          "result_summary": null,
+          "attempts": 2,
+          "error_message": null
+        },
+        {
+          "id": "step_3",
+          "description": "Search the web for pricing models and SLA documentation for the second selected cloud vector database.",
+          "tool_name_hint": "search_web",
+          "depends_on": [
+            "step_1"
+          ],
+          "success_criteria": "Retrieved pricing tiers and SLA uptime guarantees for the second database.",
+          "status": "running",
+          "result_summary": null,
+          "attempts": 2,
+          "error_message": null
+        },
+        {
+          "id": "step_4",
+          "description": "Search the web for pricing models and SLA documentation for the third selected cloud vector database.",
+          "tool_name_hint": "search_web",
+          "depends_on": [
+            "step_1"
+          ],
+          "success_criteria": "Retrieved pricing tiers and SLA uptime guarantees for the third database.",
+          "status": "running",
+          "result_summary": null,
+          "attempts": 3,
+          "error_message": null
+        },
+        {
+          "id": "step_5",
+          "description": "Synthesize the gathered pricing and SLA information from all three databases into a comprehensive markdown comparison matrix.",
+          "tool_name_hint": null,
+          "depends_on": [
+            "step_2",
+            "step_3",
+            "step_4"
+          ],
+          "success_criteria": "A fully formatted markdown table comparing pricing models, features, and SLA terms across all three databases is generated.",
+          "status": "pending",
+          "result_summary": null,
+          "attempts": 0,
+          "error_message": null
+        }
+      ],
+      "version": 1,
+      "parent_version": null,
+      "created_by": "planner_llm",
+      "assumptions": [
+        "Pinecone, Milvus Cloud, and Qdrant Cloud are representative cloud vector databases.",
+        "Public web pages contain accessible and up-to-date pricing and SLA information."
+      ],
+      "change_summary": null,
+      "created_at": "2023-10-27T00:00:00Z"
+    }
+  ],
+  "step_executions": {
+    "step_1": [
+      {
+        "step_id": "step_1",
+        "plan_version": 1,
+        "status": "completed",
+        "attempts": 1,
+        "depends_on": [],
+        "started_at": "2026-10-28T10:02:49.324027Z",
+        "completed_at": "2026-10-28T10:02:52.802302Z",
+        "tokens_used": 1602,
+        "cost_usd": 0.00021007,
+        "duration_ms": 1843.69,
+        "result_summary": "To fulfill the objective for **step_1**, here are three prominent cloud vector databases chosen for analysis:\n\n1. **Pinecone** (Fully managed, serverless vector database known for high performance and ease of use)\n2. **Milvus Cloud** (Managed service for Milvus, a highly scalable open-source vector database)\n3. **Qdrant Cloud** (Managed cloud service for Qdrant, featuring high-performance vector search with Rust and rich filtering capabilities)\n\nThese three specific cloud vector database names are now selected and documented.",
+        "verification": {
+          "step_id": "step_1",
+          "passed": true,
+          "programmatic_passed": true,
+          "model_passed": true,
+          "score": 1.0,
+          "reasoning": "The agent successfully identified and documented three prominent cloud vector databases (Pinecone, Milvus Cloud, and Qdrant Cloud), fully satisfying the verifiable success criteria.",
+          "missing_criteria": [],
+          "verified_at": "2026-10-28T10:02:52.802292Z"
+        },
+        "error_message": null
+      }
+    ],
+    "step_4": [
+      {
+        "step_id": "step_4",
+        "plan_version": 1,
+        "status": "failed",
+        "attempts": 1,
+        "depends_on": [
+          "step_1"
+        ],
+        "started_at": "2026-10-28T10:02:52.802663Z",
+        "completed_at": "2026-10-28T10:04:06.348429Z",
+        "tokens_used": 10549,
+        "cost_usd": 0.00138442,
+        "duration_ms": 73538.77,
+        "result_summary": null,
+        "verification": {
+          "step_id": "step_4",
+          "passed": false,
+          "programmatic_passed": false,
+          "model_passed": false,
+          "score": 0.0,
+          "reasoning": "Step execution failed with status 'failed'",
+          "missing_criteria": [
+            "Step execution failed with status 'failed'"
+          ],
+          "verified_at": "2026-10-28T10:04:06.348417Z"
+        },
+        "error_message": "Step execution failed with status 'failed'"
+      },
+      {
+        "step_id": "step_4",
+        "plan_version": 1,
+        "status": "failed",
+        "attempts": 2,
+        "depends_on": [
+          "step_1"
+        ],
+        "started_at": "2026-10-28T10:04:06.348496Z",
+        "completed_at": "2026-10-28T10:05:10.017483Z",
+        "tokens_used": 10875,
+        "cost_usd": 0.0014271,
+        "duration_ms": 63668.76,
+        "result_summary": null,
+        "verification": {
+          "step_id": "step_4",
+          "passed": false,
+          "programmatic_passed": false,
+          "model_passed": false,
+          "score": 0.0,
+          "reasoning": "Step execution failed with status 'failed'",
+          "missing_criteria": [
+            "Step execution failed with status 'failed'"
+          ],
+          "verified_at": "2026-10-28T10:05:10.017472Z"
+        },
+        "error_message": "Step execution failed with status 'failed'"
+      }
+    ],
+    "step_2": [
+      {
+        "step_id": "step_2",
+        "plan_version": 1,
+        "status": "failed",
+        "attempts": 1,
+        "depends_on": [
+          "step_1"
+        ],
+        "started_at": "2026-10-28T10:02:52.802429Z",
+        "completed_at": "2026-10-28T10:04:07.861745Z",
+        "tokens_used": 11301,
+        "cost_usd": 0.00148313,
+        "duration_ms": 75059.09,
+        "result_summary": null,
+        "verification": {
+          "step_id": "step_2",
+          "passed": false,
+          "programmatic_passed": false,
+          "model_passed": false,
+          "score": 0.0,
+          "reasoning": "Step execution failed with status 'failed'",
+          "missing_criteria": [
+            "Step execution failed with status 'failed'"
+          ],
+          "verified_at": "2026-10-28T10:04:07.861736Z"
+        },
+        "error_message": "Step execution failed with status 'failed'"
+      }
+    ],
+    "step_3": [
+      {
+        "step_id": "step_3",
+        "plan_version": 1,
+        "status": "failed",
+        "attempts": 1,
+        "depends_on": [
+          "step_1"
+        ],
+        "started_at": "2026-10-28T10:02:52.802605Z",
+        "completed_at": "2026-10-28T10:04:09.806601Z",
+        "tokens_used": 8851,
+        "cost_usd": 0.00116145,
+        "duration_ms": 73927.8,
+        "result_summary": null,
+        "verification": {
+          "step_id": "step_3",
+          "passed": false,
+          "programmatic_passed": true,
+          "model_passed": false,
+          "score": 0.3,
+          "reasoning": "The agent encountered a non-content web search response (202 status) and failed to actually retrieve the live pricing and SLA documentation for Milvus Cloud, instead providing general assumptions rather than verified data from the search.",
+          "missing_criteria": [
+            "Retrieved pricing tiers for Milvus Cloud",
+            "Retrieved SLA uptime guarantees for Milvus Cloud"
+          ],
+          "verified_at": "2026-10-28T10:04:09.806585Z"
+        },
+        "error_message": "The agent encountered a non-content web search response (202 status) and failed to actually retrieve the live pricing and SLA documentation for Milvus Cloud, instead providing general assumptions rather than verified data from the search."
+      }
+    ]
+  },
+  "total_tokens": 43178,
+  "total_cost_usd": 0.00566617,
+  "duration_ms": 144151.77,
+  "created_at": "2026-10-28T10:02:45.868230Z",
+  "completed_at": "2026-10-28T10:05:10.019990Z",
+  "error_message": "Budget exceeded: Token budget exhausted: 43178 >= 40000",
+  "metadata": {}
+}
