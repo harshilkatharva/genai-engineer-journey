@@ -45,6 +45,12 @@ class StepVerificationResult(BaseModel):
     missing_criteria: list[str] = Field(
         default_factory=list, description="Specific unfulfilled criteria points if failed"
     )
+    tokens_used: int = Field(
+        default=0, ge=0, description="Tokens consumed during model verification"
+    )
+    cost_usd: float = Field(
+        default=0.0, ge=0.0, description="USD cost incurred during model verification"
+    )
     verified_at: datetime = Field(
         default_factory=lambda: datetime.now(UTC),
         description="UTC timestamp when verification completed",

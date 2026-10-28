@@ -13,6 +13,7 @@ from genai_core import (
 )
 
 from ..core.config import AssistantConfig, get_assistant_config
+from ..models.budget import RunBudget
 from ..models.plan import Plan
 from .exceptions import PlanGenerationError, PlanValidationError
 from .prompts import build_repair_prompt
@@ -42,6 +43,7 @@ class PlanRepairer:
         invalid_plan: Plan | dict[str, Any] | str,
         initial_error: Exception,
         max_retries: int | None = None,
+        budget: RunBudget | None = None,
     ) -> Plan:
         """Attempt to repair an invalid plan by querying the LLM with the validation error.
 
@@ -101,6 +103,18 @@ class PlanRepairer:
                 current_error = PlanGenerationError(response.error.message)
                 continue
 
+            # Record repair LLM usage if budget provided
+            if budget is not None:
+                usage = getattr(response, "usage", {}) or {}
+                if isinstance(usage, dict):
+                    tokens = int(usage.get("total_tokens", 0)) or (
+                        int(usage.get("output_tokens", 0)) + int(usage.get("input_tokens", 0))
+                    )
+                else:
+                    tokens = getattr(usage, "total_tokens", 0)
+                cost = float(getattr(response, "cost_usd", 0.0) or 0.0)
+                budget.record_usage(tokens=tokens, cost_usd=cost)
+
             # Extract structured plan from response
             candidate: Plan | None = None
             if isinstance(response.structured_response, Plan):
@@ -155,6 +169,7 @@ class PlanRepairer:
         capabilities: dict[str, str] | None = None,
         user_preferences: list[str] | None = None,
         max_retries: int | None = None,
+        budget: RunBudget | None = None,
     ) -> Plan:
         """Alias for repair providing flexible signature for replanner and generators."""
         resolved_goal = str(goal or getattr(invalid_plan, "goal", "") or "")
@@ -163,4 +178,5 @@ class PlanRepairer:
             invalid_plan=invalid_plan,
             initial_error=error,
             max_retries=max_retries,
+            budget=budget,
         )

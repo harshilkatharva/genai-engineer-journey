@@ -188,6 +188,7 @@ class PlanAndExecuteAssistant:
                 user_id=user_id,
                 user_preferences=user_preferences,
                 context=context,
+                budget=active_budget,
             )
             run_record.plan_versions.append(initial_plan)
             current_plan = initial_plan

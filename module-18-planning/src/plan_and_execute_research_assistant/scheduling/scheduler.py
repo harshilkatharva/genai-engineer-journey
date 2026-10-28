@@ -82,9 +82,16 @@ class DAGScheduler:
         )
         active_budget.start_timer()
 
-        # In-memory execution state
-        step_status: dict[str, StepStatus] = {s.id: StepStatus.PENDING for s in plan.steps}
-        step_results: dict[str, str] = {}
+        # In-memory execution state (preserving previously completed steps from replans)
+        step_status: dict[str, StepStatus] = {
+            s.id: s.status if s.status == StepStatus.COMPLETED else StepStatus.PENDING
+            for s in plan.steps
+        }
+        step_results: dict[str, str] = {
+            s.id: s.result_summary
+            for s in plan.steps
+            if s.status == StepStatus.COMPLETED and s.result_summary
+        }
         step_records: dict[str, list[StepExecutionRecord]] = {s.id: [] for s in plan.steps}
 
         active_tasks: dict[str, asyncio.Task[None]] = {}
@@ -169,6 +176,16 @@ class DAGScheduler:
                         execution_status=exec_status,
                     )
 
+                    # Track token & cost usage from model verification in RunBudget
+                    v_tokens = getattr(verification, "tokens_used", 0) or 0
+                    v_cost = getattr(verification, "cost_usd", 0.0) or 0.0
+                    if v_tokens or v_cost:
+                        active_budget.record_usage(tokens=v_tokens, cost_usd=v_cost)
+
+                    # Total attempt tokens & cost (executor + verifier)
+                    attempt_tokens = tokens + v_tokens
+                    attempt_cost = cost + v_cost
+
                     # Record attempt telemetry
                     record = StepExecutionRecord(
                         step_id=step.id,
@@ -178,8 +195,8 @@ class DAGScheduler:
                         depends_on=list(step.depends_on or []),
                         started_at=attempt_start,
                         completed_at=datetime.now(UTC),
-                        tokens_used=tokens,
-                        cost_usd=cost,
+                        tokens_used=attempt_tokens,
+                        cost_usd=attempt_cost,
                         duration_ms=dur_ms,
                         result_summary=output_text if verification.passed else None,
                         verification=verification,

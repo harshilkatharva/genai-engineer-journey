@@ -324,3 +324,36 @@ async def test_verify_step_approval_required_verified(
     assert result.model_passed is True
     assert result.score == 0.92
     assert "properly registered it for human authorization" in result.reasoning
+
+
+@pytest.mark.asyncio
+async def test_verifier_tracks_tokens_and_cost(mock_llm_service: MagicMock) -> None:
+    """Verify StepVerifier extracts usage metrics from LLM response and populates StepVerificationResult."""
+    step = PlanStep(
+        id="step_tokens",
+        description="Verify pricing metrics",
+        success_criteria="Metrics verified",
+    )
+    verdict = StepJudgeVerdict(
+        is_satisfied=True,
+        score=0.90,
+        reasoning="Metrics verified completely.",
+        missing_criteria=[],
+    )
+    mock_response = MagicMock()
+    mock_response.structured_response = verdict
+    mock_response.model = "gemini-3.5-flash-lite"
+    mock_response.usage = {"input_tokens": 300, "output_tokens": 150, "total_tokens": 450}
+    mock_response.cost_usd = 0.00025
+    mock_llm_service.complete_structure.return_value = mock_response
+
+    verifier = StepVerifier(llm_service=mock_llm_service)
+    result = await verifier.verify_step(
+        step=step,
+        output_text="Pricing metrics: compute is $0.50/hr and storage is $0.02/GB.",
+        execution_status=StepStatus.COMPLETED,
+    )
+
+    assert result.passed is True
+    assert result.tokens_used == 450
+    assert result.cost_usd == 0.00025

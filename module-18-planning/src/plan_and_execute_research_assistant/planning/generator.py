@@ -14,6 +14,7 @@ from genai_core import (
 
 from ..core.config import AssistantConfig, get_assistant_config
 from ..memory.manager import PlanningMemoryManager
+from ..models.budget import RunBudget
 from ..models.plan import Plan
 from ..protocols.specialist import StepExecutor
 from .exceptions import PlanGenerationError, PlanValidationError
@@ -66,6 +67,7 @@ class PlanGenerator:
         user_preferences: list[str] | None = None,
         past_plans: list[dict[str, Any]] | None = None,
         context: dict[str, Any] | None = None,
+        budget: RunBudget | None = None,
     ) -> Plan:
         """Decompose a high-level goal into a validated Directed Acyclic Graph (DAG) Plan.
 
@@ -141,6 +143,18 @@ class PlanGenerator:
         if response.error:
             raise PlanGenerationError(f"LLM service returned error: {response.error.message}")
 
+        # Record planning usage if budget provided
+        if budget is not None:
+            usage = getattr(response, "usage", {}) or {}
+            if isinstance(usage, dict):
+                tokens = int(usage.get("total_tokens", 0)) or (
+                    int(usage.get("output_tokens", 0)) + int(usage.get("input_tokens", 0))
+                )
+            else:
+                tokens = getattr(usage, "total_tokens", 0)
+            cost = float(getattr(response, "cost_usd", 0.0) or 0.0)
+            budget.record_usage(tokens=tokens, cost_usd=cost)
+
         # Extract structured Plan
         candidate: Plan | None = None
         if isinstance(response.structured_response, Plan):
@@ -178,4 +192,5 @@ class PlanGenerator:
                 goal=clean_goal,
                 invalid_plan=candidate,
                 initial_error=val_exc,
+                budget=budget,
             )

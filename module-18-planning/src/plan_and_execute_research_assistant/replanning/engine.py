@@ -243,6 +243,7 @@ class ReplanningEngine:
                     error=val_exc,
                     capabilities=capabilities,
                     user_preferences=user_preferences,
+                    budget=budget,
                 )
             except Exception as repair_exc:
                 safe_log(

@@ -418,3 +418,61 @@ async def test_scheduler_step_records_collector_preserves_executions_on_budget_e
     assert len(collector["s1"]) == 1
     assert collector["s1"][0].step_id == "s1"
     assert collector["s1"][0].tokens_used == 5000
+
+
+@pytest.mark.asyncio
+async def test_scheduler_preserves_completed_steps_on_replan(
+    mock_executor: MagicMock, mock_verifier: MagicMock
+) -> None:
+    """Verify DAGScheduler does NOT re-execute already COMPLETED steps from a replanned DAG."""
+    # Plan v2 with step_1 already completed and step_2_alt pending
+    plan_v2 = Plan(
+        goal="Preserve completed work test",
+        version=2,
+        steps=[
+            PlanStep(
+                id="step_1",
+                description="Initial completed task",
+                status=StepStatus.COMPLETED,
+                result_summary="Verified output from step_1",
+                success_criteria="Done",
+            ),
+            PlanStep(
+                id="step_2_alt",
+                description="Replacement alternative task",
+                depends_on=["step_1"],
+                status=StepStatus.PENDING,
+                success_criteria="Done",
+            ),
+        ],
+    )
+
+    executed_steps: list[str] = []
+    received_predecessors: dict[str, str] = {}
+
+    async def fake_execute(
+        step: PlanStep, predecessor_context: dict[str, str] | None = None, **kwargs
+    ) -> StepExecutionOutput:
+        executed_steps.append(step.id)
+        if predecessor_context:
+            received_predecessors.update(predecessor_context)
+        return StepExecutionOutput(
+            step_id=step.id,
+            output_text=f"Output for {step.id}",
+            status=StepStatus.COMPLETED,
+        )
+
+    mock_executor.execute_step.side_effect = fake_execute
+
+    scheduler = DAGScheduler(executor=mock_executor, verifier=mock_verifier)
+    result = await scheduler.execute_plan(plan=plan_v2, user_id="user_test")
+
+    assert result.status == StepStatus.COMPLETED
+    # Critical: step_1 must NOT have been executed again!
+    assert "step_1" not in executed_steps
+    assert executed_steps == ["step_2_alt"]
+    # Predecessor context for step_2_alt must contain step_1's cached summary
+    assert received_predecessors.get("step_1") == "Verified output from step_1"
+    # Result must contain outputs for both steps
+    assert result.step_results["step_1"] == "Verified output from step_1"
+    assert "step_2_alt" in result.step_results

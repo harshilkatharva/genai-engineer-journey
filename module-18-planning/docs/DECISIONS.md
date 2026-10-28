@@ -333,3 +333,33 @@
   1. Auto-resuming approval inside `Module17StepExecutor`: Rejected as default because in a true plan-and-execute system, submitting a dangerous or irreversible action to an external supervisor queue is the correct terminal state of the agent's autonomous execution phase.
   2. Bypassing tool approval checks entirely: Rejected because violating security invariants compromises safety guarantees.
 - **Impact:** Clean execution and verification of operational steps requiring human authorization without spurious retries, false replans, or token budget exhaustion.
+
+---
+
+### Decision 25: DAGScheduler Work Preservation on Replans & Complete LLM RunBudget Accounting (P0 Fixes)
+- **Context:**
+  1. Broken Work Preservation Invariant (PLN-001): When `ReplanningEngine` generated a revised DAG (Version $N+1$) following a step failure, completed steps were stamped with `status=COMPLETED` and `result_summary`. However, `DAGScheduler.execute_plan` unconditionally initialized `step_status` to `StepStatus.PENDING` for all steps and `step_results` to `{}`. Consequently, already-completed and verified steps were re-dispatched and executed again, violating work preservation, duplicating side-effects (e.g. balance adjustments), and wasting model tokens and latency.
+  2. Systemic Token & Cost Budget Leak (PLN-002): `RunBudget.record_usage` was only invoked for step execution (`exec_output`), replanning, and synthesis. Initial plan generation (`PlanGenerator.generate_plan`), automated repair loops (`PlanRepairer.repair`), and step verification judges (`StepVerifier.verify_model`) completely bypassed budget accounting. Consequently, reported costs were falsely deflated and global ceilings could not prevent runaway consumption.
+- **Decision:**
+  1. DAGScheduler Work Preservation:
+     - In `DAGScheduler.execute_plan`, initialized `step_status` to preserve `s.status` if `s.status == StepStatus.COMPLETED`, defaulting to `StepStatus.PENDING` only for remaining/uncompleted steps.
+     - Initialized `step_results` with `s.result_summary` for all pre-completed steps.
+     - As a result, the dispatch loop immediately skips pre-completed steps, makes their cached outputs available to downstream dependent steps in `predecessor_context`, and includes them in the final `step_results`.
+  2. Verification Judge Budget Tracking:
+     - Added `tokens_used: int = 0` and `cost_usd: float = 0.0` fields to `StepVerificationResult`.
+     - In `StepVerifier.verify_model`, extracted `usage` and `cost_usd` from the LLM response and returned them as `(verdict, tokens, cost)`. Populated these in `StepVerificationResult`.
+     - In `DAGScheduler._run_single_step`, recorded verification token and cost usage into `active_budget.record_usage` and combined them into `StepExecutionRecord.tokens_used` and `cost_usd`.
+  3. Planning & Repair Budget Tracking:
+     - Updated `PlanGenerator.generate_plan`, `PlanRepairer.repair`, and `PlanRepairer.repair_plan` to accept an optional `budget: RunBudget | None = None`.
+     - Recorded usage from structured plan generation and repair LLM calls into `budget.record_usage(tokens, cost)`.
+     - In `PlanAndExecuteAssistant`, passed `budget=active_budget` during Phase 2 plan generation.
+     - In `ReplanningEngine`, forwarded `budget=budget` during repair of candidate replanned plans.
+  4. Unit Tests Added:
+     - `test_scheduler_preserves_completed_steps_on_replan` in `tests/unit/scheduling/test_dag_scheduler.py`.
+     - `test_verifier_tracks_tokens_and_cost` in `tests/unit/verification/test_verification.py`.
+     - `test_generator_records_tokens_in_budget` in `tests/unit/planning/test_plan_generator.py`.
+- **Alternatives Considered:**
+  1. Pruning completed steps entirely from replanned DAGs: Rejected because downstream steps reference completed step IDs in `depends_on`, requiring completed steps to remain in the plan graph for dependency resolution.
+  2. Tracking budget only at phase boundaries: Rejected because individual step loops and verification cycles can breach token/cost budgets before reaching a phase boundary.
+- **Impact:** Strict adherence to the Work Preservation Invariant during dynamic replanning (zero duplicate execution of completed steps) and 100% complete accounting of all LLM tokens and costs in `RunBudget`.
+

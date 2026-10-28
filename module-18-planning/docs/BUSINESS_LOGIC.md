@@ -270,6 +270,7 @@ When parallel steps are executing concurrently (e.g. Step A and Step B running s
 ### 6.2 Work Preservation Invariant
 - **Never Re-execute Completed Work:** Steps that have achieved `COMPLETED` status prior to replanning are immutable.
 - In the replanned DAG, completed steps retain their original step IDs, cached outputs, and `COMPLETED` statuses.
+- In `DAGScheduler.execute_plan`, steps with `status == StepStatus.COMPLETED` are loaded with their existing verified `result_summary` into `step_results`, bypassing re-dispatch and re-execution. Their cached outputs are passed directly to downstream dependent steps in `predecessor_context`.
 - The replanner is strictly forbidden from resetting a completed step to `PENDING` unless an explicit conflict is identified.
 
 ### 6.3 Subgraph Replanning Rules
@@ -300,8 +301,8 @@ Module 18 introduces a global, run-wide budget envelope (`RunBudget`) that spans
 
 | Budget Parameter | Default Ceiling | Scope & Enforcement |
 | :--- | :--- | :--- |
-| `max_total_tokens` | 40,000 tokens | Cumulative prompt and completion tokens across all LLM calls. |
-| `max_total_cost_usd` | $0.25 USD | Cumulative dollar cost calculated via `PricingCalculator`. |
+| `max_total_tokens` | 40,000 tokens | Cumulative prompt and completion tokens across all LLM calls (planning, repair, execution, verification, replanning, synthesis). |
+| `max_total_cost_usd` | $0.25 USD | Cumulative dollar cost across all agent, judge, and planner LLM invocations. |
 | `total_timeout_seconds` | 180 seconds | Monotonic wall-clock deadline (`time.monotonic() + total_timeout_seconds`). |
 | `max_concurrency` | 3 parallel steps | Maximum concurrent active step tasks in `DAGScheduler`. |
 | `max_planning_retries`| 3 attempts | Maximum structural repair attempts during initial planning. |
@@ -310,6 +311,7 @@ Module 18 introduces a global, run-wide budget envelope (`RunBudget`) that spans
 
 ### 7.2 Budget Exhaustion Behavior
 - Before dispatching any step or invoking any LLM call (planning, verification, replanning, reflection, deliverable synthesis), the orchestrator checks `RunBudget.check_budget()`.
+- Every LLM invocation (initial plan generation, plan repair loops, step agent loops, model verification judges, dynamic replanners, and deliverable synthesizers) records its actual token and cost consumption in `RunBudget.record_usage()`.
 - If cumulative tokens exceed `max_total_tokens`, cumulative cost exceeds `max_total_cost_usd`, or wall-clock time exceeds `total_timeout_seconds`, `RunBudget.check_budget()` raises `BudgetExceededError`.
 - The assistant catches `BudgetExceededError`, logs an observability error event, stamps `run_record.status = RunStatus.FAILED` with error message `"Budget exceeded: ..."`, flushes the run record atomically via `FileRunRecordStore`, and returns `AssistantRunResult`.
 

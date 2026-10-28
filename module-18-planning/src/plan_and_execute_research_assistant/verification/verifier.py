@@ -66,8 +66,12 @@ class StepVerifier:
         self,
         step: PlanStep,
         output_text: str,
-    ) -> StepJudgeVerdict:
-        """Evaluate semantic criteria satisfaction using the LLM judge."""
+    ) -> tuple[StepJudgeVerdict, int, float]:
+        """Evaluate semantic criteria satisfaction using the LLM judge.
+
+        Returns:
+            Tuple of (verdict: StepJudgeVerdict, tokens_used: int, cost_usd: float).
+        """
         prompt = build_judge_prompt(
             step_description=step.description,
             success_criteria=step.success_criteria,
@@ -75,12 +79,26 @@ class StepVerifier:
             tool_hint=step.tool_name_hint,
         )
 
+        tokens_used = 0
+        cost_usd = 0.0
+
         try:
             response = await self.llm_service.complete_structure(
                 prompt=prompt,
                 response_schema=StepJudgeVerdict,
                 provider=self.config.default_provider,
             )
+
+            # Extract token and cost usage
+            usage = getattr(response, "usage", {}) or {}
+            if isinstance(usage, dict):
+                tokens_used = int(usage.get("total_tokens", 0)) or (
+                    int(usage.get("output_tokens", 0)) + int(usage.get("input_tokens", 0))
+                )
+            else:
+                tokens_used = getattr(usage, "total_tokens", 0)
+            cost_usd = float(getattr(response, "cost_usd", 0.0) or 0.0)
+
             # Unwrap LLMManagerResponse or raw response
             structured = getattr(response, "structured_response", None)
             if structured is None and hasattr(response, "content"):
@@ -89,11 +107,11 @@ class StepVerifier:
             candidate = structured if structured is not None else response
 
             if isinstance(candidate, StepJudgeVerdict):
-                return candidate
+                return candidate, tokens_used, cost_usd
             if isinstance(candidate, dict):
-                return StepJudgeVerdict.model_validate(candidate)
+                return StepJudgeVerdict.model_validate(candidate), tokens_used, cost_usd
             if hasattr(response, "text") and response.text:
-                return StepJudgeVerdict.model_validate_json(response.text)
+                return StepJudgeVerdict.model_validate_json(response.text), tokens_used, cost_usd
 
             raise TypeError(f"Unexpected response type from LLMService: {type(response).__name__}")
 
@@ -106,11 +124,17 @@ class StepVerifier:
                 step_id=step.id,
                 error=str(exc),
             )
-            return StepJudgeVerdict(
-                is_satisfied=False,
-                score=0.0,
-                reasoning=f"Model judge evaluation failed with error: {exc}",
-                missing_criteria=["Model judge evaluation failed to produce a structured verdict."],
+            return (
+                StepJudgeVerdict(
+                    is_satisfied=False,
+                    score=0.0,
+                    reasoning=f"Model judge evaluation failed with error: {exc}",
+                    missing_criteria=[
+                        "Model judge evaluation failed to produce a structured verdict."
+                    ],
+                ),
+                tokens_used,
+                cost_usd,
             )
 
     async def verify_step(
@@ -155,7 +179,7 @@ class StepVerifier:
             )
 
         # Gate 2: Model-based semantic judge
-        verdict = await self.verify_model(step=step, output_text=output_text)
+        verdict, tokens_used, cost_usd = await self.verify_model(step=step, output_text=output_text)
 
         threshold = self.config.verification_threshold
         model_passed = verdict.is_satisfied and (verdict.score >= threshold)
@@ -180,4 +204,6 @@ class StepVerifier:
             score=verdict.score,
             reasoning=verdict.reasoning,
             missing_criteria=verdict.missing_criteria,
+            tokens_used=tokens_used,
+            cost_usd=cost_usd,
         )
