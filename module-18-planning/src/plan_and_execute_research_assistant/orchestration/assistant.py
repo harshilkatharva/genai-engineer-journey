@@ -211,7 +211,7 @@ class PlanAndExecuteAssistant:
             except PlanRejectedError as reject_exc:
                 run_record.status = RunStatus.CANCELLED
                 run_record.error_message = f"Plan rejected by reviewer: {reject_exc}"
-                return self._finalize_run(run_record, current_plan, active_budget)
+                return await self._finalize_run(run_record, current_plan, active_budget)
 
             current_plan = approved_plan
             if current_plan.version > initial_plan.version:
@@ -271,7 +271,7 @@ class PlanAndExecuteAssistant:
                         f"Replanning ceiling exceeded ({replan_count}/{self.config.max_replans}). "
                         f"Last failure: {sched_result.error_message}"
                     )
-                    return self._finalize_run(run_record, current_plan, active_budget)
+                    return await self._finalize_run(run_record, current_plan, active_budget)
 
                 run_record.status = RunStatus.REPLANNING
                 await self.store.save_run(run_record)
@@ -376,7 +376,7 @@ class PlanAndExecuteAssistant:
                     error=str(mem_exc),
                 )
 
-            return self._finalize_run(run_record, current_plan, active_budget)
+            return await self._finalize_run(run_record, current_plan, active_budget)
 
         except BudgetExceededError as budget_exc:
             safe_log(
@@ -388,7 +388,7 @@ class PlanAndExecuteAssistant:
             )
             run_record.status = RunStatus.FAILED
             run_record.error_message = f"Budget exceeded: {budget_exc}"
-            return self._finalize_run(run_record, current_plan, active_budget)
+            return await self._finalize_run(run_record, current_plan, active_budget)
         except Exception as exc:  # noqa: BLE001
             safe_log(
                 _logger,
@@ -399,9 +399,9 @@ class PlanAndExecuteAssistant:
             )
             run_record.status = RunStatus.FAILED
             run_record.error_message = f"Execution error: {exc}"
-            return self._finalize_run(run_record, current_plan, active_budget)
+            return await self._finalize_run(run_record, current_plan, active_budget)
 
-    def _finalize_run(
+    async def _finalize_run(
         self,
         run_record: RunRecord,
         plan: Plan,
@@ -417,14 +417,14 @@ class PlanAndExecuteAssistant:
         run_record.duration_ms = duration_ms
         run_record.completed_at = datetime.now(UTC)
 
-        # Synchronously write final snapshot (FileRunRecordStore handles atomic save)
+        # Asynchronously persist final snapshot via RunRecordStore protocol
         try:
-            self.store._save_run_sync(run_record)  # type: ignore[attr-defined]
+            await self.store.save_run(run_record)
         except Exception as store_exc:  # noqa: BLE001
             safe_log(
                 _logger,
                 logging.WARNING,
-                f"Failed to synchronously save run record '{run_record.run_id}': {store_exc}",
+                f"Failed to asynchronously save run record '{run_record.run_id}': {store_exc}",
                 error=str(store_exc),
             )
 

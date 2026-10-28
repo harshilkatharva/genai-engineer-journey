@@ -513,3 +513,49 @@ async def test_scheduler_sibling_settling_propagates_budget_exceeded_error(
 
     with pytest.raises(BudgetExceededError, match="Token budget exhausted"):
         await scheduler.execute_plan(plan=plan, user_id="user_test")
+
+
+@pytest.mark.asyncio
+async def test_scheduler_active_cancellation_on_budget_timeout(
+    mock_executor: MagicMock, mock_verifier: MagicMock
+) -> None:
+    """Verify that scheduler actively times out and cancels long-running tasks on budget deadline (PLN-009)."""
+    import time
+
+    from plan_and_execute_research_assistant.models import BudgetExceededError
+
+    plan = Plan(
+        goal="Test active deadline timeout",
+        steps=[
+            PlanStep(id="step_long", description="Long-running task", success_criteria="Done"),
+        ],
+    )
+
+    task_cancelled = False
+
+    async def slow_execute(step: PlanStep, **kwargs) -> StepExecutionOutput:
+        nonlocal task_cancelled
+        try:
+            await asyncio.sleep(5.0)
+            return StepExecutionOutput(
+                step_id="step_long",
+                output_text="Done",
+                status=StepStatus.COMPLETED,
+            )
+        except asyncio.CancelledError:
+            task_cancelled = True
+            raise
+
+    mock_executor.execute_step.side_effect = slow_execute
+    scheduler = DAGScheduler(executor=mock_executor, verifier=mock_verifier)
+
+    budget = RunBudget(total_timeout_seconds=0.08)
+
+    t0 = time.monotonic()
+    with pytest.raises(BudgetExceededError, match="Run deadline exceeded"):
+        await scheduler.execute_plan(plan=plan, user_id="user_timeout", budget=budget)
+
+    elapsed = time.monotonic() - t0
+    # Must fail quickly without waiting 5 seconds for slow task
+    assert elapsed < 1.0
+    assert task_cancelled is True

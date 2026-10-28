@@ -227,3 +227,70 @@ async def test_review_plan_missing_decision_provider_raises(sample_plan: Plan) -
             user_id="user_admin",
             decision_provider=None,
         )
+
+
+def test_process_decision_modify_enforces_deep_copy(sample_plan: Plan) -> None:
+    """Verify that modifying stamped plan does not mutate the original decision modified_plan (PLN-007)."""
+    gateway = HumanPlanReviewGateway()
+    req = gateway.create_review_request(sample_plan, sample_plan.goal, "user_1")
+
+    modified = sample_plan.model_copy(deep=True)
+    decision = PlanReviewDecision(
+        action=ReviewAction.MODIFY,
+        reviewer_id="lead_operator",
+        modified_plan=modified,
+    )
+
+    result = gateway.process_decision(req, decision)
+    # Mutate the step in the returned stamped plan
+    result.steps[0].description = "Mutated description after approval"
+
+    # Verify that the input modified plan's step was NOT mutated
+    assert modified.steps[0].description == "Fetch user roles from directory"
+
+
+@pytest.mark.asyncio
+async def test_review_plan_interactive_cli_approve(
+    monkeypatch: pytest.MonkeyPatch, sample_plan: Plan
+) -> None:
+    """Verify interactive CLI review prompt auto-approves on 'a' input (PLN-010)."""
+    import sys
+
+    config = AssistantConfig(auto_approve_review=False)
+    gateway = HumanPlanReviewGateway(config=config)
+
+    # Simulate interactive TTY stdin
+    monkeypatch.setattr(sys.stdin, "isatty", lambda: True)
+    monkeypatch.setattr("builtins.input", lambda _prompt="": "a")
+
+    approved = await gateway.review_plan(
+        plan=sample_plan,
+        goal="Audit user permissions",
+        user_id="user_admin",
+        decision_provider=None,
+    )
+    assert approved.version == 1
+    assert approved.created_by == "planner_llm"
+
+
+@pytest.mark.asyncio
+async def test_review_plan_interactive_cli_reject(
+    monkeypatch: pytest.MonkeyPatch, sample_plan: Plan
+) -> None:
+    """Verify interactive CLI review prompt rejects on 'r' input (PLN-010)."""
+    import sys
+
+    config = AssistantConfig(auto_approve_review=False)
+    gateway = HumanPlanReviewGateway(config=config)
+
+    inputs = iter(["r", "Security vulnerability detected"])
+    monkeypatch.setattr(sys.stdin, "isatty", lambda: True)
+    monkeypatch.setattr("builtins.input", lambda _prompt="": next(inputs))
+
+    with pytest.raises(PlanRejectedError, match="Security vulnerability detected"):
+        await gateway.review_plan(
+            plan=sample_plan,
+            goal="Audit user permissions",
+            user_id="user_admin",
+            decision_provider=None,
+        )

@@ -392,4 +392,36 @@
   2. Failing the run on episodic memory errors: Rejected because episodic memory is secondary historical indexing; user deliverable synthesis is the primary goal.
 - **Impact:** Symmetric, unbiased benchmark evaluation; bulletproof budget error propagation across concurrent DAG tasks; resilience against transient episodic database errors; and total state isolation between benchmark test cases.
 
+---
+
+### Decision 27: Reliability & Architectural Integrity: Deep Copy on Plan Review Modifications, Async Run Finalization, Active Deadline Cancellation & Interactive CLI Review Fallback (P2 Fixes)
+- **Context:**
+  1. Shallow Copy in Plan Review Modifications (PLN-007): In `HumanPlanReviewGateway.process_decision`, `decision.modified_plan.model_copy(...)` defaulted to `deep=False`. Consequently, nested `PlanStep` object references were shared between historical plan versions and the currently executing plan, causing subsequent step status updates during execution to mutate archived historical plan versions in-place.
+  2. Non-Async Run Finalization Breaching Storage Protocol (PLN-008): In `PlanAndExecuteAssistant._finalize_run`, the run finalizer called a private synchronous method `self.store._save_run_sync(run_record)`. If a custom storage backend implemented the asynchronous `RunRecordStore` protocol (`async def save_run(...)`) without providing `_save_run_sync`, persistence either failed silently or threw an AttributeError.
+  3. Passive Deadline Enforcement During Task Await (PLN-009): In `DAGScheduler.execute_plan`, the main loop invoked `await asyncio.wait(active_tasks.values(), return_when=asyncio.FIRST_COMPLETED)` without a timeout. In-flight tasks that hung or exceeded the remaining wall-clock budget ran past the deadline indefinitely without active cancellation.
+  4. Missing Interactive CLI Review Fallback (PLN-010): In `HumanPlanReviewGateway.review_plan`, when `config.require_plan_review = True` and `decision_provider is None`, the gateway unconditionally raised a `ValueError` rather than providing an interactive stdin prompt as documented for CLI execution.
+- **Decision:**
+  1. Enforced Deep Copy on Plan Review Modifications (PLN-007):
+     - In `HumanPlanReviewGateway.process_decision`, passed `deep=True` in `decision.modified_plan.model_copy(update={...}, deep=True)`, guaranteeing total isolation of step models across plan versions.
+  2. Fully Asynchronous Run Finalization (PLN-008):
+     - Converted `_finalize_run` in `PlanAndExecuteAssistant` to an `async def` method.
+     - Awaited `await self.store.save_run(run_record)` conforming strictly to the public `RunRecordStore` protocol interface.
+     - Updated all five call sites in `PlanAndExecuteAssistant.run` to await `_finalize_run`.
+  3. Active Deadline Cancellation on Wall-Clock Timeout (PLN-009):
+     - In `DAGScheduler.execute_plan`, derived `rem_timeout = active_budget.remaining_seconds()`.
+     - Passed `timeout=rem_timeout` to `asyncio.wait`. If timeout elapses before any task completes (`not done and pending`), immediately invoke `active_budget.check_budget()`, triggering `BudgetExceededError` and cancelling all in-flight sibling tasks.
+  4. Interactive CLI Prompt Fallback (PLN-010):
+     - In `HumanPlanReviewGateway`, implemented `_default_cli_review_prompt` using `asyncio.to_thread` to read operator decisions (`[a]pprove`, `[r]eject`) from `stdin`.
+     - When `decision_provider is None` and `sys.stdin.isatty()` is `True`, seamlessly delegate to `_default_cli_review_prompt`. In non-interactive environments, raise a descriptive `ValueError`.
+  5. Test Coverage:
+     - `test_process_decision_modify_enforces_deep_copy` in `tests/unit/review/test_human_review.py`.
+     - `test_review_plan_interactive_cli_approve` and `test_review_plan_interactive_cli_reject` in `tests/unit/review/test_human_review.py`.
+     - `test_assistant_finalizes_run_with_pure_async_store` in `tests/unit/orchestration/test_assistant.py`.
+     - `test_scheduler_active_cancellation_on_budget_timeout` in `tests/unit/scheduling/test_dag_scheduler.py`.
+- **Alternatives Considered:**
+  1. Background timer task with cancellation handles: Rejected because passing `timeout=rem_timeout` directly to `asyncio.wait` leverages native asyncio timeout mechanics cleanly without auxiliary tasks.
+  2. Blocking synchronous input on the event loop: Rejected; wrapped input prompt in `asyncio.to_thread` to prevent stalling the async event loop during operator review.
+- **Impact:** Complete immutability of historical plan versions, full protocol compliance for pluggable async storage backends, proactive cancellation of deadline-breaching tasks, and out-of-the-box interactive CLI plan inspection.
+
+
 

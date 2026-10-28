@@ -355,8 +355,18 @@ class DAGScheduler:
                         "Dependencies could not be satisfied."
                     )
 
-                # 6. Await at least one active task to complete
-                await asyncio.wait(active_tasks.values(), return_when=asyncio.FIRST_COMPLETED)
+                # 6. Await at least one active task to complete with active deadline enforcement
+                rem_timeout = active_budget.remaining_seconds()
+                if rem_timeout <= 0.0:
+                    active_budget.check_budget()
+
+                done, pending = await asyncio.wait(
+                    active_tasks.values(),
+                    timeout=rem_timeout,
+                    return_when=asyncio.FIRST_COMPLETED,
+                )
+                if not done and pending:
+                    active_budget.check_budget()
 
         except Exception:
             # Settle running tasks on unexpected cancellations or errors

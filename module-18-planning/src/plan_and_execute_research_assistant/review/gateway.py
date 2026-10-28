@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import asyncio
 import inspect
 import logging
+import sys
 from typing import TYPE_CHECKING, Any
 
 from genai_core import safe_log
@@ -138,7 +140,8 @@ class HumanPlanReviewGateway:
                     "parent_version": request.plan.version,
                     "created_by": "human_reviewer",
                     "change_summary": change_notes,
-                }
+                },
+                deep=True,
             )
 
             safe_log(
@@ -167,6 +170,49 @@ class HumanPlanReviewGateway:
             )
 
         raise ValueError(f"Unknown ReviewAction: {decision.action}")
+
+    async def _default_cli_review_prompt(self, request: PlanReviewRequest) -> PlanReviewDecision:
+        """Interactive CLI prompt presenting the plan and reading operator decision from stdin."""
+        formatted_plan = self.format_plan_for_review(request.plan)
+        print("\n" + "=" * 60)
+        print(f"Goal: {request.goal}")
+        print(f"User ID: {request.user_id}")
+        print("=" * 60)
+        print(formatted_plan)
+        print("=" * 60)
+
+        def _read_stdin() -> PlanReviewDecision:
+            try:
+                choice = input("Enter decision ([a]pprove / [r]eject): ").strip().lower()
+            except (EOFError, OSError):
+                return PlanReviewDecision(
+                    action=ReviewAction.REJECT,
+                    reviewer_id="cli_operator",
+                    reason="Non-interactive stdin or EOF encountered during CLI review.",
+                )
+
+            if choice in ("a", "approve", "y", "yes", ""):
+                return PlanReviewDecision(
+                    action=ReviewAction.APPROVE,
+                    reviewer_id="cli_operator",
+                )
+            if choice in ("r", "reject", "n", "no"):
+                try:
+                    reason = input("Enter rejection reason: ").strip()
+                except (EOFError, OSError):
+                    reason = "Rejected by operator"
+                return PlanReviewDecision(
+                    action=ReviewAction.REJECT,
+                    reviewer_id="cli_operator",
+                    reason=reason or "Rejected by CLI operator",
+                )
+            return PlanReviewDecision(
+                action=ReviewAction.REJECT,
+                reviewer_id="cli_operator",
+                reason=f"Unrecognized decision option '{choice}' provided via CLI prompt.",
+            )
+
+        return await asyncio.to_thread(_read_stdin)
 
     async def review_plan(
         self,
@@ -199,9 +245,12 @@ class HumanPlanReviewGateway:
             return plan
 
         if decision_provider is None:
-            raise ValueError(
-                "A decision_provider callable is required when auto_approve_review is False."
-            )
+            if sys.stdin and sys.stdin.isatty():
+                decision_provider = self._default_cli_review_prompt
+            else:
+                raise ValueError(
+                    "A decision_provider callable is required when auto_approve_review is False in a non-interactive environment."
+                )
 
         request = self.create_review_request(plan=plan, goal=goal, user_id=user_id)
 

@@ -496,3 +496,53 @@ async def test_assistant_episodic_memory_failure_does_not_fail_run(
     assert result.status == RunStatus.COMPLETED
     assert result.final_deliverable is not None
     mock_mem.record_plan_episode.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_assistant_finalizes_run_with_pure_async_store(
+    mock_llm_service: MagicMock,
+    sample_valid_plan: Plan,
+) -> None:
+    """Verify assistant finalizes run and persists RunRecord using pure async save_run (PLN-008)."""
+    from unittest.mock import create_autospec
+
+    from plan_and_execute_research_assistant.storage.protocol import RunRecordStore
+
+    # Custom store implementing only the RunRecordStore async protocol (no _save_run_sync attribute)
+    pure_async_store = create_autospec(RunRecordStore, instance=True)
+    pure_async_store.save_run = AsyncMock()
+
+    mock_executor = MagicMock()
+    mock_executor.get_available_capabilities = MagicMock(return_value={"tool_a": "Tool A"})
+
+    mock_mem = MagicMock()
+    mock_mem.get_user_preferences = AsyncMock(return_value=[])
+    mock_mem.record_plan_episode = AsyncMock()
+
+    mock_generator = MagicMock()
+    mock_generator.generate_plan = AsyncMock(return_value=sample_valid_plan)
+
+    mock_scheduler = MagicMock()
+    mock_scheduler.execute_plan = AsyncMock(
+        return_value=SchedulerExecutionResult(
+            status=StepStatus.COMPLETED,
+            step_results={"step_1": "Result 1", "step_2": "Result 2"},
+        )
+    )
+
+    assistant = PlanAndExecuteAssistant(
+        llm_service=mock_llm_service,
+        executor=mock_executor,
+        memory_manager=mock_mem,
+        store=pure_async_store,
+        plan_generator=mock_generator,
+        scheduler=mock_scheduler,
+        config=AssistantConfig(auto_approve_review=True),
+    )
+
+    result = await assistant.run(goal="Test async finalize", user_id="user_async")
+
+    assert result.status == RunStatus.COMPLETED
+    assert not hasattr(pure_async_store, "_save_run_sync")
+    # Verify save_run was called asynchronously
+    assert pure_async_store.save_run.await_count >= 1
