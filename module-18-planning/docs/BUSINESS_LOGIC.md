@@ -266,6 +266,7 @@ When parallel steps are executing concurrently (e.g. Step A and Step B running s
 2. **Sibling Settling:** The scheduler does *not* abruptly kill or discard currently running sibling Step B. Instead, Step B is allowed to finish its active execution and verification.
 3. **Cache Consolidation:** If Step B succeeds, its `result_summary` and status are permanently recorded as `COMPLETED`. This prevents throwing away expensive LLM and tool work already paid for.
 4. **Clean Settle:** Once all actively running sibling tasks settle, replanning begins with the complete, settled state.
+5. **Budget Error Propagation During Settling:** If a sibling task breaches resource ceilings and raises `BudgetExceededError` during execution or settling, the scheduler propagates and re-raises `BudgetExceededError` immediately rather than converting it to a routine step failure, preventing runaway replanning cycles.
 
 ### 6.2 Work Preservation Invariant
 - **Never Re-execute Completed Work:** Steps that have achieved `COMPLETED` status prior to replanning are immutable.
@@ -358,6 +359,10 @@ Every plan run produces an auditable `RunRecord` containing:
 - Run records are serialized to JSON and saved locally to `runs/run_{run_id}.json` via `FileRunRecordStore`.
 - Conforms to the `RunRecordStore` protocol, allowing future seamless migration to PostgreSQL without modifying orchestration code.
 
+### 9.3 Non-Fatal Episodic Memory Telemetry
+- Recording completed plan episodes in episodic memory (`PlanningMemoryManager.record_plan_episode`) is treated as non-fatal telemetry.
+- If transient database errors, vector store connectivity issues, or embedding failures occur during episode recording, the error is logged as a warning, and the run retains its `RunStatus.COMPLETED` status and returns the synthesized deliverable to the user.
+
 ---
 
 ## 10. Fair Comparative Evaluation Benchmark Rules
@@ -370,9 +375,12 @@ To prevent evaluation bias, both systems are benchmarked under strictly equivale
 2. **Identical Model Configuration:** Both systems execute using Google Gemini 3.5 Flash Lite (`gemini-3.5-flash-lite`) with identical temperature ($0.2$) and rate limiting.
 3. **Equalized Resource Caps:** Both systems are constrained by identical total token ($40,000$ tokens) and cost ($0.25$ USD) budgets per goal.
 4. **Identical Tool & Database State:** Both systems share access to the same 16 tools, identical PostgreSQL seed tables (`support_customers`, `support_tickets`), and the same knowledge base chunks.
-5. **Uniform Success Criteria:** A single, neutral model-based judge (`genai_core.LLMService.complete_structure`) evaluates the final output of both systems against identical ground-truth reference requirements.
+5. **Uniform & Symmetric Success Criteria:** Both systems are evaluated against identical ground-truth criteria:
+   $$\text{passed} = \text{is\_completed} \land \text{req\_matched} \land \text{len}(\text{deliverable}) > 20$$
+   where for Reactive Baseline, `is_completed` includes both `ToolLoopStatus.COMPLETED` and `ToolLoopStatus.APPROVAL_REQUIRED` (human-in-the-loop operational initiation). The Planned Assistant must never bypass required keyword matching via an `all_steps_ok` clause.
 6. **Inter-Goal Cooldown (Rate Limiting Protection):** To prevent LLM API rate limits (TPM/RPM exhaustion) during sequential evaluation, the system pauses 30 seconds after each goal evaluation for both Planned and Reactive systems. To ensure benchmark integrity, the goal latency metric is stamped immediately upon execution completion *before* initiating the 30-second cooldown.
 7. **Web Retrieval Token Ceiling (5,000 Tokens):** All web-retrieved data and search tool responses (`search_web`) are strictly bounded to a maximum of 5,000 tokens using `tiktoken` (`cl100k_base` encoding). Any web content exceeding 5,000 tokens is truncated with a defensive marker to prevent intermediate payload bloat from exhausting token budgets.
+8. **In-Memory Store Isolation:** To prevent data contamination across sequential benchmark goals, mutable dictionary stores (`accounts` and `tickets`) are deep-copied into initial reference snapshots and restored before every goal execution across both systems.
 
 ### 10.2 The 10 Curated Benchmark Goals
 

@@ -476,3 +476,40 @@ async def test_scheduler_preserves_completed_steps_on_replan(
     # Result must contain outputs for both steps
     assert result.step_results["step_1"] == "Verified output from step_1"
     assert "step_2_alt" in result.step_results
+
+
+@pytest.mark.asyncio
+async def test_scheduler_sibling_settling_propagates_budget_exceeded_error(
+    mock_executor: MagicMock, mock_verifier: MagicMock
+) -> None:
+    """Verify that if a sibling task raises BudgetExceededError while settling, it is propagated."""
+    from plan_and_execute_research_assistant.models import BudgetExceededError
+
+    plan = Plan(
+        goal="Sibling budget error test",
+        steps=[
+            PlanStep(id="step_a", description="Failing task", success_criteria="Done"),
+            PlanStep(
+                id="step_b", description="Sibling that exhausts budget", success_criteria="Done"
+            ),
+        ],
+    )
+
+    async def fake_execute(step: PlanStep, **kwargs) -> StepExecutionOutput:
+        if step.id == "step_a":
+            # Immediately fails execution
+            return StepExecutionOutput(
+                step_id="step_a",
+                output_text="Failure output",
+                status=StepStatus.FAILED,
+            )
+        # Sibling task step_b takes slightly longer and raises BudgetExceededError during settling
+        await asyncio.sleep(0.05)
+        raise BudgetExceededError("Token budget exhausted: 45000 >= 40000")
+
+    mock_executor.execute_step.side_effect = fake_execute
+
+    scheduler = DAGScheduler(executor=mock_executor, verifier=mock_verifier)
+
+    with pytest.raises(BudgetExceededError, match="Token budget exhausted"):
+        await scheduler.execute_plan(plan=plan, user_id="user_test")

@@ -443,3 +443,56 @@ async def test_assistant_optional_reflector_integration(
 
     assert result.status == RunStatus.COMPLETED
     mock_reflector.reflect.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_assistant_episodic_memory_failure_does_not_fail_run(
+    mock_llm_service: MagicMock,
+    sample_valid_plan: Plan,
+) -> None:
+    """Verify that transient episodic memory failures do not cause a successful run to fail."""
+    mock_executor = MagicMock()
+    mock_executor.get_available_capabilities = MagicMock(return_value={"tool_a": "Tool A"})
+
+    mock_mem = MagicMock()
+    mock_mem.get_user_preferences = AsyncMock(return_value=[])
+    # Memory record throws database connection error
+    mock_mem.record_plan_episode = AsyncMock(
+        side_effect=RuntimeError("PostgreSQL connection lost during episodic insert")
+    )
+
+    mock_store = MagicMock()
+    mock_store.save_run = AsyncMock()
+    mock_store._save_run_sync = MagicMock()
+
+    mock_generator = MagicMock()
+    mock_generator.generate_plan = AsyncMock(return_value=sample_valid_plan)
+
+    mock_scheduler = MagicMock()
+    mock_scheduler.execute_plan = AsyncMock(
+        return_value=SchedulerExecutionResult(
+            status=StepStatus.COMPLETED,
+            step_results={"step_1": "Verified step 1", "step_2": "Verified step 2"},
+        )
+    )
+
+    config = AssistantConfig(auto_approve_review=True)
+    assistant = PlanAndExecuteAssistant(
+        llm_service=mock_llm_service,
+        executor=mock_executor,
+        memory_manager=mock_mem,
+        store=mock_store,
+        plan_generator=mock_generator,
+        scheduler=mock_scheduler,
+        config=config,
+    )
+
+    result = await assistant.run(
+        goal="Test resilience to episodic memory logging failure",
+        user_id="user_resilient",
+    )
+
+    # Run MUST complete successfully despite episodic memory write failure!
+    assert result.status == RunStatus.COMPLETED
+    assert result.final_deliverable is not None
+    mock_mem.record_plan_episode.assert_awaited_once()

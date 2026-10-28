@@ -142,6 +142,8 @@ class DAGScheduler:
                             user_id=user_id,
                             retry_feedback=retry_feedback,
                         )
+                    except BudgetExceededError:
+                        raise
                     except Exception as exc:  # noqa: BLE001
                         safe_log(
                             _logger,
@@ -294,7 +296,12 @@ class DAGScheduler:
                     )
                     # Sibling Settling: await active sibling tasks to complete without aborting
                     if active_tasks:
-                        await asyncio.gather(*active_tasks.values(), return_exceptions=True)
+                        settled_results = await asyncio.gather(
+                            *active_tasks.values(), return_exceptions=True
+                        )
+                        for res in settled_results:
+                            if isinstance(res, BudgetExceededError):
+                                raise res
 
                     return SchedulerExecutionResult(
                         status=StepStatus.FAILED,

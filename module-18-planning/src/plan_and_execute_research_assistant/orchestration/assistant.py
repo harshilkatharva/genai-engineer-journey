@@ -355,17 +355,26 @@ class PlanAndExecuteAssistant:
             run_record.final_deliverable = synth_text
             run_record.status = RunStatus.COMPLETED
 
-            # Record completed episode in episodic memory
-            await self.memory_manager.record_plan_episode(
-                user_id=user_id,
-                goal=goal,
-                plan=current_plan,
-                result_summary=synth_text,
-                metadata={
-                    "total_tokens": active_budget.current_tokens,
-                    "total_cost_usd": active_budget.current_cost_usd,
-                },
-            )
+            # Record completed episode in episodic memory (non-fatal telemetry)
+            try:
+                await self.memory_manager.record_plan_episode(
+                    user_id=user_id,
+                    goal=goal,
+                    plan=current_plan,
+                    result_summary=synth_text,
+                    metadata={
+                        "total_tokens": active_budget.current_tokens,
+                        "total_cost_usd": active_budget.current_cost_usd,
+                    },
+                )
+            except Exception as mem_exc:  # noqa: BLE001
+                safe_log(
+                    _logger,
+                    logging.WARNING,
+                    f"Failed to record episodic memory for run '{run_id}': {mem_exc}",
+                    run_id=run_id,
+                    error=str(mem_exc),
+                )
 
             return self._finalize_run(run_record, current_plan, active_budget)
 

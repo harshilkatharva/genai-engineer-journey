@@ -363,3 +363,33 @@
   2. Tracking budget only at phase boundaries: Rejected because individual step loops and verification cycles can breach token/cost budgets before reaching a phase boundary.
 - **Impact:** Strict adherence to the Work Preservation Invariant during dynamic replanning (zero duplicate execution of completed steps) and 100% complete accounting of all LLM tokens and costs in `RunBudget`.
 
+---
+
+### Decision 26: Benchmark Validity Harmonization, Concurrency Robustness & Store Isolation (P1 Fixes)
+- **Context:**
+  1. Asymmetric Benchmark Scoring (PLN-003): In `eval/live_runner.py`, `live_planned_target` used an asymmetric criteria condition `passed = is_completed and (all_steps_ok or req_matched) and len(deliverable) > 20`. This allowed Planned Assistant to pass even when failing benchmark-required keyword checks simply because all plan steps executed to completion. Conversely, `live_reactive_target` strictly enforced `req_matched` and did not recognize `ToolLoopStatus.APPROVAL_REQUIRED` as valid completion for human-in-the-loop operational goals.
+  2. Silent Swallowing of BudgetExceededError in Sibling Settling (PLN-004): In `DAGScheduler`, `_execute_step_with_retries` caught general `Exception` and converted `BudgetExceededError` into a regular step failure rather than propagating it. Furthermore, when sibling tasks were awaited during settling (`asyncio.gather(*active_tasks.values(), return_exceptions=True)`), exceptions in `settled_results` were not inspected for `BudgetExceededError`, allowing budget violations to be swallowed silently and triggering unwanted dynamic replans.
+  3. Non-Fatal Episodic Memory Telemetry (PLN-005): In `PlanAndExecuteAssistant.run`, episodic memory write (`record_plan_episode`) occurred within the primary execution `try` block without isolated exception handling. If vector storage, embedding generation, or database operations failed transiently after all steps and deliverable synthesis had succeeded, the entire run was erroneously marked as `FAILED`.
+  4. In-Memory Store Contamination Across Benchmark Goals (PLN-006): In `eval/live_runner.py`, mutable in-memory dictionary stores (`accounts` and `tickets`) were passed by reference into tools and shared across both Planned Assistant and Reactive Baseline across all 10 benchmark goals. Mutating accounts or tickets in earlier goals (e.g. `G-03`) corrupted subsequent goal evaluations (e.g. `G-04`, `G-09`).
+- **Decision:**
+  1. Harmonized Benchmark Passing Criteria (PLN-003):
+     - In `live_planned_target`, removed `(all_steps_ok or req_matched)` and enforced symmetric `passed = is_completed and req_matched and len(deliverable) > 20`.
+     - In `live_reactive_target`, recognized `is_completed = agent_res.status in (ToolLoopStatus.COMPLETED, ToolLoopStatus.APPROVAL_REQUIRED)` to honor enterprise HITL safety approvals.
+  2. Concurrency Robustness & BudgetExceededError Propagation (PLN-004):
+     - In `DAGScheduler._execute_step_with_retries`, explicitly caught and re-raised `BudgetExceededError` before general `Exception` handling.
+     - In `DAGScheduler.execute_plan`, inspected `settled_results` from sibling task settling (`asyncio.gather(*active_tasks.values(), return_exceptions=True)`) and immediately re-raised any `BudgetExceededError` to abort cleanly.
+  3. Resilient Episodic Memory Isolation (PLN-005):
+     - In `PlanAndExecuteAssistant.run`, wrapped `self.memory_manager.record_plan_episode` in an isolated `try...except Exception as mem_exc` block with a warning log, ensuring memory telemetry failures never fail an already-completed user run.
+  4. In-Memory Store Snapshot & Restoration (PLN-006):
+     - In `live_runner.py`, captured baseline deepcopy snapshots (`initial_accounts` and `initial_tickets`) after seed data initialization.
+     - Restored stores in-place via `.clear()` and `.update(copy.deepcopy(initial_...))` before dispatching each goal in both `live_planned_target` and `live_reactive_target`.
+  5. Test Coverage:
+     - Added `test_scheduler_sibling_settling_propagates_budget_exceeded_error` in `tests/unit/scheduling/test_dag_scheduler.py`.
+     - Added `test_assistant_episodic_memory_failure_does_not_fail_run` in `tests/unit/orchestration/test_assistant.py`.
+     - Added `test_eval_store_state_isolation_deepcopy` and `test_eval_criteria_symmetry_logic` in `tests/unit/eval/test_eval_runner.py`.
+- **Alternatives Considered:**
+  1. Re-instantiating the entire agent and database connection per benchmark goal: Rejected due to significant connection setup overhead and latency; in-place dictionary restoration achieves complete isolation with zero connection churn.
+  2. Failing the run on episodic memory errors: Rejected because episodic memory is secondary historical indexing; user deliverable synthesis is the primary goal.
+- **Impact:** Symmetric, unbiased benchmark evaluation; bulletproof budget error propagation across concurrent DAG tasks; resilience against transient episodic database errors; and total state isolation between benchmark test cases.
+
+

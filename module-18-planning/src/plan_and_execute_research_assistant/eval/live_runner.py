@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import copy
 import logging
 import time
 from typing import TYPE_CHECKING, Any
@@ -30,7 +31,7 @@ from research_and_support_agent.memory.manager import AgentMemoryManager
 from ..core import AssistantConfig, get_assistant_config, truncate_to_tokens
 from ..execution import Module17StepExecutor
 from ..memory import PlanningMemoryManager
-from ..models import RunBudget, RunStatus, StepStatus
+from ..models import RunBudget, RunStatus
 from ..orchestration import PlanAndExecuteAssistant
 from ..planning import PlanGenerator, PlanValidator
 from ..replanning import ReplanningEngine
@@ -168,6 +169,9 @@ async def create_live_benchmark_targets(
             history=[{"action": "created", "note": "Billing turnaround ticket opened"}],
         )
 
+    initial_accounts = copy.deepcopy(accounts)
+    initial_tickets = copy.deepcopy(tickets)
+
     executor = Module17StepExecutor(agent=bounded_agent, config=effective_config)
     planning_mem = PlanningMemoryManager(memory_service=memory_service, config=effective_config)
     plan_generator = PlanGenerator(
@@ -199,6 +203,11 @@ async def create_live_benchmark_targets(
         g_id = str(sample.id)
         category = sample.metadata.get("category", "general")
         print(f"  -> [{g_id}] Evaluating Planned Assistant ({category})...", flush=True)
+        # Restore clean database mock state before each goal run to isolate benchmarks
+        accounts.clear()
+        accounts.update(copy.deepcopy(initial_accounts))
+        tickets.clear()
+        tickets.update(copy.deepcopy(initial_tickets))
         start_t = time.monotonic()
         try:
             budget = RunBudget(
@@ -212,11 +221,6 @@ async def create_live_benchmark_targets(
 
             deliverable = result.final_deliverable or ""
             is_completed = result.status == RunStatus.COMPLETED
-            all_steps_ok = (
-                all(s.status == StepStatus.COMPLETED for s in result.plan.steps)
-                if result.plan.steps
-                else False
-            )
             req_matched = True
             if sample.expected_answer and sample.expected_answer.required:
                 matches = [
@@ -226,7 +230,7 @@ async def create_live_benchmark_targets(
                 ]
                 req_matched = len(matches) >= max(1, len(sample.expected_answer.required) // 2)
 
-            passed = is_completed and (all_steps_ok or req_matched) and len(deliverable) > 20
+            passed = is_completed and req_matched and len(deliverable) > 20
             replan_count = max(0, result.plan.version - 1)
             status_tag = "PASSED" if passed else "FAILED"
             print(
@@ -268,6 +272,11 @@ async def create_live_benchmark_targets(
         g_id = str(sample.id)
         category = sample.metadata.get("category", "general")
         print(f"  -> [{g_id}] Evaluating Reactive Baseline ({category})...", flush=True)
+        # Restore clean database mock state before each goal run to isolate benchmarks
+        accounts.clear()
+        accounts.update(copy.deepcopy(initial_accounts))
+        tickets.clear()
+        tickets.update(copy.deepcopy(initial_tickets))
         start_t = time.monotonic()
         try:
             user_id = sample.metadata.get("user_id")
@@ -279,7 +288,10 @@ async def create_live_benchmark_targets(
             elapsed = round(time.monotonic() - start_t, 3)
 
             deliverable = agent_res.final_text or ""
-            is_completed = agent_res.status == ToolLoopStatus.COMPLETED
+            is_completed = agent_res.status in (
+                ToolLoopStatus.COMPLETED,
+                ToolLoopStatus.APPROVAL_REQUIRED,
+            )
             req_matched = True
             if sample.expected_answer and sample.expected_answer.required:
                 matches = [
