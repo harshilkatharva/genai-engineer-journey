@@ -140,3 +140,37 @@ async def test_execute_step_truncates_web_search_output() -> None:
     assert "truncated to 100 tokens limit" in output.output_text
     prefix = output.output_text.split("\n... [Web-retrieved response truncated")[0]
     assert count_tokens(prefix) <= 100
+
+
+@pytest.mark.asyncio
+async def test_execute_step_approval_required_is_success() -> None:
+    """Verify approval_required status is treated as successful hand-off deliverable."""
+    agent = MagicMock()
+    mock_result = MagicMock()
+    mock_result.status = "approval_required"
+    mock_result.final_text = None
+    mock_req = MagicMock()
+    mock_req.tool_name = "execute_refund"
+    mock_req.request_id = "req_12345"
+    mock_req.arguments = {"customer_id": "C-102", "amount_usd": 50.0}
+    mock_req.reason = "Refund exceeds automated threshold"
+    mock_req.risk_level.value = "irreversible"
+    mock_result.pending_approval = mock_req
+    mock_result.total_tokens = 400
+    mock_result.total_cost_usd = 0.0002
+    mock_result.error_message = None
+    agent.run = AsyncMock(return_value=mock_result)
+
+    executor = Module17StepExecutor(agent=agent)
+    step = PlanStep(
+        id="step_refund",
+        description="Execute support refund of $50.00 USD for customer C-102",
+        tool_name_hint="execute_refund",
+        success_criteria="Refund successfully executed for customer C-102",
+    )
+    output = await executor.execute_step(step=step, predecessor_context={}, user_id="C-102")
+
+    assert output.status == StepStatus.COMPLETED
+    assert "execute_refund" in output.output_text
+    assert "req_12345" in output.output_text
+    assert "paused for human authorization" in output.output_text

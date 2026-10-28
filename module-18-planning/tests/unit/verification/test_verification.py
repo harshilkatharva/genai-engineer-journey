@@ -280,3 +280,47 @@ async def test_verify_step_negative_finding_verified(
     assert result.model_passed is True
     assert result.score == 0.95
     assert "conclusively confirmed R-999 does not exist" in result.reasoning
+
+
+@pytest.mark.asyncio
+async def test_verify_step_approval_required_verified(
+    mock_llm_service: MagicMock,
+) -> None:
+    """Verify step passes when tool initiates irreversible action paused for human approval."""
+    step = PlanStep(
+        id="step_refund",
+        description="Execute support refund of $50.00 USD for customer C-102",
+        tool_name_hint="execute_refund",
+        success_criteria="Refund successfully executed for customer C-102",
+    )
+    verdict = StepJudgeVerdict(
+        is_satisfied=True,
+        score=0.92,
+        reasoning="The agent initiated execute_refund and properly registered it for human authorization per security policy.",
+        missing_criteria=[],
+    )
+    mock_llm_service.complete_structure.return_value = LLMManagerResponse(
+        structured_response=verdict,
+        model="gemini-3.5-flash-lite",
+    )
+
+    deliverable = (
+        "Action 'execute_refund' (irreversible) was successfully initiated and paused for human authorization.\n"
+        "- Approval Request ID: req_9999\n"
+        "- Parameters: {'customer_id': 'C-102', 'amount_usd': 50.0}\n"
+        "- Safeguard Reason: Refund exceeds automated threshold\n"
+        "The operation is safely registered in the approval store awaiting reviewer sign-off."
+    )
+
+    verifier = StepVerifier(llm_service=mock_llm_service)
+    result = await verifier.verify_step(
+        step=step,
+        output_text=deliverable,
+        execution_status=StepStatus.COMPLETED,
+    )
+
+    assert result.passed is True
+    assert result.programmatic_passed is True
+    assert result.model_passed is True
+    assert result.score == 0.92
+    assert "properly registered it for human authorization" in result.reasoning

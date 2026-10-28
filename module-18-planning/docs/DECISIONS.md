@@ -320,6 +320,16 @@
   2. Only truncating in post-processing: Rejected because huge intermediate tool outputs inside `BoundedAgent` cause immediate token budget exhaustion during agent turns.
 - **Impact:** 100% telemetry retention across all completed step attempts even upon budget termination, and strict 5K token boundedness for all web-retrieved data.
 
+---
 
-
-
+### Decision 24: Operational Hand-off & Approval-Required Status Handling (HITL Safety Invariant)
+- **Context:** During live comparative evaluation on operational goals (e.g., `G-03` resolving ticket `T-102` and executing support actions), the planner may decompose an operational step calling an irreversible tool (e.g. `execute_refund`). In `BoundedAgent` (Module 17), `execute_refund` is guarded by `RiskLevel.IRREVERSIBLE`, causing the agent's tool loop to halt and return `ToolLoopStatus.APPROVAL_REQUIRED` alongside a serialized `ApprovalRequest`. Because `Module17StepExecutor.execute_step` previously checked only `is_success = "completed" in status_str or "success" in status_str`, it treated `APPROVAL_REQUIRED` as `StepStatus.FAILED`. Furthermore, because the tool loop paused before LLM final synthesis, `output_text` was left empty (`""`). This caused Programmatic Gate 1 in `StepVerifier` to immediately fail the step (`"Step execution failed with status 'failed'"`), triggering 3 identical retry failures, replanning, and token budget exhaustion (42,950 tokens).
+- **Decision:**
+  1. Operational Hand-off Status Recognition: In `src/plan_and_execute_research_assistant/execution/module17_executor.py`, updated `is_success` to recognize `is_approval = "approval_required" in status_str`, mapping safely paused approval states to `StepStatus.COMPLETED`.
+  2. Deliverable Synthesis for Pending Approvals: When `is_approval` is True and `output_text` is empty, extract `result.pending_approval` (`ApprovalRequest`) and synthesize a structured deliverable documenting the initiated action, request ID, tool arguments, risk level, and policy reason awaiting reviewer authorization.
+  3. LLM Judge Instruction for Human Authorization: In `src/plan_and_execute_research_assistant/verification/prompts.py`, added instruction 3 clarifying that operational actions safely paused for human review represent successful, compliant execution under enterprise safety policies, directing the judge to assign passing scores (`>= 0.85`).
+  4. Unit Test Coverage: Added `test_execute_step_approval_required_is_success` in `test_module17_executor.py` and `test_verify_step_approval_required_verified` in `test_verification.py`.
+- **Alternatives Considered:**
+  1. Auto-resuming approval inside `Module17StepExecutor`: Rejected as default because in a true plan-and-execute system, submitting a dangerous or irreversible action to an external supervisor queue is the correct terminal state of the agent's autonomous execution phase.
+  2. Bypassing tool approval checks entirely: Rejected because violating security invariants compromises safety guarantees.
+- **Impact:** Clean execution and verification of operational steps requiring human authorization without spurious retries, false replans, or token budget exhaustion.

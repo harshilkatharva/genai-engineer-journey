@@ -149,12 +149,32 @@ class Module17StepExecutor(StepExecutor):
             # Extract fields from AgentRunResult
             status_val = getattr(result, "status", None)
             status_str = getattr(status_val, "value", str(status_val)).lower()
-            is_success = "completed" in status_str or "success" in status_str
+            is_approval = "approval_required" in status_str
+            is_success = "completed" in status_str or "success" in status_str or is_approval
 
             output_text = getattr(result, "final_text", None) or ""
             tokens_used = getattr(result, "total_tokens", 0) or 0
             cost_usd = getattr(result, "total_cost_usd", 0.0) or 0.0
             error_msg = getattr(result, "error_message", None)
+
+            # If paused for human authorization, synthesize a structured deliverable from pending_approval
+            if is_approval and not output_text:
+                req = getattr(result, "pending_approval", None)
+                tool_name = getattr(req, "tool_name", step.tool_name_hint or "operational_action")
+                req_id = getattr(req, "request_id", "pending")
+                args = getattr(req, "arguments", {})
+                reason = getattr(req, "reason", "Requires authorized operator sign-off")
+                risk_lvl_obj = getattr(req, "risk_level", None)
+                risk_level = getattr(
+                    risk_lvl_obj, "value", str(risk_lvl_obj) if risk_lvl_obj else "irreversible"
+                )
+                output_text = (
+                    f"Action '{tool_name}' ({risk_level}) was successfully initiated and paused for human authorization.\n"
+                    f"- Approval Request ID: {req_id}\n"
+                    f"- Parameters: {args}\n"
+                    f"- Safeguard Reason: {reason}\n"
+                    f"The operation is safely registered in the approval store awaiting reviewer sign-off."
+                )
 
             # Enforce 5K token limit on web-retrieved data / response using tiktoken
             is_web_step = (

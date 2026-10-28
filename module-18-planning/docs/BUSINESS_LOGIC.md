@@ -205,8 +205,8 @@ Step Execution Finished
 
 #### Gate 1: Programmatic Verifier
 Fast, deterministic assertion checking:
-1. `AgentRunResult.status == ToolLoopStatus.COMPLETED`. (Runs that halted with `BUDGET_EXCEEDED` or `LOOP_DETECTED` fail immediately).
-2. `final_text` is non-empty and contains at least 20 characters.
+1. `AgentRunResult.status` is `COMPLETED` or `APPROVAL_REQUIRED` (safely paused for human authorization). Runs that halted with `BUDGET_EXCEEDED` or `LOOP_DETECTED` fail immediately.
+2. `output_text` is non-empty and contains at least 20 characters. For `APPROVAL_REQUIRED`, a structured deliverable detailing the initiated tool, request ID, parameters, risk level, and policy reason is synthesized.
 3. If the step produces structured data or file artifacts, the programmatic verifier runs schema validation or file existence checks.
 
 #### Gate 2: Model-Based Judge Verifier
@@ -225,6 +225,10 @@ Semantic evaluation using `genai_core.LLMService.complete_structure`:
   - Conclusively establishing and clearly documenting that a requested entity, record, document, identifier, account, or piece of information does **not exist**, is **not found** (e.g. 404, not found, or empty search result), or is absent from system records is a **valid and successful factual finding** about the real-world state of the data.
   - The model judge evaluates the step as satisfied (`is_satisfied = True`, `score >= 0.85`) when the absence is clearly documented, rather than failing the step.
   - Verification fails (`is_satisfied = False`) only if the agent encountered an unhandled execution crash, returned empty/too-short text, hallucinated fictitious data, or failed to perform the required inquiry action.
+- **Operational Safeguard & Approval-Required Rule:** For operational actions (e.g., refund execution, record deletion, sensitive account modification):
+  - If the action was successfully initiated, registered in the approval store, and safely paused for human reviewer authorization (`ToolLoopStatus.APPROVAL_REQUIRED`), this represents a **valid and successful execution** under enterprise safety policies.
+  - The model judge evaluates the initiation step as satisfied (`is_satisfied = True`, `score >= 0.85`) when the pending authorization and request ID are documented in the deliverable.
+
 
 ### 5.3 Step-Level Retries
 - If verification fails (either programmatic or model judge), the step is not immediately escalated to replanning.

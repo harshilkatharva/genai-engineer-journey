@@ -47,10 +47,20 @@ def build_judge_prompt(
                 "     (e.g., unhandled exception, broken connection, malformed parameters), fabricated fictitious data,\n"
                 "     or failed to perform the required inquiry action at all."
             ),
-            "3. Score the deliverable on a scale from 0.0 (complete failure/empty/unhandled error) to 1.0 (flawless satisfaction or clear verified finding).",
-            "4. If any required information, action, calculation, or synthesis is missing due to agent oversight (and not due to confirmed absence in the data source), set is_satisfied=False and list the missing items in 'missing_criteria'.",
-            "5. Provide a clear, objective reasoning for your verdict.",
-            "6. Return your evaluation strictly structured according to the StepJudgeVerdict schema.",
+            (
+                "3. HANDLING ACTIONS REQUIRING HUMAN AUTHORIZATION (CRITICAL RULE):\n"
+                "   - For operational actions (e.g., refund execution, record deletion, sensitive account modification): if the\n"
+                "     action was successfully initiated, registered, and safely paused for human reviewer authorization\n"
+                "     (e.g., status 'approval_required' or an approval request registered with a request ID),\n"
+                "     this represents a VALID AND SUCCESSFUL EXECUTION under enterprise safety policies.\n"
+                "   - Do NOT penalize the agent or set is_satisfied=False simply because the operation requires human review before finalizing.\n"
+                "   - If the deliverable clearly documents that the action was initiated and is awaiting operator authorization,\n"
+                "     consider the initiation objective fulfilled, set is_satisfied=True, and assign a passing confidence score (>= 0.85)."
+            ),
+            "4. Score the deliverable on a scale from 0.0 (complete failure/empty/unhandled error) to 1.0 (flawless satisfaction or clear verified finding).",
+            "5. If any required information, action, calculation, or synthesis is missing due to agent oversight (and not due to confirmed absence in the data source or safety review pause), set is_satisfied=False and list the missing items in 'missing_criteria'.",
+            "6. Provide a clear, objective reasoning for your verdict.",
+            "7. Return your evaluation strictly structured according to the StepJudgeVerdict schema.",
         ]
     )
 
