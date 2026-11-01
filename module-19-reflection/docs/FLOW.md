@@ -4,7 +4,7 @@ This document reflects the actual implemented execution and data flows in Module
 
 ---
 
-## 1. Implemented Architecture (Milestones 1, 2 & 3)
+## 1. Implemented Architecture (Milestones 1, 2, 3 & 4)
 
 ```mermaid
 flowchart TB
@@ -15,6 +15,7 @@ flowchart TB
         SectionModel["ReportSection\n(Section prose & structured claims)"]
         ReportModel["Report\n(Executive Summary, Sections, Conclusion, Limitations)"]
         RubricModel["RubricConfig & DimensionScore\n(7 calibrated dimensions, sum=1.0)"]
+        CritiqueModel["Critique & CritiqueIssue\n(Prioritized actionable defects, should_revise)"]
 
         SourceRef -.-> CitationModel
         CitationModel --> ClaimModel
@@ -47,6 +48,12 @@ flowchart TB
         Judge --> Rollup
     end
 
+    subgraph ReflectionEngine["6. Reflection & Feedback (src/self_improving_report_writer/reflection/)"]
+        CritiqueEng["CritiqueEngine.generate_critique()\n(Translates defects, enforces revision thresholds)"]
+        OscillationDet["OscillationDetector.check_oscillation()\n(SHA-256 Content & Critique Fingerprinting)"]
+        CritiqueEng --> OscillationDet
+    end
+
     %% Wiring
     TopicInput(["Research Topic"]) --> Retriever
     Retriever -->|list of SourceReference| PromptBuilder
@@ -55,12 +62,16 @@ flowchart TB
     Retriever -->|Authoritative Source Pool| G1Verifier
     Retriever -->|Authoritative Source Pool| G2Verifier
     G1Verifier -->|DeterministicReport| G2Verifier
-    G2Verifier --> SemanticOutput(["SemanticGroundingReport"])
     Generator --> Judge
     G1Verifier --> Judge
     Retriever --> Judge
-    Judge --> VerdictOutput(["ReportJudgeVerdict"])
+    G1Verifier --> CritiqueEng
+    G2Verifier --> CritiqueEng
+    Judge --> CritiqueEng
+    CritiqueEng -->|Critique| OscillationDet
+    OscillationDet --> LoopDecision(["OscillationCheckResult\n(content_cycle | critique_stagnation | none)"])
 ```
+
 
 
 ---
@@ -217,8 +228,65 @@ sequenceDiagram
     end
     LLM-->>Judge: LLMJudgeEvaluation(dimension_scores, overall_feedback)
     Judge->>Judge: Pure Python deterministic composite score calculation (sum w_i * score_i)
-    Judge->>Judge: Check dimension min_pass_score across all 7 dimensions
     Judge-->>Caller: ReportJudgeVerdict(composite_score, passed, dimension_scores, feedback)
     end
 ```
+
+---
+
+## 5. Structured Critique Generation & Oscillation Detection Flow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Caller as Reflection Orchestrator
+    participant CE as CritiqueEngine
+    participant OD as OscillationDetector
+    participant Det as DeterministicVerificationReport (G1)
+    participant Grd as SemanticGroundingReport (G2)
+    participant Jdg as ReportJudgeVerdict (Rubric)
+    participant Rep as Report Candidate
+
+    Caller->>CE: generate_critique(round, report, det_report, grd_report, judge_verdict)
+    
+    rect rgb(245, 240, 255)
+    Note over CE: Defect Translation & Categorization
+    CE->>Det: Ingest schema, authority, and substring quotation defects
+    CE->>Grd: Ingest entailment (CONTRADICTS, NEUTRAL) and ungrounded prose defects
+    CE->>Jdg: Ingest failing rubric dimensions (< min_pass_score or < 0.80)
+    CE->>CE: Deduplicate issues by signature and sort (CRITICAL > MAJOR > MINOR)
+    end
+
+    rect rgb(240, 255, 245)
+    Note over CE: Severity-Based Revision Threshold Decision
+    alt critical_count > 0
+        CE->>CE: should_revise = True (Critical issues always revise)
+    else major_count > 0
+        CE->>CE: should_revise = (composite_score < threshold OR grounding_score < 0.85)
+    else minor_count > 0 AND critical=0 AND major=0
+        opt composite_score >= threshold
+            CE->>CE: should_revise = False (Immediate Acceptance, terminate loop)
+        end
+    end
+    CE-->>Caller: Critique(round_number, issues, summary, should_revise)
+    end
+
+    rect rgb(255, 250, 240)
+    Note over Caller,OD: Dual-State Fingerprinting & Oscillation Check
+    Caller->>OD: check_oscillation(round_number, report, critique)
+    OD->>OD: compute_content_fingerprint(report) -> SHA256(norm_title + norm_sections)
+    OD->>OD: compute_critique_fingerprint(critique) -> SHA256(sorted({category+claim+severity}))
+    alt content_hash in content_history
+        OD-->>Caller: OscillationCheckResult(has_oscillation=True, type='content_cycle')
+        Note over Caller: Loop terminated: report reverted to earlier version
+    else critique_hash == critique_history[-1]
+        OD-->>Caller: OscillationCheckResult(has_oscillation=True, type='critique_stagnation')
+        Note over Caller: Loop terminated: revision failed to fix identified defects
+    else No oscillation detected
+        OD->>OD: Record content_hash and critique_hash into history
+        OD-->>Caller: OscillationCheckResult(has_oscillation=False, type='none')
+    end
+    end
+```
+
 

@@ -99,7 +99,7 @@ In accordance with repository change control rules, decisions are marked with th
 ---
 
 ### Decision 6: Oscillation & Circular Revision Detection via Normalized Content & Critique Fingerprinting
-- **Status:** Proposed (Milestone 4 Specification)
+- **Status:** Implemented (Milestone 4 - `OscillationDetector` with Dual-State SHA-256 Fingerprinting)
 - **Context:** In unconstrained self-refinement, models can alternate between two conflicting phrasings (e.g., Round 1 expands detail, Round 2 shortens for conciseness, Round 3 re-expands detail), wasting budget without making progress.
 - **Decision:** Implement dual-state fingerprinting in `OscillationDetector`:
   - `Content Fingerprint`: SHA-256 hash of normalized section titles and claim texts.
@@ -109,6 +109,7 @@ In accordance with repository change control rules, decisions are marked with th
   - Both conditions immediately abort the reflection loop and trigger candidate selection.
 - **Alternatives Considered:** String edit distance / Levenshtein. Rejected because it is expensive for long reports and sensitive to trivial formatting noise.
 - **Impact:** Zero-cost, instantaneous detection of cyclical loops and stalled revisions, conserving execution budgets.
+
 
 ---
 
@@ -167,4 +168,22 @@ In accordance with repository change control rules, decisions are marked with th
   5. Audit section prose for ungrounded factual assertions omitting structured claims, flagging any detected unstructured claim as `MAJOR`.
 - **Alternatives Considered:** Asking the LLM to output composite scores directly. Rejected due to frequent floating-point arithmetic errors and hallucinated thresholds.
 - **Impact:** Guarantees 100% mathematical precision in rubric rollups, prevents silent grade inflation, and produces structured defect lists for the reflection critique engine.
+
+---
+
+### Decision 11: Structured Critique Engine & Severity-Based Revision Thresholds
+- **Status:** Implemented (Milestone 4 - `models/critique.py`, `reflection/critique_engine.py`)
+- **Context:** Raw verifier defect lists and free-form judge reasoning are unstructured and difficult for generator LLMs to systematically address during revision. In addition, an unconstrained revision loop can waste resources on trivial minor formatting issues when the report is already high-quality.
+- **Decision:**
+  1. Define a strict taxonomy: `IssueCategory` (`SCHEMA`, `CITATION_INTEGRITY`, `FACTUAL_GROUNDING`, `COMPLETENESS`, `RELEVANCE`, `CLARITY_ORGANIZATION`, `LOGICAL_CONSISTENCY`) and `IssueSeverity` (`CRITICAL`, `MAJOR`, `MINOR`).
+  2. Map all Gate 1 deterministic defects, Gate 2 grounding issues, and rubric deficits into prioritized `CritiqueIssue`s with concrete actionable recommendations.
+  3. Enforce Section 4.2 Severity-Based Revision Thresholds:
+     - `CRITICAL` issues present: Always triggers revision.
+     - `MAJOR` issues present: Triggers revision if composite score < threshold or grounding score < 0.85.
+     - `MINOR` issues only: If composite score >= threshold, terminates immediately and accepts report without wasting further tokens.
+  4. Deduplicate issues and sort by severity (`CRITICAL` > `MAJOR` > `MINOR`).
+- **Alternatives Considered:** Free-text LLM critique prompts without structured schemas. Rejected because free-text critiques are prone to vague advice, hallucinated issues, and unpredictable termination conditions.
+- **Impact:** Provides targeted, prioritized revision directives while strictly guarding execution budgets against frivolous revision rounds.
+
+
 
