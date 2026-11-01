@@ -4,12 +4,10 @@ This document reflects the actual implemented execution and data flows in Module
 
 ---
 
-## 1. Milestone 1 Implemented Architecture
-
-Milestone 1 establishes the core typed domain models and Gate 1 deterministic verification engine:
+## 1. Implemented Architecture (Milestones 1 & 2)
 
 ```mermaid
-flowchart TD
+flowchart TB
     subgraph DataStructures["1. Domain Models (src/self_improving_report_writer/models/)"]
         SourceRef["SourceReference\n(Immutable application source chunk)"]
         CitationModel["Citation\n(QUOTATION | PARAPHRASE)"]
@@ -23,34 +21,75 @@ flowchart TD
         SectionModel --> ReportModel
     end
 
-    subgraph VerifierEngine["2. Gate 1 Deterministic Verification (src/self_improving_report_writer/verification/)"]
-        InputReport(["Report Candidate"])
-        SourcePool[("Application-Controlled\nSource Pool")]
-        NormHelper["normalize_for_matching()\n(lowercase, whitespace collapse, quote normalization)"]
-        Verifier["DeterministicVerifier.verify()"]
-
-        CheckSchema["Check 1: Schema & Integrity Invariants\n(Unique section_ids, claim_ids, citation_ids)"]
-        CheckAuthority["Check 2: Source Authority\n(Check source_id & chunk_id exist in pool)"]
-        CheckQuotations["Check 3: Quotation Matching\n(Exact / Normalized Substring Containment)"]
-        CheckClaims["Check 4: Factual Citation Presence\n(Factual claims must have citations)"]
-        CheckProse["Check 5: Prose Reference Alignment\n(Inline [cite_id] markers in content)"]
-
-        ReportOutput(["DeterministicVerificationReport\n(passed, issues, passage_matches)"])
-
-        InputReport & SourcePool --> Verifier
-        Verifier --> CheckSchema
-        CheckSchema --> CheckAuthority
-        CheckAuthority --> CheckQuotations
-        CheckQuotations <--> NormHelper
-        CheckQuotations --> CheckClaims
-        CheckClaims --> CheckProse
-        CheckProse --> ReportOutput
+    subgraph RetrievalLayer["2. Evidence Retrieval (src/self_improving_report_writer/retrieval/)"]
+        Retriever["SourceRetriever\n(Facade over genai-core RetrievalService)"]
+        StoreAdapter[("VectorStore / InMemoryStore\n(768-dim embeddings)")]
+        Retriever <--> StoreAdapter
     end
+
+    subgraph GenerationLayer["3. Report Synthesis (src/self_improving_report_writer/generation/)"]
+        PromptBuilder["build_report_generation_prompt()\n(Untrusted XML delimiter barrier)"]
+        Generator["ReportGenerator\n(LLMService complete_structure)"]
+        PromptBuilder --> Generator
+    end
+
+    subgraph VerifierEngine["4. Gate 1 Deterministic Verification (src/self_improving_report_writer/verification/)"]
+        Verifier["DeterministicVerifier.verify()"]
+        CheckSchema["Check 1: Structural Integrity"]
+        CheckAuthority["Check 2: Application Source Authority"]
+        CheckQuotations["Check 3: Exact / Normalized Substring Match"]
+        CheckClaims["Check 4: Factual Citation Presence"]
+        CheckProse["Check 5: Prose Citation Alignment"]
+
+        Verifier --> CheckSchema --> CheckAuthority --> CheckQuotations --> CheckClaims --> CheckProse
+    end
+
+    %% Wiring
+    TopicInput(["Research Topic"]) --> Retriever
+    Retriever -->|list of SourceReference| PromptBuilder
+    PromptBuilder --> Generator
+    Generator -->|Report Candidate| Verifier
+    Retriever -->|Authoritative Source Pool| Verifier
+    Verifier --> ReportOutput(["DeterministicVerificationReport"])
 ```
 
 ---
 
-## 2. Gate 1 Deterministic Verification Data Flow
+## 2. Milestone 2: Evidence Retrieval & Synthesis Data Flow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Caller as Caller / Orchestrator
+    participant Ret as SourceRetriever
+    participant CoreRet as genai-core.RetrievalService
+    participant PB as PromptBuilder (prompts.py)
+    participant Gen as ReportGenerator
+    participant LLM as genai-core.LLMService
+    participant Ver as DeterministicVerifier
+
+    Caller->>Ret: retrieve_sources(topic="Quantum Annealing", top_k=8, min_score=0.0)
+    Ret->>CoreRet: search(query="Quantum Annealing", top_k=8)
+    CoreRet-->>Ret: RetrievalResponse(results=[RetrievalResult, ...])
+    Ret-->>Caller: list[SourceReference] (immutable source chunks)
+
+    Caller->>Gen: generate_report(topic, sources, guidelines)
+    Gen->>PB: build_report_generation_prompt(topic, sources, guidelines)
+    Note over PB: Enclose chunks in <untrusted_source_context> tags
+    Note over PB: Sanitize internal delimiter occurrences
+    PB-->>Gen: complete prompt string with security barrier
+
+    Gen->>LLM: complete_structure(prompt, response_schema=Report)
+    LLM-->>Gen: LLMManagerResponse(structured_response=Report, usage)
+    Gen-->>Caller: (Report, tokens_used, cost_usd)
+
+    Caller->>Ver: verify(report, retrieved_sources=sources)
+    Ver-->>Caller: DeterministicVerificationReport(passed, issues)
+```
+
+---
+
+## 3. Gate 1 Deterministic Verification Logic
 
 ```mermaid
 sequenceDiagram

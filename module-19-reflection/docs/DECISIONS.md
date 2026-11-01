@@ -139,7 +139,7 @@ In accordance with repository change control rules, decisions are marked with th
 ---
 
 ### Decision 9: Practical Untrusted Retrieved Content Defense
-- **Status:** Proposed (Milestone 2 Specification)
+- **Status:** Implemented (Milestone 2 - Untrusted Prompt Delimiter Barrier & Escaping in `prompts.py`)
 - **Context:** Retrieved sources often include untrusted external web text or third-party documents containing malicious instructions or prompt-injection attempts.
 - **Decision:**
   1. Preserve the original canonical text of retrieved chunks in application memory untouched for exact substring citation matching.

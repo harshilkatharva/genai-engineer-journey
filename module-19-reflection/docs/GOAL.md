@@ -90,7 +90,7 @@ gantt
     M8 15-Topic Comparative Evaluation Suite   :7, 8
 ```
 
-### [ ] Milestone 1: Domain Models, Report Schema & Deterministic Verifier
+### [x] Milestone 1: Domain Models, Report Schema & Deterministic Verifier
 - **Objective:** Establish typed data structures and fast deterministic verification routines.
 - **Scope:**
   - Define `Report`, `ReportSection`, `Claim`, `Citation`, `SourceReference`.
