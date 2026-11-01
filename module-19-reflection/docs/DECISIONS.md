@@ -48,7 +48,7 @@ In accordance with repository change control rules, decisions are marked with th
 ---
 
 ### Decision 3: Model Diversity Strategy for Generator vs Judge & Fallback Self-Evaluation Disclosure
-- **Status:** Proposed (Milestone 3 Specification)
+- **Status:** Implemented (Milestone 3 - RubricJudge with Model Diversity Safeguards)
 - **Context:** Large language models exhibit systematic self-preference bias when evaluating their own outputs. Using the same model family and size for both generation and judging yields artificially inflated quality scores and misses subtle hallucinations.
 - **Decision:** Mandate model diversity across generator and judge roles:
   - **Generator Model:** `gemini-3.5-flash-lite` (or equivalent fast tier) to support high-throughput, low-latency drafting and revisions.
@@ -61,6 +61,7 @@ In accordance with repository change control rules, decisions are marked with th
   1. *Allowing identical model without disclosure:* Rejected as scientifically invalid and prone to undetected hallucination loops.
   2. *Hard failure when secondary model is unavailable:* Rejected because operational resilience requires graceful degradation for production environments.
 - **Impact:** Guarantees objective judging while preserving operational availability and transparent auditability.
+
 
 ---
 
@@ -148,3 +149,22 @@ In accordance with repository change control rules, decisions are marked with th
   4. Safely escape internal prompt delimiters before prompt construction without mutating the canonical source text.
 - **Alternatives Considered:** Modifying or stripping source text destructively. Rejected because modifying source text breaks exact citation passage matching.
 - **Impact:** Hardens the report writer against prompt injection while keeping canonical citation verification 100% accurate.
+
+---
+
+### Decision 10: Deterministic Pure Python Rubric Score Calculation & Gate 2 Entailment Verifier
+- **Status:** Implemented (Milestone 3 - `models/rubric.py`, `judging/rubric_judge.py`, `verification/semantic_grounding_verifier.py`)
+- **Context:** Relying on language models to calculate weighted arithmetic sums ($\sum w_i \times \text{score}_i$) produces hallucinated math errors and inconsistent pass/fail thresholds. Furthermore, Gate 2 requires granular, claim-level semantic entailment tracking (`ENTAILS`, `NEUTRAL`, `CONTRADICTS`) and auditing for ungrounded factual assertions embedded in prose without structured claims.
+- **Decision:**
+  1. Enforce mathematical weight validation strictly in Pydantic: criteria weights must sum to 1.0 $\pm 10^{-3}$, and duplicate criterion names are rejected.
+  2. The LLM judge scores individual dimensions from 0.0 to 1.0 and provides concrete reasoning. The composite score is computed deterministically in pure Python: $\sum w_i \times \text{Score}_i$.
+  3. A report passes judging if and only if: (a) composite score $\ge$ effective threshold (0.85 default, 0.90 if self-judged), and (b) all dimensions satisfy their individual `min_pass_score`.
+  4. Gate 2 (`SemanticGroundingVerifier`) verifies every factual claim against resolved chunk texts via natural language inference:
+     - `ENTAILS`: score 1.0, 0 issues.
+     - `NEUTRAL`: score 0.5, tagged as `MAJOR` (Weak / Insufficient Grounding).
+     - `CONTRADICTS`: score 0.0, tagged as `CRITICAL` (Evidence Contradiction).
+     - Uncited factual claim or missing chunk: score 0.0, tagged as `MAJOR`.
+  5. Audit section prose for ungrounded factual assertions omitting structured claims, flagging any detected unstructured claim as `MAJOR`.
+- **Alternatives Considered:** Asking the LLM to output composite scores directly. Rejected due to frequent floating-point arithmetic errors and hallucinated thresholds.
+- **Impact:** Guarantees 100% mathematical precision in rubric rollups, prevents silent grade inflation, and produces structured defect lists for the reflection critique engine.
+

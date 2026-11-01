@@ -4,7 +4,7 @@ This document reflects the actual implemented execution and data flows in Module
 
 ---
 
-## 1. Implemented Architecture (Milestones 1 & 2)
+## 1. Implemented Architecture (Milestones 1, 2 & 3)
 
 ```mermaid
 flowchart TB
@@ -14,6 +14,7 @@ flowchart TB
         ClaimModel["Claim\n(Factual proposition & attached citations)"]
         SectionModel["ReportSection\n(Section prose & structured claims)"]
         ReportModel["Report\n(Executive Summary, Sections, Conclusion, Limitations)"]
+        RubricModel["RubricConfig & DimensionScore\n(7 calibrated dimensions, sum=1.0)"]
 
         SourceRef -.-> CitationModel
         CitationModel --> ClaimModel
@@ -33,25 +34,34 @@ flowchart TB
         PromptBuilder --> Generator
     end
 
-    subgraph VerifierEngine["4. Gate 1 Deterministic Verification (src/self_improving_report_writer/verification/)"]
-        Verifier["DeterministicVerifier.verify()"]
-        CheckSchema["Check 1: Structural Integrity"]
-        CheckAuthority["Check 2: Application Source Authority"]
-        CheckQuotations["Check 3: Exact / Normalized Substring Match"]
-        CheckClaims["Check 4: Factual Citation Presence"]
-        CheckProse["Check 5: Prose Citation Alignment"]
+    subgraph VerifierEngine["4. Verification Pipeline (src/self_improving_report_writer/verification/)"]
+        G1Verifier["Gate 1: DeterministicVerifier.verify()\n(Pure Python, 0 LLM calls)"]
+        G2Verifier["Gate 2: SemanticGroundingVerifier.verify_grounding()\n(Claim NLI Entailment & Prose Consistency)"]
 
-        Verifier --> CheckSchema --> CheckAuthority --> CheckQuotations --> CheckClaims --> CheckProse
+        G1Verifier -->|If Pass| G2Verifier
+    end
+
+    subgraph JudgingEngine["5. Rubric Evaluation (src/self_improving_report_writer/judging/)"]
+        Judge["RubricJudge.evaluate()\n(gemini-2.5-pro / diversity fallback)"]
+        Rollup["Deterministic Math Rollup\n(Weighted composite score >= threshold)"]
+        Judge --> Rollup
     end
 
     %% Wiring
     TopicInput(["Research Topic"]) --> Retriever
     Retriever -->|list of SourceReference| PromptBuilder
     PromptBuilder --> Generator
-    Generator -->|Report Candidate| Verifier
-    Retriever -->|Authoritative Source Pool| Verifier
-    Verifier --> ReportOutput(["DeterministicVerificationReport"])
+    Generator -->|Report Candidate| G1Verifier
+    Retriever -->|Authoritative Source Pool| G1Verifier
+    Retriever -->|Authoritative Source Pool| G2Verifier
+    G1Verifier -->|DeterministicReport| G2Verifier
+    G2Verifier --> SemanticOutput(["SemanticGroundingReport"])
+    Generator --> Judge
+    G1Verifier --> Judge
+    Retriever --> Judge
+    Judge --> VerdictOutput(["ReportJudgeVerdict"])
 ```
+
 
 ---
 
@@ -149,3 +159,66 @@ sequenceDiagram
 
     Ver-->>Caller: DeterministicVerificationReport(passed, issues, counts)
 ```
+
+---
+
+## 4. Gate 2 Semantic Grounding & Rubric Judging Data Flow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Caller as Caller / Orchestrator
+    participant G2 as SemanticGroundingVerifier
+    participant Judge as RubricJudge
+    participant LLM as genai-core.LLMService
+    participant Report as Report Candidate
+    participant Sources as Authoritative Source Pool
+
+    rect rgb(240, 248, 255)
+    Note over Caller,G2: Gate 2: Semantic Grounding Verification
+    Caller->>G2: verify_grounding(report, retrieved_sources)
+    loop For each factual Claim
+        alt No citations attached
+            G2->>G2: Flag MAJOR defect: Uncited Factual Claim (Score 0.0)
+        else Citations reference missing chunk
+            G2->>G2: Flag MAJOR defect: Missing Chunk ID (Score 0.0)
+        else Citations resolved
+            G2->>LLM: complete_structure(claim_text, cited_chunks, response_schema=ClaimEntailmentEvaluation)
+            LLM-->>G2: ClaimEntailmentEvaluation(entailment, score, reasoning)
+            alt ENTAILS
+                G2->>G2: Score 1.0 (Supported)
+            else NEUTRAL
+                G2->>G2: Flag MAJOR defect: Weak/Neutral Grounding (Score 0.5)
+            else CONTRADICTS
+                G2->>G2: Flag CRITICAL defect: Evidence Contradiction (Score 0.0)
+            end
+        end
+    end
+    loop For each section prose
+        G2->>LLM: complete_structure(prose, structured_claims, response_schema=ProseConsistencyEvaluation)
+        LLM-->>G2: ProseConsistencyEvaluation(unstructured_claims)
+        opt Unstructured claims present
+            G2->>G2: Flag MAJOR defect: Ungrounded Factual Prose Assertion
+        end
+    end
+    G2-->>Caller: SemanticGroundingReport(passed, grounding_score, issues)
+    end
+
+    rect rgb(255, 248, 240)
+    Note over Caller,Judge: Rubric-Based Evaluation & Scoring
+    Caller->>Judge: evaluate(report, sources, deterministic_report)
+    Judge->>Judge: Check model diversity (gemini-2.5-pro vs generator model)
+    opt Model Diversity Compromised (Self-Judging)
+        Judge->>Judge: Set is_self_judged=True, Threshold bumped +0.05 (0.85 -> 0.90)
+    end
+    Judge->>LLM: complete_structure(prompt, response_schema=LLMJudgeEvaluation, provider=judge_model)
+    opt Primary Judge Fails
+        Judge->>LLM: Fallback to generator_model, set is_self_judged=True, threshold +0.05
+    end
+    LLM-->>Judge: LLMJudgeEvaluation(dimension_scores, overall_feedback)
+    Judge->>Judge: Pure Python deterministic composite score calculation (sum w_i * score_i)
+    Judge->>Judge: Check dimension min_pass_score across all 7 dimensions
+    Judge-->>Caller: ReportJudgeVerdict(composite_score, passed, dimension_scores, feedback)
+    end
+```
+

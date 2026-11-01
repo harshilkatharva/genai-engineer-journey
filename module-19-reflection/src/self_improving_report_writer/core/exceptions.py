@@ -19,6 +19,10 @@ class VerificationError(ReportWriterError):
     """Raised when deterministic or semantic verification encounters fatal inconsistency."""
 
 
+class JudgingError(ReportWriterError):
+    """Raised when rubric judging fails or returns unparseable evaluation."""
+
+
 class BudgetExceededError(ReportWriterError):
     """Raised when token, cost, or wall-clock budget is breached."""
 
