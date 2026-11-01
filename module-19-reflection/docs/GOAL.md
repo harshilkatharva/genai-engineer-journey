@@ -103,7 +103,7 @@ gantt
 - **Tests Required:** `tests/unit/test_report_schema.py`, `tests/unit/test_deterministic_verifier.py`.
 - **Acceptance Criteria:** Deterministic verifier catches missing fields, fabricated citation IDs, and missing substring passages with 100% accuracy in unit tests.
 
-### [ ] Milestone 2: Source Retrieval Integration & Baseline Generator
+### [x] Milestone 2: Source Retrieval Integration & Baseline Generator
 - **Objective:** Ingest topics, query `genai-core.RetrievalService`, and generate structured baseline reports.
 - **Scope:**
   - Implement `SourceRetriever` wrapping `RetrievalService` with fallback to `InMemoryVectorStore`.
@@ -116,7 +116,8 @@ gantt
 - **Tests Required:** `tests/unit/test_source_retriever.py`, `tests/unit/test_report_generator.py`.
 - **Acceptance Criteria:** Generates well-formed reports matching `Report` schema with valid citation IDs corresponding to retrieved chunks.
 
-### [ ] Milestone 3: Semantic Grounding Verifier & Rubric-Based Judge
+### [x] Milestone 3: Semantic Grounding Verifier & Rubric-Based Judge
+
 - **Objective:** Implement semantic entailment verification and multi-dimensional rubric judging.
 - **Scope:**
   - Implement `SemanticGroundingVerifier` evaluating claim-passage entailment via LLM.
@@ -131,7 +132,8 @@ gantt
 - **Tests Required:** `tests/unit/test_rubric_validator.py`, `tests/unit/test_rubric_judge.py`, `tests/unit/test_grounding_verifier.py`.
 - **Acceptance Criteria:** Validates rubric configs; correctly identifies supported vs unsupported claims; outputs calibrated composite scores.
 
-### [ ] Milestone 4: Structured Critique Engine & Oscillation Detection
+### [x] Milestone 4: Structured Critique Engine & Oscillation Detection
+
 - **Objective:** Translate verification failures and rubric deficits into structured critiques, and detect revision cycles.
 - **Scope:**
   - Define `Critique`, `CritiqueIssue`, `IssueSeverity` (`CRITICAL`, `MAJOR`, `MINOR`), and `IssueCategory`.
