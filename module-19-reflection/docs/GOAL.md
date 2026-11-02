@@ -173,7 +173,7 @@ gantt
 - **Tests Required:** `tests/unit/test_acceptance_gate.py`, `tests/unit/test_human_review_gateway.py`.
 - **Acceptance Criteria:** Never marks a report `ACCEPTED` if critical defects remain or score < 0.85; correctly structures human review packets.
 
-### [ ] Milestone 7: Episodic Memory Lesson Distillation
+### [x] Milestone 7: Episodic Memory Lesson Distillation
 - **Objective:** Persist validated reflection lessons to `genai-core.EpisodicMemory`.
 - **Scope:**
   - Implement `ReflectionMemoryManager` interacting with `EpisodicMemory.record` and `EpisodicMemory.check`.
