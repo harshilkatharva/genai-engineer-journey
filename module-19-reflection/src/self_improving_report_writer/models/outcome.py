@@ -69,6 +69,43 @@ class ReportCandidate(BaseModel):
         eg_val = eg.score if eg else 0.0
         return round(fa_val + eg_val, 4)
 
+    @property
+    def deterministic_passed(self) -> bool:
+        """Whether Gate 1 deterministic verification passed."""
+        return self.deterministic_report.passed
+
+    @property
+    def critical_defect_count(self) -> int:
+        """Total unresolved critical defects across Gate 1 and Gate 2."""
+        return self.total_critical_count
+
+    @property
+    def major_defect_count(self) -> int:
+        """Total unresolved major defects across Gate 1 and Gate 2."""
+        return self.total_major_count
+
+    @property
+    def composite_score(self) -> float:
+        """Judge verdict composite score."""
+        return self.judge_verdict.composite_score
+
+    @property
+    def all_claims_grounded(self) -> bool:
+        """Whether Gate 2 semantic grounding verification passed."""
+        return self.grounding_report.passed
+
+    @property
+    def factual_accuracy_score(self) -> float:
+        """Factual accuracy dimension score."""
+        fa = self.judge_verdict.dimension_scores.get("factual_accuracy")
+        return fa.score if fa else 0.0
+
+    @property
+    def evidence_grounding_score(self) -> float:
+        """Evidence grounding dimension score."""
+        eg = self.judge_verdict.dimension_scores.get("evidence_grounding")
+        return eg.score if eg else 0.0
+
 
 class HumanReviewPacket(BaseModel):
     """Immutable packet containing all necessary context for human operator review (Section 6.2)."""

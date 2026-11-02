@@ -485,3 +485,70 @@ sequenceDiagram
     end
     end
 ```
+
+---
+
+## 9. Milestone 8: 15-Topic Comparative Benchmark Evaluation Flow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor CLI as Benchmark CLI / Operator
+    participant Runner as BenchmarkRunner
+    participant Dataset as 15-Topic Benchmark Dataset
+    participant AppA as Approach A Runner (No Reflection)
+    participant AppB as Approach B Runner (Ungrounded Refinement)
+    participant AppC as Approach C Runner (Grounded Reflection)
+    participant Judge as BlindedJudge (Unbiased Rubric)
+    participant Gate as AcceptanceGate
+    participant Metrics as Metrics Calculator
+    participant Out as Markdown & JSON Output
+
+    CLI->>Runner: run_benchmark(topic_ids=all, output_dir="benchmark_outputs")
+    Runner->>Dataset: get_benchmark_dataset()
+    Dataset-->>Runner: 15 Benchmark Topics (5 Domains x 3 Topics)
+
+    loop For each Benchmark Topic (1 to 15)
+        rect rgb(240, 248, 255)
+        Note over Runner,AppA: Condition A: No Reflection (Baseline)
+        Runner->>AppA: run_approach_a(topic)
+        AppA->>AppA: Generate draft R0
+        AppA->>Judge: evaluate_blinded(R0)
+        AppA->>Gate: evaluate_candidate(candidate_A)
+        AppA-->>Runner: ApproachRunResult(rounds=0, A_scores, A_defects, A_cost)
+        end
+
+        rect rgb(255, 250, 240)
+        Note over Runner,AppB: Condition B: Ungrounded Self-Critique
+        Runner->>AppB: run_approach_b(topic, max_rounds=2)
+        AppB->>AppB: Generate draft R0
+        loop Round 1 to 2
+            AppB->>AppB: Free-form LLM Self-Critique (no verifier access)
+            AppB->>AppB: Revise draft to R_k
+        end
+        AppB->>Judge: evaluate_blinded(R_final)
+        AppB->>Gate: evaluate_candidate(candidate_B)
+        AppB-->>Runner: ApproachRunResult(rounds=k, B_scores, B_defects, B_cost)
+        end
+
+        rect rgb(240, 255, 245)
+        Note over Runner,AppC: Condition C: Grounded Reflection (Our System)
+        Runner->>AppC: run_approach_c(topic)
+        AppC->>AppC: ReflectionLoopOrchestrator(Dual Gates + Structured Critique + Oscillation Detector + Pareto Selection)
+        AppC->>Judge: evaluate_blinded(best_candidate.report)
+        AppC->>Gate: evaluate_candidate(best_candidate)
+        AppC-->>Runner: ApproachRunResult(rounds=k, C_scores, C_defects, C_cost)
+        end
+    end
+
+    rect rgb(250, 240, 255)
+    Note over Runner,Out: Aggregation & Deliverable Generation
+    Runner->>Metrics: compute_comparative_summary(all_results)
+    Metrics->>Metrics: Calculate means, std, pass rates, cost deltas, and research question resolution
+    Metrics-->>Runner: ComparativeEvaluationSummary
+    Runner->>Out: Save benchmark_summary.md (Markdown table & analysis)
+    Runner->>Out: Save benchmark_results.json (Machine-readable audit trail)
+    Runner-->>CLI: BenchmarkExecutionReport
+    end
+```
+

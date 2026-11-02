@@ -132,11 +132,11 @@ In accordance with repository change control rules, decisions are marked with th
 
 ---
 
-### Decision 8: Controlled 15-Topic Evaluation Protocol (Deferred to Milestone 8)
-- **Status:** Proposed (Deferred to Milestone 8)
+### Decision 8: Controlled 15-Topic Evaluation Protocol
+- **Status:** Implemented (Milestone 8 - Benchmark Suite in `eval/`)
 - **Context:** Comparing Approach A (No Reflection), Approach B (Ungrounded Self-Critique), and Approach C (Grounded Reflection) across 15 topics requires frozen source snapshots and blinded judging.
-- **Decision:** The high-level requirement to compare the three approaches across 15 topics is preserved in `GOAL.md`. Detailed evaluation methodology, statistical tests, and reporting schemas are deliberately deferred until Milestone 8, at which point the methodology will be finalized collaboratively.
-- **Impact:** Prevents premature evaluation overengineering while preserving the core mini-project research goal.
+- **Decision:** The high-level requirement to compare the three approaches across 15 topics is preserved in `GOAL.md`. Curate 15 topics across 5 domains with frozen gold source references, execute all three conditions under identical constraints, and evaluate using a blinded judge that strips provenance metadata. Compute comparative quality, integrity, efficiency, and cost metrics to answer the central research question.
+- **Impact:** Delivers rigorous, reproducible empirical evidence demonstrating that grounded reflection eliminates critical defects and increases machine acceptance.
 
 ---
 
@@ -226,4 +226,22 @@ In accordance with repository change control rules, decisions are marked with th
   5. Provide soft-failure guarantees: any exception during lesson distillation or episode retrieval is logged via `safe_log` without throwing or aborting report generation.
 - **Alternatives Considered:** Semantic clustering of raw critiques. Rejected due to complexity, latency, and privacy leak risks from unstructured text.
 - **Impact:** Enables cross-session continuous learning while maintaining strict data privacy, deduplication, and zero operational downtime.
+
+---
+
+### Decision 15: 15-Topic Comparative Evaluation Suite, Blinded Judging & Research Question Resolution
+- **Status:** Implemented (Milestone 8 - `eval/dataset.py`, `eval/runners.py`, `eval/metrics.py`, `eval/blinded_judge.py`, `eval/benchmark_runner.py`, `scripts/run_eval.py`)
+- **Context:** To definitively answer the research question *"Does grounded reflection improve report quality enough to justify its additional latency and cost?"*, we must evaluate a representative set of technical topics across three experimental conditions under controlled, reproducible conditions without evaluation bias.
+- **Decision:**
+  1. Curate 15 distinct research topics across 5 domains (Quantum Computing, AI Systems, Renewable Energy, Biomedical AI, Distributed Systems) with frozen authoritative `SourceReference` chunks containing verifiable quantitative and qualitative facts.
+  2. Implement three standardized runners:
+     - **Approach A (No Reflection / Baseline):** Generates draft $R_0$, verifies Gate 1 and Gate 2, evaluates rubric judge, and halts immediately (0 reflection rounds).
+     - **Approach B (Ungrounded Self-Critique):** Generates draft $R_0$, executes up to 2 rounds of ungrounded self-critique (without access to verifier reports or chunk alignment), revises, and evaluates.
+     - **Approach C (Grounded Reflection):** Coordinates full bounded reflection loop with dual-gate verification, structured critique, oscillation detection, and Pareto candidate selection.
+  3. Implement `BlindedJudge`: strips all provenance markers (`created_by`, version numbers, approach labels) to ensure objective, unskewed rubric judging across all conditions.
+  4. Aggregate multidimensional metrics across all topics: mean composite scores, factual accuracy, evidence grounding, Gate 1 pass rate, critical/major defect counts, token consumption, financial cost ($USD), latency, and machine acceptance rate (% meeting Section 6.1 criteria).
+  5. Provide automated markdown table rendering and research question resolution: computing quality gain per dollar spent ($\Delta \text{Quality} / \Delta \text{Cost}$) and verifying that grounded reflection eliminates critical defects and increases machine acceptance.
+- **Alternatives Considered:** Running live web search during benchmarking. Rejected because web search results drift over time, preventing reproducible scientific comparison.
+- **Impact:** Delivers complete empirical verification resolving the central research question with statistical rigor and full auditability.
+
 
