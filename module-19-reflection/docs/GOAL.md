@@ -186,7 +186,7 @@ gantt
 - **Tests Required:** `tests/unit/test_reflection_memory_manager.py`.
 - **Acceptance Criteria:** Persists distilled lessons to episodic memory; skips duplicates; filters low-confidence entries; retrieves past lessons safely.
 
-### [ ] Milestone 8: 15-Topic Comparative Evaluation Suite & Benchmark Runner
+### [x] Milestone 8: 15-Topic Comparative Evaluation Suite & Benchmark Runner
 - **Objective:** Execute the controlled 15-topic evaluation comparing Approaches A, B, and C.
 - **Scope:**
   - Curate 15 diverse benchmark research topics across 5 domains with gold retrieval corpora.
