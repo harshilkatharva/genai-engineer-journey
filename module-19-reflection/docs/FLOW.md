@@ -289,4 +289,114 @@ sequenceDiagram
     end
 ```
 
+---
+
+## 6. Milestone 5: Bounded Reflection Orchestration & Candidate Selection Flow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as User / Benchmark Runner
+    participant Orch as ReflectionLoopOrchestrator
+    participant Budget as RunBudget (Shared Multi-Resource Ceiling)
+    participant Ret as SourceRetriever
+    participant Gen as ReportGenerator
+    participant Ver as Dual-Gate (G1 Verifier & G2 Grounding)
+    participant Jdg as RubricJudge
+    participant CE as CritiqueEngine
+    participant OD as OscillationDetector
+    participant Rev as RevisionEngine
+    participant Sel as CandidateSelector (Hierarchical Pareto)
+
+    User->>Orch: run(topic, sources=None, initial_report=None)
+    Orch->>Budget: Initialize RunBudget(max_tokens=50k, max_cost=$0.20, max_time=90s, max_rounds=3)
+    Orch->>OD: reset()
+
+    rect rgb(240, 245, 255)
+    Note over Orch,Gen: Phase 1: Source Resolution & Baseline Generation (Round 0)
+    Orch->>Ret: retrieve_sources(topic)
+    Ret-->>Orch: source_list (immutable SourceReference chunks)
+    Orch->>Gen: generate_report(topic, sources)
+    Gen-->>Orch: (Report v1, tokens, cost)
+    Orch->>Budget: record_usage(tokens, cost)
+    end
+
+    rect rgb(245, 240, 255)
+    Note over Orch,Jdg: Phase 2: Baseline Candidate Evaluation
+    Orch->>Ver: G1: verify(report, sources) & G2: verify_grounding(report, sources)
+    Ver-->>Orch: DeterministicVerificationReport + SemanticGroundingReport
+    Orch->>Budget: record_usage(g2_tokens, g2_cost)
+    Orch->>Jdg: evaluate(report, sources, det_report)
+    Jdg-->>Orch: ReportJudgeVerdict(composite_score, passed)
+    Orch->>Budget: record_usage(judge_tokens, judge_cost)
+    Orch->>Orch: candidates.append(ReportCandidate(round=0, ...))
+    Orch->>CE: generate_critique(round=0, report, det, g2, judge)
+    CE-->>Orch: Critique(round=0, issues, should_revise)
+    opt not critique.should_revise
+        Orch-->>User: ReflectionRunResult(best=Round 0, termination="ALL_ACCEPTANCE_CRITERIA_MET")
+    end
+    Orch->>OD: check_oscillation(round=0, report, critique)
+    end
+
+    rect rgb(255, 248, 240)
+    Note over Orch,Rev: Phase 3: Bounded Iterative Revision Loop (Rounds 1..max_rounds)
+    loop Round k = 1 to max_rounds (default: 3)
+        Orch->>Budget: check_budget_exceeded(current_round=k-1)
+        opt Budget Exceeded (Tokens, Cost, or Time)
+            Note over Orch: Break loop with BUDGET_EXCEEDED termination
+        end
+
+        Orch->>Rev: revise_report(current_report, sources, critique)
+        Rev-->>Orch: (Report v{k+1}, rev_tokens, rev_cost)
+        Orch->>Budget: record_usage(rev_tokens, rev_cost)
+
+        Orch->>Ver: G1 verify() + G2 verify_grounding()
+        Ver-->>Orch: det_report, g2_report
+        Orch->>Budget: record_usage(g2_tokens, g2_cost)
+        Orch->>Jdg: evaluate(revised_report, sources, det_report)
+        Jdg-->>Orch: judge_verdict
+        Orch->>Budget: record_usage(judge_tokens, judge_cost)
+
+        Orch->>Orch: rev_cand = ReportCandidate(round=k, ...)
+        Orch->>Sel: is_regression(candidates[-1], rev_cand)
+        alt Regression detected
+            Orch->>Orch: consecutive_regressions += 1
+            opt consecutive_regressions >= max_consecutive_regressions (1)
+                Note over Orch: Break loop with CONSECUTIVE_REGRESSIONS_EXCEEDED
+            end
+        else Quality preserved or improved
+            Orch->>Orch: consecutive_regressions = 0
+        end
+
+        Orch->>Orch: candidates.append(rev_cand)
+        Orch->>Budget: record_round_completed()
+
+        Orch->>CE: generate_critique(round=k, rev_cand...)
+        CE-->>Orch: Critique(round=k, issues, should_revise)
+        opt not critique.should_revise
+            Note over Orch: Break loop with ALL_ACCEPTANCE_CRITERIA_MET
+        end
+
+        Orch->>OD: check_oscillation(round=k, revised_report, critique)
+        opt has_oscillation (content_cycle or critique_stagnation)
+            Note over Orch: Break loop with OSCILLATION_DETECTED
+        end
+
+        Orch->>Budget: check_budget_exceeded(current_round=k)
+        opt Budget ceiling reached
+            Note over Orch: Break loop with BUDGET_EXCEEDED
+        end
+    end
+    end
+
+    rect rgb(240, 255, 245)
+    Note over Orch,Sel: Phase 4: Deterministic Hierarchical Candidate Selection
+    Orch->>Sel: select_best(candidates)
+    Note over Sel: Tier 1: Gate 1 Pass > Fail<br/>Tier 2: Fewer Critical Defects<br/>Tier 3: Fewer Major Defects<br/>Tier 4: All Claims Grounded & Grounding Score<br/>Tier 5: Composite Rubric Score<br/>Tier 6: Grounding Sub-Scores<br/>Tier 7: Parsimony (Earlier round)
+    Sel-->>Orch: best_candidate (guaranteed optimal, immune to late regressions)
+    Orch-->>User: ReflectionRunResult(best_candidate, all_candidates, budget_summary, termination_reason)
+    end
+```
+
+
 

@@ -38,6 +38,12 @@ class ReportWriterConfig(BaseModel):
     max_wall_clock_seconds: float = Field(
         default=90.0, ge=5.0, description="Run-wide execution deadline in seconds"
     )
+    max_consecutive_regressions: int = Field(
+        default=1,
+        ge=1,
+        le=5,
+        description="Maximum consecutive rounds where candidate quality degrades",
+    )
     acceptance_threshold: float = Field(
         default=0.85, ge=0.0, le=1.0, description="Composite score required for acceptance"
     )

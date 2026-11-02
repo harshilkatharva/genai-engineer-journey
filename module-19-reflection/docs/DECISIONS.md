@@ -66,7 +66,7 @@ In accordance with repository change control rules, decisions are marked with th
 ---
 
 ### Decision 4: Deterministic Hierarchical Candidate Selection (vs Latest-Candidate Acceptance)
-- **Status:** Proposed (Milestone 5 Specification)
+- **Status:** Implemented (Milestone 5 - `reflection/candidate_selector.py`)
 - **Context:** In iterative reflection, subsequent revisions frequently suffer from *regression*: an LLM may revise a paragraph to address a completeness critique, but inadvertently introduce an unsupported claim, drop a citation, or degrade overall clarity. Naively returning the final revision can produce a worse deliverable than an earlier draft.
 - **Decision:** Maintain an immutable candidate history (`list[ReportCandidate]`) across all reflection rounds and apply a strict deterministic hierarchical comparator:
   1. *Tier 1:* Gate 1 Deterministic Verification (`passed == True` strictly beats `passed == False`).
@@ -84,7 +84,7 @@ In accordance with repository change control rules, decisions are marked with th
 ---
 
 ### Decision 5: Multi-Resource Bounded Budget Envelope (`RunBudget`)
-- **Status:** Proposed (Milestone 5 Specification)
+- **Status:** Implemented (Milestone 5 - `core/budget.py`, `reflection/orchestrator.py`)
 - **Context:** Unbounded reflection loops can cause catastrophic runaway API costs and latency spikes if an LLM repeatedly attempts and fails to satisfy an elusive critique.
 - **Decision:** Introduce a shared `RunBudget` envelope enforced across all reflection lifecycle phases (generation, verification, critique generation, revision, judging):
   - Max reflection rounds: `3`
@@ -185,5 +185,16 @@ In accordance with repository change control rules, decisions are marked with th
 - **Alternatives Considered:** Free-text LLM critique prompts without structured schemas. Rejected because free-text critiques are prone to vague advice, hallucinated issues, and unpredictable termination conditions.
 - **Impact:** Provides targeted, prioritized revision directives while strictly guarding execution budgets against frivolous revision rounds.
 
+---
 
-
+### Decision 12: Bounded Reflection Orchestrator & Deterministic Multi-Resource Halting
+- **Status:** Implemented (Milestone 5 - `core/budget.py`, `reflection/revision_engine.py`, `reflection/candidate_selector.py`, `reflection/orchestrator.py`)
+- **Context:** Orchestrating iterative reflection requires coordinating source resolution, initial report synthesis, dual-gate verification, rubric judging, structured critique generation, oscillation tracking, revision generation, and candidate selection across bounded iterations without runaway costs or regressions.
+- **Decision:**
+  1. Implement `RunBudget` tracking token consumption, financial expenditure ($USD), elapsed wall-clock seconds, and completed rounds, raising `BudgetExceededError` or halting the loop gracefully.
+  2. Implement `RevisionEngine` formatting prioritized critiques into targeted revision prompts with untrusted XML source context boundaries, incrementing report versions, and attributing provenance to `revision_llm`.
+  3. Implement `CandidateSelector` applying the 7-tier deterministic hierarchical comparator to guarantee that reflection never returns a degraded candidate.
+  4. Implement `is_regression` on quality dimensions (Tiers 1-6) while excluding parsimony (Tier 7) so that stagnant rounds trigger oscillation/stagnation checks rather than false regression halts.
+  5. Implement `ReflectionLoopOrchestrator` enforcing early exit when all acceptance criteria are met, halting on budget limits, detecting content/critique oscillation, and capping consecutive regressions at `max_consecutive_regressions` (1).
+- **Alternatives Considered:** Unbounded async retry loops or accepting the last candidate generated. Rejected due to regression risk and lack of cost ceilings.
+- **Impact:** Provides an autonomous, cost-bounded, self-improving synthesis loop with guaranteed quality monotonicity and full observability.
