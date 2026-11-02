@@ -5,60 +5,11 @@ from __future__ import annotations
 import functools
 import logging
 
-from pydantic import BaseModel, Field
-
-from self_improving_report_writer.models.report import Report
-from self_improving_report_writer.models.rubric import (
-    ReportJudgeVerdict,
-    SemanticGroundingReport,
-)
-from self_improving_report_writer.models.verification import (
-    DeterministicVerificationReport,
-)
+from self_improving_report_writer.models.outcome import ReportCandidate
 
 logger = logging.getLogger(__name__)
 
-
-class ReportCandidate(BaseModel):
-    """Immutable snapshot of a report candidate and all associated evaluations for a round."""
-
-    round_number: int = Field(
-        ge=0, description="Reflection round index (0 for baseline, 1+ for revisions)"
-    )
-    report: Report = Field(description="The generated or revised research report")
-    deterministic_report: DeterministicVerificationReport = Field(
-        description="Gate 1 deterministic verification results"
-    )
-    grounding_report: SemanticGroundingReport = Field(
-        description="Gate 2 semantic grounding verification results"
-    )
-    judge_verdict: ReportJudgeVerdict = Field(
-        description="Rubric judge evaluation and composite score"
-    )
-    tokens_used: int = Field(
-        default=0, ge=0, description="Tokens consumed during generation/revision"
-    )
-    cost_usd: float = Field(default=0.0, ge=0.0, description="Financial cost incurred in USD")
-
-    @property
-    def total_critical_count(self) -> int:
-        """Combined critical defects across Gate 1 and Gate 2."""
-        return self.deterministic_report.critical_count + self.grounding_report.critical_count
-
-    @property
-    def total_major_count(self) -> int:
-        """Combined major defects across Gate 1 and Gate 2."""
-        return self.deterministic_report.major_count + self.grounding_report.major_count
-
-    @property
-    def grounding_subscore(self) -> float:
-        """Sum of factual_accuracy and evidence_grounding dimension scores."""
-        scores = self.judge_verdict.dimension_scores
-        fa = scores.get("factual_accuracy")
-        eg = scores.get("evidence_grounding")
-        fa_val = fa.score if fa else 0.0
-        eg_val = eg.score if eg else 0.0
-        return round(fa_val + eg_val, 4)
+__all__ = ["CandidateSelector", "ReportCandidate"]
 
 
 class CandidateSelector:

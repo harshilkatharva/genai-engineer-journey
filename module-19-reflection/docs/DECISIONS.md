@@ -195,6 +195,21 @@ In accordance with repository change control rules, decisions are marked with th
   2. Implement `RevisionEngine` formatting prioritized critiques into targeted revision prompts with untrusted XML source context boundaries, incrementing report versions, and attributing provenance to `revision_llm`.
   3. Implement `CandidateSelector` applying the 7-tier deterministic hierarchical comparator to guarantee that reflection never returns a degraded candidate.
   4. Implement `is_regression` on quality dimensions (Tiers 1-6) while excluding parsimony (Tier 7) so that stagnant rounds trigger oscillation/stagnation checks rather than false regression halts.
-  5. Implement `ReflectionLoopOrchestrator` enforcing early exit when all acceptance criteria are met, halting on budget limits, detecting content/critique oscillation, and capping consecutive regressions at `max_consecutive_regressions` (1).
-- **Alternatives Considered:** Unbounded async retry loops or accepting the last candidate generated. Rejected due to regression risk and lack of cost ceilings.
 - **Impact:** Provides an autonomous, cost-bounded, self-improving synthesis loop with guaranteed quality monotonicity and full observability.
+
+---
+
+### Decision 13: Honest Acceptance Gate & Human Review Gateway
+- **Status:** Implemented (Milestone 6 - `models/outcome.py`, `review/acceptance_gate.py`, `review/human_review_gateway.py`)
+- **Context:** Automated reflection systems must never falsely mark a report as accepted when defects remain or scores fall below standard. When a report is unresolved, a structured human-in-the-loop workflow is required to allow operators to review, override, request targeted human-guided revisions, or reject.
+- **Decision:**
+  1. Define explicit terminal statuses: `ReportStatus.ACCEPTED`, `ReportStatus.UNRESOLVED`, `ReportStatus.HUMAN_APPROVED`, `ReportStatus.HUMAN_REJECTED`.
+  2. Implement `AcceptanceGate` enforcing all 5 conditions of Section 6.1: (1) Gate 1 pass, (2) zero critical defects, (3) zero major grounding defects, (4) composite rubric score $\ge$ threshold (0.85, or 0.90 if self-judged), and (5) factual accuracy $\ge 0.85$ & evidence grounding $\ge 0.85$.
+  3. If any condition fails, the report is strictly marked `UNRESOLVED` and an immutable `HumanReviewPacket` is generated capturing defect counts, rubric dimension scores, and unresolved critique issues.
+  4. Implement `HumanReviewGateway` supporting three operator actions:
+     - `APPROVE_OVERRIDE`: Sets status to `HUMAN_APPROVED` without rewriting or falsifying underlying automated verification reports.
+     - `REJECT`: Sets status to `HUMAN_REJECTED`.
+     - `REQUEST_REVISION`: Bounded to maximum 2 human revision rounds, incorporates reviewer directives into prioritized critiques, generates a revised report candidate (`created_by="human_revision"`, `version=v+1`), and re-executes complete dual-gate verification and rubric judging.
+- **Alternatives Considered:** Automatically accepting reports if budget expires or if composite score is passing despite critical defects. Strongly rejected because it undermines trust and integrity.
+- **Impact:** Guarantees honest deliverables and transparent human-in-the-loop governance for high-stakes research reporting.
+

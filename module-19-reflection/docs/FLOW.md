@@ -398,5 +398,49 @@ sequenceDiagram
     end
 ```
 
+---
+
+## 7. Milestone 6: Acceptance Gate & Human Review Gateway Flow
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Caller as Caller / User
+    participant Gate as AcceptanceGate
+    participant GW as HumanReviewGateway
+    actor Operator as Human Operator
+    participant Rev as RevisionEngine
+    participant Ver as Dual-Gate & Rubric Judge
+
+    Caller->>Gate: evaluate_run_result(run_result)
+    Note over Gate: Evaluate 5 Mandatory Acceptance Criteria:<br/>1. Gate 1 deterministic passed == True<br/>2. Critical defect count == 0<br/>3. Major factual grounding defects == 0<br/>4. Composite score >= threshold (0.85 / 0.90 self-judged)<br/>5. Factual Accuracy & Evidence Grounding >= 0.85
+
+    alt All 5 Conditions Met
+        Gate-->>Caller: AcceptanceResult(status=ACCEPTED, is_accepted=True, review_packet=None)
+        Note over Caller: Report deliverable finalized and ready for consumption
+    else Any Condition Failed
+        Gate->>Gate: Construct HumanReviewPacket(defects, scores, critiques)
+        Gate-->>Caller: AcceptanceResult(status=UNRESOLVED, is_accepted=False, review_packet=packet)
+        Caller->>GW: format_review_packet(packet)
+        GW-->>Operator: Display markdown inspection packet
+
+        Operator->>GW: process_decision(HumanReviewDecision)
+        alt Action: APPROVE_OVERRIDE
+            GW-->>Caller: HumanReviewOutcome(status=HUMAN_APPROVED, notes preserved, verifications intact)
+        else Action: REJECT
+            GW-->>Caller: HumanReviewOutcome(status=HUMAN_REJECTED)
+        else Action: REQUEST_REVISION (Round <= 2)
+            GW->>Rev: revise_report(best_candidate, sources, critique with operator directives)
+            Rev-->>GW: revised_report (version=v+1, created_by='human_revision')
+            GW->>Ver: Re-verify Gate 1, Gate 2, and RubricJudge
+            Ver-->>GW: revised_candidate
+            GW->>Gate: evaluate_candidate(revised_candidate)
+            Gate-->>GW: AcceptanceResult(status=ACCEPTED or UNRESOLVED)
+            GW-->>Caller: HumanReviewOutcome(status=result.status, final_report, revised_candidate)
+        end
+    end
+```
+
+
 
 
