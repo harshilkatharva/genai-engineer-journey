@@ -146,7 +146,7 @@ gantt
 - **Tests Required:** `tests/unit/test_critique_engine.py`, `tests/unit/test_oscillation_detector.py`.
 - **Acceptance Criteria:** Correctly tags severity levels; detects cycles when an identical or previously seen report version re-appears.
 
-### [ ] Milestone 5: Bounded Reflection Orchestrator & Best-So-Far Selection
+### [x] Milestone 5: Bounded Reflection Orchestrator & Best-So-Far Selection
 - **Objective:** Coordinate the iterative reflection-revision loop with multi-resource budget enforcement.
 - **Scope:**
   - Implement `RevisionEngine` taking current report, retrieved sources, and filtered critiques to produce revised `Report`.
