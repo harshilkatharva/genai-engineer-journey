@@ -441,6 +441,47 @@ sequenceDiagram
     end
 ```
 
+---
 
+## 8. Milestone 7: Episodic Memory Lesson Distillation & Retrieval Flow
 
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Orch as Reflection Orchestrator / Pipeline
+    participant MM as ReflectionMemoryManager
+    participant EM as genai-core.EpisodicMemory
+    participant LLM as genai-core.LLMService
 
+    rect rgb(240, 248, 255)
+    Note over Orch,EM: Phase A: Pre-Generation Memory Retrieval
+    Orch->>MM: retrieve_lessons(user_id, domain, limit=5)
+    MM->>EM: get_episodes(user_id, action_type="reflection_writing_lesson", limit=20)
+    EM-->>MM: list[Episode]
+    MM->>MM: Filter episodes where metadata['domain'] == domain
+    MM-->>Orch: list[str] (distilled abstract guidelines)
+    Note over Orch: Injected into ReportGenerator system prompt
+    end
+
+    rect rgb(255, 248, 240)
+    Note over Orch,EM: Phase B: Post-Run Lesson Distillation
+    Orch->>MM: distill_lessons(user_id, domain, initial_cand, best_cand, session_id)
+    MM->>MM: Verify improvement: delta_score >= 0.10 OR delta_critical >= 1
+    alt Improvement Insufficient
+        MM-->>Orch: [] (Lesson recording skipped)
+    else Verified Improvement Satisfied
+        MM->>LLM: Distill resolved issues into abstract rules (confidence, rule, category)
+        LLM-->>MM: list[DistilledLessonCandidate]
+        loop For each candidate lesson with confidence >= 0.85
+            MM->>EM: check(user_id, action_type="reflection_writing_lesson", parameters, target)
+            alt Duplicate exists (check() == True)
+                MM->>MM: Skip duplicate
+            else Unique lesson
+                MM->>EM: record(user_id, action_type="reflection_writing_lesson", parameters, target, result_summary=rule)
+                MM->>MM: Append to recorded lessons
+            end
+        end
+        MM-->>Orch: list[str] (newly recorded lessons)
+    end
+    end
+```

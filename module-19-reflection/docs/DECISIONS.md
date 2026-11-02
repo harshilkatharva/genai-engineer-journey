@@ -114,7 +114,7 @@ In accordance with repository change control rules, decisions are marked with th
 ---
 
 ### Decision 7: Reuse of `genai-core.EpisodicMemory` via Structured Recent Episode Retrieval
-- **Status:** Proposed (Milestone 7 Specification)
+- **Status:** Implemented (Milestone 7 - `memory/reflection_memory_manager.py`)
 - **Context:** After report completion, the system must persist distilled reflection lessons so future report runs can avoid repeated mistakes. We must utilize the real `packages/genai-core` episodic memory infrastructure without inventing non-existent APIs.
 - **Codebase Analysis of `genai-core.EpisodicMemory`:**
   `genai_core.EpisodicMemory` does **not** provide vector semantic search; it provides structured action episode tracking:
@@ -212,4 +212,18 @@ In accordance with repository change control rules, decisions are marked with th
      - `REQUEST_REVISION`: Bounded to maximum 2 human revision rounds, incorporates reviewer directives into prioritized critiques, generates a revised report candidate (`created_by="human_revision"`, `version=v+1`), and re-executes complete dual-gate verification and rubric judging.
 - **Alternatives Considered:** Automatically accepting reports if budget expires or if composite score is passing despite critical defects. Strongly rejected because it undermines trust and integrity.
 - **Impact:** Guarantees honest deliverables and transparent human-in-the-loop governance for high-stakes research reporting.
+
+---
+
+### Decision 14: Episodic Memory Lesson Distillation & Privacy-Preserving Generalization
+- **Status:** Implemented (Milestone 7 - `memory/reflection_memory_manager.py`)
+- **Context:** Following completion of a reflection run, the system distills actionable writing lessons to prevent future reports from repeating identical mistakes. Lessons must only be recorded when improvement is proven, must be deduplicated reliably, and must strictly protect privacy by storing abstract authoring rules rather than raw content.
+- **Decision:**
+  1. Distill lessons only when verified improvement satisfies $\Delta = \text{final\_score} - \text{initial\_score} \ge +0.10$ or critical defect count reduces by $\ge 1$.
+  2. Filter lesson candidates by confidence score $\ge 0.85$.
+  3. Ensure idempotent deduplication using `genai_core.EpisodicMemory.check(user_id, action_type, parameters, target, session_id)` with a canonical parameter fingerprint (domain, issue category, affected rule).
+  4. Enforce strict data minimization: persist only generalized authoring guidelines in `result_summary` (e.g., "In quantum_computing reports: always cite NISQ qubit counts accurately from source chunks."). Raw report text, confidential source passages, and system prompts are never persisted in episodic memory.
+  5. Provide soft-failure guarantees: any exception during lesson distillation or episode retrieval is logged via `safe_log` without throwing or aborting report generation.
+- **Alternatives Considered:** Semantic clustering of raw critiques. Rejected due to complexity, latency, and privacy leak risks from unstructured text.
+- **Impact:** Enables cross-session continuous learning while maintaining strict data privacy, deduplication, and zero operational downtime.
 
