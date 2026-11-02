@@ -160,7 +160,7 @@ gantt
 - **Tests Required:** `tests/unit/test_revision_engine.py`, `tests/unit/test_candidate_selector.py`, `tests/unit/test_reflection_orchestrator.py`.
 - **Acceptance Criteria:** Terminates gracefully upon budget exhaustion, returns the best-so-far candidate even if late rounds regress, and respects max round limits.
 
-### [ ] Milestone 6: Honest Acceptance Gate & Human Review Gateway
+### [x] Milestone 6: Honest Acceptance Gate & Human Review Gateway
 - **Objective:** Enforce honest terminal outcomes and provide operator review workflows.
 - **Scope:**
   - Implement `AcceptanceGate` evaluating best candidate against deterministic criteria and score thresholds.
