@@ -9,16 +9,16 @@ class ReportWriterConfig(BaseModel):
     """Runtime configuration for report generation, verification, and reflection."""
 
     generator_provider: str | None = Field(
-        default=None, description="LLM provider for report generation and revision"
+        default="google", description="LLM provider for report generation and revision"
     )
     generator_model: str = Field(
         default="gemini-3.5-flash-lite", description="Model name for generation"
     )
     judge_provider: str | None = Field(
-        default=None, description="LLM provider for rubric judging and semantic evaluation"
+        default="google", description="LLM provider for rubric judging and semantic evaluation"
     )
     judge_model: str = Field(
-        default="gemini-2.5-pro", description="Model name for independent judging"
+        default="gemini-3.1-flash-lite", description="Model name for independent judging"
     )
     default_top_k: int = Field(
         default=8, ge=1, le=50, description="Default number of source chunks to retrieve"

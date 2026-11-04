@@ -57,7 +57,7 @@ async def test_rubric_judge_successful_evaluation(
 
     judge = RubricJudge(
         llm_service=mock_llm,
-        judge_model="gemini-2.5-pro",
+        judge_model="gemini-3.1-flash-lite",
         generator_model="gemini-3.5-flash-lite",
     )
 
@@ -65,7 +65,7 @@ async def test_rubric_judge_successful_evaluation(
 
     assert verdict.passed is True
     assert verdict.is_self_judged is False
-    assert verdict.judge_model == "gemini-2.5-pro"
+    assert verdict.judge_model == "gemini-3.1-flash-lite"
     assert verdict.tokens_used == 700
     assert verdict.cost_usd == 0.0025
     assert verdict.composite_score >= 0.90
@@ -206,7 +206,7 @@ async def test_rubric_judge_fallback_on_primary_failure(
 
     judge = RubricJudge(
         llm_service=mock_llm,
-        judge_model="gemini-2.5-pro",
+        judge_model="gemini-3.1-flash-lite",
         generator_model="gemini-3.5-flash-lite",
     )
 

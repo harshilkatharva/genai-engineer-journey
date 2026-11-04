@@ -68,7 +68,7 @@ def _make_candidate(
         dimension_scores=dim_scores,
         overall_feedback="Evaluation feedback",
         is_self_judged=is_self_judged,
-        judge_model="gemini-2.5-pro",
+        judge_model="gemini-3.1-flash-lite",
     )
     return ReportCandidate(
         round_number=1,

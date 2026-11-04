@@ -159,10 +159,8 @@ class SemanticGroundingVerifier:
                 )
 
                 resp = await self.llm_service.complete_structure(
-                    prompt=prompt,
+                    prompt=f"{CLAIM_ENTAILMENT_SYSTEM_PROMPT}\n\n{prompt}",
                     response_schema=ClaimEntailmentEvaluation,
-                    system_instruction=CLAIM_ENTAILMENT_SYSTEM_PROMPT,
-                    provider=self.evaluator_model,
                 )
 
                 if resp.error is not None:
@@ -251,10 +249,9 @@ class SemanticGroundingVerifier:
                 )
 
                 p_resp = await self.llm_service.complete_structure(
-                    prompt=prose_prompt,
+                    prompt=f"{PROSE_CONSISTENCY_SYSTEM_PROMPT}\n\n{prose_prompt}",
                     response_schema=ProseConsistencyEvaluation,
-                    system_instruction=PROSE_CONSISTENCY_SYSTEM_PROMPT,
-                    provider=self.evaluator_model,
+                    # provider=self.evaluator_model,
                 )
 
                 if p_resp.error is None and p_resp.structured_response:

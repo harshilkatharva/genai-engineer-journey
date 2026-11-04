@@ -85,10 +85,9 @@ class RubricJudge:
 
         # Call primary judge model
         resp = await self.llm_service.complete_structure(
-            prompt=prompt,
+            prompt=f"{RUBRIC_JUDGE_SYSTEM_PROMPT}\n\n{prompt}",
             response_schema=LLMJudgeEvaluation,
-            system_instruction=RUBRIC_JUDGE_SYSTEM_PROMPT,
-            provider=target_model,
+            # provider=target_model,
         )
 
         # Check for error and fallback if applicable
@@ -103,10 +102,9 @@ class RubricJudge:
             is_self_judged = True
             effective_threshold = base_threshold + 0.05
             resp = await self.llm_service.complete_structure(
-                prompt=prompt,
+                prompt=f"{RUBRIC_JUDGE_SYSTEM_PROMPT}\n\n{prompt}",
                 response_schema=LLMJudgeEvaluation,
-                system_instruction=RUBRIC_JUDGE_SYSTEM_PROMPT,
-                provider=target_model,
+                # provider=target_model,
             )
 
         if resp.error is not None:

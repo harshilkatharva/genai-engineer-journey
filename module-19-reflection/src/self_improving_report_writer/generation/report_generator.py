@@ -70,7 +70,7 @@ class ReportGenerator:
             response = await self.llm_service.complete_structure(
                 prompt=prompt,
                 response_schema=Report,
-                provider=self.provider,
+                # provider=self.provider,
             )
         except Exception as exc:
             safe_log(

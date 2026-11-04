@@ -54,7 +54,7 @@ def _make_mock_verdict(
         },
         overall_feedback="Good report.",
         is_self_judged=is_self_judged,
-        judge_model="gemini-2.5-pro",
+        judge_model="gemini-3.1-flash-lite",
         tokens_used=500,
         cost_usd=0.002,
     )

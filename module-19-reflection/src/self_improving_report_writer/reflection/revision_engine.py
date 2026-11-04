@@ -140,10 +140,9 @@ class RevisionEngine:
 
         try:
             response = await self.llm_service.complete_structure(
-                prompt=prompt,
+                prompt=f"{REVISION_SYSTEM_PROMPT}\n\n{prompt}",
                 response_schema=Report,
-                system_instruction=REVISION_SYSTEM_PROMPT,
-                provider=self.model,
+                # provider=self.model,
             )
         except Exception as e:
             safe_log(

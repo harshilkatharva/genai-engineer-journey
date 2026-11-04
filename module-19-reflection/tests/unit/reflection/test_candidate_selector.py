@@ -73,7 +73,7 @@ def _make_candidate(
         passed=composite_score >= 0.85,
         dimension_scores=dim_scores,
         overall_feedback="Feedback",
-        judge_model="gemini-2.5-pro",
+        judge_model="gemini-3.1-flash-lite",
     )
     return ReportCandidate(
         round_number=round_number,

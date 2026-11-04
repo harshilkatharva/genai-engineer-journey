@@ -135,7 +135,7 @@ class ReportJudgeVerdict(BaseModel):
         description="Flag indicating whether evaluation was conducted by the generator model fallback",
     )
     judge_model: str = Field(
-        default="gemini-2.5-pro", description="Model identifier used for evaluation"
+        default="gemini-3.1-flash-lite", description="Model identifier used for evaluation"
     )
     tokens_used: int = Field(default=0, ge=0)
     cost_usd: float = Field(default=0.0, ge=0.0)

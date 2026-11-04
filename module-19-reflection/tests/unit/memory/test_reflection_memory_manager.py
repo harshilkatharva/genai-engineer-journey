@@ -68,7 +68,7 @@ def _make_candidate(round_number: int, report: Report, composite_score: float) -
             ),
         },
         overall_feedback="Feedback",
-        judge_model="gemini-2.5-pro",
+        judge_model="gemini-3.1-flash-lite",
     )
     return ReportCandidate(
         round_number=round_number,
