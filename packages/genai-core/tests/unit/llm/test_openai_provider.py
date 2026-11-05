@@ -197,3 +197,20 @@ async def test_openai_provider_stream() -> None:
         chunks.append(chunk)
 
     assert "".join(chunks) == "Hello world"
+
+
+@pytest.mark.asyncio
+async def test_openai_provider_per_call_model_override() -> None:
+    client = cast(Any, FakeOpenAIClient())
+    provider = OpenAIProvider(client=client, model="gpt-default")
+
+    # Structure completion override
+    await provider.complete_structure("Hi", model="gpt-4o-override")
+    assert client.responses.calls[-1]["model"] == "gpt-4o-override"
+
+    # Tool completion override
+    await provider.complete_tool(
+        [ChatMessage(role="user", content="Hi")],
+        model="gpt-4o-override-tool",
+    )
+    assert client.responses.calls[-1]["model"] == "gpt-4o-override-tool"

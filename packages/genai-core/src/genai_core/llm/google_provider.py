@@ -57,14 +57,16 @@ class GoogleProvider(LLMProvider):
         prompt: str,
         response_schema: type[BaseModel] | None = None,
         max_retries: int | None = None,
+        model: str | None = None,
     ) -> LLMResponseModel:
+        effective_model = model or self.model
         if response_schema is None:
             start = time.perf_counter()
             config = types.GenerateContentConfig(
                 temperature=self.temperature,
             )
             response = await self.client.aio.models.generate_content(
-                model=self.model,
+                model=effective_model,
                 contents=prompt,
                 config=config,
             )
@@ -73,7 +75,7 @@ class GoogleProvider(LLMProvider):
             return LLMResponseModel(
                 text=getattr(response, "text", None),
                 structured_response=None,
-                model=getattr(response, "model_version", None) or self.model,
+                model=getattr(response, "model_version", None) or effective_model,
                 latency_ms=latency,
                 input_tokens=(getattr(usage, "prompt_token_count", 0) if usage else 0) or 0,
                 output_tokens=(getattr(usage, "candidates_token_count", 0) if usage else 0) or 0,
@@ -98,7 +100,7 @@ class GoogleProvider(LLMProvider):
 
         for attempt in range(effective_max_retries + 1):
             response = await self.client.aio.models.generate_content(
-                model=self.model,
+                model=effective_model,
                 contents=current_prompt,
                 config=config,
             )
@@ -118,7 +120,7 @@ class GoogleProvider(LLMProvider):
                     return LLMResponseModel(
                         text=response_text,
                         structured_response=validated_output,
-                        model=getattr(response, "model_version", None) or self.model,
+                        model=getattr(response, "model_version", None) or effective_model,
                         latency_ms=latency,
                         input_tokens=total_input_tokens,
                         output_tokens=total_output_tokens,
@@ -154,7 +156,9 @@ class GoogleProvider(LLMProvider):
         messages: list[ChatMessage],
         tools: list[ToolSpec] | None = None,
         tool_choice: ToolChoice | None = None,
+        model: str | None = None,
     ) -> LLMResponseModel:
+        effective_model = model or self.model
         declarations = [
             types.FunctionDeclaration(**tool.to_google_function_declaration())
             for tool in tools or []
@@ -253,7 +257,7 @@ class GoogleProvider(LLMProvider):
             try:
                 self._last_call_time = time.monotonic()
                 response = await self.client.aio.models.generate_content(
-                    model=self.model, contents=contents, config=config
+                    model=effective_model, contents=contents, config=config
                 )
                 break
             except Exception as exc:
@@ -295,14 +299,17 @@ class GoogleProvider(LLMProvider):
         return LLMResponseModel(
             text=getattr(response, "text", None) if not calls else None,
             tool_calls=calls,
-            model=getattr(response, "model_version", None) or self.model,
+            model=getattr(response, "model_version", None) or effective_model,
             latency_ms=(time.perf_counter() - start) * 1000,
             input_tokens=getattr(usage, "prompt_token_count", 0) or 0,
             output_tokens=getattr(usage, "candidates_token_count", 0) or 0,
             raw_response=response,
         )
 
-    async def stream(self, messages: list[ChatMessage] | str) -> AsyncIterator[str]:
+    async def stream(
+        self, messages: list[ChatMessage] | str, model: str | None = None
+    ) -> AsyncIterator[str]:
+        effective_model = model or self.model
         system_instruction: str | None = None
         if isinstance(messages, str):
             contents: list[types.Content] = [
@@ -332,7 +339,7 @@ class GoogleProvider(LLMProvider):
         if config is not None:
             kwargs["config"] = config
         stream_or_coro = self.client.aio.models.generate_content_stream(
-            model=self.model,
+            model=effective_model,
             contents=contents,
             **kwargs,
         )

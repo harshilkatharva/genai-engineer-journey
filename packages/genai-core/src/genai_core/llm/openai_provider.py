@@ -61,11 +61,13 @@ class OpenAIProvider(LLMProvider):
         prompt: str,
         response_schema: type[BaseModel] | None = None,
         max_retries: int | None = None,
+        model: str | None = None,
     ) -> LLMResponseModel:
+        effective_model = model or self.model
         if response_schema is None:
             start = time.perf_counter()
             request_kwargs: dict[str, Any] = {
-                "model": self.model,
+                "model": effective_model,
                 "input": prompt,
             }
             if self.temperature is not None:
@@ -78,7 +80,7 @@ class OpenAIProvider(LLMProvider):
             return LLMResponseModel(
                 text=getattr(response, "output_text", None),
                 structured_response=None,
-                model=getattr(response, "model", self.model),
+                model=getattr(response, "model", effective_model),
                 latency_ms=latency,
                 input_tokens=getattr(usage, "input_tokens", 0) if usage else 0,
                 output_tokens=getattr(usage, "output_tokens", 0) if usage else 0,
@@ -98,7 +100,7 @@ class OpenAIProvider(LLMProvider):
         for attempt in range(effective_max_retries + 1):
             prepared_schema = self._prepare_strict_json_schema(response_schema.model_json_schema())
             request_kwargs = {
-                "model": self.model,
+                "model": effective_model,
                 "input": current_prompt,
                 "text": {
                     "format": {
@@ -128,7 +130,7 @@ class OpenAIProvider(LLMProvider):
                     return LLMResponseModel(
                         text=output_text,
                         structured_response=validated_output,
-                        model=getattr(response, "model", self.model),
+                        model=getattr(response, "model", effective_model),
                         latency_ms=latency,
                         input_tokens=total_input_tokens,
                         output_tokens=total_output_tokens,
@@ -164,7 +166,9 @@ class OpenAIProvider(LLMProvider):
         messages: list[ChatMessage],
         tools: list[ToolSpec] | None = None,
         tool_choice: ToolChoice | None = None,
+        model: str | None = None,
     ) -> LLMResponseModel:
+        effective_model = model or self.model
         request_tools: list[FunctionToolParam] = []
         for tool in tools or []:
             request_tools.append(tool.to_openai_tool())
@@ -208,7 +212,7 @@ class OpenAIProvider(LLMProvider):
                 input_items.append({"role": message.role, "content": message.content})
 
         response = await self.client.responses.create(
-            model=self.model,
+            model=effective_model,
             input=cast(
                 ResponseInputParam,
                 input_items,
@@ -235,14 +239,17 @@ class OpenAIProvider(LLMProvider):
         return LLMResponseModel(
             text=getattr(response, "output_text", None) if not calls else None,
             tool_calls=calls,
-            model=getattr(response, "model", self.model),
+            model=getattr(response, "model", effective_model),
             latency_ms=(time.perf_counter() - start) * 1000,
             input_tokens=getattr(usage, "input_tokens", 0) if usage else 0,
             output_tokens=getattr(usage, "output_tokens", 0) if usage else 0,
             raw_response=response,
         )
 
-    async def stream(self, messages: list[ChatMessage] | str) -> AsyncIterator[str]:
+    async def stream(
+        self, messages: list[ChatMessage] | str, model: str | None = None
+    ) -> AsyncIterator[str]:
+        effective_model = model or self.model
         input_data: Any
         if isinstance(messages, str):
             input_data = messages
@@ -252,7 +259,7 @@ class OpenAIProvider(LLMProvider):
                 [message.model_dump(exclude_none=True) for message in messages],
             )
         async with self.client.responses.stream(
-            model=self.model,
+            model=effective_model,
             input=input_data,
         ) as stream:
             async for event in stream:

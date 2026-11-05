@@ -10,6 +10,7 @@ class LLMManagerRequest(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
     provider: str | None = None
+    model: str | None = None
     prompt: str | None = None
     messages: list[ChatMessage] = Field(default_factory=list)
     tools: list[ToolSpec] = Field(default_factory=list)

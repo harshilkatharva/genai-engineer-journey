@@ -31,7 +31,7 @@ class FakeGoogleModels:
     async def generate_content(self, *, model: Any, contents: Any, config: Any) -> Any:
         self.contents = contents
         self.config = config
-        self.call_history.append({"contents": contents, "config": config})
+        self.call_history.append({"model": model, "contents": contents, "config": config})
         parts = []
         if self.function_call:
             parts.append(
@@ -297,3 +297,21 @@ async def test_google_provider_complete_tool_429_backoff() -> None:
 
     response = await provider.complete_tool([ChatMessage(role="user", content="Hi")])
     assert response.text == "Recovered from 429"
+
+
+@pytest.mark.asyncio
+async def test_google_provider_per_call_model_override() -> None:
+    models = FakeGoogleModels(response_text="Done")
+    client = cast(Any, SimpleNamespace(aio=SimpleNamespace(models=models)))
+    provider = GoogleProvider(client=client, model="gemini-default")
+
+    # 1. Structure completion override
+    await provider.complete_structure(prompt="Hi", model="gemini-override-struct")
+    assert models.call_history[-1]["model"] == "gemini-override-struct"
+
+    # 2. Tool completion override
+    await provider.complete_tool(
+        messages=[ChatMessage(role="user", content="Hi")],
+        model="gemini-override-tool",
+    )
+    assert models.call_history[-1]["model"] == "gemini-override-tool"

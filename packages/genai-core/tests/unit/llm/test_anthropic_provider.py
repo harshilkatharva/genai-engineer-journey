@@ -176,3 +176,20 @@ async def test_anthropic_provider_stream() -> None:
         chunks.append(chunk)
 
     assert "".join(chunks) == "Hello from Claude"
+
+
+@pytest.mark.asyncio
+async def test_anthropic_provider_per_call_model_override() -> None:
+    client = cast(Any, FakeAnthropicClient())
+    provider = AnthropicProvider(client=client, model="claude-default")
+
+    # Structure completion override
+    await provider.complete_structure("Hi", model="claude-3-opus-override")
+    assert client.messages.calls[-1]["model"] == "claude-3-opus-override"
+
+    # Tool completion override
+    await provider.complete_tool(
+        [ChatMessage(role="user", content="Hi")],
+        model="claude-3-haiku-override",
+    )
+    assert client.messages.calls[-1]["model"] == "claude-3-haiku-override"

@@ -41,11 +41,13 @@ class FaithfulnessEvaluator:
         self,
         llm_service: LLMService,
         provider: str | None = None,
+        model: str | None = None,
         name: str = "faithfulness",
         pass_threshold: float = 0.8,
     ) -> None:
         self.llm_service = llm_service
         self.provider = provider
+        self.model = model
         self.name = name
         self.pass_threshold = pass_threshold
 
@@ -81,6 +83,7 @@ class FaithfulnessEvaluator:
             prompt=prompt,
             response_schema=JudgeVerdict,
             provider=self.provider,
+            model=self.model,
         )
 
         if resp.error is not None:

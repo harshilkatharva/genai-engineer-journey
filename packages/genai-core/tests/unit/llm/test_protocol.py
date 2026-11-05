@@ -15,20 +15,27 @@ from genai_core.models import ChatMessage, LLMResponseModel, ToolChoice, ToolSpe
 
 class MockCustomProvider:
     async def complete_structure(
-        self, prompt: str, response_schema: type[BaseModel] | None = None
+        self,
+        prompt: str,
+        response_schema: type[BaseModel] | None = None,
+        max_retries: int | None = None,
+        model: str | None = None,
     ) -> LLMResponseModel:
-        return LLMResponseModel(text="structured", model="mock", latency_ms=1.0)
+        return LLMResponseModel(text="structured", model=model or "mock", latency_ms=1.0)
 
     async def complete_tool(
         self,
         messages: list[ChatMessage],
         tools: list[ToolSpec] | None = None,
         tool_choice: ToolChoice | None = None,
+        model: str | None = None,
     ) -> LLMResponseModel:
-        return LLMResponseModel(text="tool", model="mock", latency_ms=1.0)
+        return LLMResponseModel(text="tool", model=model or "mock", latency_ms=1.0)
 
-    async def stream(self, messages: list[ChatMessage]) -> AsyncIterator[str]:
-        yield "chunk"
+    async def stream(
+        self, messages: list[ChatMessage] | str, model: str | None = None
+    ) -> AsyncIterator[str]:
+        yield f"chunk_{model or 'mock'}"
 
 
 def test_custom_provider_conforms_to_protocol() -> None:

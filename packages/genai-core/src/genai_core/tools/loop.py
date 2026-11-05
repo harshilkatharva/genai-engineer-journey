@@ -56,6 +56,7 @@ class ToolLoopRunner:
         timeout_s: float | None = None,
         initial_iterations: int = 0,
         initial_tool_calls: int = 0,
+        model: str | None = None,
     ) -> ToolLoopResult:
         """Run the bounded tool loop until completion, budget exhaustion, or approval pause."""
         effective_timeout = timeout_s if timeout_s is not None else self.default_timeout_s
@@ -113,6 +114,7 @@ class ToolLoopRunner:
                     tools=active_specs,
                     tool_choice=tool_choice,
                     provider=provider,
+                    model=model,
                 )
             except Exception as exc:  # noqa: BLE001
                 msg = f"LLM completion error: {type(exc).__name__}: {exc}"
@@ -303,6 +305,7 @@ class ToolLoopRunner:
         initial_iterations: int = 0,
         initial_tool_calls: int = 0,
         remaining_tool_calls: list[ToolCall] | None = None,
+        model: str | None = None,
     ) -> ToolLoopResult:
         """Resume execution of a paused tool loop after human or caller authorization decision."""
         if self.executor.approval_store is not None:
@@ -386,4 +389,5 @@ class ToolLoopRunner:
             timeout_s=timeout_s,
             initial_iterations=initial_iterations,
             initial_tool_calls=initial_tool_calls,
+            model=model,
         )

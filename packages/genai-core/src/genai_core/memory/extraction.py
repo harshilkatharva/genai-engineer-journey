@@ -98,6 +98,7 @@ class MemoryExtractor(Protocol):
         existing_memories: list[LongTermMemoryRecord],
         custom_prompt_template: str | None = None,
         llm_provider: str | None = None,
+        llm_model: str | None = None,
     ) -> list[MemoryCandidate]:
         """Extract memory candidates from conversation context."""
         ...
@@ -116,6 +117,7 @@ class LLMMemoryExtractor:
         existing_memories: list[LongTermMemoryRecord],
         custom_prompt_template: str | None = None,
         llm_provider: str | None = None,
+        llm_model: str | None = None,
     ) -> list[MemoryCandidate]:
         """Analyze conversation history and return validated memory candidates."""
         if not messages:
@@ -162,6 +164,7 @@ class LLMMemoryExtractor:
 
         request = LLMManagerRequest(
             provider=llm_provider,
+            model=llm_model,
             messages=[
                 ChatMessage(role="system", content=system_prompt),
                 ChatMessage(role="user", content=user_content),

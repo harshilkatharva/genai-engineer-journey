@@ -37,11 +37,13 @@ class AnswerRelevanceEvaluator:
         self,
         llm_service: LLMService,
         provider: str | None = None,
+        model: str | None = None,
         name: str = "answer_relevance",
         pass_threshold: float = 0.8,
     ) -> None:
         self.llm_service = llm_service
         self.provider = provider
+        self.model = model
         self.name = name
         self.pass_threshold = pass_threshold
 
@@ -65,6 +67,7 @@ class AnswerRelevanceEvaluator:
             prompt=prompt,
             response_schema=JudgeVerdict,
             provider=self.provider,
+            model=self.model,
         )
 
         if resp.error is not None:

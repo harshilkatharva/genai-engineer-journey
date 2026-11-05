@@ -18,31 +18,31 @@ class CitySchema(BaseModel):
 
 
 class FailingProvider:
-    async def complete_structure(self, prompt: str, response_schema=None):
+    async def complete_structure(self, prompt: str, response_schema=None, model=None):
         error: Any = RuntimeError("provider temporarily unavailable")
         error.status_code = 503
         error.code = "service_unavailable"
         raise error
 
-    async def complete_tool(self, messages, tools=None, tool_choice=None):
+    async def complete_tool(self, messages, tools=None, tool_choice=None, model=None):
         error: Any = RuntimeError("provider temporarily unavailable")
         error.status_code = 503
         error.code = "service_unavailable"
         raise error
 
-    async def stream(self, messages):
+    async def stream(self, messages, model=None):
         if False:
             yield ""
 
 
 class ValidationFailingProvider:
-    async def complete_structure(self, prompt: str, response_schema=None):
+    async def complete_structure(self, prompt: str, response_schema=None, model=None):
         raise LLMValidationError("Output failed schema validation after retries.")
 
-    async def complete_tool(self, messages, tools=None, tool_choice=None):
+    async def complete_tool(self, messages, tools=None, tool_choice=None, model=None):
         raise LLMValidationError("Tool output failed schema validation.")
 
-    async def stream(self, messages):
+    async def stream(self, messages, model=None):
         if False:
             yield ""
 
@@ -50,16 +50,39 @@ class ValidationFailingProvider:
 class SuccessfulProvider:
     def __init__(self, response: LLMResponseModel) -> None:
         self.response = response
+        self.last_model: str | None = None
 
-    async def complete_structure(self, prompt: str, response_schema=None):
-        return self.response
+    async def complete_structure(self, prompt: str, response_schema=None, model=None):
+        self.last_model = model
+        resp = self.response.model_copy()
+        if model:
+            resp.model = model
+        return resp
 
-    async def complete_tool(self, messages, tools=None, tool_choice=None):
-        return self.response
+    async def complete_tool(self, messages, tools=None, tool_choice=None, model=None):
+        self.last_model = model
+        resp = self.response.model_copy()
+        if model:
+            resp.model = model
+        return resp
 
-    async def stream(self, messages):
+    async def stream(self, messages, model=None):
+        self.last_model = model
         yield "token1"
         yield "token2"
+
+
+class LegacyProviderWithoutModel:
+    """Simulates a third-party custom provider whose complete_* methods don't accept model."""
+
+    async def complete_structure(self, prompt: str, response_schema=None):
+        return LLMResponseModel(text="legacy_structured", model="legacy-model", latency_ms=1.0)
+
+    async def complete_tool(self, messages, tools=None, tool_choice=None):
+        return LLMResponseModel(text="legacy_tool", model="legacy-model", latency_ms=1.0)
+
+    async def stream(self, messages):
+        yield "legacy_chunk"
 
 
 def make_request(provider: str) -> LLMManagerRequest:
@@ -269,3 +292,122 @@ async def test_stream_unsupported_provider_raises_value_error() -> None:
     with pytest.raises(ValueError, match="Unsupported provider"):
         async for _ in service.stream("unknown", "hello"):
             pass
+
+
+@pytest.mark.asyncio
+async def test_llm_service_initialization_with_model() -> None:
+    provider_response = LLMResponseModel(text="test", model="default-model", latency_ms=1.0)
+    provider = SuccessfulProvider(provider_response)
+    service = LLMService(
+        providers={"test": provider},
+        default_provider="test",
+        model="custom-init-model",
+    )
+
+    assert service.default_model == "custom-init-model"
+
+    response = await service.complete_structure(prompt="Hello")
+    assert response.error is None
+    assert provider.last_model == "custom-init-model"
+    assert response.model == "custom-init-model"
+
+
+@pytest.mark.asyncio
+async def test_complete_structure_with_per_call_model_override() -> None:
+    provider_response = LLMResponseModel(text="test", model="default-model", latency_ms=1.0)
+    provider = SuccessfulProvider(provider_response)
+    service = LLMService(
+        providers={"test": provider},
+        default_provider="test",
+        default_model="service-default-model",
+    )
+
+    # Per-call model override must take precedence over service default
+    response = await service.complete_structure(prompt="Hello", model="override-structure-model")
+    assert response.error is None
+    assert provider.last_model == "override-structure-model"
+    assert response.model == "override-structure-model"
+
+
+@pytest.mark.asyncio
+async def test_complete_tool_with_per_call_model_override() -> None:
+    provider_response = LLMResponseModel(
+        tool_calls=[ToolCall(id="c1", name="search", arguments={})],
+        model="default-model",
+        latency_ms=1.0,
+    )
+    provider = SuccessfulProvider(provider_response)
+    service = LLMService(
+        providers={"test": provider},
+        default_provider="test",
+        model="service-default-model",
+    )
+
+    response = await service.complete_tool(
+        messages=[ChatMessage(role="user", content="find info")],
+        model="override-tool-model",
+    )
+    assert response.error is None
+    assert provider.last_model == "override-tool-model"
+    assert response.model == "override-tool-model"
+
+
+@pytest.mark.asyncio
+async def test_complete_with_request_model() -> None:
+    provider_response = LLMResponseModel(text="test", model="default-model", latency_ms=1.0)
+    provider = SuccessfulProvider(provider_response)
+    service = LLMService(providers={"test": provider}, default_provider="test")
+
+    req = LLMManagerRequest(
+        provider="test",
+        model="explicit-request-model",
+        prompt="Hi",
+    )
+    response = await service.complete(req)
+    assert response.error is None
+    assert provider.last_model == "explicit-request-model"
+    assert response.model == "explicit-request-model"
+
+
+@pytest.mark.asyncio
+async def test_stream_with_model_override() -> None:
+    provider_response = LLMResponseModel(text="", model="default-model", latency_ms=1.0)
+    provider = SuccessfulProvider(provider_response)
+    service = LLMService(providers={"test": provider}, default_provider="test")
+
+    chunks = []
+    async for chunk in service.stream("test", "hi", model="stream-override-model"):
+        chunks.append(chunk)
+
+    assert provider.last_model == "stream-override-model"
+    assert len(chunks) == 2
+
+
+@pytest.mark.asyncio
+async def test_legacy_provider_without_model_parameter_fallback() -> None:
+    legacy_prov = LegacyProviderWithoutModel()
+    service = LLMService(
+        providers={"legacy": legacy_prov},
+        default_provider="legacy",
+        model="ignored-by-legacy",
+    )
+
+    # complete_structure fallback
+    resp1 = await service.complete_structure(
+        prompt="Hi", response_schema=CitySchema, model="new-model"
+    )
+    assert resp1.error is None
+    assert resp1.text == "legacy_structured"
+
+    # complete_tool fallback
+    resp2 = await service.complete_tool(
+        messages=[ChatMessage(role="user", content="Hi")], model="new-model"
+    )
+    assert resp2.error is None
+    assert resp2.text == "legacy_tool"
+
+    # stream fallback
+    chunks = []
+    async for c in service.stream("legacy", "Hi", model="new-model"):
+        chunks.append(c)
+    assert chunks == ["legacy_chunk"]

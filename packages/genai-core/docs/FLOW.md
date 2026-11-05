@@ -151,11 +151,13 @@ flowchart TD
 - **Execution Flow**:
   1. Receives an [`LLMManagerRequest`](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/models/llm_model/llm_manager_request.py).
   2. Resolves provider name via precedence: `request.provider` -> `self.default_provider` -> `settings.default_llm_provider` -> fallback `"google"`.
-  3. Checks `self.providers.get(provider_name)`.
-  4. If provider is `None`: immediately returns `LLMManagerResponse(error=LLMError(provider=provider_name, code="unsupported_provider", message=...))`.
-  5. **Operation Routing**:
-     - **If `request.response_schema is not None`**: extracts prompt and calls `await provider.complete_structure(prompt=prompt, response_schema=request.response_schema)`.
-     - **If `request.response_schema is None`**: builds messages and calls `await provider.complete_tool(messages=messages, tools=request.tools, tool_choice=request.tool_choice)`.
+  3. Resolves effective model name via precedence: `request.model` -> `self.default_model` (if provider is default provider) -> adapter `provider.model` -> `settings.default_llm_model`.
+  4. Checks `self.providers.get(provider_name)`.
+  5. If provider is `None`: immediately returns `LLMManagerResponse(error=LLMError(provider=provider_name, code="unsupported_provider", message=...))`.
+  6. **Operation Routing**:
+     - **If `request.response_schema is not None`**: extracts prompt and calls `await provider.complete_structure(prompt=prompt, response_schema=request.response_schema, model=model_name)`.
+     - **If `request.response_schema is None`**: builds messages and calls `await provider.complete_tool(messages=messages, tools=request.tools, tool_choice=request.tool_choice, model=model_name)`.
+     - Automatically falls back to invocations without `model` if a legacy custom provider raises `TypeError`.
 
 ### 2.2 Provider Adapters
 - **Google Gemini (`GoogleProvider`)**: Uses `google-genai` SDK. Supports native JSON schema constraints, function calling declarations, delta streaming, and multi-turn tool execution:

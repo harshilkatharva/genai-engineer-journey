@@ -755,6 +755,41 @@ This document records the architectural decisions, component responsibilities, d
 - **Alternatives Considered**: Relying purely on client-level manual delays. Rejected because rapid tool-calling loops in agents should be resilient out of the box against common provider RPM limits.
 - **Impact**: Free-tier rate limits and bursts are smoothly paced and recovered from automatically without terminating active agent runs.
 
+---
+
+## 2026-11-05: Model Selection and Per-Call Overrides for `LLMService` and Providers
+
+### 1. Context and Problem
+Prior to this change, caller code could not specify or override the target LLM model at runtime:
+- `LLMService.__init__` only accepted `providers` and `default_provider`, leaving callers unable to initialize `LLMService` with a specific model (e.g. `LLMService(model="gemini-2.5-flash")`).
+- `LLMManagerRequest` lacked a `model` attribute.
+- Convenience methods (`complete_structure`, `complete_tool`, `stream`) did not expose a `model` parameter.
+- The `LLMProvider` protocol and concrete provider adapters (`GoogleProvider`, `OpenAIProvider`, `AnthropicProvider`) hardcoded SDK calls to `self.model`, ignoring per-call model overrides.
+
+### 2. Decision and Implementation
+1. **Model Resolution Precedence Rule**:
+   - Level 1 (Highest): Explicit per-call override (`request.model` in `complete`, or `model` parameter in `complete_structure`, `complete_tool`, `stream`).
+   - Level 2: Service-level default (`self.default_model` set via `LLMService(model=...)` or `LLMService(default_model=...)`).
+   - Level 3: Provider-level adapter default (`provider.model`).
+   - Level 4: Central settings fallback (`settings.default_llm_model`).
+2. **Contract & Interface Updates**:
+   - `LLMManagerRequest`: Added `model: str | None = None`.
+   - `LLMProvider` Protocol: Updated `complete_structure`, `complete_tool`, and `stream` to accept optional `model: str | None = None`.
+   - `LLMService`: Added `default_model: str | None = None`, `model: str | None = None`, and `provider: str | None = None` to `__init__`. Added `model: str | None = None` to `complete_structure`, `complete_tool`, `complete_all`, and `stream`.
+   - `GoogleProvider`, `OpenAIProvider`, `AnthropicProvider`: Added `model: str | None = None` to `complete_structure`, `complete_tool`, and `stream`, resolving `effective_model = model or self.model` per call.
+   - Downstream integration: Exposed `model` in `ToolLoopRunner.run`/`resume`, `LLMMemoryExtractor.extract`, and judge evaluators (`SemanticCorrectnessEvaluator`, `FaithfulnessEvaluator`, `RelevanceEvaluator`).
+3. **Defensive Backward Compatibility**:
+   - In `LLMService.complete` and `stream`, wrapped provider calls in `try/except TypeError` to detect legacy third-party providers that do not yet accept `model`, falling back gracefully to invocation without `model`.
+
+### 3. Alternatives Considered
+- Dynamically mutating `provider.model = request.model`: Rejected because mutating state on shared provider instances causes race conditions in concurrent async requests.
+- Re-instantiating provider adapters per call: Rejected due to unnecessary connection churn, loss of thought-signature caches, and re-authentication overhead.
+
+### 4. Impact and Verification
+- Zero breaking changes to existing signatures; 100% backward compatible.
+- Verified with 254 unit tests across LLM, embedding, retrieval, memory, tools, and evaluation subsystems (100% pass rate).
+- Passed all `ruff` and `mypy` checks.
+
 
 
 

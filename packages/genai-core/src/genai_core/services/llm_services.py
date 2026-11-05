@@ -36,21 +36,39 @@ class LLMService:
         self,
         providers: dict[str, LLMProvider] | None = None,
         default_provider: str | None = None,
+        default_model: str | None = None,
+        model: str | None = None,
+        provider: str | None = None,
     ) -> None:
-        self.default_provider = default_provider
+        self.default_provider = provider or default_provider
+        self.default_model = model or default_model
         if providers is not None:
             self.providers = providers
         else:
-            self.providers = self._init_default_providers()
+            self.providers = self._init_default_providers(
+                default_provider=self.default_provider,
+                default_model=self.default_model,
+            )
 
-    def _init_default_providers(self) -> dict[str, LLMProvider]:
+    def _init_default_providers(
+        self,
+        default_provider: str | None = None,
+        default_model: str | None = None,
+    ) -> dict[str, LLMProvider]:
         providers: dict[str, LLMProvider] = {}
+        target_provider = default_provider or "google"
         with contextlib.suppress(Exception):
-            providers["google"] = GoogleProvider()
+            providers["google"] = GoogleProvider(
+                model=default_model if target_provider == "google" else None
+            )
         with contextlib.suppress(Exception):
-            providers["openai"] = OpenAIProvider()
+            providers["openai"] = OpenAIProvider(
+                model=default_model if target_provider == "openai" else None
+            )
         with contextlib.suppress(Exception):
-            providers["anthropic"] = AnthropicProvider()
+            providers["anthropic"] = AnthropicProvider(
+                model=default_model if target_provider == "anthropic" else None
+            )
         return providers
 
     async def complete(self, request: LLMManagerRequest) -> LLMManagerResponse:
@@ -62,12 +80,25 @@ class LLMService:
             or getattr(settings, "default_llm_provider", "google")
             or "google"
         )
+        model_name: str | None = request.model
+        if (
+            model_name is None
+            and self.default_model is not None
+            and (
+                request.provider is None
+                or request.provider == self.default_provider
+                or provider_name == self.default_provider
+            )
+        ):
+            model_name = self.default_model
+
         safe_log(
             _logger,
             20,  # INFO
             "LLM request initiated",
             event=ObservabilityEvent.LLM_REQUEST_START,
             provider=provider_name,
+            model=model_name,
             has_schema=bool(request.response_schema),
             tools_count=len(request.tools or []),
             messages_count=len(request.messages or []),
@@ -112,18 +143,39 @@ class LLMService:
                     prompt = "\n\n".join(parts) if parts else ""
                 else:
                     prompt = ""
-                response = await provider.complete_structure(
-                    prompt=prompt, response_schema=request.response_schema
-                )
+                try:
+                    response = await provider.complete_structure(
+                        prompt=prompt,
+                        response_schema=request.response_schema,
+                        model=model_name,
+                    )
+                except TypeError as type_err:
+                    if "model" in str(type_err):
+                        response = await provider.complete_structure(
+                            prompt=prompt, response_schema=request.response_schema
+                        )
+                    else:
+                        raise
             else:
                 messages = list(request.messages)
                 if not messages and request.prompt:
                     messages = [ChatMessage(role="user", content=request.prompt)]
-                response = await provider.complete_tool(
-                    messages=messages,
-                    tools=request.tools,
-                    tool_choice=request.tool_choice,
-                )
+                try:
+                    response = await provider.complete_tool(
+                        messages=messages,
+                        tools=request.tools,
+                        tool_choice=request.tool_choice,
+                        model=model_name,
+                    )
+                except TypeError as type_err:
+                    if "model" in str(type_err):
+                        response = await provider.complete_tool(
+                            messages=messages,
+                            tools=request.tools,
+                            tool_choice=request.tool_choice,
+                        )
+                    else:
+                        raise
         except LLMValidationError as error:
             latency_ms = round((time.perf_counter() - start_time) * 1000, 2)
             safe_log(
@@ -213,9 +265,11 @@ class LLMService:
         prompt: str,
         response_schema: type[BaseModel] | None = None,
         provider: str | None = None,
+        model: str | None = None,
     ) -> LLMManagerResponse:
         request = LLMManagerRequest(
             provider=provider,
+            model=model,
             prompt=prompt,
             response_schema=response_schema,
         )
@@ -227,9 +281,11 @@ class LLMService:
         tools: list[ToolSpec] | None = None,
         tool_choice: ToolChoice | None = None,
         provider: str | None = None,
+        model: str | None = None,
     ) -> LLMManagerResponse:
         request = LLMManagerRequest(
             provider=provider,
+            model=model,
             messages=messages,
             tools=tools or [],
             tool_choice=tool_choice or ToolChoice(),
@@ -240,16 +296,28 @@ class LLMService:
         self,
         prompt: str,
         response_schema: type[BaseModel] | None = None,
+        model: str | None = None,
     ) -> list[LLMResponseModel | BaseException]:
-        tasks = [
-            provider.complete_structure(prompt=prompt, response_schema=response_schema)
-            for provider in self.providers.values()
-        ]
+        tasks = []
+        for provider in self.providers.values():
+            try:
+                tasks.append(
+                    provider.complete_structure(
+                        prompt=prompt, response_schema=response_schema, model=model
+                    )
+                )
+            except TypeError:
+                tasks.append(
+                    provider.complete_structure(prompt=prompt, response_schema=response_schema)
+                )
         results = await asyncio.gather(*tasks, return_exceptions=True)
         return results
 
     async def stream(
-        self, provider_name: str, messages: list[ChatMessage] | str
+        self,
+        provider_name: str,
+        messages: list[ChatMessage] | str,
+        model: str | None = None,
     ) -> AsyncIterator[str]:
         start_time = time.perf_counter()
         provider = self.providers.get(provider_name)
@@ -264,19 +332,34 @@ class LLMService:
             )
             raise ValueError(f"Unsupported provider: {provider_name}")
 
+        effective_model = model or (
+            self.default_model
+            if (self.default_provider is None or provider_name == self.default_provider)
+            else None
+        )
+
         safe_log(
             _logger,
             20,  # INFO
             "LLM stream initiated",
             event=ObservabilityEvent.LLM_STREAM_START,
             provider=provider_name,
+            model=effective_model,
         )
 
         if isinstance(messages, str):
             messages = [ChatMessage(role="user", content=messages)]
 
         try:
-            async for token in provider.stream(messages):
+            try:
+                stream_iter = provider.stream(messages, model=effective_model)
+            except TypeError as type_err:
+                if "model" in str(type_err):
+                    stream_iter = provider.stream(messages)
+                else:
+                    raise
+
+            async for token in stream_iter:
                 yield token
             latency_ms = round((time.perf_counter() - start_time) * 1000, 2)
             safe_log(

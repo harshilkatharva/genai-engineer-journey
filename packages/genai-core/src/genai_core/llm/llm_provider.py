@@ -19,6 +19,8 @@ class LLMProvider(Protocol):
         self,
         prompt: str,
         response_schema: type[BaseModel] | None = None,
+        max_retries: int | None = None,
+        model: str | None = None,
     ) -> LLMResponseModel: ...
 
     async def complete_tool(
@@ -26,6 +28,11 @@ class LLMProvider(Protocol):
         messages: list[ChatMessage],
         tools: list[ToolSpec] | None = None,
         tool_choice: ToolChoice | None = None,
+        model: str | None = None,
     ) -> LLMResponseModel: ...
 
-    def stream(self, messages: list[ChatMessage]) -> AsyncIterator[str]: ...
+    def stream(
+        self,
+        messages: list[ChatMessage] | str,
+        model: str | None = None,
+    ) -> AsyncIterator[str]: ...

@@ -191,6 +191,17 @@ Streaming, automatic tool execution, automatic retries beyond the basic safe pol
 - **Free-Tier Call Pacing**: `GoogleProvider` enforces a minimum inter-call interval (`min_call_interval=3.0` seconds) to avoid bursting past Gemini free-tier 15 RPM limits.
 - **Adaptive 429 Backoff**: Intercepts `429`, `quota`, and `resource_exhausted` errors, extracts Google's suggested `retry in X.Xs` duration from the error message, and applies backoff up to 4 attempts before escalating to callers.
 
+### 5.11 Model Configuration and Resolution Precedence
+- **Service Initialization Configuration**: `LLMService` accepts `model` or `default_model` at initialization time (`LLMService(model=...)`), alongside optional `provider` or `default_provider`. When default providers are instantiated, the target provider receives the specified default model.
+- **Per-Call Model Overrides**: Callers can dynamically override the model on a per-request basis via `LLMManagerRequest.model`, `LLMService.complete_structure(model=...)`, `LLMService.complete_tool(model=...)`, and `LLMService.stream(model=...)`.
+- **Resolution Precedence**:
+  1. `request.model` (explicit per-call argument) takes highest precedence.
+  2. `self.default_model` configured on `LLMService` applies when the request does not specify a different provider or uses the default provider.
+  3. `provider.model` configured on the concrete provider adapter applies.
+  4. `settings.default_llm_model` acts as the repository-wide environment fallback.
+- **Stateless Execution**: Model overrides are evaluated per request without mutating provider instance state, ensuring thread and async task safety.
+- **Graceful Backward Compatibility**: `LLMService` safely catches `TypeError` for legacy custom providers that do not accept a `model` parameter, invoking them without the argument.
+
 
 ## 6. Implemented capability: embeddings
 
