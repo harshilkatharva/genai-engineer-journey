@@ -52,7 +52,7 @@ In accordance with repository change control rules, decisions are marked with th
 - **Context:** Large language models exhibit systematic self-preference bias when evaluating their own outputs. Using the same model family and size for both generation and judging yields artificially inflated quality scores and misses subtle hallucinations.
 - **Decision:** Mandate model diversity across generator and judge roles:
   - **Generator Model:** `gemini-3.5-flash-lite` (or equivalent fast tier) to support high-throughput, low-latency drafting and revisions.
-  - **Judge Model:** `gemini-2.5-pro` (or OpenAI `gpt-4o` / Anthropic `claude-3-7-sonnet` via `genai-core.LLMService`) for multi-dimensional rubric scoring and claim entailment verification.
+  - **Judge Model:** `gemini-3.1-flash-lite` (or OpenAI `gpt-4o` / Anthropic `claude-3-7-sonnet` via `genai-core.LLMService`) for multi-dimensional rubric scoring and claim entailment verification.
   - **Fallback Policy:** If the secondary judge model is unavailable due to quota or provider outages, the system allows the generator model to act as judge, but **strictly requires**:
     1. Setting `is_self_judged = True` in evaluation metadata and run logs.
     2. Increasing the acceptance threshold by `+0.05` (from `0.85` to `0.90`) to counteract leniency bias.
@@ -243,5 +243,4 @@ In accordance with repository change control rules, decisions are marked with th
   5. Provide automated markdown table rendering and research question resolution: computing quality gain per dollar spent ($\Delta \text{Quality} / \Delta \text{Cost}$) and verifying that grounded reflection eliminates critical defects and increases machine acceptance.
 - **Alternatives Considered:** Running live web search during benchmarking. Rejected because web search results drift over time, preventing reproducible scientific comparison.
 - **Impact:** Delivers complete empirical verification resolving the central research question with statistical rigor and full auditability.
-
 

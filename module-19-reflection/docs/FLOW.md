@@ -43,7 +43,7 @@ flowchart TB
     end
 
     subgraph JudgingEngine["5. Rubric Evaluation (src/self_improving_report_writer/judging/)"]
-        Judge["RubricJudge.evaluate()\n(gemini-2.5-pro / diversity fallback)"]
+        Judge["RubricJudge.evaluate()\n(gemini-3.1-flash-lite / diversity fallback)"]
         Rollup["Deterministic Math Rollup\n(Weighted composite score >= threshold)"]
         Judge --> Rollup
     end
@@ -218,7 +218,7 @@ sequenceDiagram
     rect rgb(255, 248, 240)
     Note over Caller,Judge: Rubric-Based Evaluation & Scoring
     Caller->>Judge: evaluate(report, sources, deterministic_report)
-    Judge->>Judge: Check model diversity (gemini-2.5-pro vs generator model)
+    Judge->>Judge: Check model diversity (gemini-3.1-flash-lite vs generator model)
     opt Model Diversity Compromised (Self-Judging)
         Judge->>Judge: Set is_self_judged=True, Threshold bumped +0.05 (0.85 -> 0.90)
     end
@@ -551,4 +551,3 @@ sequenceDiagram
     Runner-->>CLI: BenchmarkExecutionReport
     end
 ```
-

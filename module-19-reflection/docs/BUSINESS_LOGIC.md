@@ -276,7 +276,7 @@ The judge evaluates reports across seven explicit dimensions. Weights sum strict
 $$\text{Composite Score} = \sum_{i=1}^{7} w_i \times \text{Score}_i \quad \text{where} \quad \sum w_i = 1.0$$
 
 ### 3.2 Model Diversity & Fallback Self-Judging Disclosure
-- **Primary Strategy:** Generator uses `gemini-3.5-flash-lite`; judge uses a distinct, higher-capacity model (`gemini-2.5-pro` or Anthropic/OpenAI provider via `LLMService`).
+- **Primary Strategy:** Generator uses `gemini-3.5-flash-lite`; judge uses a distinct model (`gemini-3.1-flash-lite` or Anthropic/OpenAI provider via `LLMService`).
 - **Fallback Policy:** If the secondary judge model is unavailable:
   1. The system falls back to the generator model.
   2. The verdict metadata sets `is_self_judged = True`.
