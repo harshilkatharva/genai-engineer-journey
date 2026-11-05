@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, cast
 
 import pytest
 from pydantic import BaseModel
@@ -18,7 +18,9 @@ class CitySchema(BaseModel):
 
 
 class FailingProvider:
-    async def complete_structure(self, prompt: str, response_schema=None, model=None):
+    async def complete_structure(
+        self, prompt: str, response_schema=None, max_retries=None, model=None
+    ):
         error: Any = RuntimeError("provider temporarily unavailable")
         error.status_code = 503
         error.code = "service_unavailable"
@@ -36,7 +38,9 @@ class FailingProvider:
 
 
 class ValidationFailingProvider:
-    async def complete_structure(self, prompt: str, response_schema=None, model=None):
+    async def complete_structure(
+        self, prompt: str, response_schema=None, max_retries=None, model=None
+    ):
         raise LLMValidationError("Output failed schema validation after retries.")
 
     async def complete_tool(self, messages, tools=None, tool_choice=None, model=None):
@@ -52,7 +56,9 @@ class SuccessfulProvider:
         self.response = response
         self.last_model: str | None = None
 
-    async def complete_structure(self, prompt: str, response_schema=None, model=None):
+    async def complete_structure(
+        self, prompt: str, response_schema=None, max_retries=None, model=None
+    ):
         self.last_model = model
         resp = self.response.model_copy()
         if model:
@@ -387,7 +393,7 @@ async def test_stream_with_model_override() -> None:
 async def test_legacy_provider_without_model_parameter_fallback() -> None:
     legacy_prov = LegacyProviderWithoutModel()
     service = LLMService(
-        providers={"legacy": legacy_prov},
+        providers={"legacy": cast(Any, legacy_prov)},
         default_provider="legacy",
         model="ignored-by-legacy",
     )
