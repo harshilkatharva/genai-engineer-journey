@@ -23,6 +23,7 @@ from self_improving_report_writer.models.report import (
     Report,
     SourceReference,
 )
+from self_improving_report_writer.models.rubric import DimensionScore
 from self_improving_report_writer.verification.semantic_grounding_verifier import (
     SemanticGroundingVerifier,
 )
@@ -398,7 +399,7 @@ async def test_rubric_judge_with_429_retry(
     raw_eval = LLMJudgeEvaluation(
         overall_feedback="High quality",
         dimension_scores=[
-            {"dimension_name": k, "score": v, "passed": True, "reasoning": "Excellent"}
+            DimensionScore(dimension_name=k, score=v, passed=True, reasoning="Excellent")
             for k, v in scores.items()
         ],
     )
