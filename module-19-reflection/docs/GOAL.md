@@ -203,6 +203,25 @@ gantt
 - **Tests Required:** `tests/integration/test_benchmark_pipeline.py`.
 - **Acceptance Criteria:** Successfully executes 15 topics across all 3 conditions; outputs comparative metrics resolving the central research question.
 
+### [x] Milestone 9: Evaluation Improvements (Batched Claim Verification & 429 Rate-Limit Controller)
+- **Objective:** Eliminate Google 15 RPM rate limit bottlenecks and reduce LLM calls during benchmark evaluation.
+- **Scope:**
+  - **Improvement 1: Batched Claim Verification:** Group claims per section into a single LLM entailment call with chunk deduplication, defensive individual claim fallback, and XML context injection defense.
+  - **Improvement 2: HTTP 429 Rate-Limit Controller:** Local to `module-19-reflection` evaluation pipeline (zero changes to `packages/genai-core`), detect 429 responses, extract recommended retry delays, pause concurrent requests via an async barrier, retry automatically, and bound waiting within wall-clock deadlines.
+- **Key Files:**
+  - `src/self_improving_report_writer/core/rate_limit_controller.py`
+  - `src/self_improving_report_writer/core/config.py`
+  - `src/self_improving_report_writer/core/exceptions.py`
+  - `src/self_improving_report_writer/judging/prompts.py`
+  - `src/self_improving_report_writer/verification/semantic_grounding_verifier.py`
+  - `src/self_improving_report_writer/judging/rubric_judge.py`
+  - `src/self_improving_report_writer/eval/blinded_judge.py`
+  - `src/self_improving_report_writer/eval/runners.py`
+  - `src/self_improving_report_writer/reflection/orchestrator.py`
+- **Tests Required:** `tests/unit/verification/test_batch_claim_verification.py`, `tests/unit/core/test_rate_limit_controller.py`.
+- **Acceptance Criteria:** Reduces claim entailment LLM calls by 75-80%; automatically retries and pauses on Google API 429 responses without exceeding deadlines; zero changes to `packages/genai-core`.
+
+
 ---
 
 ## 6. Deliverables & Acceptance Criteria Summary

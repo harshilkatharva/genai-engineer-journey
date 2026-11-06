@@ -9,6 +9,10 @@ from genai_core import ObservabilityEvent, safe_log
 
 from self_improving_report_writer.core.config import ReportWriterConfig
 from self_improving_report_writer.core.exceptions import JudgingError
+from self_improving_report_writer.core.rate_limit_controller import (
+    EvaluationRateLimitController,
+    get_shared_rate_limit_controller,
+)
 from self_improving_report_writer.judging.prompts import (
     RUBRIC_JUDGE_SYSTEM_PROMPT,
     LLMJudgeEvaluation,
@@ -39,18 +43,23 @@ class RubricJudge:
         rubric_config: RubricConfig | None = None,
         judge_model: str | None = None,
         generator_model: str | None = None,
+        rate_limit_controller: EvaluationRateLimitController | None = None,
     ) -> None:
         self.llm_service = llm_service
         self.config = config or ReportWriterConfig()
         self.rubric_config = rubric_config or get_default_rubric_config()
         self.judge_model = judge_model or self.config.judge_model
         self.generator_model = generator_model or self.config.generator_model
+        self.rate_limit_controller = rate_limit_controller or get_shared_rate_limit_controller(
+            config=self.config
+        )
 
     async def evaluate(
         self,
         report: Report,
         sources: dict[str, SourceReference],
         deterministic_report: DeterministicVerificationReport | None = None,
+        deadline: float | None = None,
     ) -> ReportJudgeVerdict:
         """Evaluate a research report across all configured rubric dimensions."""
         base_threshold = self.rubric_config.acceptance_threshold
@@ -84,9 +93,11 @@ class RubricJudge:
         )
 
         # Call primary judge model
-        resp = await self.llm_service.complete_structure(
+        resp = await self.rate_limit_controller.complete_structure(
+            self.llm_service,
             prompt=f"{RUBRIC_JUDGE_SYSTEM_PROMPT}\n\n{prompt}",
             response_schema=LLMJudgeEvaluation,
+            deadline=deadline,
             # provider=target_model,
         )
 
@@ -101,9 +112,11 @@ class RubricJudge:
             target_model = self.generator_model
             is_self_judged = True
             effective_threshold = base_threshold + 0.05
-            resp = await self.llm_service.complete_structure(
+            resp = await self.rate_limit_controller.complete_structure(
+                self.llm_service,
                 prompt=f"{RUBRIC_JUDGE_SYSTEM_PROMPT}\n\n{prompt}",
                 response_schema=LLMJudgeEvaluation,
+                deadline=deadline,
                 # provider=target_model,
             )
 

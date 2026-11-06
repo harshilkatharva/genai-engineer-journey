@@ -187,21 +187,24 @@ sequenceDiagram
 
     rect rgb(240, 248, 255)
     Note over Caller,G2: Gate 2: Semantic Grounding Verification
-    Caller->>G2: verify_grounding(report, retrieved_sources)
-    loop For each factual Claim
-        alt No citations attached
-            G2->>G2: Flag MAJOR defect: Uncited Factual Claim (Score 0.0)
-        else Citations reference missing chunk
-            G2->>G2: Flag MAJOR defect: Missing Chunk ID (Score 0.0)
-        else Citations resolved
-            G2->>LLM: complete_structure(claim_text, cited_chunks, response_schema=ClaimEntailmentEvaluation)
-            LLM-->>G2: ClaimEntailmentEvaluation(entailment, score, reasoning)
-            alt ENTAILS
-                G2->>G2: Score 1.0 (Supported)
-            else NEUTRAL
-                G2->>G2: Flag MAJOR defect: Weak/Neutral Grounding (Score 0.5)
-            else CONTRADICTS
-                G2->>G2: Flag CRITICAL defect: Evidence Contradiction (Score 0.0)
+    Caller->>G2: verify_grounding(report, retrieved_sources, deadline)
+    loop For each Section
+        G2->>G2: Pre-check claims (flag uncited or missing chunk pointers without LLM)
+        opt Section has claims with valid citations
+            G2->>G2: Deduplicate cited source chunks across section
+            G2->>LLM: complete_structure(batch_prompt, response_schema=SectionClaimsEntailmentEvaluation, deadline)
+            LLM-->>G2: SectionClaimsEntailmentEvaluation(evaluations=[...])
+            loop For each claim verdict
+                alt ENTAILS
+                    G2->>G2: Score 1.0 (Supported)
+                else NEUTRAL
+                    G2->>G2: Flag MAJOR defect: Weak/Neutral Grounding (Score 0.5)
+                else CONTRADICTS
+                    G2->>G2: Flag CRITICAL defect: Evidence Contradiction (Score 0.0)
+                end
+            end
+            opt Claim omitted by LLM (fallback)
+                G2->>LLM: complete_structure(single_claim_prompt, response_schema=ClaimEntailmentEvaluation)
             end
         end
     end
@@ -551,3 +554,43 @@ sequenceDiagram
     Runner-->>CLI: BenchmarkExecutionReport
     end
 ```
+
+---
+
+## 9. Evaluation Pipeline Rate-Limit Control Flow (Google API 429 Resilience)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Eval as Evaluation Component<br/>(Verifier / Judge)
+    participant Ctrl as EvaluationRateLimitController<br/>(Shared Barrier)
+    participant LLM as LLMService / Google Provider
+    participant Timer as Monotonic Wall-Clock Deadline
+
+    Eval->>Ctrl: complete_structure(prompt, schema, deadline)
+    loop Up to max_retries
+        Ctrl->>Ctrl: wait_if_paused(deadline)
+        alt Pause Active & (now + pause >= deadline)
+            Ctrl-->>Eval: raise EvaluationRateLimitError("Pause exceeds deadline")
+        else Pause Active & (now + pause < deadline)
+            Ctrl->>Ctrl: await asyncio.sleep(remaining_pause)
+        end
+
+        Ctrl->>LLM: complete_structure(...)
+        alt Success (200 OK)
+            LLM-->>Ctrl: LLMManagerResponse(data)
+            Ctrl-->>Eval: LLMManagerResponse(data)
+        else HTTP 429 / RESOURCE_EXHAUSTED
+            LLM-->>Ctrl: LLMManagerResponse(error: 429, "Please retry in X.Xs")
+            Ctrl->>Ctrl: extract_retry_delay(error) + safety_buffer (1.0s)
+            alt Delay exceeds remaining deadline
+                Ctrl-->>Eval: return 429 response / raise EvaluationRateLimitError
+            else Delay fits within deadline
+                Ctrl->>Ctrl: pause_all(effective_delay) [Sets _pause_until barrier]
+                Note over Ctrl: Concurrent evaluation calls check barrier and pause
+                Ctrl->>Ctrl: Await delay expiration
+            end
+        end
+    end
+```
+

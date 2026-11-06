@@ -58,6 +58,7 @@ class BlindedJudge:
         report: Report,
         sources: dict[str, SourceReference] | list[SourceReference],
         deterministic_report: DeterministicVerificationReport | None = None,
+        deadline: float | None = None,
     ) -> ReportJudgeVerdict:
         """Perform blinded rubric evaluation on an anonymized report candidate.
 
@@ -65,6 +66,7 @@ class BlindedJudge:
             report: The report candidate to evaluate.
             sources: Authoritative source references.
             deterministic_report: Optional deterministic report for citation fact-checking.
+            deadline: Optional wall-clock monotonic deadline.
 
         Returns:
             ReportJudgeVerdict containing calibrated dimension and composite scores.
@@ -85,4 +87,5 @@ class BlindedJudge:
             report=anonymized,
             sources=sources_dict,
             deterministic_report=deterministic_report,
+            deadline=deadline,
         )

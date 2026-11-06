@@ -47,6 +47,32 @@ class ReportWriterConfig(BaseModel):
     acceptance_threshold: float = Field(
         default=0.85, ge=0.0, le=1.0, description="Composite score required for acceptance"
     )
+    batch_claim_evaluation: bool = Field(
+        default=True,
+        description="Whether to batch claim entailment verification per section to minimize LLM calls",
+    )
+    max_claims_per_batch: int = Field(
+        default=6,
+        ge=1,
+        le=20,
+        description="Maximum claims to evaluate in a single batched LLM entailment call",
+    )
+    eval_rate_limit_max_retries: int = Field(
+        default=3,
+        ge=0,
+        le=10,
+        description="Maximum automatic retries upon encountering HTTP 429 during evaluation",
+    )
+    eval_rate_limit_safety_buffer: float = Field(
+        default=1.0,
+        ge=0.0,
+        description="Safety buffer seconds added to recommended retry-after delay",
+    )
+    eval_rate_limit_default_backoff: float = Field(
+        default=10.0,
+        ge=0.1,
+        description="Default backoff seconds when 429 response does not specify retry delay",
+    )
 
 
 def get_default_config() -> ReportWriterConfig:

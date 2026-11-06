@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import time
 from collections.abc import Sequence
 from typing import TYPE_CHECKING
 
@@ -178,11 +179,17 @@ class ReflectionLoopOrchestrator:
 
         # 3. Evaluate Baseline Candidate
         det_report = self.deterministic_verifier.verify(current_report, source_list)
-        g2_report = await self.grounding_verifier.verify_grounding(current_report, source_list)
+        deadline = time.monotonic() + budget.remaining_seconds
+        g2_report = await self.grounding_verifier.verify_grounding(
+            current_report, source_list, deadline=deadline
+        )
         budget.record_usage(tokens=g2_report.tokens_used, cost_usd=g2_report.cost_usd)
 
         judge_verdict = await self.judge.evaluate(
-            current_report, source_dict, deterministic_report=det_report
+            current_report,
+            source_dict,
+            deterministic_report=det_report,
+            deadline=deadline,
         )
         budget.record_usage(tokens=judge_verdict.tokens_used, cost_usd=judge_verdict.cost_usd)
 
@@ -244,13 +251,18 @@ class ReflectionLoopOrchestrator:
 
             # Evaluate revised report
             rev_det_report = self.deterministic_verifier.verify(revised_report, source_list)
+            deadline = time.monotonic() + budget.remaining_seconds
             rev_g2_report = await self.grounding_verifier.verify_grounding(
-                revised_report, source_list
+                revised_report, source_list, deadline=deadline
             )
             budget.record_usage(tokens=rev_g2_report.tokens_used, cost_usd=rev_g2_report.cost_usd)
 
+            deadline = time.monotonic() + budget.remaining_seconds
             rev_judge_verdict = await self.judge.evaluate(
-                revised_report, source_dict, deterministic_report=rev_det_report
+                revised_report,
+                source_dict,
+                deterministic_report=rev_det_report,
+                deadline=deadline,
             )
             budget.record_usage(
                 tokens=rev_judge_verdict.tokens_used, cost_usd=rev_judge_verdict.cost_usd

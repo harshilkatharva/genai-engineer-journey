@@ -29,3 +29,7 @@ class BudgetExceededError(ReportWriterError):
 
 class ReflectionError(ReportWriterError):
     """Raised when reflection orchestration encounters unrecoverable failure."""
+
+
+class EvaluationRateLimitError(ReportWriterError):
+    """Raised when evaluation encounters rate limits that exceed retry budget or deadline."""

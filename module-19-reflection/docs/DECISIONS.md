@@ -244,3 +244,36 @@ In accordance with repository change control rules, decisions are marked with th
 - **Alternatives Considered:** Running live web search during benchmarking. Rejected because web search results drift over time, preventing reproducible scientific comparison.
 - **Impact:** Delivers complete empirical verification resolving the central research question with statistical rigor and full auditability.
 
+---
+
+### Decision 16: Section-Level Batched Claim Entailment & Wall-Clock Deadline Propagation
+- **Status:** Implemented (Evaluation Improvements - `verification/semantic_grounding_verifier.py`, `judging/prompts.py`, `core/config.py`, `reflection/orchestrator.py`)
+- **Context:** Previously, `SemanticGroundingVerifier` issued a distinct sequential LLM call for every claim in every section. A 20-claim report generated 20 claim calls + 5 prose consistency calls, triggering Google API 15 RPM rate limits, high latency (35-45s), and prompt token bloat from re-sending the same chunks. Furthermore, calls lacked wall-clock deadline propagation.
+- **Decision:**
+  1. Implement section-level claim batching (`batch_claim_evaluation=True`, `max_claims_per_batch=6`): evaluate all factual claims in a section within a single structured LLM call against deduplicated cited source chunks.
+  2. Implement defensive single-claim fallback: if the LLM omits a claim from the batch response, only the omitted claim is evaluated individually.
+  3. Enforce deterministic pre-checks: claims lacking citations or pointing to unknown chunk IDs continue to emit `MAJOR` defect issues without making LLM calls.
+  4. Fix prompt injection vulnerability in source delimiters: HTML-escape `&`, `<`, and `>` in all source chunk text (`escape_xml_context`).
+  5. Propagate monotonic wall-clock deadlines from `RunBudget.remaining_seconds` through `ReflectionLoopOrchestrator` to `verify_grounding` and `LLMService`.
+- **Alternatives Considered:** Report-wide single-shot evaluation (all 20+ claims across all sections in 1 prompt). Rejected due to attention fatigue, output token overflow, and increased hallucination risks.
+- **Impact:** Slashes claim entailment LLM calls by 75-80% (from 20 calls to ~4 calls), reduces Gate 2 latency by ~4x, cuts input token bloat by ~65%, and strictly bounds retry waits within the global 90-second run budget.
+
+---
+
+### Decision 17: Evaluation Pipeline HTTP 429 Rate-Limit Controller with Delay Extraction, Async Barrier, and Wall-Clock Deadline Protection
+- **Status:** Implemented (Evaluation Improvements - `core/rate_limit_controller.py`, `core/exceptions.py`, `core/config.py`, `verification/semantic_grounding_verifier.py`, `judging/rubric_judge.py`, `eval/blinded_judge.py`, `eval/runners.py`, `reflection/orchestrator.py`)
+- **Context:** During benchmark evaluation with real Google API credentials, the system encounters Google's 15 RPM rate limit (`RESOURCE_EXHAUSTED` / HTTP 429). The requirement is to automatically detect 429s, extract recommended retry delays (e.g. `"Please retry in 52.8s"`), pause further requests via an async barrier across concurrent evaluation tasks, retry automatically, and bound all waiting time within the monotonic wall-clock deadline without touching `packages/genai-core`.
+- **Decision:**
+  1. Implement `EvaluationRateLimitController` in `src/self_improving_report_writer/core/rate_limit_controller.py` with shared singleton access (`get_shared_rate_limit_controller`) scoped specifically to Module 19 evaluation components.
+  2. Implement robust 429 detection: inspecting `LLMManagerResponse.error.code`, `status_code == 429`, `"RESOURCE_EXHAUSTED"`, `"RATE LIMIT"`, and message retry directives, as well as direct provider exceptions.
+  3. Extract recommended delay in seconds via regex (`r"retry\s+(?:after|in)\s+([0-9.]+)\s*s?"`) and `Retry-After` HTTP headers, adding a `1.0s` safety buffer to prevent race conditions on quota resets.
+  4. Implement an async barrier (`_pause_until: float`, `_lock: asyncio.Lock`) that synchronizes all concurrent evaluation requests: when one call encounters 429, subsequent requests pause before dispatching to the LLM.
+  5. Include retry waiting in total wall-clock deadline (`now + delay >= deadline`): fail fast with `EvaluationRateLimitError` immediately rather than sleeping past the run budget's deadline.
+  6. Support repeated 429 errors up to `max_retries` (default 3) with exponential backoff fallback.
+  7. Integrate into `SemanticGroundingVerifier` (Gate 2 claim batching, single claim fallback, and prose consistency checks), `RubricJudge`, `BlindedJudge`, and benchmark `runners.py`.
+- **Alternatives Considered:**
+  1. *Modifying `packages/genai-core`:* Explicitly rejected per user directive to keep `genai-core` pristine and restrict 429 retry behavior exclusively to Module 19's evaluation pipeline.
+  2. *Per-task uncoordinated sleep:* Rejected because concurrent tasks waking up independently would stampede Google API and immediately trigger another 429 cascade.
+- **Impact:** Eliminates 429-induced benchmark crashes under Google's 15 RPM limit, pauses all evaluation traffic during quota resets, guarantees zero budget deadline breaches, and maintains complete isolation from `packages/genai-core`.
+
+

@@ -39,6 +39,32 @@ class ClaimEntailmentEvaluation(BaseModel):
     )
 
 
+class SingleClaimEntailmentVerdict(BaseModel):
+    """Structured entailment verdict for a single claim evaluated within a batch."""
+
+    claim_id: str = Field(description="Exact ID of the claim being evaluated")
+    entailment: Literal["ENTAILS", "NEUTRAL", "CONTRADICTS"] = Field(
+        description="Entailment relationship: ENTAILS (supported), NEUTRAL (insufficient/unsupported), CONTRADICTS (refuted)"
+    )
+    score: float = Field(
+        ge=0.0,
+        le=1.0,
+        description="Entailment score: 1.0 for ENTAILS, 0.5 for NEUTRAL, 0.0 for CONTRADICTS",
+    )
+    reasoning: str = Field(
+        description="Clear, concise rationale detailing why the context entails, lacks support for, or contradicts the claim"
+    )
+
+
+class SectionClaimsEntailmentEvaluation(BaseModel):
+    """Structured batch evaluation response containing individual verdicts for multiple claims."""
+
+    evaluations: list[SingleClaimEntailmentVerdict] = Field(
+        default_factory=list,
+        description="List of entailment verdicts for all evaluated claims in the section",
+    )
+
+
 class ProseConsistencyEvaluation(BaseModel):
     """Evaluation of whether section prose contains factual statements missing from structured claims."""
 
@@ -68,6 +94,11 @@ Evaluation Rules:
 """
 
 
+def escape_xml_context(text: str) -> str:
+    """Sanitize text embedded within XML isolation delimiters to prevent prompt injection."""
+    return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
 def build_rubric_judge_prompt(
     report: Report,
     rubric_config: RubricConfig,
@@ -90,11 +121,9 @@ def build_rubric_judge_prompt(
     # Format sources with untrusted isolation
     source_blocks = []
     for s_id, s_ref in sorted(sources.items()):
-        clean_content = s_ref.content.replace(
-            "<untrusted_source_context", "&lt;untrusted_source_context"
-        )
+        clean_content = escape_xml_context(s_ref.content)
         source_blocks.append(
-            f'<untrusted_source_context id="{s_id}" title="{s_ref.title}">\n'
+            f'<untrusted_source_context id="{s_id}" source_id="{s_ref.source_id}" title="{s_ref.title}">\n'
             f"{clean_content}\n"
             f"</untrusted_source_context>"
         )
@@ -167,7 +196,7 @@ def build_claim_entailment_prompt(
     """Build prompt to evaluate semantic entailment between a claim and its cited chunk passages."""
     chunk_blocks = []
     for c_id, content in cited_chunks:
-        clean_content = content.replace("<untrusted_source_context", "&lt;untrusted_source_context")
+        clean_content = escape_xml_context(content)
         chunk_blocks.append(
             f'<untrusted_source_context chunk_id="{c_id}">\n{clean_content}\n</untrusted_source_context>'
         )
@@ -185,6 +214,45 @@ def build_claim_entailment_prompt(
 {evidence_text}
 
 Determine whether the relationship is ENTAILS (1.0), NEUTRAL (0.5), or CONTRADICTS (0.0). Provide concise reasoning.
+"""
+
+
+def build_batch_claim_entailment_prompt(
+    section_id: str,
+    section_title: str,
+    claims: list[tuple[str, str, list[str]]],
+    cited_chunks: list[tuple[str, str]],
+) -> str:
+    """Build prompt to evaluate semantic entailment for multiple claims in a section against deduplicated source chunks."""
+    chunk_blocks = []
+    for c_id, content in cited_chunks:
+        clean_content = escape_xml_context(content)
+        chunk_blocks.append(
+            f'<untrusted_source_context chunk_id="{c_id}">\n{clean_content}\n</untrusted_source_context>'
+        )
+    evidence_text = "\n\n".join(chunk_blocks) if chunk_blocks else "NO CITED CHUNKS PROVIDED."
+
+    claim_blocks = []
+    for c_id, text, c_chunks in claims:
+        chunks_str = ", ".join(c_chunks) if c_chunks else "None"
+        claim_blocks.append(
+            f'- Claim ID: {c_id}\n  Statement: "{text}"\n  Referenced Chunk IDs: [{chunks_str}]'
+        )
+    claims_text = "\n\n".join(claim_blocks) if claim_blocks else "NO CLAIMS TO EVALUATE."
+
+    return f"""Evaluate whether each of the following factual claims from section '{section_title}' ({section_id}) is supported by the cited source chunk passages.
+
+### Cited Source Evidence:
+{evidence_text}
+
+### Claims to Evaluate:
+{claims_text}
+
+Instructions:
+1. Evaluate each claim independently against its referenced source chunk passages.
+2. Assign ENTAILS (1.0), NEUTRAL (0.5), or CONTRADICTS (0.0) for each claim.
+3. Ensure EVERY requested claim above has a corresponding evaluation entry in 'evaluations' with the exact matching claim_id.
+4. Provide concise, objective reasoning grounded strictly in the cited source passages.
 """
 
 

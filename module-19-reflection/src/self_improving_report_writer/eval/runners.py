@@ -120,12 +120,14 @@ async def run_approach_a(
     cost += gen_cost
 
     # Step 2: Evaluation
+    deadline = time.monotonic() + cfg.max_wall_clock_seconds
     det_report = det_ver.verify(initial_report, sources_map)
-    grd_report = await grd_ver.verify_grounding(initial_report, sources_map)
+    grd_report = await grd_ver.verify_grounding(initial_report, sources_map, deadline=deadline)
     judge_verdict = await judge.evaluate_blinded(
         report=initial_report,
         sources=sources_map,
         deterministic_report=det_report,
+        deadline=deadline,
     )
 
     candidate = ReportCandidate(
@@ -245,12 +247,14 @@ async def run_approach_b(
         cost += rev_cost
 
     # Step 3: Independent evaluation of final revised report
+    deadline = time.monotonic() + cfg.max_wall_clock_seconds
     det_report = det_ver.verify(current_report, sources_map)
-    grd_report = await grd_ver.verify_grounding(current_report, sources_map)
+    grd_report = await grd_ver.verify_grounding(current_report, sources_map, deadline=deadline)
     judge_verdict = await judge.evaluate_blinded(
         report=current_report,
         sources=sources_map,
         deterministic_report=det_report,
+        deadline=deadline,
     )
 
     candidate = ReportCandidate(
@@ -329,10 +333,12 @@ async def run_approach_c(
     best_report = best_cand.report
 
     # Blinded independent evaluation of best candidate
+    deadline = time.monotonic() + cfg.max_wall_clock_seconds
     blinded_verdict = await judge.evaluate_blinded(
         report=best_report,
         sources=sources_map,
         deterministic_report=best_cand.deterministic_report,
+        deadline=deadline,
     )
 
     acceptance = gate.evaluate_candidate(best_cand)
