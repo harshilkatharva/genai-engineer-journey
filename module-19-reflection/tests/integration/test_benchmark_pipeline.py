@@ -44,6 +44,8 @@ from self_improving_report_writer.models.verification import (
 from self_improving_report_writer.reflection.orchestrator import ReflectionRunResult
 from self_improving_report_writer.review.acceptance_gate import AcceptanceResult
 
+pytestmark = pytest.mark.integration
+
 
 def _build_test_report(
     topic: str = "Test Topic",

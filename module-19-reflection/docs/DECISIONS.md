@@ -277,3 +277,15 @@ In accordance with repository change control rules, decisions are marked with th
 - **Impact:** Eliminates 429-induced benchmark crashes under Google's 15 RPM limit, pauses all evaluation traffic during quota resets, guarantees zero budget deadline breaches, and maintains complete isolation from `packages/genai-core`.
 
 
+---
+
+### Decision 18: Integration Test Suite Gating via `INTEGRATION_TEST=1` Autouse Fixture
+- **Status:** Implemented (FINDING-15 - `tests/conftest.py`, `tests/integration/test_benchmark_pipeline.py`, `pyproject.toml`)
+- **Context:** Previously, running `uv run pytest tests/` unconditionally executed integration tests in `tests/integration/test_benchmark_pipeline.py`, violating the development workflow rule (`docs/DEVELOPMENT_WORKFLOW.md:62`) requiring integration tests to be gated behind `INTEGRATION_TEST=1`.
+- **Decision:**
+  1. Add autouse fixture `require_integration_test_flag` in `tests/conftest.py` with helper `check_integration_gate` skipping any test marked with `integration` when `INTEGRATION_TEST != "1"`.
+  2. Mark all tests in `tests/integration/test_benchmark_pipeline.py` with `pytestmark = pytest.mark.integration`.
+  3. Standardize marker in `pyproject.toml` to `"integration: marks tests that call external services"`.
+  4. Add unit test `tests/unit/core/test_integration_gating.py` to verify skipping when disabled and execution when enabled.
+- **Alternatives Considered:** Manual gating in each test function. Rejected due to code duplication and human error risk when adding new integration tests.
+- **Impact:** Aligns test execution with repository standard; pre-push checks run unit tests fast without inadvertently triggering integration suites unless explicitly requested.

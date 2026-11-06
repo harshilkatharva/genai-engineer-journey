@@ -59,7 +59,7 @@ asyncio_mode = "auto"
 testpaths = ["tests/unit", "tests/integration"]
 
 markers = [
-    "integration : marks tests that call external services"
+    "integration: marks tests that call external services"
 ]
 
 [tool.mypy]

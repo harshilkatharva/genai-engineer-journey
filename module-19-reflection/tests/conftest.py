@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+import os
+from collections.abc import Mapping
+from typing import Any
+
 import pytest
 
 from self_improving_report_writer.models.report import (
@@ -12,6 +16,22 @@ from self_improving_report_writer.models.report import (
     ReportSection,
     SourceReference,
 )
+
+
+def check_integration_gate(
+    keywords: Mapping[str, Any] | set[str], integration_env: str | None
+) -> None:
+    """Skip test if it is marked with integration and INTEGRATION_TEST != '1'."""
+    if "integration" in keywords and integration_env != "1":
+        pytest.skip(
+            "Integration tests are disabled. Set INTEGRATION_TEST=1 in .env or environment to run them."
+        )
+
+
+@pytest.fixture(autouse=True)
+def require_integration_test_flag(request: pytest.FixtureRequest) -> None:
+    """Gate tests marked with @pytest.mark.integration behind INTEGRATION_TEST=1."""
+    check_integration_gate(request.keywords, os.getenv("INTEGRATION_TEST"))
 
 
 @pytest.fixture
