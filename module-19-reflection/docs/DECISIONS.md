@@ -289,3 +289,22 @@ In accordance with repository change control rules, decisions are marked with th
   4. Add unit test `tests/unit/core/test_integration_gating.py` to verify skipping when disabled and execution when enabled.
 - **Alternatives Considered:** Manual gating in each test function. Rejected due to code duplication and human error risk when adding new integration tests.
 - **Impact:** Aligns test execution with repository standard; pre-push checks run unit tests fast without inadvertently triggering integration suites unless explicitly requested.
+
+---
+
+### Decision 19: Comprehensive Schema Validation and Prompt Builder Unit Test Coverage
+- **Status:** Implemented (FINDING-16, FINDING-17, Observation 10, Observation 11 - `tests/unit/models/`, `tests/unit/core/test_config.py`, `tests/unit/judging/test_judge_prompts.py`)
+- **Context:** An audit of test coverage revealed that multiple Pydantic domain models (`DimensionScore`, `ReportJudgeVerdict`, `ClaimGroundingResult`, `SemanticGroundingReport`, `CritiqueIssue`, `Critique`, `ReportCandidate`, `HumanReviewPacket`, `HumanReviewDecision`, `AcceptanceResult`, `HumanReviewOutcome`, `DeterministicVerificationReport`, `PassageMatchResult`, `VerificationIssue`, `ReportWriterConfig`, and judging prompt response schemas) lacked dedicated unit tests. Furthermore, prompt construction functions in `judging/prompts.py` (`build_rubric_judge_prompt`, `build_claim_entailment_prompt`, `build_batch_claim_entailment_prompt`, `build_prose_consistency_prompt`) had zero test coverage, preventing early detection of prompt injection escapes and missing XML attributes.
+- **Decision:**
+  1. Add dedicated model unit test suites:
+     - `tests/unit/models/test_rubric_models.py`
+     - `tests/unit/models/test_critique_models.py`
+     - `tests/unit/models/test_outcome_models.py`
+     - `tests/unit/models/test_verification_models.py`
+     - `tests/unit/models/test_judge_schemas.py`
+     - `tests/unit/core/test_config.py`
+  2. Add dedicated prompt builder unit test suite:
+     - `tests/unit/judging/test_judge_prompts.py`
+  3. Validate score bounds ($0.0 \le score \le 1.0$), non-empty string constraints, enum serializations, property computations, XML character escaping, and error handling for missing/empty arguments.
+- **Alternatives Considered:** Relying exclusively on end-to-end integration tests. Rejected because integration tests mock LLM responses and do not validate Pydantic boundary conditions or prompt string structures.
+- **Impact:** Closes critical test coverage gaps, guarantees Pydantic validation invariant enforcement, and ensures prompt structures and XML sanitization remain verified across future refactorings.
