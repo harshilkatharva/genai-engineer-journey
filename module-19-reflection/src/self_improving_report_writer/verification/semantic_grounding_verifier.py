@@ -17,13 +17,15 @@ from self_improving_report_writer.core.rate_limit_controller import (
 from self_improving_report_writer.judging.prompts import (
     CLAIM_ENTAILMENT_SYSTEM_PROMPT,
     PROSE_CONSISTENCY_SYSTEM_PROMPT,
+    build_batch_claim_entailment_prompt,
+    build_claim_entailment_prompt,
+    build_prose_consistency_prompt,
+)
+from self_improving_report_writer.models.llm_schemas import (
     ClaimEntailmentEvaluation,
     ProseConsistencyEvaluation,
     SectionClaimsEntailmentEvaluation,
     SingleClaimEntailmentVerdict,
-    build_batch_claim_entailment_prompt,
-    build_claim_entailment_prompt,
-    build_prose_consistency_prompt,
 )
 from self_improving_report_writer.models.report import Claim, Report, SourceReference
 from self_improving_report_writer.models.rubric import ClaimGroundingResult, SemanticGroundingReport

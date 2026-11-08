@@ -1,0 +1,14 @@
+Evaluate whether each of the following factual claims from section '{{ section_title }}' ({{ section_id }}) is supported by the cited source chunk passages.
+
+### Cited Source Evidence:
+{{ evidence_text }}
+
+### Claims to Evaluate:
+{{ claims_text }}
+
+Instructions:
+1. Evaluate each claim independently against its referenced source chunk passages.
+2. Assign ENTAILS (1.0), NEUTRAL (0.5), or CONTRADICTS (0.0) for each claim.
+3. Ensure EVERY requested claim above has a corresponding evaluation entry in 'evaluations' with the exact matching claim_id.
+4. Provide concise, objective reasoning grounded strictly in the cited source passages.
+

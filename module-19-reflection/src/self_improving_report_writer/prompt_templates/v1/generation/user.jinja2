@@ -1,0 +1,14 @@
+RESEARCH TOPIC:
+{{ topic }}
+{% if guidelines %}
+
+ADDITIONAL WRITING GUIDELINES TO OBSERVE:
+{% for g in guidelines %}
+- {{ g }}
+{% endfor %}
+{% endif %}
+
+AVAILABLE SOURCE EVIDENCE:
+{{ sources_text }}
+
+Generate the complete structured Report adhering strictly to the required schema.

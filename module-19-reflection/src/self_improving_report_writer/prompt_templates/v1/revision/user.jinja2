@@ -1,0 +1,22 @@
+Please revise the research report below to resolve all identified critique issues.
+
+### Research Topic:
+{{ topic }}
+
+### Prioritized Critique Issues to Resolve (Round {{ round_number }}):
+{{ critique_block }}
+
+### Available Verified Sources (Ground Truth Evidence):
+{{ sources_text }}
+
+### Current Report Under Revision (Version {{ current_version }}):
+```json
+{{ report_json }}
+```
+
+Instructions:
+1. Fix all CRITICAL and MAJOR issues identified in the critique.
+2. For quotations, copy verbatim substrings from the source chunks above.
+3. Keep all valid, verified claims and citations intact.
+4. Increment version to {{ target_version }} and set created_by to 'revision_llm'.
+5. Return the full, updated Report object matching the schema.

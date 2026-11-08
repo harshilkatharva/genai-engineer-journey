@@ -308,3 +308,18 @@ In accordance with repository change control rules, decisions are marked with th
   3. Validate score bounds ($0.0 \le score \le 1.0$), non-empty string constraints, enum serializations, property computations, XML character escaping, and error handling for missing/empty arguments.
 - **Alternatives Considered:** Relying exclusively on end-to-end integration tests. Rejected because integration tests mock LLM responses and do not validate Pydantic boundary conditions or prompt string structures.
 - **Impact:** Closes critical test coverage gaps, guarantees Pydantic validation invariant enforcement, and ensures prompt structures and XML sanitization remain verified across future refactorings.
+
+---
+
+### Decision 20: Isolated Prompt Templates via Jinja2 & Migration of Evaluation Schemas to Models
+- **Status:** Implemented (Observations 5 & 6 - `models/llm_schemas.py`, `prompt_templates/`, `prompts/manager.py`, `tests/unit/prompts/`)
+- **Context:** Previously, Pydantic response schemas for LLM structured output (`LLMJudgeEvaluation`, `ClaimEntailmentEvaluation`, `SingleClaimEntailmentVerdict`, `SectionClaimsEntailmentEvaluation`, `ProseConsistencyEvaluation`) were defined inside `judging/prompts.py`, causing `verification/` to cross-import models from `judging/`. In addition, prompt string templates and hardcoded system prompts were scattered across domain packages without a unified versioning or template loading mechanism.
+- **Decision:**
+  1. Move all LLM response schemas to `models/llm_schemas.py` and export from `models/__init__.py`. Re-export backwards-compatibly in `judging/prompts.py`.
+  2. Decouple `verification/semantic_grounding_verifier.py` to import models directly from `models.llm_schemas`.
+  3. Create a dedicated prompt template directory `prompt_templates/v1/` storing templates as individual `.jinja2` files organized by domain (`generation/`, `revision/`, `judging/`, `verification/`).
+  4. Implement `PromptTemplateManager` in `prompts/manager.py` using Jinja2 with custom `escape_xml` filter, versioning support, template listing, and version metadata.
+  5. Refactor `generation/prompts.py`, `judging/prompts.py`, and `reflection/revision_engine.py` to delegate rendering to `PromptTemplateManager`.
+  6. Add unit test suite in `tests/unit/prompts/` testing the template manager and each individual prompt template.
+- **Alternatives Considered:** Inlining templates as Python multiline strings. Rejected because Jinja2 template files allow external prompt version control, syntax highlighting, tracing, and dynamic inheritance without touching Python source code.
+- **Impact:** Enforces architectural layering consistency (all Pydantic schemas in `models/`), eliminates cross-domain import spaghetti, and establishes a versioned, traceable prompt management infrastructure powered by Jinja2.

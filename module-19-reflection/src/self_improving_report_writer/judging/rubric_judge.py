@@ -15,9 +15,9 @@ from self_improving_report_writer.core.rate_limit_controller import (
 )
 from self_improving_report_writer.judging.prompts import (
     RUBRIC_JUDGE_SYSTEM_PROMPT,
-    LLMJudgeEvaluation,
     build_rubric_judge_prompt,
 )
+from self_improving_report_writer.models.llm_schemas import LLMJudgeEvaluation
 from self_improving_report_writer.models.report import Report, SourceReference
 from self_improving_report_writer.models.rubric import (
     DimensionScore,
