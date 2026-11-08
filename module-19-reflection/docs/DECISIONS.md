@@ -339,3 +339,17 @@ In accordance with repository change control rules, decisions are marked with th
   4. Ensure unit tests remain offline and fast by injecting `InMemoryVectorStore` or mock retrieval/embedding services.
 - **Alternatives Considered:** Leaving `InMemoryVectorStore` as the default runtime store. Rejected because production search requires durable persistence and index scaling provided by PostgreSQL `pgvector`.
 - **Impact:** Eliminates crashes during autonomous source retrieval, configures production-grade PostgreSQL storage by default, satisfies `RetrievalService` embedding prerequisites, and preserves offline isolation for unit tests.
+
+---
+
+### Decision 22: Explicit Model Diversity Enforcement & Runtime Self-Judging Detection
+- **Status:** Implemented (FINDING-02 Option A - `judging/rubric_judge.py`, `generation/report_generator.py`, `reflection/revision_engine.py`, `core/rate_limit_controller.py`, `tests/unit/judging/test_model_diversity_enforcement.py`)
+- **Context:** Previously, `RubricJudge`, `ReportGenerator`, and `RevisionEngine` had `provider=target_model` commented out and omitted passing `model` and `provider` to `complete_structure`. Consequently, all components ran against the default model (`gemini-3.5-flash-lite`), causing the generator model to evaluate its own output while `is_self_judged` erroneously evaluated to `False` due to divergent config strings (`judge_model="gemini-3.1-flash-lite"` vs `generator_model="gemini-3.5-flash-lite"`). This completely bypassed the required +0.05 self-judging penalty and model diversity safeguards.
+- **Decision:**
+  1. Update `RubricJudge.evaluate` to pass `model=target_model` and `provider=target_provider` to `complete_structure` for primary judge calls, and `model=self.generator_model` and `provider=self.config.generator_provider` for fallback calls.
+  2. Implement Option A runtime model verification in `RubricJudge`: inspect `resp.model` in `LLMManagerResponse`; if the returned model matches `self.generator_model`, dynamically flag `is_self_judged = True`, adjust `effective_threshold = min(1.0, base_threshold + 0.05)`, and log an audit warning.
+  3. Update `ReportGenerator` and `RevisionEngine` to accept and forward `model` and `provider` to `complete_structure`.
+  4. Update `RateLimitController.complete_structure` to accept and forward `model` and `provider`, gracefully falling back if `deadline` is unsupported by the underlying LLM service.
+  5. Add dedicated test suite `tests/unit/judging/test_model_diversity_enforcement.py` validating explicit model routing, fallback behavior, dynamic self-judging detection, and generator/revision engine parameter forwarding.
+- **Alternatives Considered:** Option B (shared service injection with multiple `LLMService` instances). Rejected for Option A because Option A enforces model parameters at call sites and provides dynamic runtime detection without modifying `packages/genai-core`.
+- **Impact:** Guarantees model diversity between generator and judge, prevents self-affirmation bias, enforces the +0.05 penalty whenever the generator model evaluates reports, and provides complete traceability in audit logs.

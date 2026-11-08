@@ -27,11 +27,13 @@ class ReportGenerator:
         llm_service: LLMService,
         config: ReportWriterConfig | None = None,
         provider: str | None = None,
+        model: str | None = None,
     ) -> None:
         """Initialize generator with LLMService and configuration."""
         self.llm_service = llm_service
         self.config = config or get_default_config()
         self.provider = provider or self.config.generator_provider
+        self.model = model or self.config.generator_model
 
     async def generate_report(
         self,
@@ -70,7 +72,8 @@ class ReportGenerator:
             response = await self.llm_service.complete_structure(
                 prompt=prompt,
                 response_schema=Report,
-                # provider=self.provider,
+                provider=self.provider,
+                model=self.model,
             )
         except Exception as exc:
             safe_log(

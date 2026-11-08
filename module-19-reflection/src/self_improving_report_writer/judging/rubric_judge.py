@@ -43,6 +43,7 @@ class RubricJudge:
         rubric_config: RubricConfig | None = None,
         judge_model: str | None = None,
         generator_model: str | None = None,
+        judge_provider: str | None = None,
         rate_limit_controller: EvaluationRateLimitController | None = None,
     ) -> None:
         self.llm_service = llm_service
@@ -50,6 +51,7 @@ class RubricJudge:
         self.rubric_config = rubric_config or get_default_rubric_config()
         self.judge_model = judge_model or self.config.judge_model
         self.generator_model = generator_model or self.config.generator_model
+        self.judge_provider = judge_provider or self.config.judge_provider
         self.rate_limit_controller = rate_limit_controller or get_shared_rate_limit_controller(
             config=self.config
         )
@@ -68,6 +70,7 @@ class RubricJudge:
         is_self_judged = self.judge_model == self.generator_model
         effective_threshold = base_threshold + (0.05 if is_self_judged else 0.0)
         target_model = self.judge_model
+        target_provider = self.judge_provider
 
         if is_self_judged:
             safe_log(
@@ -98,7 +101,8 @@ class RubricJudge:
             prompt=f"{RUBRIC_JUDGE_SYSTEM_PROMPT}\n\n{prompt}",
             response_schema=LLMJudgeEvaluation,
             deadline=deadline,
-            # provider=target_model,
+            provider=target_provider,
+            model=target_model,
         )
 
         # Check for error and fallback if applicable
@@ -110,20 +114,37 @@ class RubricJudge:
                 f"Falling back to generator model {self.generator_model}.",
             )
             target_model = self.generator_model
+            target_provider = self.config.generator_provider
             is_self_judged = True
-            effective_threshold = base_threshold + 0.05
+            effective_threshold = min(1.0, base_threshold + 0.05)
             resp = await self.rate_limit_controller.complete_structure(
                 self.llm_service,
                 prompt=f"{RUBRIC_JUDGE_SYSTEM_PROMPT}\n\n{prompt}",
                 response_schema=LLMJudgeEvaluation,
                 deadline=deadline,
-                # provider=target_model,
+                provider=target_provider,
+                model=target_model,
             )
 
         if resp.error is not None:
             raise JudgingError(
                 f"Rubric judge execution failed for model {target_model}: {resp.error.message}"
             )
+
+        # Runtime model identity verification (Option A)
+        actual_model = getattr(resp, "model", None)
+        if actual_model and actual_model == self.generator_model and not is_self_judged:
+            is_self_judged = True
+            effective_threshold = min(1.0, base_threshold + 0.05)
+            safe_log(
+                logger,
+                logging.WARNING,
+                f"Model diversity check: Returned model '{actual_model}' matches generator model '{self.generator_model}'. "
+                f"Engaging self-judging penalty (+0.05) to raise effective threshold to {effective_threshold:.2f}.",
+                event=ObservabilityEvent.LLM_REQUEST_START,
+            )
+        if actual_model:
+            target_model = actual_model
 
         raw_eval = resp.structured_response
         if raw_eval is None:

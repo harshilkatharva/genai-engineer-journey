@@ -333,17 +333,36 @@ class EvaluationRateLimitController:
         prompt: str,
         response_schema: type[T],
         deadline: float | None = None,
+        provider: str | None = None,
+        model: str | None = None,
         **kwargs: Any,
     ) -> LLMManagerResponse:
         """Call LLMService.complete_structure with rate-limit and deadline management."""
 
         async def _call() -> LLMManagerResponse:
-            return await llm_service.complete_structure(
-                prompt=prompt,
-                response_schema=response_schema,
-                deadline=deadline,
-                **kwargs,
-            )
+            call_kwargs = dict(kwargs)
+            if provider is not None:
+                call_kwargs["provider"] = provider
+            if model is not None:
+                call_kwargs["model"] = model
+            if deadline is not None:
+                call_kwargs["deadline"] = deadline
+
+            try:
+                return await llm_service.complete_structure(
+                    prompt=prompt,
+                    response_schema=response_schema,
+                    **call_kwargs,
+                )
+            except TypeError as te:
+                if "deadline" in str(te) and "deadline" in call_kwargs:
+                    call_kwargs.pop("deadline", None)
+                    return await llm_service.complete_structure(
+                        prompt=prompt,
+                        response_schema=response_schema,
+                        **call_kwargs,
+                    )
+                raise
 
         return await self.execute_with_retry(_call, deadline=deadline)
 
