@@ -99,7 +99,7 @@ class ReflectionLoopOrchestrator:
         self.llm_service = llm_service
         self.config = config or get_default_config()
 
-        self.retriever = retriever or SourceRetriever()
+        self.retriever = retriever or SourceRetriever(config=self.config)
         self.generator = generator or ReportGenerator(
             llm_service=self.llm_service,
             config=self.config,

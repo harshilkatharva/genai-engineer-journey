@@ -14,6 +14,12 @@ from self_improving_report_writer.core.config import (
 def test_default_config() -> None:
     """Test default values of ReportWriterConfig."""
     config = get_default_config()
+    assert config.database_url == "postgresql://localhost:5432/ai_search"
+    assert config.vector_store_backend == "pgvector"
+    assert config.vector_store_table == "document_chunks"
+    assert config.embedding_provider == "local"
+    assert config.embedding_model == "all-MiniLM-L6-v2"
+    assert config.embedding_dimensions == 384
     assert config.generator_provider == "google"
     assert config.generator_model == "gemini-3.5-flash-lite"
     assert config.judge_provider == "google"
@@ -65,3 +71,7 @@ def test_config_boundary_validation() -> None:
         ReportWriterConfig(max_claims_per_batch=0)
     with pytest.raises(ValidationError):
         ReportWriterConfig(max_claims_per_batch=21)
+
+    # embedding_dimensions must be >= 1
+    with pytest.raises(ValidationError):
+        ReportWriterConfig(embedding_dimensions=0)

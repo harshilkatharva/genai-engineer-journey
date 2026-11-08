@@ -323,3 +323,19 @@ In accordance with repository change control rules, decisions are marked with th
   6. Add unit test suite in `tests/unit/prompts/` testing the template manager and each individual prompt template.
 - **Alternatives Considered:** Inlining templates as Python multiline strings. Rejected because Jinja2 template files allow external prompt version control, syntax highlighting, tracing, and dynamic inheritance without touching Python source code.
 - **Impact:** Enforces architectural layering consistency (all Pydantic schemas in `models/`), eliminates cross-domain import spaghetti, and establishes a versioned, traceable prompt management infrastructure powered by Jinja2.
+
+---
+
+### Decision 21: PostgreSQL Runtime Default for Vector Storage with Required Embedding Service
+- **Status:** Implemented (FINDING-01 & Observation 4 - `core/config.py`, `retrieval/source_retriever.py`, `tests/unit/retrieval/test_source_retriever.py`)
+- **Context:** Previously, `SourceRetriever` defaulted to `InMemoryVectorStore(dimensions=768)` without providing an `EmbeddingService` to `RetrievalService`. In `genai-core`, default retrieval queries execute in dense mode (`SearchMode.DENSE`), which requires an active `EmbeddingService` and matching vector dimensions. Calling retrieval or indexing on default instances crashed with `RetrievalError`. Furthermore, `SourceRetriever` hardcoded `InMemoryVectorStore` rather than utilizing PostgreSQL vector storage for runtime persistence.
+- **Decision:**
+  1. Add PostgreSQL database configuration fields to `ReportWriterConfig`: `database_url` (default `"postgresql://localhost:5432/ai_search"`), `vector_store_backend` (default `"pgvector"`), `vector_store_table` (default `"document_chunks"`), `embedding_provider` (default `"local"`), `embedding_model` (default `"all-MiniLM-L6-v2"`), and `embedding_dimensions` (default `384`).
+  2. In `SourceRetriever.__init__`:
+     - Default runtime store to `PGVectorStoreAdapter` with connection factory targeting `database_url`.
+     - When `vector_store_backend == "memory"` or when `vector_store` is explicitly injected, configure `InMemoryVectorStore` for fast, zero-dependency offline testing.
+     - Automatically instantiate and configure `EmbeddingService` with dimensions matching the vector store, ensuring non-silent failure if missing or misconfigured.
+  3. Wrap document indexing with error handling to guarantee informative logging and `RetrievalError` raising rather than unhandled store crashes.
+  4. Ensure unit tests remain offline and fast by injecting `InMemoryVectorStore` or mock retrieval/embedding services.
+- **Alternatives Considered:** Leaving `InMemoryVectorStore` as the default runtime store. Rejected because production search requires durable persistence and index scaling provided by PostgreSQL `pgvector`.
+- **Impact:** Eliminates crashes during autonomous source retrieval, configures production-grade PostgreSQL storage by default, satisfies `RetrievalService` embedding prerequisites, and preserves offline isolation for unit tests.

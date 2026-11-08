@@ -7,11 +7,12 @@ from typing import TYPE_CHECKING, Any
 
 from genai_core import ObservabilityEvent, safe_log
 
+from ..core.config import ReportWriterConfig, get_default_config
 from ..core.exceptions import RetrievalError
 from ..models.report import SourceReference
 
 if TYPE_CHECKING:
-    from genai_core import DocumentChunk, RetrievalService, VectorStoreAdapter
+    from genai_core import DocumentChunk, EmbeddingService, RetrievalService, VectorStoreAdapter
 
 _logger = logging.getLogger("self_improving_report_writer.retrieval")
 
@@ -23,16 +24,76 @@ class SourceRetriever:
         self,
         retrieval_service: RetrievalService | None = None,
         vector_store: VectorStoreAdapter | None = None,
+        embedding_service: EmbeddingService | None = None,
+        config: ReportWriterConfig | None = None,
     ) -> None:
-        """Initialize retriever with an existing service or create an in-memory fallback."""
+        """Initialize retriever with PostgreSQL runtime defaults or in-memory testing store."""
+        self.config = config or get_default_config()
+
         if retrieval_service is not None:
             self.service = retrieval_service
+            self.store = getattr(retrieval_service, "store", vector_store)
+            self.embedding_service = getattr(
+                retrieval_service, "embedding_service", embedding_service
+            )
         else:
-            from genai_core import InMemoryVectorStore
             from genai_core import RetrievalService as CoreRetrievalService
 
-            store = vector_store or InMemoryVectorStore(dimensions=768)
-            self.service = CoreRetrievalService(store=store)
+            # Configure embedding service
+            if embedding_service is not None:
+                self.embedding_service = embedding_service
+            else:
+                from genai_core import EmbeddingService as CoreEmbeddingService
+
+                try:
+                    self.embedding_service = CoreEmbeddingService(
+                        provider=self.config.embedding_provider,
+                        model=self.config.embedding_model,
+                        dimensions=self.config.embedding_dimensions,
+                    )
+                except Exception as exc:
+                    safe_log(
+                        _logger,
+                        logging.ERROR,
+                        f"Failed to initialize required EmbeddingService: {exc}",
+                        event=ObservabilityEvent.RETRIEVAL_FAILED,
+                        error=str(exc),
+                    )
+                    raise RetrievalError(
+                        f"Failed to initialize required EmbeddingService: {exc}"
+                    ) from exc
+
+            # Configure vector store adapter
+            if vector_store is not None:
+                self.store = vector_store
+            elif self.config.vector_store_backend == "pgvector":
+                import psycopg
+                from genai_core import PGVectorStoreAdapter
+
+                def _conn_factory() -> Any:
+                    return psycopg.AsyncConnection.connect(self.config.database_url)
+
+                self.store = PGVectorStoreAdapter(
+                    dimensions=self.config.embedding_dimensions,
+                    table_name=self.config.vector_store_table,
+                    connection_factory=_conn_factory,
+                )
+            elif self.config.vector_store_backend == "memory":
+                from genai_core import InMemoryVectorStore
+
+                self.store = InMemoryVectorStore(dimensions=self.config.embedding_dimensions)
+            else:
+                raise ValueError(
+                    f"Unsupported vector_store_backend: '{self.config.vector_store_backend}'. "
+                    "Expected 'pgvector' or 'memory'."
+                )
+
+            self.service = CoreRetrievalService(
+                store=self.store,
+                embedding_service=self.embedding_service,
+            )
+
+        self.retrieval_service = self.service
 
     async def retrieve_sources(
         self,
@@ -129,4 +190,14 @@ class SourceRetriever:
                     )
                 )
 
-        return await self.service.index_documents(chunks)
+        try:
+            return await self.service.index_documents(chunks)
+        except Exception as exc:
+            safe_log(
+                _logger,
+                logging.ERROR,
+                f"Evidence indexing failed: {exc}",
+                event=ObservabilityEvent.RETRIEVAL_FAILED,
+                error=str(exc),
+            )
+            raise RetrievalError(f"Evidence indexing failed: {exc}") from exc
