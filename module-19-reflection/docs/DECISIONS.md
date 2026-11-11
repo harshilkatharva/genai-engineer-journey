@@ -392,3 +392,15 @@ In accordance with repository change control rules, decisions are marked with th
   3. Update `test_severity_based_revision_thresholds_major` docstring and add regression tests in `tests/unit/reflection/test_critique_major_defect_triggers_revision.py` verifying critique behavior and orchestrator/acceptance-gate consistency.
 - **Alternatives Considered:** Relaxing `AcceptanceGate` to accept major defects if scores exceed threshold. Rejected because Section 6.1 strictly requires zero major grounding defects and zero major defects for automated acceptance.
 - **Impact:** Eliminates contradictory `ALL_ACCEPTANCE_CRITERIA_MET` vs `UNRESOLVED` outcomes and allows the reflection loop to repair major defects whenever round/resource budgets permit.
+
+---
+
+### Decision 26: Separate Normal Max-Rounds Completion from Budget Exceeded Termination
+- **Status:** Implemented (FINDING-06 - `reflection/orchestrator.py`, `docs/FLOW.md`, `tests/unit/models/test_outcome_models.py`, `tests/unit/reflection/test_orchestrator_termination_reasons.py`)
+- **Context:** When `ReflectionLoopOrchestrator.run` completed all configured reflection rounds (`round_idx == max_reflection_rounds`) without triggering early acceptance or oscillation, `budget.check_budget_exceeded(current_round=round_idx)` returned `"MAX_ROUNDS_REACHED ..."`, and the orchestrator unconditionally formatted it as `"BUDGET_EXCEEDED: MAX_ROUNDS_REACHED ..."`. Normal scheduled loop completion was therefore mislabeled as a budget breach.
+- **Decision:**
+  1. Add `ReflectionLoopOrchestrator._format_budget_termination_reason` so breaches starting with `MAX_ROUNDS_REACHED` emit `"MAX_ROUNDS_REACHED"` (matching existing `orchestrator.py` and `review/` test conventions), while genuine resource exhaustions (`TOKENS_EXHAUSTED`, `COST_EXHAUSTED`, `TIME_EXHAUSTED`) continue emitting `"BUDGET_EXCEEDED: {breach}"`.
+  2. Replace duplicated `is_exhausted` + `check_budget_exceeded` calls at the end of each loop iteration with a single `check_budget_exceeded` check formatted through `_format_budget_termination_reason`.
+  3. Update `FLOW.md` Phase 3 termination branch and `tests/unit/models/test_outcome_models.py`, and add regression tests in `tests/unit/reflection/test_orchestrator_termination_reasons.py`.
+- **Alternatives Considered:** Removing round checks from `RunBudget.check_budget_exceeded`. Rejected because `RunBudget` intentionally enforces round limits (`test_budget_round_limit_exhaustion`) alongside token/cost/time bounds, whereas formatting the loop outcome belongs to `ReflectionLoopOrchestrator`.
+- **Impact:** Eliminates false-positive `BUDGET_EXCEEDED` labels on normal scheduled completion while preserving accurate error reporting when token, dollar, or wall-clock limits are breached.

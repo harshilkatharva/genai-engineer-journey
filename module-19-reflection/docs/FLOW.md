@@ -386,8 +386,10 @@ sequenceDiagram
         end
 
         Orch->>Budget: check_budget_exceeded(current_round=k)
-        opt Budget ceiling reached
+        alt Tokens, Cost, or Time exhausted
             Note over Orch: Break loop with BUDGET_EXCEEDED
+        else Max rounds completed normally
+            Note over Orch: Break loop with MAX_ROUNDS_REACHED
         end
     end
     end

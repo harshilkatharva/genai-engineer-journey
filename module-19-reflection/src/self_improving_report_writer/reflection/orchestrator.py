@@ -229,7 +229,7 @@ class ReflectionLoopOrchestrator:
             # Check budget before revising
             breach = budget.check_budget_exceeded(current_round=round_idx - 1)
             if breach:
-                termination_reason = f"BUDGET_EXCEEDED: {breach}"
+                termination_reason = self._format_budget_termination_reason(breach)
                 break
 
             safe_log(
@@ -325,16 +325,22 @@ class ReflectionLoopOrchestrator:
                 )
                 break
 
-            # Check if budget exhausted at end of round
-            if budget.is_exhausted(current_round=round_idx):
-                termination_reason = (
-                    f"BUDGET_EXCEEDED: {budget.check_budget_exceeded(current_round=round_idx)}"
-                )
+            # Check if round or resource budget exhausted at end of round
+            breach = budget.check_budget_exceeded(current_round=round_idx)
+            if breach:
+                termination_reason = self._format_budget_termination_reason(breach)
                 break
 
         return self._build_result(
             topic, candidates, budget, budget.rounds_executed, termination_reason
         )
+
+    @staticmethod
+    def _format_budget_termination_reason(breach: str) -> str:
+        """Distinguish normal max-rounds completion from resource budget exhaustion."""
+        if breach.startswith("MAX_ROUNDS_REACHED"):
+            return "MAX_ROUNDS_REACHED"
+        return f"BUDGET_EXCEEDED: {breach}"
 
     def _build_result(
         self,

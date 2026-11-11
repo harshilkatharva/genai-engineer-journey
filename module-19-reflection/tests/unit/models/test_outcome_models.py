@@ -168,7 +168,7 @@ def test_human_review_packet_validation() -> None:
         best_candidate=report,
         best_candidate_version=1,
         total_rounds_executed=3,
-        terminal_reason="BUDGET_EXCEEDED: MAX_ROUNDS_REACHED",
+        terminal_reason="MAX_ROUNDS_REACHED",
         deterministic_passed=True,
         critical_defect_count=0,
         major_defect_count=1,
