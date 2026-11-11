@@ -404,3 +404,15 @@ In accordance with repository change control rules, decisions are marked with th
   3. Update `FLOW.md` Phase 3 termination branch and `tests/unit/models/test_outcome_models.py`, and add regression tests in `tests/unit/reflection/test_orchestrator_termination_reasons.py`.
 - **Alternatives Considered:** Removing round checks from `RunBudget.check_budget_exceeded`. Rejected because `RunBudget` intentionally enforces round limits (`test_budget_round_limit_exhaustion`) alongside token/cost/time bounds, whereas formatting the loop outcome belongs to `ReflectionLoopOrchestrator`.
 - **Impact:** Eliminates false-positive `BUDGET_EXCEEDED` labels on normal scheduled completion while preserving accurate error reporting when token, dollar, or wall-clock limits are breached.
+
+---
+
+### Decision 27: Strictly Transitive Tuple Ranking Key in CandidateSelector
+- **Status:** Implemented (FINDING-07 - `reflection/candidate_selector.py`, `tests/unit/reflection/test_candidate_selector_transitivity.py`)
+- **Context:** `CandidateSelector.compare` and `CandidateSelector.is_regression` previously used pairwise `abs(diff) >= 0.01` threshold checks across `grounding_score`, `composite_score`, and `grounding_subscore`. Because approximate equality within `< 0.01` is non-transitive, three candidates with small stepped score increments (`e.g., 0.800, 0.808, 0.816`) could create cyclic preferences ($A \succ B \succ C \succ A$), violating strict weak ordering for sorting and making `rank_candidates` / `select_best` depend on input list order.
+- **Decision:**
+  1. Introduce `CandidateSelector._quality_key` (Tiers 1-6) and `CandidateSelector.ranking_key` (Tiers 1-7) returning pure lexicographical tuples with 0.01-rounded continuous scores (`round(..., 2)`), preserving the exact 7-tier hierarchy including Gate 1 pass, critical/major defect counts, grounding status/score, composite score, grounding subscores, and parsimony tie-breaking (`-round_number`).
+  2. Implement `compare`, `select_best`, `rank_candidates`, and `is_regression` in terms of `_quality_key` and `ranking_key`, removing the intransitive pairwise `cmp_to_key` comparator.
+  3. Add permutation-invariance and strict-weak-ordering regression tests in `tests/unit/reflection/test_candidate_selector_transitivity.py`.
+- **Alternatives Considered:** Removing score quantization completely and comparing raw floats. Rejected because raw IEEE-754 floating-point noise in sub-0.01 differences should continue breaking via Tier 6/7 tie-breakers, whereas per-candidate `round(..., 2)` quantization preserves bucketing cleanly without sacrificing transitivity.
+- **Impact:** Guarantees deterministic, permutation-invariant candidate selection and regression detection across all candidate orderings.
