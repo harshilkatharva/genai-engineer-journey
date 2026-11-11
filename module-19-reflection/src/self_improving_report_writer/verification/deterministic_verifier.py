@@ -5,8 +5,8 @@ from __future__ import annotations
 import re
 from collections.abc import Sequence
 
-from ..models.report import CitationType, Report, SourceReference
-from ..models.verification import (
+from self_improving_report_writer.models.report import CitationType, Report, SourceReference
+from self_improving_report_writer.models.verification import (
     DefectCategory,
     DefectSeverity,
     DeterministicVerificationReport,

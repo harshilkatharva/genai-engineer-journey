@@ -8,12 +8,12 @@ from typing import TYPE_CHECKING
 
 from genai_core import ObservabilityEvent, safe_log
 
-from ..core.config import ReportWriterConfig, get_default_config
-from ..core.exceptions import GenerationError
-from ..core.json_parsing import unwrap_llm_response_payload
-from ..core.pricing import extract_or_estimate_cost
-from ..models.report import Report, SourceReference
-from .prompts import build_report_generation_prompt
+from self_improving_report_writer.core.config import ReportWriterConfig, get_default_config
+from self_improving_report_writer.core.exceptions import GenerationError
+from self_improving_report_writer.core.json_parsing import unwrap_llm_response_payload
+from self_improving_report_writer.core.pricing import extract_or_estimate_cost
+from self_improving_report_writer.generation.prompts import build_report_generation_prompt
+from self_improving_report_writer.models.report import Report, SourceReference
 
 if TYPE_CHECKING:
     from genai_core import LLMService

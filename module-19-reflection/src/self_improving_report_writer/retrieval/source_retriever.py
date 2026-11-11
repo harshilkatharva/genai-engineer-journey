@@ -10,9 +10,9 @@ from typing import TYPE_CHECKING, Any
 
 from genai_core import ObservabilityEvent, safe_log
 
-from ..core.config import ReportWriterConfig, get_default_config
-from ..core.exceptions import RetrievalError
-from ..models.report import SourceReference
+from self_improving_report_writer.core.config import ReportWriterConfig, get_default_config
+from self_improving_report_writer.core.exceptions import RetrievalError
+from self_improving_report_writer.models.report import SourceReference
 
 if TYPE_CHECKING:
     from genai_core import DocumentChunk, EmbeddingService, RetrievalService, VectorStoreAdapter

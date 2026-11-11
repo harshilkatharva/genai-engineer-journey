@@ -492,3 +492,14 @@ In accordance with repository change control rules, decisions are marked with th
      - automatically distill lessons via `memory_manager.distill_lessons(...)` when `memory_manager` is configured and `result.is_accepted` holds.
 - **Alternatives Considered:** Leaving callers responsible for manually wiring `AcceptanceGate` and `ReflectionMemoryManager` around every `orchestrator.run()` invocation. Rejected because standalone orchestrator calls produced inconsistent `is_accepted` semantics and skipped review packet generation and episodic memory integration.
 - **Impact:** Unifies orchestrator run outcomes with Section 6.1 acceptance rules, surfaces ready-to-review `HumanReviewPacket` instances on unresolved runs, and automates pre-/post-run episodic memory hooks without breaking existing constructor or test call sites.
+
+---
+
+### Decision 34: Standardize All Intra-Package Imports to Explicit Absolute Paths
+- **Status:** Implemented (Observation 2 — `src/self_improving_report_writer/`, `tests/unit/core/test_import_style.py`)
+- **Context:** While newer modules (`reflection/orchestrator.py`, `judging/rubric_judge.py`, `review/human_review_gateway.py`) used explicit absolute `self_improving_report_writer.*` imports, earlier modules (`__init__.py`, `core/budget.py`, `eval/__init__.py`, `generation/__init__.py`, `generation/report_generator.py`, `models/__init__.py`, `retrieval/__init__.py`, `retrieval/source_retriever.py`, `verification/__init__.py`, `verification/deterministic_verifier.py`) still mixed `from .` and `from ..` relative imports.
+- **Decision:**
+  1. Replace every relative intra-package import (`level > 0`) across `src/self_improving_report_writer/` with explicit absolute `self_improving_report_writer.*` imports.
+  2. Add an AST-based regression test (`tests/unit/core/test_import_style.py`) verifying that zero relative imports exist anywhere under `src/self_improving_report_writer/` or `tests/`.
+- **Alternatives Considered:** Leaving sibling `from .` imports inside `__init__.py` re-export barrels while replacing only `from ..`. Rejected for uniform consistency and unambiguous static analysis across the entire package.
+- **Impact:** Eliminates mixed import styles across Module 19 and automatically prevents future relative-import regressions via unit tests.

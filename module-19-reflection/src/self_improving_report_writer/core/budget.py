@@ -88,7 +88,7 @@ class RunBudget:
 
         effective_cost = max(0.0, cost_usd)
         if effective_cost == 0.0 and effective_tokens > 0 and model:
-            from .pricing import estimate_llm_cost
+            from self_improving_report_writer.core.pricing import estimate_llm_cost
 
             effective_cost = estimate_llm_cost(
                 model=model,

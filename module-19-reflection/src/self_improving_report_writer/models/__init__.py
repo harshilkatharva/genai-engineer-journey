@@ -1,26 +1,26 @@
 """Domain models for self-improving report writer."""
 
-from .critique import (
+from self_improving_report_writer.models.critique import (
     Critique,
     CritiqueIssue,
     IssueCategory,
     IssueSeverity,
 )
-from .llm_schemas import (
+from self_improving_report_writer.models.llm_schemas import (
     ClaimEntailmentEvaluation,
     LLMJudgeEvaluation,
     ProseConsistencyEvaluation,
     SectionClaimsEntailmentEvaluation,
     SingleClaimEntailmentVerdict,
 )
-from .outcome import (
+from self_improving_report_writer.models.outcome import (
     AcceptanceResult,
     HumanReviewDecision,
     HumanReviewOutcome,
     HumanReviewPacket,
     ReportStatus,
 )
-from .report import (
+from self_improving_report_writer.models.report import (
     Citation,
     CitationType,
     Claim,
@@ -28,7 +28,7 @@ from .report import (
     ReportSection,
     SourceReference,
 )
-from .rubric import (
+from self_improving_report_writer.models.rubric import (
     SELF_JUDGING_THRESHOLD_PENALTY,
     ClaimGroundingResult,
     DimensionScore,
@@ -40,7 +40,7 @@ from .rubric import (
     get_default_rubric_config,
     resolve_effective_threshold,
 )
-from .verification import (
+from self_improving_report_writer.models.verification import (
     DefectCategory,
     DefectSeverity,
     DeterministicVerificationReport,
