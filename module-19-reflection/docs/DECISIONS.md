@@ -416,3 +416,14 @@ In accordance with repository change control rules, decisions are marked with th
   3. Add permutation-invariance and strict-weak-ordering regression tests in `tests/unit/reflection/test_candidate_selector_transitivity.py`.
 - **Alternatives Considered:** Removing score quantization completely and comparing raw floats. Rejected because raw IEEE-754 floating-point noise in sub-0.01 differences should continue breaking via Tier 6/7 tie-breakers, whereas per-candidate `round(..., 2)` quantization preserves bucketing cleanly without sacrificing transitivity.
 - **Impact:** Guarantees deterministic, permutation-invariant candidate selection and regression detection across all candidate orderings.
+
+---
+
+### Decision 28: Judge Prompt `source_id` Attribution Regression Verification
+- **Status:** Verified & Regression-Tested (FINDING-08 - `tests/unit/judging/test_judge_prompt_construction.py`)
+- **Context:** Audit FINDING-08 identified that `build_rubric_judge_prompt` previously omitted `source_id` on `<untrusted_source_context>` tags when `sources` was keyed by `chunk_id`, preventing the judge LLM from verifying citation `source_id` attribution.
+- **Decision:**
+  1. Confirm via code inspection that [`PromptTemplateManager.render_rubric_judge_prompt`](src/self_improving_report_writer/prompts/manager.py) (backed by `format_untrusted_source_block`) already emits `<untrusted_source_context id="{s_id}" source_id="{s_ref.source_id}" title="{s_ref.title}">` for every retrieved chunk.
+  2. Add dedicated regression tests in `tests/unit/judging/test_judge_prompt_construction.py` verifying chunk-keyed source mappings, multi-source distinction, and end-to-end prompt emission through `RubricJudge.evaluate`.
+- **Alternatives Considered:** Re-keying `sources` dicts by `source_id` inside `ReflectionLoopOrchestrator`. Rejected because one source document can yield multiple chunks, so `chunk_id` keying with an explicit `source_id` XML attribute is required.
+- **Impact:** Locks in regression protection for citation `source_id` visibility in rubric judge prompts.
