@@ -439,3 +439,16 @@ In accordance with repository change control rules, decisions are marked with th
   3. Add regression tests in `tests/unit/memory/test_memory_distillation.py` covering unresolved defect suppression and sequential `DEFECT-NNN` renumbering across rounds.
 - **Alternatives Considered:** Matching strictly by `issue_id` alone. Rejected because `DeterministicVerifier` re-numbers `DEFECT-001`, `DEFECT-002` per round, which would misclassify renumbered unresolved issues after fixing earlier defects.
 - **Impact:** Prevents episodic memory poisoning by ensuring unresolved failures are never stored as positive writing rules.
+
+---
+
+### Decision 30: Centralize Self-Judging Threshold Resolution & Enforce Single-Bump [0.0, 1.0] Bounds
+- **Status:** Implemented (Observation 9 - `models/rubric.py`, `models/__init__.py`, `judging/rubric_judge.py`, `reflection/critique_engine.py`, `review/acceptance_gate.py`, `reflection/orchestrator.py`, `tests/unit/judging/test_self_judging_threshold.py`)
+- **Context:** Self-judging penalty computation (`+0.05`) was duplicated inconsistently across four components (`RubricJudge`, `CritiqueEngine`, `AcceptanceGate`, and `ReflectionRunResult.is_accepted`). `ReportJudgeVerdict` lacked an `effective_threshold` field, `RubricJudge.__init__` ignored `config.acceptance_threshold` when using the default rubric, `ReflectionRunResult.is_accepted` fell back to hardcoded `0.90`/`0.85`, and upper boundary clamping (`<= 1.0`) was missing in `RubricJudge`, `CritiqueEngine`, and `AcceptanceGate`.
+- **Decision:**
+  1. Add `SELF_JUDGING_THRESHOLD_PENALTY = 0.05`, `compute_effective_threshold`, and idempotent `resolve_effective_threshold` to `models/rubric.py` (re-exported from `models/__init__.py`), guaranteeing at most one `+0.05` increase capped strictly at `1.0`.
+  2. Add validated `effective_threshold: float | None` (`ge=0.0, le=1.0`) to `ReportJudgeVerdict` and populate it once inside `RubricJudge.evaluate` across direct self-judging, fallback, and runtime model-diversity detection; sync default `rubric_config.acceptance_threshold` with `config.acceptance_threshold` in `RubricJudge.__init__`.
+  3. Update `CritiqueEngine`, `AcceptanceGate`, and `ReflectionRunResult.is_accepted` (with `ReflectionRunResult.acceptance_threshold`) to call `resolve_effective_threshold(...)` instead of duplicating unguarded `+ 0.05` arithmetic or hardcoded `0.90/0.85` fallbacks.
+  4. Add unit and end-to-end boundary/idempotency tests in `tests/unit/judging/test_self_judging_threshold.py`.
+- **Alternatives Considered:** Leaving each component responsible for checking `is_self_judged` and adding `+ 0.05` independently. Rejected due to duplication, inability to inspect applied thresholds downstream, and risk of exceeding `1.0` or compounding adjustments.
+- **Impact:** Guarantees single-application semantics for self-judging penalties, respects custom `acceptance_threshold` configurations end-to-end, and prevents impossible `> 1.0` thresholds at boundary values.

@@ -29,13 +29,16 @@ from .report import (
     SourceReference,
 )
 from .rubric import (
+    SELF_JUDGING_THRESHOLD_PENALTY,
     ClaimGroundingResult,
     DimensionScore,
     ReportJudgeVerdict,
     RubricConfig,
     RubricCriterion,
     SemanticGroundingReport,
+    compute_effective_threshold,
     get_default_rubric_config,
+    resolve_effective_threshold,
 )
 from .verification import (
     DefectCategory,
@@ -46,6 +49,7 @@ from .verification import (
 )
 
 __all__ = [
+    "SELF_JUDGING_THRESHOLD_PENALTY",
     "AcceptanceResult",
     "Citation",
     "CitationType",
@@ -77,5 +81,7 @@ __all__ = [
     "SingleClaimEntailmentVerdict",
     "SourceReference",
     "VerificationIssue",
+    "compute_effective_threshold",
     "get_default_rubric_config",
+    "resolve_effective_threshold",
 ]

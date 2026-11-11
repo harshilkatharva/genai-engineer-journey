@@ -15,6 +15,7 @@ from self_improving_report_writer.core.config import ReportWriterConfig, get_def
 from self_improving_report_writer.generation.report_generator import ReportGenerator
 from self_improving_report_writer.judging.rubric_judge import RubricJudge
 from self_improving_report_writer.models.report import Report, SourceReference
+from self_improving_report_writer.models.rubric import resolve_effective_threshold
 from self_improving_report_writer.reflection.candidate_selector import (
     CandidateSelector,
     ReportCandidate,
@@ -54,6 +55,12 @@ class ReflectionRunResult(BaseModel):
     termination_reason: str = Field(
         description="Specific reason the reflection loop terminated (e.g., criteria met, budget, oscillation)"
     )
+    acceptance_threshold: float = Field(
+        default=0.85,
+        ge=0.0,
+        le=1.0,
+        description="Base acceptance threshold configured for the reflection run",
+    )
 
     @property
     def is_accepted(self) -> bool:
@@ -64,10 +71,8 @@ class ReflectionRunResult(BaseModel):
         if cand.total_critical_count > 0 or cand.total_major_count > 0:
             return False
 
-        effective_threshold = (
-            cand.judge_verdict.effective_threshold
-            if hasattr(cand.judge_verdict, "effective_threshold")
-            else (0.90 if cand.judge_verdict.is_self_judged else 0.85)
+        effective_threshold = resolve_effective_threshold(
+            self.acceptance_threshold, cand.judge_verdict
         )
         if cand.judge_verdict.composite_score < effective_threshold:
             return False
@@ -369,4 +374,5 @@ class ReflectionLoopOrchestrator:
             budget_summary=budget.to_summary(),
             rounds_executed=rounds_executed,
             termination_reason=termination_reason,
+            acceptance_threshold=self.config.acceptance_threshold,
         )

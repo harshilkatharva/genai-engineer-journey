@@ -24,6 +24,7 @@ from self_improving_report_writer.models.rubric import (
     DimensionScore,
     ReportJudgeVerdict,
     RubricConfig,
+    compute_effective_threshold,
     get_default_rubric_config,
 )
 from self_improving_report_writer.models.verification import DeterministicVerificationReport
@@ -49,7 +50,14 @@ class RubricJudge:
     ) -> None:
         self.llm_service = llm_service
         self.config = config or ReportWriterConfig()
-        self.rubric_config = rubric_config or get_default_rubric_config()
+        if rubric_config is not None:
+            self.rubric_config = rubric_config
+        elif config is not None:
+            self.rubric_config = get_default_rubric_config().model_copy(
+                update={"acceptance_threshold": self.config.acceptance_threshold}
+            )
+        else:
+            self.rubric_config = get_default_rubric_config()
         self.judge_model = judge_model or self.config.judge_model
         self.generator_model = generator_model or self.config.generator_model
         self.judge_provider = judge_provider or self.config.judge_provider
@@ -69,7 +77,9 @@ class RubricJudge:
 
         # Check model diversity
         is_self_judged = self.judge_model == self.generator_model
-        effective_threshold = base_threshold + (0.05 if is_self_judged else 0.0)
+        effective_threshold = compute_effective_threshold(
+            base_threshold, is_self_judged=is_self_judged
+        )
         target_model = self.judge_model
         target_provider = self.judge_provider
 
@@ -117,7 +127,7 @@ class RubricJudge:
             target_model = self.generator_model
             target_provider = self.config.generator_provider
             is_self_judged = True
-            effective_threshold = min(1.0, base_threshold + 0.05)
+            effective_threshold = compute_effective_threshold(base_threshold, is_self_judged=True)
             resp = await self.rate_limit_controller.complete_structure(
                 self.llm_service,
                 prompt=f"{RUBRIC_JUDGE_SYSTEM_PROMPT}\n\n{prompt}",
@@ -136,7 +146,7 @@ class RubricJudge:
         actual_model = getattr(resp, "model", None)
         if actual_model and actual_model == self.generator_model and not is_self_judged:
             is_self_judged = True
-            effective_threshold = min(1.0, base_threshold + 0.05)
+            effective_threshold = compute_effective_threshold(base_threshold, is_self_judged=True)
             safe_log(
                 logger,
                 logging.WARNING,
@@ -210,6 +220,7 @@ class RubricJudge:
             dimension_scores=final_dim_scores,
             overall_feedback=raw_eval.overall_feedback,
             is_self_judged=is_self_judged,
+            effective_threshold=effective_threshold,
             judge_model=target_model,
             tokens_used=tokens_used,
             cost_usd=cost_usd,

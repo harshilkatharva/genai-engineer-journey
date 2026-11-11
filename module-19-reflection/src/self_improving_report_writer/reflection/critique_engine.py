@@ -13,6 +13,7 @@ from self_improving_report_writer.models.critique import (
     IssueCategory,
     IssueSeverity,
 )
+from self_improving_report_writer.models.rubric import resolve_effective_threshold
 from self_improving_report_writer.models.verification import (
     DefectCategory,
     DefectSeverity,
@@ -162,11 +163,7 @@ class CritiqueEngine:
         # Decide should_revise strictly according to Business Logic Section 4.2
         composite_score = judge_verdict.composite_score if judge_verdict else 0.0
         grounding_score = grounding_report.grounding_score if grounding_report else 1.0
-        eff_threshold = (
-            (acceptance_threshold + 0.05)
-            if (judge_verdict and judge_verdict.is_self_judged)
-            else acceptance_threshold
-        )
+        eff_threshold = resolve_effective_threshold(acceptance_threshold, judge_verdict)
 
         should_revise = self._determine_should_revise(
             critical_count=critical_count,

@@ -14,6 +14,7 @@ from self_improving_report_writer.models.outcome import (
     HumanReviewPacket,
     ReportStatus,
 )
+from self_improving_report_writer.models.rubric import resolve_effective_threshold
 
 if TYPE_CHECKING:
     from self_improving_report_writer.models.critique import CritiqueIssue
@@ -62,11 +63,9 @@ class AcceptanceGate:
                 f"({candidate.grounding_report.major_count} major grounding defects)"
             )
 
-        # 4. Composite Rubric Score Threshold Check (with self-judging disclosure adjustment)
-        effective_threshold = (
-            self.config.acceptance_threshold + 0.05
-            if candidate.judge_verdict.is_self_judged
-            else self.config.acceptance_threshold
+        # 4. Composite Rubric Score Threshold Check (with single +0.05 self-judging adjustment, <= 1.0)
+        effective_threshold = resolve_effective_threshold(
+            self.config.acceptance_threshold, candidate.judge_verdict
         )
         if candidate.judge_verdict.composite_score < effective_threshold:
             unresolved_reasons.append(

@@ -10,6 +10,32 @@ from self_improving_report_writer.models.verification import (
     VerificationIssue,
 )
 
+SELF_JUDGING_THRESHOLD_PENALTY = 0.05
+
+
+def compute_effective_threshold(base_threshold: float, *, is_self_judged: bool = False) -> float:
+    """Compute effective acceptance threshold with at most one +0.05 bump, capped at 1.0."""
+    clamped_base = max(0.0, min(1.0, float(base_threshold)))
+    if not is_self_judged:
+        return round(clamped_base, 4)
+    return round(min(1.0, clamped_base + SELF_JUDGING_THRESHOLD_PENALTY), 4)
+
+
+def resolve_effective_threshold(
+    base_threshold: float,
+    judge_verdict: ReportJudgeVerdict | None = None,
+) -> float:
+    """Resolve effective threshold without compounding self-judging adjustments.
+
+    Uses ``judge_verdict.effective_threshold`` directly when populated by ``RubricJudge``,
+    avoiding double-application of the +0.05 self-judging penalty. Falls back to
+    ``compute_effective_threshold`` when a verdict or explicit threshold is absent.
+    """
+    if judge_verdict is not None and judge_verdict.effective_threshold is not None:
+        return round(max(0.0, min(1.0, float(judge_verdict.effective_threshold))), 4)
+    is_self_judged = bool(judge_verdict and judge_verdict.is_self_judged)
+    return compute_effective_threshold(base_threshold, is_self_judged=is_self_judged)
+
 
 class RubricCriterion(BaseModel):
     """An individual evaluation dimension within the rubric."""
@@ -133,6 +159,15 @@ class ReportJudgeVerdict(BaseModel):
     is_self_judged: bool = Field(
         default=False,
         description="Flag indicating whether evaluation was conducted by the generator model fallback",
+    )
+    effective_threshold: float | None = Field(
+        default=None,
+        ge=0.0,
+        le=1.0,
+        description=(
+            "Authoritative composite acceptance threshold applied for this verdict "
+            "(includes at most one +0.05 self-judging bump, capped at 1.0)"
+        ),
     )
     judge_model: str = Field(
         default="gemini-3.1-flash-lite", description="Model identifier used for evaluation"
