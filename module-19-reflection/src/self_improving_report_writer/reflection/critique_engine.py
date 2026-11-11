@@ -213,13 +213,14 @@ class CritiqueEngine:
         effective_threshold: float,
     ) -> bool:
         """Enforce Section 4.2 Severity-Based Revision Thresholds."""
-        # 1. Critical Issues Present -> Always triggers revision
-        if critical_count > 0:
+        # 1. Critical or Major Issues Present -> Always triggers revision
+        # (AcceptanceGate rejects any candidate with critical or major defects.)
+        if critical_count > 0 or major_count > 0:
             return True
 
-        # 2. Major Issues Present -> Triggers revision if composite score < threshold or grounding < 0.85
-        if major_count > 0:
-            return (composite_score < effective_threshold) or (grounding_score < 0.85)
+        # 2. Sub-threshold grounding score -> Triggers revision
+        if grounding_score < 0.85:
+            return True
 
         # 3. Minor Issues Only (zero critical, zero major) ->
         # If composite score >= threshold, loop terminates immediately, accepting the report.

@@ -380,3 +380,15 @@ In accordance with repository change control rules, decisions are marked with th
   4. Update `tests/unit/generation/test_report_generator.py` and add comprehensive tests in `tests/unit/core/test_prompt_injection_sanitization.py`.
 - **Alternatives Considered:** Regex-based blacklist stripping of `<untrusted_source_context>` variations. Rejected because blacklist patterns are fragile against parser quirks and omit attribute/tag smuggling.
 - **Impact:** Eliminates delimiter-escape and attribute-breakout prompt injection vectors uniformly across generation, revision, rubric judging, and entailment verification without breaking Gate 1 deterministic checks.
+
+---
+
+### Decision 25: Always Trigger Revision on Major Defects in CritiqueEngine
+- **Status:** Implemented (FINDING-05 - `reflection/critique_engine.py`, `docs/BUSINESS_LOGIC.md`, `docs/FLOW.md`, `tests/unit/reflection/test_critique_engine.py`, `tests/unit/reflection/test_critique_major_defect_triggers_revision.py`)
+- **Context:** `CritiqueEngine._determine_should_revise` previously returned `(composite_score < effective_threshold) or (grounding_score < 0.85)` when `major_count > 0` and `critical_count == 0`. Whenever a draft scored `>= 0.85` on both composite rubric and grounding while still carrying a major defect, the orchestrator halted early with `ALL_ACCEPTANCE_CRITERIA_MET`, whereas `AcceptanceGate` and `ReflectionRunResult.is_accepted` immediately rejected major defects as `UNRESOLVED`.
+- **Decision:**
+  1. Update `CritiqueEngine._determine_should_revise` so `critical_count > 0 or major_count > 0` always returns `True`, and enforce `grounding_score < 0.85` consistently before early acceptance.
+  2. Update `BUSINESS_LOGIC.md` (Section 4.2) and `FLOW.md` to reflect that major defects always trigger another revision round when budget permits.
+  3. Update `test_severity_based_revision_thresholds_major` docstring and add regression tests in `tests/unit/reflection/test_critique_major_defect_triggers_revision.py` verifying critique behavior and orchestrator/acceptance-gate consistency.
+- **Alternatives Considered:** Relaxing `AcceptanceGate` to accept major defects if scores exceed threshold. Rejected because Section 6.1 strictly requires zero major grounding defects and zero major defects for automated acceptance.
+- **Impact:** Eliminates contradictory `ALL_ACCEPTANCE_CRITERIA_MET` vs `UNRESOLVED` outcomes and allows the reflection loop to repair major defects whenever round/resource budgets permit.

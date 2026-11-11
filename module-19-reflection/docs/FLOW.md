@@ -262,10 +262,10 @@ sequenceDiagram
 
     rect rgb(240, 255, 245)
     Note over CE: Severity-Based Revision Threshold Decision
-    alt critical_count > 0
-        CE->>CE: should_revise = True (Critical issues always revise)
-    else major_count > 0
-        CE->>CE: should_revise = (composite_score < threshold OR grounding_score < 0.85)
+    alt critical_count > 0 OR major_count > 0
+        CE->>CE: should_revise = True (Critical or major issues always revise)
+    else grounding_score < 0.85
+        CE->>CE: should_revise = True (Sub-threshold grounding always revises)
     else minor_count > 0 AND critical=0 AND major=0
         opt composite_score >= threshold
             CE->>CE: should_revise = False (Immediate Acceptance, terminate loop)
