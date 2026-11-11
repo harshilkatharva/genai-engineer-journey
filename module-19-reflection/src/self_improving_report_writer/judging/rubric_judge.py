@@ -9,6 +9,7 @@ from genai_core import ObservabilityEvent, safe_log
 
 from self_improving_report_writer.core.config import ReportWriterConfig
 from self_improving_report_writer.core.exceptions import JudgingError
+from self_improving_report_writer.core.json_parsing import unwrap_llm_response_payload
 from self_improving_report_writer.core.pricing import extract_or_estimate_cost
 from self_improving_report_writer.core.rate_limit_controller import (
     EvaluationRateLimitController,
@@ -157,13 +158,19 @@ class RubricJudge:
         if actual_model:
             target_model = actual_model
 
-        raw_eval = resp.structured_response
+        try:
+            raw_eval = unwrap_llm_response_payload(resp)
+        except Exception as exc:
+            raise JudgingError(f"Failed to parse text response from judge: {exc}") from exc
         if raw_eval is None:
             raise JudgingError("Rubric judge returned empty structured response.")
 
         # Parse raw evaluation
         if isinstance(raw_eval, dict):
-            raw_eval = LLMJudgeEvaluation.model_validate(raw_eval)
+            try:
+                raw_eval = LLMJudgeEvaluation.model_validate(raw_eval)
+            except Exception as exc:
+                raise JudgingError(f"Failed to validate dict response from judge: {exc}") from exc
         elif not isinstance(raw_eval, LLMJudgeEvaluation):
             raise JudgingError(f"Unexpected response type from judge: {type(raw_eval)}")
 

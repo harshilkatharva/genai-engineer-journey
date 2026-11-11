@@ -452,3 +452,15 @@ In accordance with repository change control rules, decisions are marked with th
   4. Add unit and end-to-end boundary/idempotency tests in `tests/unit/judging/test_self_judging_threshold.py`.
 - **Alternatives Considered:** Leaving each component responsible for checking `is_self_judged` and adding `+ 0.05` independently. Rejected due to duplication, inability to inspect applied thresholds downstream, and risk of exceeding `1.0` or compounding adjustments.
 - **Impact:** Guarantees single-application semantics for self-judging penalties, respects custom `acceptance_threshold` configurations end-to-end, and prevents impossible `> 1.0` thresholds at boundary values.
+
+---
+
+### Decision 31: Strip Markdown Code Fences Across Module-19 JSON LLM Response Callers
+- **Status:** Implemented (FINDING-10 — `core/json_parsing.py`, `core/__init__.py`, `generation/report_generator.py`, `reflection/revision_engine.py`, `judging/rubric_judge.py`, `verification/semantic_grounding_verifier.py`, `tests/unit/core/test_json_response_stripping.py`)
+- **Context:** While `EvaluationRateLimitController` already protects concurrent rate-limit pause synchronization via `asyncio.Lock`, Module-19's raw text fallback parsers (`ReportGenerator` using `Report.model_validate_json(response.text)` and `RevisionEngine` using `json.loads(response.text)`) failed whenever an LLM returned JSON wrapped in Markdown code fences (e.g., ```` ```json ... ``` ````), and `RubricJudge` / `SemanticGroundingVerifier` did not normalize raw/fenced JSON strings when `structured_response` was absent or string-encoded. Per project boundaries keeping `packages/genai-core/` unmodified, only Markdown fence stripping is needed inside `module-19-reflection/`.
+- **Decision:**
+  1. Add [`core/json_parsing.py`](file:///home/harshilk/genai-engineer-journey/module-19-reflection/src/self_improving_report_writer/core/json_parsing.py) (`strip_markdown_json_fences`, `parse_json_with_fence_stripping`, `unwrap_llm_response_payload`) to cleanly remove outer Markdown code fences (` ```json `, ` ```JSON `, ` ``` `, and surrounding prose preambles/postambles) while preserving valid raw JSON payloads containing embedded backticks.
+  2. Route payload extraction through `unwrap_llm_response_payload` in `ReportGenerator`, `RevisionEngine`, `RubricJudge`, and `SemanticGroundingVerifier` (batch, fallback, sequential, and prose-consistency checks), leaving concurrency/rate-limit barrier logic untouched.
+  3. Add unit tests in `tests/unit/core/test_json_response_stripping.py`.
+- **Alternatives Considered:** Modifying `packages/genai-core/src/genai_core/llm/google_provider.py` directly or duplicating `.removeprefix("```json")` across individual callers. Rejected to preserve shared package isolation (`packages/genai-core/`) and avoid fragile duplicate fence-stripping logic.
+- **Impact:** Prevents JSON parsing failures caused by Markdown-fenced LLM outputs across every Module-19 structured response consumer without altering shared packages or concurrency behavior.

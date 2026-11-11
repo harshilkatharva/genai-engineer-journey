@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import logging
 from typing import TYPE_CHECKING
 
@@ -10,6 +9,7 @@ from genai_core import ObservabilityEvent, safe_log
 
 from self_improving_report_writer.core.config import ReportWriterConfig
 from self_improving_report_writer.core.exceptions import ReflectionError
+from self_improving_report_writer.core.json_parsing import unwrap_llm_response_payload
 from self_improving_report_writer.core.pricing import extract_or_estimate_cost
 from self_improving_report_writer.models.critique import Critique
 from self_improving_report_writer.models.report import Report, SourceReference
@@ -109,14 +109,11 @@ class RevisionEngine:
             )
             raise ReflectionError(f"LLM revision error: {response.error.message}")
 
-        # Extract revised report
-        revised = response.structured_response
-        if revised is None and response.text:
-            try:
-                data = json.loads(response.text)
-                revised = Report.model_validate(data)
-            except Exception as e:
-                raise ReflectionError(f"Failed to parse text response as Report: {e}") from e
+        # Extract revised report (stripping Markdown fences on raw JSON text if needed)
+        try:
+            revised = unwrap_llm_response_payload(response)
+        except Exception as e:
+            raise ReflectionError(f"Failed to parse text response as Report: {e}") from e
 
         if isinstance(revised, dict):
             try:

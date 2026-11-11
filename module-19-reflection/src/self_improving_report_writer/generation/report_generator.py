@@ -10,6 +10,7 @@ from genai_core import ObservabilityEvent, safe_log
 
 from ..core.config import ReportWriterConfig, get_default_config
 from ..core.exceptions import GenerationError
+from ..core.json_parsing import unwrap_llm_response_payload
 from ..core.pricing import extract_or_estimate_cost
 from ..models.report import Report, SourceReference
 from .prompts import build_report_generation_prompt
@@ -103,10 +104,13 @@ class ReportGenerator:
             default_model=self.config.generator_model,
         )
 
-        # Unwrap structured candidate
-        candidate = getattr(response, "structured_response", None)
-        if candidate is None and hasattr(response, "content"):
-            candidate = response.content
+        # Unwrap structured candidate (stripping Markdown fences on raw JSON text if needed)
+        try:
+            candidate = unwrap_llm_response_payload(response, allow_content_fallback=True)
+        except Exception as json_exc:
+            raise GenerationError(
+                f"Report JSON validation failed on raw text response: {json_exc}"
+            ) from json_exc
 
         report: Report
         if isinstance(candidate, Report):
@@ -118,13 +122,6 @@ class ReportGenerator:
                 raise GenerationError(
                     f"Report validation failed on dict response: {val_exc}"
                 ) from val_exc
-        elif hasattr(response, "text") and response.text:
-            try:
-                report = Report.model_validate_json(response.text)
-            except Exception as json_exc:
-                raise GenerationError(
-                    f"Report JSON validation failed on raw text response: {json_exc}"
-                ) from json_exc
         else:
             raise GenerationError(
                 f"Unexpected response structure from LLMService: {type(candidate).__name__}"

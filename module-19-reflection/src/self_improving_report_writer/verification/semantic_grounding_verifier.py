@@ -10,6 +10,7 @@ from genai_core import ObservabilityEvent, safe_log
 
 from self_improving_report_writer.core.config import ReportWriterConfig
 from self_improving_report_writer.core.exceptions import VerificationError
+from self_improving_report_writer.core.json_parsing import unwrap_llm_response_payload
 from self_improving_report_writer.core.pricing import extract_or_estimate_cost
 from self_improving_report_writer.core.rate_limit_controller import (
     EvaluationRateLimitController,
@@ -232,7 +233,12 @@ class SemanticGroundingVerifier:
                     total_tokens += call_tokens
                     total_cost += call_cost
 
-                    batch_data = resp.structured_response
+                    try:
+                        batch_data = unwrap_llm_response_payload(resp)
+                    except Exception as exc:
+                        raise VerificationError(
+                            f"Failed to parse batch entailment response JSON: {exc}"
+                        ) from exc
                     if isinstance(batch_data, ClaimEntailmentEvaluation):
                         batch_data = SectionClaimsEntailmentEvaluation(
                             evaluations=[
@@ -294,9 +300,18 @@ class SemanticGroundingVerifier:
                                 raise VerificationError(
                                     f"Fallback claim entailment check failed for claim '{claim_item.claim_id}': {f_resp.error.message}"
                                 )
-                            f_data = f_resp.structured_response
+                            try:
+                                f_data = unwrap_llm_response_payload(f_resp)
+                            except Exception as exc:
+                                raise VerificationError(
+                                    f"Failed to parse fallback claim entailment response JSON for claim '{claim_item.claim_id}': {exc}"
+                                ) from exc
                             if isinstance(f_data, dict):
                                 f_data = ClaimEntailmentEvaluation.model_validate(f_data)
+                            elif not isinstance(f_data, ClaimEntailmentEvaluation):
+                                raise VerificationError(
+                                    f"Unexpected response type from fallback entailment evaluator: {type(f_data)}"
+                                )
                             eval_entry = SingleClaimEntailmentVerdict(
                                 claim_id=claim_item.claim_id,
                                 entailment=f_data.entailment,
@@ -378,7 +393,12 @@ class SemanticGroundingVerifier:
                     total_tokens += call_tokens
                     total_cost += call_cost
 
-                    eval_data = resp.structured_response
+                    try:
+                        eval_data = unwrap_llm_response_payload(resp)
+                    except Exception as exc:
+                        raise VerificationError(
+                            f"Failed to parse claim entailment response JSON for claim '{claim_item.claim_id}': {exc}"
+                        ) from exc
                     if isinstance(eval_data, dict):
                         eval_data = ClaimEntailmentEvaluation.model_validate(eval_data)
                     elif not isinstance(eval_data, ClaimEntailmentEvaluation):
@@ -451,7 +471,7 @@ class SemanticGroundingVerifier:
                     model=self.evaluator_model,
                 )
 
-                if p_resp.error is None and p_resp.structured_response:
+                if p_resp.error is None:
                     _, _, call_tokens, call_cost = extract_or_estimate_cost(
                         response=p_resp,
                         model=self.evaluator_model,
@@ -460,7 +480,16 @@ class SemanticGroundingVerifier:
                     total_tokens += call_tokens
                     total_cost += call_cost
 
-                    p_eval = p_resp.structured_response
+                    try:
+                        p_eval = unwrap_llm_response_payload(p_resp)
+                    except (ValueError, TypeError) as exc:
+                        safe_log(
+                            logger,
+                            logging.WARNING,
+                            f"Failed to parse prose consistency response JSON for section '{sec.section_id}': {exc}",
+                        )
+                        p_eval = None
+
                     if isinstance(p_eval, dict):
                         p_eval = ProseConsistencyEvaluation.model_validate(p_eval)
 
