@@ -310,16 +310,22 @@ sequenceDiagram
     participant OD as OscillationDetector
     participant Rev as RevisionEngine
     participant Sel as CandidateSelector (Hierarchical Pareto)
+    participant Gate as AcceptanceGate
+    participant MM as ReflectionMemoryManager (Optional)
 
-    User->>Orch: run(topic, sources=None, initial_report=None)
+    User->>Orch: run(topic, sources=None, initial_report=None, guidelines=None, domain="general", run_id=None)
     Orch->>Budget: Initialize RunBudget(max_tokens=50k, max_cost=$0.20, max_time=90s, max_rounds=3)
     Orch->>OD: reset()
 
     rect rgb(240, 245, 255)
-    Note over Orch,Gen: Phase 1: Source Resolution & Baseline Generation (Round 0)
+    Note over Orch,Gen: Phase 1: Memory Guideline Retrieval, Source Resolution & Baseline Generation (Round 0)
+    opt guidelines is None and initial_report is None and memory_manager configured
+        Orch->>MM: retrieve_lessons(domain=domain)
+        MM-->>Orch: retrieved_lessons (injected into guidelines)
+    end
     Orch->>Ret: retrieve_sources(topic)
     Ret-->>Orch: source_list (immutable SourceReference chunks)
-    Orch->>Gen: generate_report(topic, sources)
+    Orch->>Gen: generate_report(topic, sources, guidelines)
     Gen-->>Orch: (Report v1, tokens, cost)
     Orch->>Budget: record_usage(tokens, cost)
     end
@@ -395,11 +401,17 @@ sequenceDiagram
     end
 
     rect rgb(240, 255, 245)
-    Note over Orch,Sel: Phase 4: Deterministic Hierarchical Candidate Selection
+    Note over Orch,MM: Phase 4: Candidate Selection, AcceptanceGate & Optional Memory Distillation
     Orch->>Sel: select_best(candidates)
     Note over Sel: Tier 1: Gate 1 Pass > Fail<br/>Tier 2: Fewer Critical Defects<br/>Tier 3: Fewer Major Defects<br/>Tier 4: All Claims Grounded & Grounding Score<br/>Tier 5: Composite Rubric Score<br/>Tier 6: Grounding Sub-Scores<br/>Tier 7: Parsimony (Earlier round)
     Sel-->>Orch: best_candidate (guaranteed optimal, immune to late regressions)
-    Orch-->>User: ReflectionRunResult(best_candidate, all_candidates, budget_summary, termination_reason)
+    Orch->>Gate: evaluate_candidate(best_candidate, rounds_executed, terminal_reason, run_id, unresolved_critiques)
+    Gate-->>Orch: AcceptanceResult(status=ACCEPTED | UNRESOLVED, review_packet)
+    opt memory_manager configured and acceptance_result.is_accepted
+        Orch->>MM: distill_lessons(run_result, domain=domain)
+        MM-->>Orch: recorded_lessons (learned_lessons_count updated)
+    end
+    Orch-->>User: ReflectionRunResult(best_candidate, all_candidates, acceptance_result, learned_lessons_count, budget_summary, termination_reason)
     end
 ```
 

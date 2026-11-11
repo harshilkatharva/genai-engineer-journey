@@ -477,3 +477,18 @@ In accordance with repository change control rules, decisions are marked with th
   4. Add unit tests in `tests/unit/retrieval/test_source_retriever.py` verifying `autocommit=True`, clean `close()` on search, and defensive `rollback()` + `close()` on failure.
 - **Alternatives Considered:** Modifying `PGVectorStoreAdapter._get_connection()` in `packages/genai-core/` directly or reverting runtime defaults to `InMemoryVectorStore`. Rejected to keep `packages/genai-core/` isolated and preserve PostgreSQL runtime defaults established in Decision 21.
 - **Impact:** Eliminates `INTRANS` read-transaction and connection leaks on Module-19 PGVector retrieval without touching shared core packages.
+
+---
+
+### Decision 33: Integrate `AcceptanceGate` and Optional `ReflectionMemoryManager` into `ReflectionLoopOrchestrator`
+- **Status:** Implemented (FINDING-14 — `reflection/orchestrator.py`, `tests/unit/reflection/test_orchestrator_integration.py`, `docs/FLOW.md`)
+- **Context:** Previously, `ReflectionLoopOrchestrator.run()` terminated immediately after selecting `best_candidate` without evaluating `AcceptanceGate` or hooking into `ReflectionMemoryManager` for automatic lesson retrieval or post-run distillation. Meanwhile, `ReflectionRunResult.is_accepted` duplicated a subset of acceptance checks inline (omitting per-dimension `factual_accuracy`/`evidence_grounding` minimums and the `self_judged` threshold delta), so its verdict could diverge from `AcceptanceGate`.
+- **Decision:**
+  1. Inject optional `acceptance_gate: AcceptanceGate | None = None` (defaulting to `AcceptanceGate(config=self.config)`) and `memory_manager: ReflectionMemoryManager | None = None` into `ReflectionLoopOrchestrator.__init__`, plus per-call overrides in `run_and_evaluate(...)`.
+  2. Extend `ReflectionRunResult` with `acceptance_result: AcceptanceResult | None = None`, `learned_lessons_count: int = 0`, and `@property def review_packet`, and delegate `ReflectionRunResult.is_accepted` directly to `self.acceptance_result.is_accepted` (or `AcceptanceGate` when `acceptance_result` is `None`).
+  3. Extend `run(..., domain="general", run_id=None)` and internal helpers (`_execute_run`, `_finalize_run`, `_build_result`) to:
+     - retrieve domain lessons into effective generation guidelines when `guidelines is None`, `initial_report is None`, and `memory_manager` is configured;
+     - evaluate `best_candidate` through `AcceptanceGate.evaluate_candidate(...)` with tracked round critiques and `run_id`, storing the resulting `AcceptanceResult` and optional `HumanReviewPacket`;
+     - automatically distill lessons via `memory_manager.distill_lessons(...)` when `memory_manager` is configured and `result.is_accepted` holds.
+- **Alternatives Considered:** Leaving callers responsible for manually wiring `AcceptanceGate` and `ReflectionMemoryManager` around every `orchestrator.run()` invocation. Rejected because standalone orchestrator calls produced inconsistent `is_accepted` semantics and skipped review packet generation and episodic memory integration.
+- **Impact:** Unifies orchestrator run outcomes with Section 6.1 acceptance rules, surfaces ready-to-review `HumanReviewPacket` instances on unresolved runs, and automates pre-/post-run episodic memory hooks without breaking existing constructor or test call sites.
