@@ -10,6 +10,7 @@ from genai_core import ObservabilityEvent, safe_log
 
 from self_improving_report_writer.core.config import ReportWriterConfig
 from self_improving_report_writer.core.exceptions import ReflectionError
+from self_improving_report_writer.core.pricing import extract_or_estimate_cost
 from self_improving_report_writer.models.critique import Critique
 from self_improving_report_writer.models.report import Report, SourceReference
 from self_improving_report_writer.prompts.manager import get_prompt_manager
@@ -132,25 +133,11 @@ class RevisionEngine:
         revised.created_by = "revision_llm"
 
         # Calculate tokens and cost
-        tokens_used = 0
-        if response.usage:
-            if isinstance(response.usage, dict):
-                tokens_used = response.usage.get("total_tokens") or (
-                    response.usage.get("input_tokens", 0) + response.usage.get("output_tokens", 0)
-                )
-            else:
-                tokens_used = getattr(response.usage, "total_tokens", 0) or (
-                    getattr(response.usage, "input_tokens", 0)
-                    + getattr(response.usage, "output_tokens", 0)
-                )
-
-        cost_usd = 0.0
-        if getattr(response, "cost_usd", None) is not None:
-            cost_usd = float(response.cost_usd)
-        elif isinstance(response.raw_response, dict):
-            cost_usd = float(
-                response.raw_response.get("cost") or response.raw_response.get("cost_usd") or 0.0
-            )
+        _, _, tokens_used, cost_usd = extract_or_estimate_cost(
+            response=response,
+            model=self.model,
+            default_model=self.config.generator_model,
+        )
 
         safe_log(
             logger,

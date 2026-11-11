@@ -10,6 +10,7 @@ from genai_core import ObservabilityEvent, safe_log
 
 from self_improving_report_writer.core.config import ReportWriterConfig
 from self_improving_report_writer.core.exceptions import VerificationError
+from self_improving_report_writer.core.pricing import extract_or_estimate_cost
 from self_improving_report_writer.core.rate_limit_controller import (
     EvaluationRateLimitController,
     get_shared_rate_limit_controller,
@@ -223,21 +224,13 @@ class SemanticGroundingVerifier:
                         )
 
                     # Accumulate token usage and costs
-                    if resp.usage:
-                        if isinstance(resp.usage, dict):
-                            total_tokens += resp.usage.get("total_tokens") or (
-                                resp.usage.get("input_tokens", 0)
-                                + resp.usage.get("output_tokens", 0)
-                            )
-                        else:
-                            total_tokens += getattr(resp.usage, "total_tokens", 0) or (
-                                getattr(resp.usage, "input_tokens", 0)
-                                + getattr(resp.usage, "output_tokens", 0)
-                            )
-                    if getattr(resp, "cost_usd", None) is not None:
-                        total_cost += float(resp.cost_usd)
-                    elif isinstance(resp.raw_response, dict) and "cost" in resp.raw_response:
-                        total_cost += float(resp.raw_response["cost"])
+                    _, _, call_tokens, call_cost = extract_or_estimate_cost(
+                        response=resp,
+                        model=self.evaluator_model,
+                        default_model=self.config.judge_model,
+                    )
+                    total_tokens += call_tokens
+                    total_cost += call_cost
 
                     batch_data = resp.structured_response
                     if isinstance(batch_data, ClaimEntailmentEvaluation):
@@ -377,21 +370,13 @@ class SemanticGroundingVerifier:
                             f"Claim entailment check failed for claim '{claim_item.claim_id}': {resp.error.message}"
                         )
 
-                    if resp.usage:
-                        if isinstance(resp.usage, dict):
-                            total_tokens += resp.usage.get("total_tokens") or (
-                                resp.usage.get("input_tokens", 0)
-                                + resp.usage.get("output_tokens", 0)
-                            )
-                        else:
-                            total_tokens += getattr(resp.usage, "total_tokens", 0) or (
-                                getattr(resp.usage, "input_tokens", 0)
-                                + getattr(resp.usage, "output_tokens", 0)
-                            )
-                    if getattr(resp, "cost_usd", None) is not None:
-                        total_cost += float(resp.cost_usd)
-                    elif isinstance(resp.raw_response, dict) and "cost" in resp.raw_response:
-                        total_cost += float(resp.raw_response["cost"])
+                    _, _, call_tokens, call_cost = extract_or_estimate_cost(
+                        response=resp,
+                        model=self.evaluator_model,
+                        default_model=self.config.judge_model,
+                    )
+                    total_tokens += call_tokens
+                    total_cost += call_cost
 
                     eval_data = resp.structured_response
                     if isinstance(eval_data, dict):
@@ -467,22 +452,13 @@ class SemanticGroundingVerifier:
                 )
 
                 if p_resp.error is None and p_resp.structured_response:
-                    if p_resp.usage:
-                        if isinstance(p_resp.usage, dict):
-                            total_tokens += p_resp.usage.get("total_tokens") or (
-                                p_resp.usage.get("input_tokens", 0)
-                                + p_resp.usage.get("output_tokens", 0)
-                            )
-                        else:
-                            total_tokens += getattr(p_resp.usage, "total_tokens", 0) or (
-                                getattr(p_resp.usage, "input_tokens", 0)
-                                + getattr(p_resp.usage, "output_tokens", 0)
-                            )
-
-                    if getattr(p_resp, "cost_usd", None) is not None:
-                        total_cost += float(p_resp.cost_usd)
-                    elif isinstance(p_resp.raw_response, dict) and "cost" in p_resp.raw_response:
-                        total_cost += float(p_resp.raw_response["cost"])
+                    _, _, call_tokens, call_cost = extract_or_estimate_cost(
+                        response=p_resp,
+                        model=self.evaluator_model,
+                        default_model=self.config.judge_model,
+                    )
+                    total_tokens += call_tokens
+                    total_cost += call_cost
 
                     p_eval = p_resp.structured_response
                     if isinstance(p_eval, dict):

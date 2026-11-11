@@ -353,3 +353,17 @@ In accordance with repository change control rules, decisions are marked with th
   5. Add dedicated test suite `tests/unit/judging/test_model_diversity_enforcement.py` validating explicit model routing, fallback behavior, dynamic self-judging detection, and generator/revision engine parameter forwarding.
 - **Alternatives Considered:** Option B (shared service injection with multiple `LLMService` instances). Rejected for Option A because Option A enforces model parameters at call sites and provides dynamic runtime detection without modifying `packages/genai-core`.
 - **Impact:** Guarantees model diversity between generator and judge, prevents self-affirmation bias, enforces the +0.05 penalty whenever the generator model evaluates reports, and provides complete traceability in audit logs.
+
+---
+
+### Decision 23: Deterministic Token-to-USD Pricing Estimation & Cost Budget Enforcement
+- **Status:** Implemented (FINDING-03 Option A - `core/pricing.py`, `core/budget.py`, `generation/report_generator.py`, `reflection/revision_engine.py`, `judging/rubric_judge.py`, `verification/semantic_grounding_verifier.py`, `tests/unit/core/test_cost_accounting.py`)
+- **Context:** Previously, `LLMManagerResponse` from `genai-core` provided no `cost_usd` attribute, and its `raw_response` held an SDK object rather than a dictionary. All components evaluated `cost_usd` as `0.0`. Consequently, `RunBudget.used_cost_usd` remained permanently `0.0`, rendering `max_total_cost_usd` budget constraints completely inert and exposing deployments to silent financial overruns.
+- **Decision:**
+  1. Create `core/pricing.py` defining published per-1M-token pricing rates (`MODEL_PRICING_PER_1M`) across Gemini and OpenAI models, and deterministic cost estimation functions `estimate_llm_cost` and `extract_or_estimate_cost`.
+  2. If an LLM response provides direct `cost_usd` or a dict with `'cost'`, respect it; otherwise, deterministically compute dollar expenditure using model token pricing.
+  3. Integrate `extract_or_estimate_cost` across all four LLM-invoking components: `ReportGenerator`, `RevisionEngine`, `RubricJudge`, and `SemanticGroundingVerifier`.
+  4. Enhance `RunBudget.record_usage` to support model-based estimation if cost is zero, guaranteeing accurate expenditure tracking and financial ceiling enforcement (`COST_EXHAUSTED`).
+  5. Add unit test suite in `tests/unit/core/test_cost_accounting.py` verifying pricing formulas, response precedence, caller cost calculation, and budget exhaustion.
+- **Alternatives Considered:** Option B (modifying `packages/genai-core` to inject pricing tables). Rejected in favor of Option A to keep shared core package decoupled from specific application pricing and maintain module isolation.
+- **Impact:** Fully activates financial cost accounting, eliminates silent budget bypass, and guarantees reflection loop termination when financial limits are reached.

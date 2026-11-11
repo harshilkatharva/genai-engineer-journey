@@ -9,6 +9,7 @@ from genai_core import ObservabilityEvent, safe_log
 
 from self_improving_report_writer.core.config import ReportWriterConfig
 from self_improving_report_writer.core.exceptions import JudgingError
+from self_improving_report_writer.core.pricing import extract_or_estimate_cost
 from self_improving_report_writer.core.rate_limit_controller import (
     EvaluationRateLimitController,
     get_shared_rate_limit_controller,
@@ -197,22 +198,11 @@ class RubricJudge:
         passed = (composite_score >= effective_threshold) and all_dimensions_passed
 
         # Track token usage and costs
-        tokens_used = 0
-        if resp.usage:
-            if isinstance(resp.usage, dict):
-                tokens_used = resp.usage.get("total_tokens") or (
-                    resp.usage.get("input_tokens", 0) + resp.usage.get("output_tokens", 0)
-                )
-            else:
-                tokens_used = getattr(resp.usage, "total_tokens", 0) or (
-                    getattr(resp.usage, "input_tokens", 0) + getattr(resp.usage, "output_tokens", 0)
-                )
-
-        cost_usd = 0.0
-        if getattr(resp, "cost_usd", None) is not None:
-            cost_usd = float(resp.cost_usd)
-        elif isinstance(resp.raw_response, dict) and "cost" in resp.raw_response:
-            cost_usd = float(resp.raw_response["cost"])
+        _, _, tokens_used, cost_usd = extract_or_estimate_cost(
+            response=resp,
+            model=target_model,
+            default_model=self.judge_model,
+        )
 
         verdict = ReportJudgeVerdict(
             composite_score=composite_score,
