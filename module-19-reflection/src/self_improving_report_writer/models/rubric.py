@@ -71,13 +71,13 @@ class RubricConfig(BaseModel):
     def validate_weights_sum_to_one(cls, v: list[RubricCriterion]) -> list[RubricCriterion]:
         if not v:
             raise ValueError("Rubric must contain at least one criterion")
-        total_weight = sum(c.weight for c in v)
-        if not (0.999 <= total_weight <= 1.001):
-            raise ValueError(f"Rubric criteria weights must sum to 1.0 (got {total_weight:.4f})")
-        # Check duplicate names
+        # Validate distinct criterion identities before validating aggregate numerical weight
         names = [c.name.strip().lower() for c in v]
         if len(names) != len(set(names)):
             raise ValueError("Duplicate criterion name detected in rubric configuration")
+        total_weight = sum(c.weight for c in v)
+        if not (0.999 <= total_weight <= 1.001):
+            raise ValueError(f"Rubric criteria weights must sum to 1.0 (got {total_weight:.4f})")
         return v
 
 

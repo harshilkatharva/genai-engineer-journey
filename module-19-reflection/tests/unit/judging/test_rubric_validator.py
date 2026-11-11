@@ -71,6 +71,17 @@ def test_duplicate_criterion_rejected() -> None:
         )
 
 
+def test_duplicate_criterion_detected_before_weight_sum() -> None:
+    """Duplicate criterion names must surface before weight-sum errors when total weight != 1.0."""
+    with pytest.raises(ValidationError, match="Duplicate criterion name detected"):
+        RubricConfig(
+            criteria=[
+                RubricCriterion(name="Accuracy", weight=0.6, description="Check accuracy 1"),
+                RubricCriterion(name="accuracy", weight=0.6, description="Check accuracy 2"),
+            ]
+        )
+
+
 def test_empty_criterion_name_or_description_rejected() -> None:
     """Verify whitespace-only or empty name and description are rejected."""
     with pytest.raises(ValidationError, match="Field cannot be empty"):

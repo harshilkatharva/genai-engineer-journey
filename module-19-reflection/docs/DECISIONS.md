@@ -515,3 +515,14 @@ In accordance with repository change control rules, decisions are marked with th
   3. Export pure module-level helper functions (`compare_candidates`, `select_best_candidate`, `rank_candidates`, `is_candidate_regression`) from `candidate_selector.py` and `reflection/__init__.py` for callers preferring stateless functional usage.
 - **Alternatives Considered:** Keeping `CandidateSelector` as a classmethod namespace or deleting the class completely in favor of module functions alone. Rejected because instantiability aligns with sibling orchestrator components, supports dependency injection and per-selector configuration (`score_precision`, `prefer_parsimony`), and still offers pure module functions cleanly.
 - **Impact:** Eliminates the stateless utility-class antipattern, enables per-instance selector configuration and injection in `ReflectionLoopOrchestrator`, and retains full transitive ranking guarantees.
+
+---
+
+### Decision 36: Validate Unique Rubric Criterion Names Before Aggregate Weight Sum
+- **Status:** Implemented (FINDING-18 & Observation 3 — `models/rubric.py`, `tests/unit/judging/test_rubric_validator.py`)
+- **Context:** In `RubricConfig.validate_weights_sum_to_one`, the total-weight check (`0.999 <= total_weight <= 1.001`) ran before checking duplicate criterion names (`names`). When a criterion was accidentally duplicated with non-unit aggregate weights (e.g., `0.6 + 0.6 = 1.2`), Pydantic failed on the misleading weight-sum error instead of reporting the duplicate criterion identity.
+- **Decision:**
+  1. Reorder `RubricConfig.validate_weights_sum_to_one` so non-emptiness and case-insensitive stripped criterion name uniqueness are validated before summing criteria weights.
+  2. Add `test_duplicate_criterion_detected_before_weight_sum` in `tests/unit/judging/test_rubric_validator.py` verifying that duplicate criteria with `total_weight != 1.0` raise `"Duplicate criterion name detected"`.
+- **Alternatives Considered:** Leaving aggregate weight check first and catching both simultaneously with a custom composite message. Rejected because sequential identity-first validation matches standard schema validation semantics and keeps existing error message contracts intact.
+- **Impact:** Improves validation diagnostics for malformed rubric definitions without altering valid rubric behavior or error formats.
