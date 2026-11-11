@@ -8,6 +8,11 @@ from typing import TYPE_CHECKING, Any
 
 import jinja2
 
+from self_improving_report_writer.core.sanitization import (
+    escape_xml_context,
+    format_untrusted_source_block,
+)
+
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
@@ -15,11 +20,6 @@ if TYPE_CHECKING:
     from self_improving_report_writer.models.report import Report, SourceReference
     from self_improving_report_writer.models.rubric import RubricConfig
     from self_improving_report_writer.models.verification import DeterministicVerificationReport
-
-
-def escape_xml_context(text: str) -> str:
-    """Sanitize text embedded within XML isolation delimiters to prevent prompt injection."""
-    return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
 class PromptTemplateManager:
@@ -121,11 +121,13 @@ class PromptTemplateManager:
 
         formatted_chunks: list[str] = []
         for s in sources:
-            sanitized_content = s.content.replace("</untrusted_source_context>", "[ESCAPED_TAG]")
             formatted_chunks.append(
-                f'<untrusted_source_context id="{s.chunk_id}" source_id="{s.source_id}" title="{s.title}">\n'
-                f"{sanitized_content}\n"
-                f"</untrusted_source_context>"
+                format_untrusted_source_block(
+                    s.content,
+                    id=str(s.chunk_id),
+                    source_id=str(s.source_id),
+                    title=str(s.title),
+                )
             )
         return "\n\n".join(formatted_chunks)
 
@@ -205,14 +207,15 @@ class PromptTemplateManager:
         report_dict = report.model_dump(mode="json")
         report_json = json.dumps(report_dict, indent=2)
 
-        source_blocks = []
-        for s_id, s_ref in sorted(sources.items()):
-            clean_content = escape_xml_context(s_ref.content)
-            source_blocks.append(
-                f'<untrusted_source_context id="{s_id}" source_id="{s_ref.source_id}" title="{s_ref.title}">\n'
-                f"{clean_content}\n"
-                f"</untrusted_source_context>"
+        source_blocks = [
+            format_untrusted_source_block(
+                s_ref.content,
+                id=str(s_id),
+                source_id=str(s_ref.source_id),
+                title=str(s_ref.title),
             )
+            for s_id, s_ref in sorted(sources.items())
+        ]
         sources_text = "\n\n".join(source_blocks) if source_blocks else "No sources provided."
 
         if deterministic_report:
@@ -251,12 +254,10 @@ class PromptTemplateManager:
         version: str | None = None,
     ) -> str:
         """Render user prompt for single claim entailment verification."""
-        chunk_blocks = []
-        for c_id, content in cited_chunks:
-            clean_content = escape_xml_context(content)
-            chunk_blocks.append(
-                f'<untrusted_source_context chunk_id="{c_id}">\n{clean_content}\n</untrusted_source_context>'
-            )
+        chunk_blocks = [
+            format_untrusted_source_block(content, chunk_id=str(c_id))
+            for c_id, content in cited_chunks
+        ]
         evidence_text = "\n\n".join(chunk_blocks) if chunk_blocks else "NO CITED CHUNKS PROVIDED."
 
         return self.render_template(
@@ -276,12 +277,10 @@ class PromptTemplateManager:
         version: str | None = None,
     ) -> str:
         """Render user prompt for batch claim entailment verification."""
-        chunk_blocks = []
-        for c_id, content in cited_chunks:
-            clean_content = escape_xml_context(content)
-            chunk_blocks.append(
-                f'<untrusted_source_context chunk_id="{c_id}">\n{clean_content}\n</untrusted_source_context>'
-            )
+        chunk_blocks = [
+            format_untrusted_source_block(content, chunk_id=str(c_id))
+            for c_id, content in cited_chunks
+        ]
         evidence_text = "\n\n".join(chunk_blocks) if chunk_blocks else "NO CITED CHUNKS PROVIDED."
 
         claim_blocks = []

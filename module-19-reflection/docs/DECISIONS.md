@@ -367,3 +367,16 @@ In accordance with repository change control rules, decisions are marked with th
   5. Add unit test suite in `tests/unit/core/test_cost_accounting.py` verifying pricing formulas, response precedence, caller cost calculation, and budget exhaustion.
 - **Alternatives Considered:** Option B (modifying `packages/genai-core` to inject pricing tables). Rejected in favor of Option A to keep shared core package decoupled from specific application pricing and maintain module isolation.
 - **Impact:** Fully activates financial cost accounting, eliminates silent budget bypass, and guarantees reflection loop termination when financial limits are reached.
+
+---
+
+### Decision 24: Uniform XML Delimiter & Attribute Sanitization Against Prompt Injection
+- **Status:** Implemented (FINDING-04 - `core/sanitization.py`, `prompts/manager.py`, `tests/unit/core/test_prompt_injection_sanitization.py`, `tests/unit/generation/test_report_generator.py`)
+- **Context:** `PromptTemplateManager.format_source_contexts` previously performed only an exact-substring replacement of `</untrusted_source_context>` with `[ESCAPED_TAG]`. Case variants (`</UNTRUSTED_SOURCE_CONTEXT>`), whitespace variants (`</untrusted_source_context >`), spoofed opening tags, unescaped XML attributes (`id`, `source_id`, `title`, `chunk_id`), and ampersands could break out of untrusted source data delimiters in generation and revision prompts, while judge and entailment prompts escaped content differently.
+- **Decision:**
+  1. Create `core/sanitization.py` providing `escape_xml_context` (`html.escape(..., quote=False)` for `&`, `<`, `>`), `escape_xml_attr` (`html.escape(..., quote=True)` for attributes), and a shared `format_untrusted_source_block` helper.
+  2. Update `PromptTemplateManager` (`format_source_contexts`, `render_rubric_judge_prompt`, `render_claim_entailment_prompt`, `render_batch_claim_entailment_prompt`) to use the shared sanitization module and `format_untrusted_source_block` uniformly, keeping `escape_xml_context` re-exported for backward compatibility.
+  3. Keep `SourceReference.content` unmutated so Gate 1 (`DeterministicVerifier`) exact-quotation and passage verification continues matching original source text.
+  4. Update `tests/unit/generation/test_report_generator.py` and add comprehensive tests in `tests/unit/core/test_prompt_injection_sanitization.py`.
+- **Alternatives Considered:** Regex-based blacklist stripping of `<untrusted_source_context>` variations. Rejected because blacklist patterns are fragile against parser quirks and omit attribute/tag smuggling.
+- **Impact:** Eliminates delimiter-escape and attribute-breakout prompt injection vectors uniformly across generation, revision, rubric judging, and entailment verification without breaking Gate 1 deterministic checks.
