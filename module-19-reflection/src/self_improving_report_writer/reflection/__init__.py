@@ -3,6 +3,10 @@
 from self_improving_report_writer.reflection.candidate_selector import (
     CandidateSelector,
     ReportCandidate,
+    compare_candidates,
+    is_candidate_regression,
+    rank_candidates,
+    select_best_candidate,
 )
 from self_improving_report_writer.reflection.critique_engine import CritiqueEngine
 from self_improving_report_writer.reflection.orchestrator import (
@@ -24,4 +28,8 @@ __all__ = [
     "ReflectionRunResult",
     "ReportCandidate",
     "RevisionEngine",
+    "compare_candidates",
+    "is_candidate_regression",
+    "rank_candidates",
+    "select_best_candidate",
 ]

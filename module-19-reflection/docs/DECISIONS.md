@@ -503,3 +503,15 @@ In accordance with repository change control rules, decisions are marked with th
   2. Add an AST-based regression test (`tests/unit/core/test_import_style.py`) verifying that zero relative imports exist anywhere under `src/self_improving_report_writer/` or `tests/`.
 - **Alternatives Considered:** Leaving sibling `from .` imports inside `__init__.py` re-export barrels while replacing only `from ..`. Rejected for uniform consistency and unambiguous static analysis across the entire package.
 - **Impact:** Eliminates mixed import styles across Module 19 and automatically prevents future relative-import regressions via unit tests.
+
+---
+
+### Decision 35: Refactor `CandidateSelector` from Classmethod-Only Antipattern into an Instantiable, Configurable Selector
+- **Status:** Implemented (Observation 8 — `reflection/candidate_selector.py`, `reflection/orchestrator.py`, `reflection/__init__.py`, `tests/unit/reflection/test_candidate_selector.py`, `tests/unit/reflection/test_candidate_selector_transitivity.py`)
+- **Context:** `CandidateSelector` exposed exclusively `@classmethod` methods with no `__init__`, storing no instance configuration while every sibling orchestrator dependency (`CritiqueEngine`, `OscillationDetector`, `AcceptanceGate`) followed constructor-injected instance semantics.
+- **Decision:**
+  1. Refactor `CandidateSelector` into an instantiable class with `__init__(config: ReportWriterConfig | None = None, *, score_precision: int = 2, prefer_parsimony: bool = True)` and instance methods (`_quality_key`, `ranking_key`, `compare`, `select_best`, `rank_candidates`, `is_regression`), preserving strict transitive quantization established in Decision 22.
+  2. Inject optional `candidate_selector: CandidateSelector | None = None` into `ReflectionLoopOrchestrator.__init__` and invoke `self.candidate_selector.is_regression(...)` and `self.candidate_selector.select_best(...)`.
+  3. Export pure module-level helper functions (`compare_candidates`, `select_best_candidate`, `rank_candidates`, `is_candidate_regression`) from `candidate_selector.py` and `reflection/__init__.py` for callers preferring stateless functional usage.
+- **Alternatives Considered:** Keeping `CandidateSelector` as a classmethod namespace or deleting the class completely in favor of module functions alone. Rejected because instantiability aligns with sibling orchestrator components, supports dependency injection and per-selector configuration (`score_precision`, `prefer_parsimony`), and still offers pure module functions cleanly.
+- **Impact:** Eliminates the stateless utility-class antipattern, enables per-instance selector configuration and injection in `ReflectionLoopOrchestrator`, and retains full transitive ranking guarantees.

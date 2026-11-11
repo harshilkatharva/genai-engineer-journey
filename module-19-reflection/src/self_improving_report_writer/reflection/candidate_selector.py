@@ -3,41 +3,62 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Sequence
 
+from self_improving_report_writer.core.config import ReportWriterConfig, get_default_config
 from self_improving_report_writer.models.outcome import ReportCandidate
 
 logger = logging.getLogger(__name__)
 
-__all__ = ["CandidateSelector", "ReportCandidate"]
+__all__ = [
+    "CandidateSelector",
+    "ReportCandidate",
+    "compare_candidates",
+    "is_candidate_regression",
+    "rank_candidates",
+    "select_best_candidate",
+]
 
 
 class CandidateSelector:
     """Deterministic hierarchical comparator ranking candidates across all reflection rounds."""
 
-    @classmethod
+    def __init__(
+        self,
+        config: ReportWriterConfig | None = None,
+        *,
+        score_precision: int = 2,
+        prefer_parsimony: bool = True,
+    ) -> None:
+        if score_precision < 0:
+            raise ValueError(f"score_precision must be non-negative (got {score_precision})")
+        self.config = config or get_default_config()
+        self.score_precision = score_precision
+        self.prefer_parsimony = prefer_parsimony
+
     def _quality_key(
-        cls, candidate: ReportCandidate
+        self, candidate: ReportCandidate
     ) -> tuple[int, int, int, int, float, float, float]:
         """Build a strictly transitive quality key across Tiers 1-6 (higher is better)."""
+        precision = self.score_precision
         return (
             1 if candidate.deterministic_report.passed else 0,
             -candidate.total_critical_count,
             -candidate.total_major_count,
             1 if candidate.grounding_report.all_claims_grounded else 0,
-            round(candidate.grounding_report.grounding_score, 2),
-            round(candidate.judge_verdict.composite_score, 2),
-            round(candidate.grounding_subscore, 2),
+            round(candidate.grounding_report.grounding_score, precision),
+            round(candidate.judge_verdict.composite_score, precision),
+            round(candidate.grounding_subscore, precision),
         )
 
-    @classmethod
     def ranking_key(
-        cls, candidate: ReportCandidate
+        self, candidate: ReportCandidate
     ) -> tuple[int, int, int, int, float, float, float, int]:
         """Build a strictly transitive lexicographical ranking key across Tiers 1-7 (higher is better)."""
-        return (*cls._quality_key(candidate), -candidate.round_number)
+        parsimony_key = -candidate.round_number if self.prefer_parsimony else 0
+        return (*self._quality_key(candidate), parsimony_key)
 
-    @classmethod
-    def compare(cls, c1: ReportCandidate, c2: ReportCandidate) -> int:
+    def compare(self, c1: ReportCandidate, c2: ReportCandidate) -> int:
         """Hierarchical comparison of two candidates using strict weak ordering.
 
         Returns:
@@ -45,37 +66,56 @@ class CandidateSelector:
             Negative int (<0) if c2 is strictly better than c1.
             Zero (0) if c1 and c2 are tied on all criteria.
         """
-        k1 = cls.ranking_key(c1)
-        k2 = cls.ranking_key(c2)
+        k1 = self.ranking_key(c1)
+        k2 = self.ranking_key(c2)
         if k1 > k2:
             return 1
         if k1 < k2:
             return -1
         return 0
 
-    @classmethod
-    def select_best(cls, candidates: list[ReportCandidate]) -> ReportCandidate:
+    def select_best(self, candidates: Sequence[ReportCandidate]) -> ReportCandidate:
         """Select the highest-ranking candidate from history using hierarchical comparison."""
         if not candidates:
             raise ValueError("Cannot select best candidate from empty candidate list")
 
-        return max(candidates, key=cls.ranking_key)
+        return max(candidates, key=self.ranking_key)
 
-    @classmethod
-    def rank_candidates(cls, candidates: list[ReportCandidate]) -> list[ReportCandidate]:
+    def rank_candidates(self, candidates: Sequence[ReportCandidate]) -> list[ReportCandidate]:
         """Rank candidates from best to worst using the transitive ranking key."""
         if not candidates:
             return []
 
-        return sorted(candidates, key=cls.ranking_key, reverse=True)
+        return sorted(candidates, key=self.ranking_key, reverse=True)
 
-    @classmethod
     def is_regression(
-        cls, previous_candidate: ReportCandidate, current_candidate: ReportCandidate
+        self, previous_candidate: ReportCandidate, current_candidate: ReportCandidate
     ) -> bool:
         """Check whether current candidate is strictly worse in quality than previous candidate.
 
         Note: Quality criteria (Tiers 1-6) determine regression. Parsimony tie-breaker (Tier 7)
         is excluded because current candidate round number is always greater than previous.
         """
-        return cls._quality_key(current_candidate) < cls._quality_key(previous_candidate)
+        return self._quality_key(current_candidate) < self._quality_key(previous_candidate)
+
+
+def compare_candidates(c1: ReportCandidate, c2: ReportCandidate) -> int:
+    """Compare two candidates using default hierarchical selection settings."""
+    return CandidateSelector().compare(c1, c2)
+
+
+def select_best_candidate(candidates: Sequence[ReportCandidate]) -> ReportCandidate:
+    """Select the highest-ranking candidate using default hierarchical selection settings."""
+    return CandidateSelector().select_best(candidates)
+
+
+def rank_candidates(candidates: Sequence[ReportCandidate]) -> list[ReportCandidate]:
+    """Rank candidates from best to worst using default hierarchical selection settings."""
+    return CandidateSelector().rank_candidates(candidates)
+
+
+def is_candidate_regression(
+    previous_candidate: ReportCandidate, current_candidate: ReportCandidate
+) -> bool:
+    """Check whether current_candidate regressed relative to previous_candidate."""
+    return CandidateSelector().is_regression(previous_candidate, current_candidate)

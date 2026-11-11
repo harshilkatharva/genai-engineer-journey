@@ -64,15 +64,16 @@ def _make_candidate(
 
 def _assert_strict_weak_order(candidates: list[ReportCandidate]) -> None:
     """Assert irreflexivity, antisymmetry, transitivity, and permutation-invariant sorting."""
+    selector = CandidateSelector()
     for a in candidates:
-        assert CandidateSelector.compare(a, a) == 0
+        assert selector.compare(a, a) == 0
         for b in candidates:
-            ab = CandidateSelector.compare(a, b)
-            ba = CandidateSelector.compare(b, a)
+            ab = selector.compare(a, b)
+            ba = selector.compare(b, a)
             assert ab == -ba
             for c in candidates:
-                bc = CandidateSelector.compare(b, c)
-                ac = CandidateSelector.compare(a, c)
+                bc = selector.compare(b, c)
+                ac = selector.compare(a, c)
                 if ab > 0 and bc > 0:
                     assert ac > 0
                 if ab < 0 and bc < 0:
@@ -80,12 +81,12 @@ def _assert_strict_weak_order(candidates: list[ReportCandidate]) -> None:
                 if ab == 0 and bc == 0:
                     assert ac == 0
 
-    baseline_order = [cand.round_number for cand in CandidateSelector.rank_candidates(candidates)]
+    baseline_order = [cand.round_number for cand in selector.rank_candidates(candidates)]
     for perm in itertools.permutations(candidates):
         perm_list = list(perm)
-        ranked = CandidateSelector.rank_candidates(perm_list)
+        ranked = selector.rank_candidates(perm_list)
         assert [cand.round_number for cand in ranked] == baseline_order
-        assert CandidateSelector.select_best(perm_list).round_number == baseline_order[0]
+        assert selector.select_best(perm_list).round_number == baseline_order[0]
 
 
 def test_candidate_comparator_is_strictly_transitive_across_small_score_steps(
@@ -135,6 +136,7 @@ def test_is_regression_uses_transitive_quality_key_without_parsimony_bias(
     equal_later_round = _make_candidate(valid_report, round_number=1, composite_score=0.90)
     worse_round = _make_candidate(valid_report, round_number=2, composite_score=0.85)
 
-    assert not CandidateSelector.is_regression(prev_round, equal_later_round)
-    assert CandidateSelector.is_regression(equal_later_round, worse_round)
-    assert CandidateSelector.is_regression(prev_round, worse_round)
+    selector = CandidateSelector()
+    assert not selector.is_regression(prev_round, equal_later_round)
+    assert selector.is_regression(equal_later_round, worse_round)
+    assert selector.is_regression(prev_round, worse_round)

@@ -116,6 +116,7 @@ class ReflectionLoopOrchestrator:
         revision_engine: RevisionEngine | None = None,
         acceptance_gate: AcceptanceGate | None = None,
         memory_manager: ReflectionMemoryManager | None = None,
+        candidate_selector: CandidateSelector | None = None,
     ) -> None:
         self.llm_service = llm_service
         self.config = config or get_default_config()
@@ -142,6 +143,7 @@ class ReflectionLoopOrchestrator:
         )
         self.acceptance_gate = acceptance_gate or AcceptanceGate(config=self.config)
         self.memory_manager = memory_manager
+        self.candidate_selector = candidate_selector or CandidateSelector(config=self.config)
 
     async def run(
         self,
@@ -374,7 +376,7 @@ class ReflectionLoopOrchestrator:
             )
 
             # Check for regression relative to previous candidate
-            if CandidateSelector.is_regression(candidates[-1], rev_candidate):
+            if self.candidate_selector.is_regression(candidates[-1], rev_candidate):
                 consecutive_regressions += 1
                 safe_log(
                     logger,
@@ -492,7 +494,7 @@ class ReflectionLoopOrchestrator:
         acceptance_gate: AcceptanceGate | None = None,
     ) -> ReflectionRunResult:
         """Select best candidate, evaluate AcceptanceGate, and assemble ReflectionRunResult."""
-        best_candidate = CandidateSelector.select_best(candidates)
+        best_candidate = self.candidate_selector.select_best(candidates)
         gate = acceptance_gate or self.acceptance_gate
         critique_map = critiques_by_round or {}
         best_critique = critique_map.get(best_candidate.round_number)
