@@ -217,3 +217,77 @@ async def test_missing_embedding_service_fails_indexing_non_silently() -> None:
 
     with pytest.raises(RetrievalError, match="Evidence indexing failed"):
         await retriever.index_sources([{"chunk_id": "c1", "content": "Unembedded text"}])
+
+
+async def test_pgvector_connection_factory_uses_autocommit_and_closes_on_search(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """PGVector read queries must connect with autocommit=True and close cleanly (FINDING-12 Option A)."""
+    from unittest.mock import MagicMock
+
+    import psycopg
+    from genai_core import PGVectorStoreAdapter
+
+    mock_cursor = MagicMock()
+    mock_cursor.execute = AsyncMock()
+    mock_cursor.fetchall = AsyncMock(return_value=[("c1", "Chunk text", {"source_id": "s1"}, 0.95)])
+
+    cursor_cm = MagicMock()
+    cursor_cm.__aenter__ = AsyncMock(return_value=mock_cursor)
+    cursor_cm.__aexit__ = AsyncMock(return_value=None)
+
+    mock_conn = MagicMock()
+    mock_conn.autocommit = True
+    mock_conn.cursor = MagicMock(return_value=cursor_cm)
+    mock_conn.rollback = AsyncMock()
+    mock_conn.close = AsyncMock()
+
+    connect_mock = AsyncMock(return_value=mock_conn)
+    monkeypatch.setattr(psycopg.AsyncConnection, "connect", connect_mock)
+
+    retriever = SourceRetriever()
+    assert isinstance(retriever.store, PGVectorStoreAdapter)
+
+    results = await retriever.store.search([0.1] * 384, top_k=2)
+
+    assert len(results) == 1
+    assert results[0].id == "c1"
+    connect_mock.assert_awaited_once_with(retriever.config.database_url, autocommit=True)
+    mock_conn.rollback.assert_not_awaited()
+    mock_conn.close.assert_awaited_once()
+
+
+async def test_pgvector_connection_factory_rolls_back_and_closes_on_query_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """When autocommit is False or query fails, PG connection must rollback and close cleanly."""
+    from unittest.mock import MagicMock
+
+    import psycopg
+    from genai_core import PGVectorStoreAdapter, VectorStoreError
+
+    mock_cursor = MagicMock()
+    mock_cursor.execute = AsyncMock(side_effect=RuntimeError("Query aborted"))
+
+    cursor_cm = MagicMock()
+    cursor_cm.__aenter__ = AsyncMock(return_value=mock_cursor)
+    cursor_cm.__aexit__ = AsyncMock(return_value=None)
+
+    mock_conn = MagicMock()
+    mock_conn.autocommit = False
+    mock_conn.cursor = MagicMock(return_value=cursor_cm)
+    mock_conn.rollback = AsyncMock()
+    mock_conn.close = AsyncMock()
+
+    connect_mock = AsyncMock(return_value=mock_conn)
+    monkeypatch.setattr(psycopg.AsyncConnection, "connect", connect_mock)
+
+    retriever = SourceRetriever()
+    assert isinstance(retriever.store, PGVectorStoreAdapter)
+
+    with pytest.raises(VectorStoreError, match="Query aborted"):
+        await retriever.store.search([0.1] * 384, top_k=2)
+
+    connect_mock.assert_awaited_once_with(retriever.config.database_url, autocommit=True)
+    mock_conn.rollback.assert_awaited_once()
+    mock_conn.close.assert_awaited_once()

@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import inspect
 import logging
+from collections.abc import AsyncIterator, Callable
+from contextlib import asynccontextmanager
 from typing import TYPE_CHECKING, Any
 
 from genai_core import ObservabilityEvent, safe_log
@@ -70,13 +73,10 @@ class SourceRetriever:
                 import psycopg
                 from genai_core import PGVectorStoreAdapter
 
-                def _conn_factory() -> Any:
-                    return psycopg.AsyncConnection.connect(self.config.database_url)
-
                 self.store = PGVectorStoreAdapter(
                     dimensions=self.config.embedding_dimensions,
                     table_name=self.config.vector_store_table,
-                    connection_factory=_conn_factory,
+                    connection_factory=self._create_pg_connection_factory(psycopg),
                 )
             elif self.config.vector_store_backend == "memory":
                 from genai_core import InMemoryVectorStore
@@ -94,6 +94,42 @@ class SourceRetriever:
             )
 
         self.retrieval_service = self.service
+
+    def _create_pg_connection_factory(self, psycopg_module: Any) -> Callable[[], Any]:
+        """Build an async context-managed PG connection factory with autocommit=True.
+
+        Using ``autocommit=True`` ensures PGVector read queries never leave PostgreSQL
+        sessions in ``INTRANS`` state, and managing the async context guarantees clean
+        connection teardown (plus defensive rollback if autocommit is disabled).
+        """
+
+        @asynccontextmanager
+        async def _managed_pg_connection() -> AsyncIterator[Any]:
+            conn_or_awaitable = psycopg_module.AsyncConnection.connect(
+                self.config.database_url,
+                autocommit=True,
+            )
+            conn = (
+                await conn_or_awaitable
+                if inspect.isawaitable(conn_or_awaitable)
+                else conn_or_awaitable
+            )
+            try:
+                yield conn
+            finally:
+                if not getattr(conn, "autocommit", True):
+                    rollback_fn = getattr(conn, "rollback", None)
+                    if callable(rollback_fn):
+                        rb_res = rollback_fn()
+                        if inspect.isawaitable(rb_res):
+                            await rb_res
+                close_fn = getattr(conn, "close", None)
+                if callable(close_fn):
+                    close_res = close_fn()
+                    if inspect.isawaitable(close_res):
+                        await close_res
+
+        return _managed_pg_connection
 
     async def retrieve_sources(
         self,

@@ -464,3 +464,16 @@ In accordance with repository change control rules, decisions are marked with th
   3. Add unit tests in `tests/unit/core/test_json_response_stripping.py`.
 - **Alternatives Considered:** Modifying `packages/genai-core/src/genai_core/llm/google_provider.py` directly or duplicating `.removeprefix("```json")` across individual callers. Rejected to preserve shared package isolation (`packages/genai-core/`) and avoid fragile duplicate fence-stripping logic.
 - **Impact:** Prevents JSON parsing failures caused by Markdown-fenced LLM outputs across every Module-19 structured response consumer without altering shared packages or concurrency behavior.
+
+---
+
+### Decision 32: Prevent PGVector Read-Transaction Leaks via Autocommit Managed Connection Factory
+- **Status:** Implemented (FINDING-12 Option A — `retrieval/source_retriever.py`, `tests/unit/retrieval/test_source_retriever.py`)
+- **Context:** In `SourceRetriever.__init__`, the default PostgreSQL `PGVectorStoreAdapter` connection factory returned a raw `psycopg.AsyncConnection.connect(self.config.database_url)` coroutine with `autocommit=False`. Because `PGVectorStoreAdapter._get_connection` only enters an async context manager when the returned object implements `__aenter__` (otherwise awaiting the coroutine without closing or terminating transactions), read queries could leave connections open and sessions lingering in `INTRANS` (idle in transaction) state.
+- **Decision:**
+  1. Keep `packages/genai-core/` unmodified (Option A) and add `SourceRetriever._create_pg_connection_factory`, returning an `@asynccontextmanager` for `PGVectorStoreAdapter(connection_factory=...)`.
+  2. Connect via `psycopg.AsyncConnection.connect(self.config.database_url, autocommit=True)` so read operations execute in autocommit mode without initiating idle transactions.
+  3. On context exit (`finally`), defensively issue `rollback()` if `autocommit` is ever disabled on a connection and cleanly `close()` every connection across both normal completion and error paths.
+  4. Add unit tests in `tests/unit/retrieval/test_source_retriever.py` verifying `autocommit=True`, clean `close()` on search, and defensive `rollback()` + `close()` on failure.
+- **Alternatives Considered:** Modifying `PGVectorStoreAdapter._get_connection()` in `packages/genai-core/` directly or reverting runtime defaults to `InMemoryVectorStore`. Rejected to keep `packages/genai-core/` isolated and preserve PostgreSQL runtime defaults established in Decision 21.
+- **Impact:** Eliminates `INTRANS` read-transaction and connection leaks on Module-19 PGVector retrieval without touching shared core packages.
