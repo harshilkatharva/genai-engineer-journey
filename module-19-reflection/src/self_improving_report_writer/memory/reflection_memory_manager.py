@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from typing import TYPE_CHECKING
 
 from genai_core import (
@@ -21,9 +22,11 @@ from self_improving_report_writer.models.critique import (
 )
 
 if TYPE_CHECKING:
+    from self_improving_report_writer.models.verification import VerificationIssue
     from self_improving_report_writer.reflection.orchestrator import ReflectionRunResult
 
 logger = logging.getLogger(__name__)
+_SEQUENTIAL_DET_ID_RE = re.compile(r"DEFECT-\d+", re.IGNORECASE)
 
 
 class ReflectionMemoryManager:
@@ -123,7 +126,14 @@ class ReflectionMemoryManager:
             issues_to_distill.extend(resolved_issues)
         else:
             # Fall back to evaluating defects from baseline that were resolved in best candidate
+            remaining_issues = best.deterministic_report.issues
+            remaining_issue_ids = {i.issue_id for i in remaining_issues}
+            remaining_signatures = {self._det_issue_signature(i) for i in remaining_issues}
             for det_issue in baseline.deterministic_report.issues:
+                if self._is_det_issue_unresolved(
+                    det_issue, remaining_issue_ids, remaining_signatures
+                ):
+                    continue
                 issues_to_distill.append(
                     CritiqueIssue(
                         issue_id=det_issue.issue_id,
@@ -231,3 +241,28 @@ class ReflectionMemoryManager:
                 exc_info=True,
             )
             return []
+
+    @staticmethod
+    def _det_issue_signature(issue: VerificationIssue) -> tuple[str, str, str, str, str, str]:
+        """Build a stable semantic signature invariant to sequential DEFECT-NNN re-numbering."""
+        return (
+            str(issue.category),
+            str(issue.severity),
+            issue.section_id or "",
+            issue.claim_id or "",
+            issue.citation_id or "",
+            issue.message.strip().lower(),
+        )
+
+    @classmethod
+    def _is_det_issue_unresolved(
+        cls,
+        issue: VerificationIssue,
+        remaining_issue_ids: set[str],
+        remaining_signatures: set[tuple[str, str, str, str, str, str]],
+    ) -> bool:
+        """Return True if a baseline deterministic defect still persists in the best candidate."""
+        if cls._det_issue_signature(issue) in remaining_signatures:
+            return True
+        is_sequential_id = bool(_SEQUENTIAL_DET_ID_RE.fullmatch(issue.issue_id.strip()))
+        return (not is_sequential_id) and (issue.issue_id in remaining_issue_ids)

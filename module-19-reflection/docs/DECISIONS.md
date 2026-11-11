@@ -427,3 +427,15 @@ In accordance with repository change control rules, decisions are marked with th
   2. Add dedicated regression tests in `tests/unit/judging/test_judge_prompt_construction.py` verifying chunk-keyed source mappings, multi-source distinction, and end-to-end prompt emission through `RubricJudge.evaluate`.
 - **Alternatives Considered:** Re-keying `sources` dicts by `source_id` inside `ReflectionLoopOrchestrator`. Rejected because one source document can yield multiple chunks, so `chunk_id` keying with an explicit `source_id` XML attribute is required.
 - **Impact:** Locks in regression protection for citation `source_id` visibility in rubric judge prompts.
+
+---
+
+### Decision 29: Filter Unresolved Baseline Defects During Memory Distillation
+- **Status:** Implemented (FINDING-09 - `memory/reflection_memory_manager.py`, `tests/unit/memory/test_memory_distillation.py`)
+- **Context:** When `resolved_issues` was omitted in `ReflectionMemoryManager.distill_lessons`, `_distill_lessons_internal` unconditionally treated every issue in `baseline.deterministic_report.issues` as resolved and stored it into episodic memory as a learned guideline—even when those defects remained unresolved in `best_candidate`. Additionally, `DeterministicVerifier` restarts its sequential `DEFECT-001` counter on every evaluation, so naive `issue_id`-only filtering could mismatch renumbered unresolved issues.
+- **Decision:**
+  1. In `ReflectionMemoryManager._distill_lessons_internal`, compare baseline deterministic issues against `best.deterministic_report.issues` using `_is_det_issue_unresolved` and `_det_issue_signature`.
+  2. Match unresolved defects by semantic signature (`category`, `severity`, `section_id`, `claim_id`, `citation_id`, normalized `message`) across all issues plus stable custom `issue_id` checks for non-`DEFECT-NNN` identifiers, distilling only baseline issues genuinely absent from `best_candidate`.
+  3. Add regression tests in `tests/unit/memory/test_memory_distillation.py` covering unresolved defect suppression and sequential `DEFECT-NNN` renumbering across rounds.
+- **Alternatives Considered:** Matching strictly by `issue_id` alone. Rejected because `DeterministicVerifier` re-numbers `DEFECT-001`, `DEFECT-002` per round, which would misclassify renumbered unresolved issues after fixing earlier defects.
+- **Impact:** Prevents episodic memory poisoning by ensuring unresolved failures are never stored as positive writing rules.
