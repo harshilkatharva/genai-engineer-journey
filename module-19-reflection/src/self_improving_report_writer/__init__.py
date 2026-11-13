@@ -1,7 +1,7 @@
 """Self-Improving Report Writer package."""
 
-from .core.config import ReportWriterConfig, get_default_config
-from .core.exceptions import (
+from self_improving_report_writer.core.config import ReportWriterConfig, get_default_config
+from self_improving_report_writer.core.exceptions import (
     BudgetExceededError,
     GenerationError,
     ReflectionError,
@@ -9,12 +9,12 @@ from .core.exceptions import (
     RetrievalError,
     VerificationError,
 )
-from .generation.prompts import (
+from self_improving_report_writer.generation.prompts import (
     build_report_generation_prompt,
     format_source_contexts,
 )
-from .generation.report_generator import ReportGenerator
-from .models.report import (
+from self_improving_report_writer.generation.report_generator import ReportGenerator
+from self_improving_report_writer.models.report import (
     Citation,
     CitationType,
     Claim,
@@ -22,15 +22,15 @@ from .models.report import (
     ReportSection,
     SourceReference,
 )
-from .models.verification import (
+from self_improving_report_writer.models.verification import (
     DefectCategory,
     DefectSeverity,
     DeterministicVerificationReport,
     PassageMatchResult,
     VerificationIssue,
 )
-from .retrieval.source_retriever import SourceRetriever
-from .verification.deterministic_verifier import (
+from self_improving_report_writer.retrieval.source_retriever import SourceRetriever
+from self_improving_report_writer.verification.deterministic_verifier import (
     DeterministicVerifier,
     normalize_for_matching,
 )

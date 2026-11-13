@@ -1,0 +1,1947 @@
+{
+  "topic_id": "dist-01",
+  "topic_title": "Byzantine Fault Tolerant (BFT) Consensus under Asynchronous Network Partitions",
+  "domain": "distributed_systems",
+  "recorded_at_utc": "2026-11-11T17:53:36.400097+00:00",
+  "rounds_executed": 2,
+  "best_round": 1,
+  "termination_reason": "CONSECUTIVE_REGRESSIONS_EXCEEDED (1 consecutive regressions)",
+  "is_accepted": false,
+  "terminal_status": "UNRESOLVED",
+  "blinded_composite_score": 0.985,
+  "latency_seconds": 831.487,
+  "round_history": [
+    {
+      "round_number": 0,
+      "deterministic_passed": false,
+      "critical_defect_count": 0,
+      "major_defect_count": 13,
+      "grounding_score": 0.4,
+      "all_claims_grounded": false,
+      "composite_score": 0.82,
+      "is_self_judged": false,
+      "tokens_used": 7177,
+      "cost_usd": 0.001059
+    },
+    {
+      "round_number": 1,
+      "deterministic_passed": true,
+      "critical_defect_count": 0,
+      "major_defect_count": 3,
+      "grounding_score": 1.0,
+      "all_claims_grounded": true,
+      "composite_score": 0.985,
+      "is_self_judged": false,
+      "tokens_used": 12302,
+      "cost_usd": 0.001605
+    },
+    {
+      "round_number": 2,
+      "deterministic_passed": true,
+      "critical_defect_count": 0,
+      "major_defect_count": 3,
+      "grounding_score": 0.9167,
+      "all_claims_grounded": false,
+      "composite_score": 0.985,
+      "is_self_judged": false,
+      "tokens_used": 12333,
+      "cost_usd": 0.001674
+    }
+  ],
+  "budget_summary": {
+    "used_tokens": 31812,
+    "max_tokens": 50000,
+    "used_cost_usd": 0.004338,
+    "max_cost_usd": 0.2,
+    "elapsed_seconds": 641.723,
+    "max_seconds": 1800.0,
+    "rounds_executed": 2,
+    "max_rounds": 3,
+    "is_exhausted": false,
+    "exhaustion_reason": null
+  },
+  "reflection_run_result": {
+    "topic": "Byzantine Fault Tolerant (BFT) Consensus under Asynchronous Network Partitions",
+    "best_candidate": {
+      "round_number": 1,
+      "report": {
+        "topic": "Byzantine Fault Tolerant (BFT) Consensus under Asynchronous Network Partitions",
+        "title": "Mitigating Bandwidth and Latency Bottlenecks in Byzantine Fault Tolerant Consensus Protocols",
+        "executive_summary": {
+          "section_id": "sec_exec_summary",
+          "title": "Executive Summary",
+          "content": "Traditional BFT consensus architectures often experience bandwidth bottlenecks and high communication complexity during network partitions and leader failovers [cite_exec_src1]. Recent advancements such as the Narwhal-Tusk and HotStuff-2 protocols introduce decoupled architectures and optimized threshold signature mechanisms to sustain high transaction throughput and reduce recovery latency [cite_exec_src2].",
+          "claims": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec_summary",
+              "text": "Traditional BFT protocols intertwine transaction dissemination with block ordering, and recent protocols like Narwhal-Tusk and HotStuff-2 introduce decoupled architectures and threshold signature mechanisms to sustain high transaction throughput and reduce recovery latency.",
+              "citations": [
+                {
+                  "citation_id": "cite_exec_src1",
+                  "source_id": "src_dist_01_a",
+                  "chunk_id": "chunk_dist_01_1",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 0.99
+                },
+                {
+                  "citation_id": "cite_exec_src2",
+                  "source_id": "src_dist_01_b",
+                  "chunk_id": "chunk_dist_01_2",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 0.99
+                }
+              ],
+              "is_factual": true
+            }
+          ]
+        },
+        "sections": [
+          {
+            "section_id": "sec_architectures",
+            "title": "Decoupled DAG Architectures and View-Change Efficiency",
+            "content": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node [cite_sec1_src1]. To resolve this, the Narwhal-Tusk architecture decouples the mempool into a high-throughput reliable broadcast DAG from the zero-message consensus layer, sustaining 160,000 transactions per second with sub-second finality [cite_4]. Furthermore, under partial synchrony models, liveness can be suspended during partitions exceeding Delta, but HotStuff-2 reduces view-change communication complexity to O(n) using threshold signature accumulators [cite_5].",
+            "claims": [
+              {
+                "claim_id": "claim_sec1_1",
+                "section_id": "sec_architectures",
+                "text": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+                "citations": [
+                  {
+                    "citation_id": "cite_sec1_src1",
+                    "source_id": "src_dist_01_a",
+                    "chunk_id": "chunk_dist_01_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_sec1_2",
+                "section_id": "sec_architectures",
+                "text": "The Narwhal-Tusk architecture decouples the mempool into a high-throughput reliable broadcast DAG from the zero-message consensus layer, sustaining 160,000 transactions per second with sub-second finality over 100 geographically distributed validators.",
+                "citations": [
+                  {
+                    "citation_id": "cite_4",
+                    "source_id": "src_dist_01_a",
+                    "chunk_id": "chunk_dist_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.99
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_sec1_3",
+                "section_id": "sec_architectures",
+                "text": "HotStuff-2 reduces view-change communication complexity to O(n) using threshold signature accumulators, reducing latency by 40% compared to three-phase classic HotStuff when recovering from leader failovers.",
+                "citations": [
+                  {
+                    "citation_id": "cite_5",
+                    "source_id": "src_dist_01_b",
+                    "chunk_id": "chunk_dist_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.99
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          }
+        ],
+        "conclusion": {
+          "section_id": "sec_conclusion",
+          "title": "Conclusion and Future Directions",
+          "content": "The evolution of Byzantine Fault Tolerant consensus demonstrates that decoupling transaction dissemination from block ordering and utilizing threshold signatures significantly improves scalability and fault resilience [cite_conc_src1]. Future research must continue addressing network partition vulnerabilities under asynchronous conditions to maintain liveness and low latency based on established partial synchrony models [cite_conc_src2].",
+          "claims": [
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "text": "Decoupling transaction dissemination from block ordering and utilizing threshold signatures significantly improves scalability, fault resilience, and addresses network partition vulnerabilities under asynchronous conditions.",
+              "citations": [
+                {
+                  "citation_id": "cite_conc_src1",
+                  "source_id": "src_dist_01_a",
+                  "chunk_id": "chunk_dist_01_1",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 0.99
+                },
+                {
+                  "citation_id": "cite_conc_src2",
+                  "source_id": "src_dist_01_b",
+                  "chunk_id": "chunk_dist_01_2",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 0.99
+                }
+              ],
+              "is_factual": true
+            }
+          ]
+        },
+        "limitations": [
+          "Evidence is limited to specific protocol evaluations (Narwhal-Tusk and HotStuff-2) without exhaustive comparative analysis across all existing BFT variants.",
+          "Data regarding performance under extreme asynchronous network partitions is constrained by partial synchrony model assumptions."
+        ],
+        "version": 2,
+        "created_by": "revision_llm",
+        "created_at": "2026-03-31T01:00:00Z"
+      },
+      "deterministic_report": {
+        "passed": true,
+        "schema_valid": true,
+        "citations_valid": true,
+        "passages_matched": true,
+        "total_claims": 5,
+        "total_citations": 7,
+        "passage_matches": [
+          {
+            "citation_id": "cite_sec1_src1",
+            "source_id": "src_dist_01_a",
+            "chunk_id": "chunk_dist_01_1",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+            "normalized_passage": "traditional bft protocols like pbft intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+            "normalized_source_chunk": "traditional bft protocols like pbft intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node. the narwhal-tusk architecture decouples the mempool into a high-throughput reliable broadcast dag (narwhal) from the zero-message consensus layer (tusk), sustaining 160,000 transactions per second with sub-second finality over 100 geographically distributed validators."
+          }
+        ],
+        "issues": [],
+        "critical_count": 0,
+        "major_count": 0,
+        "minor_count": 0
+      },
+      "grounding_report": {
+        "passed": false,
+        "all_claims_grounded": true,
+        "grounding_score": 1.0,
+        "claim_evaluations": [
+          {
+            "claim_id": "claim_exec_1",
+            "section_id": "sec_exec_summary",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunks confirm that traditional BFT protocols intertwine dissemination and ordering (chunk_dist_01_1), Narwhal-Tusk decouples these processes to achieve high throughput (chunk_dist_01_1), and HotStuff-2 uses threshold signature accumulators to reduce latency during leader failovers (chunk_dist_01_2).",
+            "cited_chunk_ids": [
+              "chunk_dist_01_1",
+              "chunk_dist_01_2"
+            ]
+          },
+          {
+            "claim_id": "claim_sec1_1",
+            "section_id": "sec_architectures",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk explicitly states that traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, which creates bandwidth bottlenecks at the primary node.",
+            "cited_chunk_ids": [
+              "chunk_dist_01_1"
+            ]
+          },
+          {
+            "claim_id": "claim_sec1_2",
+            "section_id": "sec_architectures",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk confirms that Narwhal-Tusk decouples the mempool into a high-throughput reliable broadcast DAG and a zero-message consensus layer, achieving 160,000 transactions per second with sub-second finality across 100 validators.",
+            "cited_chunk_ids": [
+              "chunk_dist_01_1"
+            ]
+          },
+          {
+            "claim_id": "claim_sec1_3",
+            "section_id": "sec_architectures",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk states that HotStuff-2 reduces view-change communication complexity to O(n) using threshold signature accumulators and reduces latency by 40% compared to three-phase classic HotStuff during leader failovers.",
+            "cited_chunk_ids": [
+              "chunk_dist_01_2"
+            ]
+          },
+          {
+            "claim_id": "claim_conc_1",
+            "section_id": "sec_conclusion",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunks support the claim: chunk_dist_01_1 describes how decoupling dissemination from ordering (Narwhal-Tusk) improves throughput and scalability, while chunk_dist_01_2 explains how threshold signatures (HotStuff-2) improve fault resilience (leader failover) and notes the protocol's behavior under partial synchrony/asynchronous conditions.",
+            "cited_chunk_ids": [
+              "chunk_dist_01_1",
+              "chunk_dist_01_2"
+            ]
+          }
+        ],
+        "issues": [
+          {
+            "issue_id": "G2-DEFECT-001",
+            "category": "factual_grounding",
+            "severity": "major",
+            "message": "Section 'sec_exec_summary' contains ungrounded factual assertion in prose not captured as a claim: 'Traditional BFT consensus architectures experience bandwidth bottlenecks and high communication complexity during network partitions and leader failovers.'",
+            "section_id": "sec_exec_summary",
+            "claim_id": null,
+            "citation_id": null,
+            "details": {
+              "unstructured_claim": "Traditional BFT consensus architectures experience bandwidth bottlenecks and high communication complexity during network partitions and leader failovers."
+            }
+          },
+          {
+            "issue_id": "G2-DEFECT-002",
+            "category": "factual_grounding",
+            "severity": "major",
+            "message": "Section 'sec_architectures' contains ungrounded factual assertion in prose not captured as a claim: 'Under partial synchrony models, liveness can be suspended during partitions exceeding Delta.'",
+            "section_id": "sec_architectures",
+            "claim_id": null,
+            "citation_id": null,
+            "details": {
+              "unstructured_claim": "Under partial synchrony models, liveness can be suspended during partitions exceeding Delta."
+            }
+          },
+          {
+            "issue_id": "G2-DEFECT-003",
+            "category": "factual_grounding",
+            "severity": "major",
+            "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'Future research must continue addressing network partition vulnerabilities under asynchronous conditions to maintain liveness and low latency based on established partial synchrony models.'",
+            "section_id": "sec_conclusion",
+            "claim_id": null,
+            "citation_id": null,
+            "details": {
+              "unstructured_claim": "Future research must continue addressing network partition vulnerabilities under asynchronous conditions to maintain liveness and low latency based on established partial synchrony models."
+            }
+          }
+        ],
+        "critical_count": 0,
+        "major_count": 3,
+        "minor_count": 0,
+        "tokens_used": 4057,
+        "cost_usd": 0.000492
+      },
+      "judge_verdict": {
+        "composite_score": 0.985,
+        "passed": true,
+        "dimension_scores": {
+          "factual_accuracy": {
+            "dimension_name": "factual_accuracy",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "All claims made in the report are consistent with the provided source material. No hallucinations or factual errors were detected."
+          },
+          "evidence_grounding": {
+            "dimension_name": "evidence_grounding",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "Every factual assertion is directly supported by the provided source chunks. The report accurately synthesizes the technical details of Narwhal-Tusk and HotStuff-2."
+          },
+          "citation_correctness": {
+            "dimension_name": "citation_correctness",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "Citations are correctly mapped to the provided source IDs and chunk IDs. Quotations are accurate and correctly attributed."
+          },
+          "completeness": {
+            "dimension_name": "completeness",
+            "score": 0.9,
+            "passed": true,
+            "reasoning": "The report covers the core technical mechanisms requested and includes a limitations section that acknowledges the scope of the analysis."
+          },
+          "relevance": {
+            "dimension_name": "relevance",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The content remains strictly focused on BFT consensus, network partitions, and the specific protocols mentioned in the sources."
+          },
+          "clarity_organization": {
+            "dimension_name": "clarity_organization",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report is well-structured with a logical flow from executive summary to technical architecture and conclusion."
+          },
+          "logical_consistency": {
+            "dimension_name": "logical_consistency",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report maintains internal coherence, with no contradictory statements between the summary, body, and conclusion."
+          }
+        },
+        "overall_feedback": "The report is highly professional, accurate, and well-grounded in the provided source material. It effectively synthesizes complex technical information regarding BFT consensus protocols. No significant improvements are required.",
+        "is_self_judged": false,
+        "effective_threshold": 0.85,
+        "judge_model": "gemini-3.1-flash-lite",
+        "tokens_used": 3246,
+        "cost_usd": 0.000359
+      },
+      "tokens_used": 12302,
+      "cost_usd": 0.001605
+    },
+    "all_candidates": [
+      {
+        "round_number": 0,
+        "report": {
+          "topic": "Byzantine Fault Tolerant (BFT) Consensus under Asynchronous Network Partitions",
+          "title": "Mitigating Bandwidth and Latency Bottlenecks in Byzantine Fault Tolerant Consensus Protocols",
+          "executive_summary": {
+            "section_id": "sec_exec_summary",
+            "title": "Executive Summary",
+            "content": "Traditional BFT consensus architectures often experience bandwidth bottlenecks and high communication complexity during network partitions and leader failovers. Recent advancements such as the Narwhal-Tusk and HotStuff-2 protocols introduce decoupled architectures and optimized threshold signature mechanisms to sustain high transaction throughput and reduce recovery latency [cite_1, cite_2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec_summary",
+                "text": "Traditional BFT protocols experience bandwidth bottlenecks and network partition challenges that are addressed by recent protocols like Narwhal-Tusk and HotStuff-2.",
+                "citations": [],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_architectures",
+              "title": "Decoupled DAG Architectures and View-Change Efficiency",
+              "content": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node [cite_3]. To resolve this, the Narwhal-Tusk architecture decouples the mempool into a high-throughput reliable broadcast DAG from the zero-message consensus layer, sustaining 160,000 transactions per second with sub-second finality [cite_4]. Furthermore, under partial synchrony models, liveness can be suspended during partitions exceeding Delta, but HotStuff-2 reduces view-change communication complexity to O(n) using threshold signature accumulators [cite_5].",
+              "claims": [
+                {
+                  "claim_id": "claim_sec1_1",
+                  "section_id": "sec_architectures",
+                  "text": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+                  "citations": [],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_sec1_2",
+                  "section_id": "sec_architectures",
+                  "text": "The Narwhal-Tusk architecture decouples the mempool into a high-throughput reliable broadcast DAG from the zero-message consensus layer, sustaining 160,000 transactions per second with sub-second finality over 100 geographically distributed validators.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_4",
+                      "source_id": "src_dist_01_a",
+                      "chunk_id": "chunk_dist_01_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 0.99
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_sec1_3",
+                  "section_id": "sec_architectures",
+                  "text": "HotStuff-2 reduces view-change communication complexity to O(n) using threshold signature accumulators, reducing latency by 40% compared to three-phase classic HotStuff when recovering from leader failovers.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_5",
+                      "source_id": "src_dist_01_b",
+                      "chunk_id": "chunk_dist_01_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 0.99
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Future Directions",
+            "content": "The evolution of Byzantine Fault Tolerant consensus demonstrates that decoupling transaction dissemination from block ordering and utilizing threshold signatures significantly improves scalability and fault resilience [cite_6]. Future research must continue addressing network partition vulnerabilities under asynchronous conditions to maintain liveness and low latency.",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Decoupling transaction dissemination from block ordering and utilizing threshold signatures significantly improves scalability and fault resilience.",
+                "citations": [],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Evidence is limited to specific protocol evaluations (Narwhal-Tusk and HotStuff-2) without exhaustive comparative analysis across all existing BFT variants.",
+            "Data regarding performance under extreme asynchronous network partitions is constrained by partial synchrony model assumptions."
+          ],
+          "version": 1,
+          "created_by": "generator_llm",
+          "created_at": "2026-03-31T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": false,
+          "schema_valid": true,
+          "citations_valid": false,
+          "passages_matched": true,
+          "total_claims": 5,
+          "total_citations": 2,
+          "passage_matches": [],
+          "issues": [
+            {
+              "issue_id": "DEFECT-001",
+              "category": "citation_integrity",
+              "severity": "major",
+              "message": "Factual claim 'claim_exec_1' lacks supporting citations.",
+              "section_id": "sec_exec_summary",
+              "claim_id": "claim_exec_1",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "DEFECT-002",
+              "category": "citation_integrity",
+              "severity": "major",
+              "message": "Factual claim 'claim_sec1_1' lacks supporting citations.",
+              "section_id": "sec_architectures",
+              "claim_id": "claim_sec1_1",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "DEFECT-003",
+              "category": "citation_integrity",
+              "severity": "major",
+              "message": "Factual claim 'claim_conc_1' lacks supporting citations.",
+              "section_id": "sec_conclusion",
+              "claim_id": "claim_conc_1",
+              "citation_id": null,
+              "details": {}
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 3,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": false,
+          "grounding_score": 0.4,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec_summary",
+              "entailment": "NEUTRAL",
+              "score": 0.0,
+              "reasoning": "Claim has no citations attached to substantiate the factual proposition.",
+              "cited_chunk_ids": []
+            },
+            {
+              "claim_id": "claim_sec1_1",
+              "section_id": "sec_architectures",
+              "entailment": "NEUTRAL",
+              "score": 0.0,
+              "reasoning": "Claim has no citations attached to substantiate the factual proposition.",
+              "cited_chunk_ids": []
+            },
+            {
+              "claim_id": "claim_sec1_2",
+              "section_id": "sec_architectures",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim is a direct restatement of the information provided in chunk_dist_01_1, which explicitly mentions the decoupling of the mempool into a reliable broadcast DAG and a zero-message consensus layer, as well as the performance metrics of 160,000 TPS and sub-second finality across 100 validators.",
+              "cited_chunk_ids": [
+                "chunk_dist_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_sec1_3",
+              "section_id": "sec_architectures",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim accurately reflects the details provided in chunk_dist_01_2 regarding HotStuff-2's O(n) communication complexity, the use of threshold signature accumulators, and the 40% latency reduction compared to classic HotStuff during leader failovers.",
+              "cited_chunk_ids": [
+                "chunk_dist_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "NEUTRAL",
+              "score": 0.0,
+              "reasoning": "Claim has no citations attached to substantiate the factual proposition.",
+              "cited_chunk_ids": []
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Factual claim 'claim_exec_1' lacks supporting citations.",
+              "section_id": "sec_exec_summary",
+              "claim_id": "claim_exec_1",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "G2-DEFECT-002",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec_summary' contains ungrounded factual assertion in prose not captured as a claim: 'Traditional BFT consensus architectures experience high communication complexity during leader failovers.'",
+              "section_id": "sec_exec_summary",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Traditional BFT consensus architectures experience high communication complexity during leader failovers."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-003",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec_summary' contains ungrounded factual assertion in prose not captured as a claim: 'Narwhal-Tusk and HotStuff-2 utilize decoupled architectures.'",
+              "section_id": "sec_exec_summary",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Narwhal-Tusk and HotStuff-2 utilize decoupled architectures."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-004",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec_summary' contains ungrounded factual assertion in prose not captured as a claim: 'Narwhal-Tusk and HotStuff-2 utilize optimized threshold signature mechanisms.'",
+              "section_id": "sec_exec_summary",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Narwhal-Tusk and HotStuff-2 utilize optimized threshold signature mechanisms."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-005",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec_summary' contains ungrounded factual assertion in prose not captured as a claim: 'Narwhal-Tusk and HotStuff-2 sustain high transaction throughput.'",
+              "section_id": "sec_exec_summary",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Narwhal-Tusk and HotStuff-2 sustain high transaction throughput."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-006",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec_summary' contains ungrounded factual assertion in prose not captured as a claim: 'Narwhal-Tusk and HotStuff-2 reduce recovery latency.'",
+              "section_id": "sec_exec_summary",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Narwhal-Tusk and HotStuff-2 reduce recovery latency."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-007",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Factual claim 'claim_sec1_1' lacks supporting citations.",
+              "section_id": "sec_architectures",
+              "claim_id": "claim_sec1_1",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "G2-DEFECT-008",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_architectures' contains ungrounded factual assertion in prose not captured as a claim: 'Under partial synchrony models, liveness can be suspended during partitions exceeding Delta.'",
+              "section_id": "sec_architectures",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Under partial synchrony models, liveness can be suspended during partitions exceeding Delta."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-009",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Factual claim 'claim_conc_1' lacks supporting citations.",
+              "section_id": "sec_conclusion",
+              "claim_id": "claim_conc_1",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "G2-DEFECT-010",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'Future research must continue addressing network partition vulnerabilities under asynchronous conditions to maintain liveness and low latency.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Future research must continue addressing network partition vulnerabilities under asynchronous conditions to maintain liveness and low latency."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 10,
+          "minor_count": 0,
+          "tokens_used": 2420,
+          "cost_usd": 0.000312
+        },
+        "judge_verdict": {
+          "composite_score": 0.82,
+          "passed": false,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 0.95,
+              "passed": true,
+              "reasoning": "The report accurately reflects the technical details of Narwhal-Tusk and HotStuff-2 as provided in the source material. No hallucinations were detected."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 0.7,
+              "passed": false,
+              "reasoning": "While the content is factually accurate, several key claims (claim_exec_1, claim_sec1_1, claim_conc_1) are not linked to any citations, failing to ground the assertions in the provided source contexts."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 0.5,
+              "passed": false,
+              "reasoning": "The report fails to provide citations for multiple major claims. Furthermore, the citations used (cite_1 through cite_6) are placeholders that do not map to the provided source IDs, violating the requirement for precise source attribution."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.85,
+              "passed": true,
+              "reasoning": "The report covers the requested topic well, including architectural improvements and limitations regarding partial synchrony models."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report stays strictly on topic, focusing on BFT consensus and network partitions without extraneous information."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 0.9,
+              "passed": true,
+              "reasoning": "The report is well-structured with a logical flow from executive summary to technical analysis and conclusion."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally coherent, with no contradictory statements across sections."
+            }
+          },
+          "overall_feedback": "The report provides a high-quality technical summary of the requested BFT consensus protocols. However, it suffers from significant citation failures. Multiple core claims are missing citations entirely, and the citations that are present use placeholder labels (cite_1, etc.) rather than referencing the provided source IDs. To improve, the author must ensure every factual claim is explicitly linked to the corresponding source ID and remove all placeholder citation markers.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 2901,
+          "cost_usd": 0.000352
+        },
+        "tokens_used": 7177,
+        "cost_usd": 0.001059
+      },
+      {
+        "round_number": 1,
+        "report": {
+          "topic": "Byzantine Fault Tolerant (BFT) Consensus under Asynchronous Network Partitions",
+          "title": "Mitigating Bandwidth and Latency Bottlenecks in Byzantine Fault Tolerant Consensus Protocols",
+          "executive_summary": {
+            "section_id": "sec_exec_summary",
+            "title": "Executive Summary",
+            "content": "Traditional BFT consensus architectures often experience bandwidth bottlenecks and high communication complexity during network partitions and leader failovers [cite_exec_src1]. Recent advancements such as the Narwhal-Tusk and HotStuff-2 protocols introduce decoupled architectures and optimized threshold signature mechanisms to sustain high transaction throughput and reduce recovery latency [cite_exec_src2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec_summary",
+                "text": "Traditional BFT protocols intertwine transaction dissemination with block ordering, and recent protocols like Narwhal-Tusk and HotStuff-2 introduce decoupled architectures and threshold signature mechanisms to sustain high transaction throughput and reduce recovery latency.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_src1",
+                    "source_id": "src_dist_01_a",
+                    "chunk_id": "chunk_dist_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.99
+                  },
+                  {
+                    "citation_id": "cite_exec_src2",
+                    "source_id": "src_dist_01_b",
+                    "chunk_id": "chunk_dist_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.99
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_architectures",
+              "title": "Decoupled DAG Architectures and View-Change Efficiency",
+              "content": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node [cite_sec1_src1]. To resolve this, the Narwhal-Tusk architecture decouples the mempool into a high-throughput reliable broadcast DAG from the zero-message consensus layer, sustaining 160,000 transactions per second with sub-second finality [cite_4]. Furthermore, under partial synchrony models, liveness can be suspended during partitions exceeding Delta, but HotStuff-2 reduces view-change communication complexity to O(n) using threshold signature accumulators [cite_5].",
+              "claims": [
+                {
+                  "claim_id": "claim_sec1_1",
+                  "section_id": "sec_architectures",
+                  "text": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_sec1_src1",
+                      "source_id": "src_dist_01_a",
+                      "chunk_id": "chunk_dist_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_sec1_2",
+                  "section_id": "sec_architectures",
+                  "text": "The Narwhal-Tusk architecture decouples the mempool into a high-throughput reliable broadcast DAG from the zero-message consensus layer, sustaining 160,000 transactions per second with sub-second finality over 100 geographically distributed validators.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_4",
+                      "source_id": "src_dist_01_a",
+                      "chunk_id": "chunk_dist_01_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 0.99
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_sec1_3",
+                  "section_id": "sec_architectures",
+                  "text": "HotStuff-2 reduces view-change communication complexity to O(n) using threshold signature accumulators, reducing latency by 40% compared to three-phase classic HotStuff when recovering from leader failovers.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_5",
+                      "source_id": "src_dist_01_b",
+                      "chunk_id": "chunk_dist_01_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 0.99
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Future Directions",
+            "content": "The evolution of Byzantine Fault Tolerant consensus demonstrates that decoupling transaction dissemination from block ordering and utilizing threshold signatures significantly improves scalability and fault resilience [cite_conc_src1]. Future research must continue addressing network partition vulnerabilities under asynchronous conditions to maintain liveness and low latency based on established partial synchrony models [cite_conc_src2].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Decoupling transaction dissemination from block ordering and utilizing threshold signatures significantly improves scalability, fault resilience, and addresses network partition vulnerabilities under asynchronous conditions.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_src1",
+                    "source_id": "src_dist_01_a",
+                    "chunk_id": "chunk_dist_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.99
+                  },
+                  {
+                    "citation_id": "cite_conc_src2",
+                    "source_id": "src_dist_01_b",
+                    "chunk_id": "chunk_dist_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.99
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Evidence is limited to specific protocol evaluations (Narwhal-Tusk and HotStuff-2) without exhaustive comparative analysis across all existing BFT variants.",
+            "Data regarding performance under extreme asynchronous network partitions is constrained by partial synchrony model assumptions."
+          ],
+          "version": 2,
+          "created_by": "revision_llm",
+          "created_at": "2026-03-31T01:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 5,
+          "total_citations": 7,
+          "passage_matches": [
+            {
+              "citation_id": "cite_sec1_src1",
+              "source_id": "src_dist_01_a",
+              "chunk_id": "chunk_dist_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+              "normalized_passage": "traditional bft protocols like pbft intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+              "normalized_source_chunk": "traditional bft protocols like pbft intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node. the narwhal-tusk architecture decouples the mempool into a high-throughput reliable broadcast dag (narwhal) from the zero-message consensus layer (tusk), sustaining 160,000 transactions per second with sub-second finality over 100 geographically distributed validators."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec_summary",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunks confirm that traditional BFT protocols intertwine dissemination and ordering (chunk_dist_01_1), Narwhal-Tusk decouples these processes to achieve high throughput (chunk_dist_01_1), and HotStuff-2 uses threshold signature accumulators to reduce latency during leader failovers (chunk_dist_01_2).",
+              "cited_chunk_ids": [
+                "chunk_dist_01_1",
+                "chunk_dist_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_sec1_1",
+              "section_id": "sec_architectures",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, which creates bandwidth bottlenecks at the primary node.",
+              "cited_chunk_ids": [
+                "chunk_dist_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_sec1_2",
+              "section_id": "sec_architectures",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that Narwhal-Tusk decouples the mempool into a high-throughput reliable broadcast DAG and a zero-message consensus layer, achieving 160,000 transactions per second with sub-second finality across 100 validators.",
+              "cited_chunk_ids": [
+                "chunk_dist_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_sec1_3",
+              "section_id": "sec_architectures",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk states that HotStuff-2 reduces view-change communication complexity to O(n) using threshold signature accumulators and reduces latency by 40% compared to three-phase classic HotStuff during leader failovers.",
+              "cited_chunk_ids": [
+                "chunk_dist_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunks support the claim: chunk_dist_01_1 describes how decoupling dissemination from ordering (Narwhal-Tusk) improves throughput and scalability, while chunk_dist_01_2 explains how threshold signatures (HotStuff-2) improve fault resilience (leader failover) and notes the protocol's behavior under partial synchrony/asynchronous conditions.",
+              "cited_chunk_ids": [
+                "chunk_dist_01_1",
+                "chunk_dist_01_2"
+              ]
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec_summary' contains ungrounded factual assertion in prose not captured as a claim: 'Traditional BFT consensus architectures experience bandwidth bottlenecks and high communication complexity during network partitions and leader failovers.'",
+              "section_id": "sec_exec_summary",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Traditional BFT consensus architectures experience bandwidth bottlenecks and high communication complexity during network partitions and leader failovers."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-002",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_architectures' contains ungrounded factual assertion in prose not captured as a claim: 'Under partial synchrony models, liveness can be suspended during partitions exceeding Delta.'",
+              "section_id": "sec_architectures",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Under partial synchrony models, liveness can be suspended during partitions exceeding Delta."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-003",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'Future research must continue addressing network partition vulnerabilities under asynchronous conditions to maintain liveness and low latency based on established partial synchrony models.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Future research must continue addressing network partition vulnerabilities under asynchronous conditions to maintain liveness and low latency based on established partial synchrony models."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 3,
+          "minor_count": 0,
+          "tokens_used": 4057,
+          "cost_usd": 0.000492
+        },
+        "judge_verdict": {
+          "composite_score": 0.985,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All claims made in the report are consistent with the provided source material. No hallucinations or factual errors were detected."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every factual assertion is directly supported by the provided source chunks. The report accurately synthesizes the technical details of Narwhal-Tusk and HotStuff-2."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are correctly mapped to the provided source IDs and chunk IDs. Quotations are accurate and correctly attributed."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.9,
+              "passed": true,
+              "reasoning": "The report covers the core technical mechanisms requested and includes a limitations section that acknowledges the scope of the analysis."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The content remains strictly focused on BFT consensus, network partitions, and the specific protocols mentioned in the sources."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is well-structured with a logical flow from executive summary to technical architecture and conclusion."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report maintains internal coherence, with no contradictory statements between the summary, body, and conclusion."
+            }
+          },
+          "overall_feedback": "The report is highly professional, accurate, and well-grounded in the provided source material. It effectively synthesizes complex technical information regarding BFT consensus protocols. No significant improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 3246,
+          "cost_usd": 0.000359
+        },
+        "tokens_used": 12302,
+        "cost_usd": 0.001605
+      },
+      {
+        "round_number": 2,
+        "report": {
+          "topic": "Byzantine Fault Tolerant (BFT) Consensus under Asynchronous Network Partitions",
+          "title": "Mitigating Bandwidth and Latency Bottlenecks in Byzantine Fault Tolerant Consensus Protocols",
+          "executive_summary": {
+            "section_id": "sec_exec_summary",
+            "title": "Executive Summary",
+            "content": "Traditional BFT protocols intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node [cite_exec_src1]. Recent advancements such as the Narwhal-Tusk and HotStuff-2 protocols introduce decoupled architectures and optimized threshold signature mechanisms to sustain high transaction throughput and reduce recovery latency [cite_exec_src2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec_summary",
+                "text": "Traditional BFT protocols intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_src1",
+                    "source_id": "src_dist_01_a",
+                    "chunk_id": "chunk_dist_01_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec_summary",
+                "text": "Recent protocols like Narwhal-Tusk and HotStuff-2 introduce decoupled architectures and threshold signature mechanisms to sustain high transaction throughput and reduce recovery latency.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_src2",
+                    "source_id": "src_dist_01_b",
+                    "chunk_id": "chunk_dist_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.99
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_architectures",
+              "title": "Decoupled DAG Architectures and View-Change Efficiency",
+              "content": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node [cite_sec1_src1]. To resolve this, the Narwhal-Tusk architecture decouples the mempool into a high-throughput reliable broadcast DAG from the zero-message consensus layer, sustaining 160,000 transactions per second with sub-second finality [cite_4]. Furthermore, under the Dwork-Mimno-Stockmeyer partial synchrony model, protocols guarantee safety under complete asynchrony but liveness is suspended during network partitions exceeding Delta, and HotStuff-2 reduces view-change communication complexity to O(n) using threshold signature accumulators [cite_5].",
+              "claims": [
+                {
+                  "claim_id": "claim_sec1_1",
+                  "section_id": "sec_architectures",
+                  "text": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_sec1_src1",
+                      "source_id": "src_dist_01_a",
+                      "chunk_id": "chunk_dist_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_sec1_2",
+                  "section_id": "sec_architectures",
+                  "text": "The Narwhal-Tusk architecture decouples the mempool into a high-throughput reliable broadcast DAG from the zero-message consensus layer, sustaining 160,000 transactions per second with sub-second finality over 100 geographically distributed validators.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_4",
+                      "source_id": "src_dist_01_a",
+                      "chunk_id": "chunk_dist_01_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 0.99
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_sec1_3",
+                  "section_id": "sec_architectures",
+                  "text": "Under the Dwork-Mimno-Stockmeyer partial synchrony model, protocols guarantee safety under complete asynchrony but liveness is suspended during network partitions exceeding Delta, and HotStuff-2 reduces view-change communication complexity to O(n) using threshold signature accumulators.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_5",
+                      "source_id": "src_dist_01_b",
+                      "chunk_id": "chunk_dist_01_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Under the Dwork-Mimno-Stockmeyer partial synchrony model, protocols guarantee safety under complete asynchrony but liveness is suspended during network partitions exceeding Delta. HotStuff-2 reduces view-change communication complexity to O(n) using threshold signature accumulators",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Future Directions",
+            "content": "The evolution of Byzantine Fault Tolerant consensus demonstrates that decoupling transaction dissemination from block ordering and utilizing threshold signatures significantly improves scalability and fault resilience [cite_conc_src1]. Under the Dwork-Mimno-Stockmeyer partial synchrony model, protocols guarantee safety under complete asynchrony but liveness is suspended during network partitions exceeding Delta, guiding future research to maintain liveness and low latency [cite_conc_src2].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Decoupling transaction dissemination from block ordering and utilizing threshold signatures significantly improves scalability, fault resilience, and addresses network partition vulnerabilities under asynchronous conditions.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_src1",
+                    "source_id": "src_dist_01_a",
+                    "chunk_id": "chunk_dist_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.99
+                  },
+                  {
+                    "citation_id": "cite_conc_src2",
+                    "source_id": "src_dist_01_b",
+                    "chunk_id": "chunk_dist_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.99
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Evidence is limited to specific protocol evaluations (Narwhal-Tusk and HotStuff-2) without exhaustive comparative analysis across all existing BFT variants.",
+            "Data regarding performance under extreme asynchronous network partitions is constrained by partial synchrony model assumptions."
+          ],
+          "version": 3,
+          "created_by": "revision_llm",
+          "created_at": "2026-03-31T02:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 6,
+          "total_citations": 7,
+          "passage_matches": [
+            {
+              "citation_id": "cite_exec_src1",
+              "source_id": "src_dist_01_a",
+              "chunk_id": "chunk_dist_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+              "normalized_passage": "traditional bft protocols like pbft intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+              "normalized_source_chunk": "traditional bft protocols like pbft intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node. the narwhal-tusk architecture decouples the mempool into a high-throughput reliable broadcast dag (narwhal) from the zero-message consensus layer (tusk), sustaining 160,000 transactions per second with sub-second finality over 100 geographically distributed validators."
+            },
+            {
+              "citation_id": "cite_sec1_src1",
+              "source_id": "src_dist_01_a",
+              "chunk_id": "chunk_dist_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+              "normalized_passage": "traditional bft protocols like pbft intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+              "normalized_source_chunk": "traditional bft protocols like pbft intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node. the narwhal-tusk architecture decouples the mempool into a high-throughput reliable broadcast dag (narwhal) from the zero-message consensus layer (tusk), sustaining 160,000 transactions per second with sub-second finality over 100 geographically distributed validators."
+            },
+            {
+              "citation_id": "cite_5",
+              "source_id": "src_dist_01_b",
+              "chunk_id": "chunk_dist_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Under the Dwork-Mimno-Stockmeyer partial synchrony model, protocols guarantee safety under complete asynchrony but liveness is suspended during network partitions exceeding Delta. HotStuff-2 reduces view-change communication complexity to O(n) using threshold signature accumulators",
+              "normalized_passage": "under the dwork-mimno-stockmeyer partial synchrony model, protocols guarantee safety under complete asynchrony but liveness is suspended during network partitions exceeding delta. hotstuff-2 reduces view-change communication complexity to o(n) using threshold signature accumulators",
+              "normalized_source_chunk": "under the dwork-mimno-stockmeyer partial synchrony model, protocols guarantee safety under complete asynchrony but liveness is suspended during network partitions exceeding delta. hotstuff-2 reduces view-change communication complexity to o(n) using threshold signature accumulators, reducing latency by 40% compared to three-phase classic hotstuff when recovering from leader failovers."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": false,
+          "grounding_score": 0.9167,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec_summary",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, which creates bandwidth bottlenecks at the primary node.",
+              "cited_chunk_ids": [
+                "chunk_dist_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec_summary",
+              "entailment": "NEUTRAL",
+              "score": 0.5,
+              "reasoning": "While the provided chunks discuss Narwhal-Tusk's decoupled architecture and HotStuff-2's threshold signature mechanisms, the chunks do not explicitly group them together as 'recent protocols' or provide a unified statement that they both introduce these specific features to achieve the stated goals of high throughput and reduced recovery latency in the same context.",
+              "cited_chunk_ids": [
+                "chunk_dist_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_sec1_1",
+              "section_id": "sec_architectures",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, which creates bandwidth bottlenecks at the primary node.",
+              "cited_chunk_ids": [
+                "chunk_dist_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_sec1_2",
+              "section_id": "sec_architectures",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that Narwhal-Tusk decouples the mempool into a high-throughput reliable broadcast DAG and a zero-message consensus layer, achieving 160,000 transactions per second with sub-second finality across 100 validators.",
+              "cited_chunk_ids": [
+                "chunk_dist_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_sec1_3",
+              "section_id": "sec_architectures",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms both the behavior of protocols under the Dwork-Mimno-Stockmeyer model regarding safety and liveness, and that HotStuff-2 reduces view-change communication complexity to O(n) using threshold signature accumulators.",
+              "cited_chunk_ids": [
+                "chunk_dist_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunks support the claim: chunk_dist_01_1 describes how decoupling dissemination from ordering (Narwhal-Tusk) improves throughput and scalability, while chunk_dist_01_2 explains how threshold signatures (HotStuff-2) improve fault resilience (leader failover) and notes that protocols under the Dwork-Mimno-Stockmeyer model address safety under asynchrony.",
+              "cited_chunk_ids": [
+                "chunk_dist_01_1",
+                "chunk_dist_01_2"
+              ]
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Claim 'claim_exec_2' is only weakly supported or neutral with respect to cited evidence: While the provided chunks discuss Narwhal-Tusk's decoupled architecture and HotStuff-2's threshold signature mechanisms, the chunks do not explicitly group them together as 'recent protocols' or provide a unified statement that they both introduce these specific features to achieve the stated goals of high throughput and reduced recovery latency in the same context.",
+              "section_id": "sec_exec_summary",
+              "claim_id": "claim_exec_2",
+              "citation_id": null,
+              "details": {
+                "reasoning": "While the provided chunks discuss Narwhal-Tusk's decoupled architecture and HotStuff-2's threshold signature mechanisms, the chunks do not explicitly group them together as 'recent protocols' or provide a unified statement that they both introduce these specific features to achieve the stated goals of high throughput and reduced recovery latency in the same context."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-002",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'Protocols under the Dwork-Mimno-Stockmeyer partial synchrony model guarantee safety under complete asynchrony.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Protocols under the Dwork-Mimno-Stockmeyer partial synchrony model guarantee safety under complete asynchrony."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-003",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'Liveness is suspended during network partitions exceeding Delta.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Liveness is suspended during network partitions exceeding Delta."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 3,
+          "minor_count": 0,
+          "tokens_used": 4247,
+          "cost_usd": 0.000527
+        },
+        "judge_verdict": {
+          "composite_score": 0.985,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All claims made in the report are supported by the provided source material. No hallucinations or false claims were identified."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every factual assertion is directly traceable to the provided source chunks. The report accurately reflects the technical details of Narwhal-Tusk and HotStuff-2."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are correctly mapped to the source IDs and chunk IDs. Quotations are accurate and properly attributed."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.9,
+              "passed": true,
+              "reasoning": "The report covers the core aspects of the prompt, including architectural improvements and the impact of network partitions. It acknowledges limitations regarding the scope of the protocols analyzed."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report stays strictly focused on BFT consensus, bandwidth bottlenecks, and asynchronous network partitions as requested."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is well-structured with a clear executive summary, technical section, and conclusion. The tone is professional and academic."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report maintains internal coherence, with no contradictory statements across the different sections."
+            }
+          },
+          "overall_feedback": "The report is highly accurate, well-grounded in the provided sources, and logically organized. It effectively addresses the research topic by synthesizing information on Narwhal-Tusk and HotStuff-2. No significant deficits were found.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 3450,
+          "cost_usd": 0.000378
+        },
+        "tokens_used": 12333,
+        "cost_usd": 0.001674
+      }
+    ],
+    "budget_summary": {
+      "used_tokens": 31812,
+      "max_tokens": 50000,
+      "used_cost_usd": 0.004338,
+      "max_cost_usd": 0.2,
+      "elapsed_seconds": 641.723,
+      "max_seconds": 1800.0,
+      "rounds_executed": 2,
+      "max_rounds": 3,
+      "is_exhausted": false,
+      "exhaustion_reason": null
+    },
+    "rounds_executed": 2,
+    "termination_reason": "CONSECUTIVE_REGRESSIONS_EXCEEDED (1 consecutive regressions)",
+    "acceptance_threshold": 0.85,
+    "acceptance_result": {
+      "status": "UNRESOLVED",
+      "is_accepted": false,
+      "best_candidate": {
+        "round_number": 1,
+        "report": {
+          "topic": "Byzantine Fault Tolerant (BFT) Consensus under Asynchronous Network Partitions",
+          "title": "Mitigating Bandwidth and Latency Bottlenecks in Byzantine Fault Tolerant Consensus Protocols",
+          "executive_summary": {
+            "section_id": "sec_exec_summary",
+            "title": "Executive Summary",
+            "content": "Traditional BFT consensus architectures often experience bandwidth bottlenecks and high communication complexity during network partitions and leader failovers [cite_exec_src1]. Recent advancements such as the Narwhal-Tusk and HotStuff-2 protocols introduce decoupled architectures and optimized threshold signature mechanisms to sustain high transaction throughput and reduce recovery latency [cite_exec_src2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec_summary",
+                "text": "Traditional BFT protocols intertwine transaction dissemination with block ordering, and recent protocols like Narwhal-Tusk and HotStuff-2 introduce decoupled architectures and threshold signature mechanisms to sustain high transaction throughput and reduce recovery latency.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_src1",
+                    "source_id": "src_dist_01_a",
+                    "chunk_id": "chunk_dist_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.99
+                  },
+                  {
+                    "citation_id": "cite_exec_src2",
+                    "source_id": "src_dist_01_b",
+                    "chunk_id": "chunk_dist_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.99
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_architectures",
+              "title": "Decoupled DAG Architectures and View-Change Efficiency",
+              "content": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node [cite_sec1_src1]. To resolve this, the Narwhal-Tusk architecture decouples the mempool into a high-throughput reliable broadcast DAG from the zero-message consensus layer, sustaining 160,000 transactions per second with sub-second finality [cite_4]. Furthermore, under partial synchrony models, liveness can be suspended during partitions exceeding Delta, but HotStuff-2 reduces view-change communication complexity to O(n) using threshold signature accumulators [cite_5].",
+              "claims": [
+                {
+                  "claim_id": "claim_sec1_1",
+                  "section_id": "sec_architectures",
+                  "text": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_sec1_src1",
+                      "source_id": "src_dist_01_a",
+                      "chunk_id": "chunk_dist_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_sec1_2",
+                  "section_id": "sec_architectures",
+                  "text": "The Narwhal-Tusk architecture decouples the mempool into a high-throughput reliable broadcast DAG from the zero-message consensus layer, sustaining 160,000 transactions per second with sub-second finality over 100 geographically distributed validators.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_4",
+                      "source_id": "src_dist_01_a",
+                      "chunk_id": "chunk_dist_01_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 0.99
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_sec1_3",
+                  "section_id": "sec_architectures",
+                  "text": "HotStuff-2 reduces view-change communication complexity to O(n) using threshold signature accumulators, reducing latency by 40% compared to three-phase classic HotStuff when recovering from leader failovers.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_5",
+                      "source_id": "src_dist_01_b",
+                      "chunk_id": "chunk_dist_01_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 0.99
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Future Directions",
+            "content": "The evolution of Byzantine Fault Tolerant consensus demonstrates that decoupling transaction dissemination from block ordering and utilizing threshold signatures significantly improves scalability and fault resilience [cite_conc_src1]. Future research must continue addressing network partition vulnerabilities under asynchronous conditions to maintain liveness and low latency based on established partial synchrony models [cite_conc_src2].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Decoupling transaction dissemination from block ordering and utilizing threshold signatures significantly improves scalability, fault resilience, and addresses network partition vulnerabilities under asynchronous conditions.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_src1",
+                    "source_id": "src_dist_01_a",
+                    "chunk_id": "chunk_dist_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.99
+                  },
+                  {
+                    "citation_id": "cite_conc_src2",
+                    "source_id": "src_dist_01_b",
+                    "chunk_id": "chunk_dist_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.99
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Evidence is limited to specific protocol evaluations (Narwhal-Tusk and HotStuff-2) without exhaustive comparative analysis across all existing BFT variants.",
+            "Data regarding performance under extreme asynchronous network partitions is constrained by partial synchrony model assumptions."
+          ],
+          "version": 2,
+          "created_by": "revision_llm",
+          "created_at": "2026-03-31T01:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 5,
+          "total_citations": 7,
+          "passage_matches": [
+            {
+              "citation_id": "cite_sec1_src1",
+              "source_id": "src_dist_01_a",
+              "chunk_id": "chunk_dist_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+              "normalized_passage": "traditional bft protocols like pbft intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+              "normalized_source_chunk": "traditional bft protocols like pbft intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node. the narwhal-tusk architecture decouples the mempool into a high-throughput reliable broadcast dag (narwhal) from the zero-message consensus layer (tusk), sustaining 160,000 transactions per second with sub-second finality over 100 geographically distributed validators."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec_summary",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunks confirm that traditional BFT protocols intertwine dissemination and ordering (chunk_dist_01_1), Narwhal-Tusk decouples these processes to achieve high throughput (chunk_dist_01_1), and HotStuff-2 uses threshold signature accumulators to reduce latency during leader failovers (chunk_dist_01_2).",
+              "cited_chunk_ids": [
+                "chunk_dist_01_1",
+                "chunk_dist_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_sec1_1",
+              "section_id": "sec_architectures",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, which creates bandwidth bottlenecks at the primary node.",
+              "cited_chunk_ids": [
+                "chunk_dist_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_sec1_2",
+              "section_id": "sec_architectures",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that Narwhal-Tusk decouples the mempool into a high-throughput reliable broadcast DAG and a zero-message consensus layer, achieving 160,000 transactions per second with sub-second finality across 100 validators.",
+              "cited_chunk_ids": [
+                "chunk_dist_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_sec1_3",
+              "section_id": "sec_architectures",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk states that HotStuff-2 reduces view-change communication complexity to O(n) using threshold signature accumulators and reduces latency by 40% compared to three-phase classic HotStuff during leader failovers.",
+              "cited_chunk_ids": [
+                "chunk_dist_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunks support the claim: chunk_dist_01_1 describes how decoupling dissemination from ordering (Narwhal-Tusk) improves throughput and scalability, while chunk_dist_01_2 explains how threshold signatures (HotStuff-2) improve fault resilience (leader failover) and notes the protocol's behavior under partial synchrony/asynchronous conditions.",
+              "cited_chunk_ids": [
+                "chunk_dist_01_1",
+                "chunk_dist_01_2"
+              ]
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec_summary' contains ungrounded factual assertion in prose not captured as a claim: 'Traditional BFT consensus architectures experience bandwidth bottlenecks and high communication complexity during network partitions and leader failovers.'",
+              "section_id": "sec_exec_summary",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Traditional BFT consensus architectures experience bandwidth bottlenecks and high communication complexity during network partitions and leader failovers."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-002",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_architectures' contains ungrounded factual assertion in prose not captured as a claim: 'Under partial synchrony models, liveness can be suspended during partitions exceeding Delta.'",
+              "section_id": "sec_architectures",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Under partial synchrony models, liveness can be suspended during partitions exceeding Delta."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-003",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'Future research must continue addressing network partition vulnerabilities under asynchronous conditions to maintain liveness and low latency based on established partial synchrony models.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Future research must continue addressing network partition vulnerabilities under asynchronous conditions to maintain liveness and low latency based on established partial synchrony models."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 3,
+          "minor_count": 0,
+          "tokens_used": 4057,
+          "cost_usd": 0.000492
+        },
+        "judge_verdict": {
+          "composite_score": 0.985,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All claims made in the report are consistent with the provided source material. No hallucinations or factual errors were detected."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every factual assertion is directly supported by the provided source chunks. The report accurately synthesizes the technical details of Narwhal-Tusk and HotStuff-2."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are correctly mapped to the provided source IDs and chunk IDs. Quotations are accurate and correctly attributed."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.9,
+              "passed": true,
+              "reasoning": "The report covers the core technical mechanisms requested and includes a limitations section that acknowledges the scope of the analysis."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The content remains strictly focused on BFT consensus, network partitions, and the specific protocols mentioned in the sources."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is well-structured with a logical flow from executive summary to technical architecture and conclusion."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report maintains internal coherence, with no contradictory statements between the summary, body, and conclusion."
+            }
+          },
+          "overall_feedback": "The report is highly professional, accurate, and well-grounded in the provided source material. It effectively synthesizes complex technical information regarding BFT consensus protocols. No significant improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 3246,
+          "cost_usd": 0.000359
+        },
+        "tokens_used": 12302,
+        "cost_usd": 0.001605
+      },
+      "rationale": "Candidate did not meet automated acceptance criteria: Unresolved major factual grounding defects remain (3 major grounding defects)",
+      "unresolved_reasons": [
+        "Unresolved major factual grounding defects remain (3 major grounding defects)"
+      ],
+      "review_packet": {
+        "run_id": "run_8da1cb6e716d",
+        "topic": "Byzantine Fault Tolerant (BFT) Consensus under Asynchronous Network Partitions",
+        "best_candidate": {
+          "topic": "Byzantine Fault Tolerant (BFT) Consensus under Asynchronous Network Partitions",
+          "title": "Mitigating Bandwidth and Latency Bottlenecks in Byzantine Fault Tolerant Consensus Protocols",
+          "executive_summary": {
+            "section_id": "sec_exec_summary",
+            "title": "Executive Summary",
+            "content": "Traditional BFT consensus architectures often experience bandwidth bottlenecks and high communication complexity during network partitions and leader failovers [cite_exec_src1]. Recent advancements such as the Narwhal-Tusk and HotStuff-2 protocols introduce decoupled architectures and optimized threshold signature mechanisms to sustain high transaction throughput and reduce recovery latency [cite_exec_src2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec_summary",
+                "text": "Traditional BFT protocols intertwine transaction dissemination with block ordering, and recent protocols like Narwhal-Tusk and HotStuff-2 introduce decoupled architectures and threshold signature mechanisms to sustain high transaction throughput and reduce recovery latency.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_src1",
+                    "source_id": "src_dist_01_a",
+                    "chunk_id": "chunk_dist_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.99
+                  },
+                  {
+                    "citation_id": "cite_exec_src2",
+                    "source_id": "src_dist_01_b",
+                    "chunk_id": "chunk_dist_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.99
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_architectures",
+              "title": "Decoupled DAG Architectures and View-Change Efficiency",
+              "content": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node [cite_sec1_src1]. To resolve this, the Narwhal-Tusk architecture decouples the mempool into a high-throughput reliable broadcast DAG from the zero-message consensus layer, sustaining 160,000 transactions per second with sub-second finality [cite_4]. Furthermore, under partial synchrony models, liveness can be suspended during partitions exceeding Delta, but HotStuff-2 reduces view-change communication complexity to O(n) using threshold signature accumulators [cite_5].",
+              "claims": [
+                {
+                  "claim_id": "claim_sec1_1",
+                  "section_id": "sec_architectures",
+                  "text": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_sec1_src1",
+                      "source_id": "src_dist_01_a",
+                      "chunk_id": "chunk_dist_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Traditional BFT protocols like PBFT intertwine transaction dissemination with block ordering, creating bandwidth bottlenecks at the designated primary node.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_sec1_2",
+                  "section_id": "sec_architectures",
+                  "text": "The Narwhal-Tusk architecture decouples the mempool into a high-throughput reliable broadcast DAG from the zero-message consensus layer, sustaining 160,000 transactions per second with sub-second finality over 100 geographically distributed validators.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_4",
+                      "source_id": "src_dist_01_a",
+                      "chunk_id": "chunk_dist_01_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 0.99
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_sec1_3",
+                  "section_id": "sec_architectures",
+                  "text": "HotStuff-2 reduces view-change communication complexity to O(n) using threshold signature accumulators, reducing latency by 40% compared to three-phase classic HotStuff when recovering from leader failovers.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_5",
+                      "source_id": "src_dist_01_b",
+                      "chunk_id": "chunk_dist_01_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 0.99
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Future Directions",
+            "content": "The evolution of Byzantine Fault Tolerant consensus demonstrates that decoupling transaction dissemination from block ordering and utilizing threshold signatures significantly improves scalability and fault resilience [cite_conc_src1]. Future research must continue addressing network partition vulnerabilities under asynchronous conditions to maintain liveness and low latency based on established partial synchrony models [cite_conc_src2].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Decoupling transaction dissemination from block ordering and utilizing threshold signatures significantly improves scalability, fault resilience, and addresses network partition vulnerabilities under asynchronous conditions.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_src1",
+                    "source_id": "src_dist_01_a",
+                    "chunk_id": "chunk_dist_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.99
+                  },
+                  {
+                    "citation_id": "cite_conc_src2",
+                    "source_id": "src_dist_01_b",
+                    "chunk_id": "chunk_dist_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.99
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Evidence is limited to specific protocol evaluations (Narwhal-Tusk and HotStuff-2) without exhaustive comparative analysis across all existing BFT variants.",
+            "Data regarding performance under extreme asynchronous network partitions is constrained by partial synchrony model assumptions."
+          ],
+          "version": 2,
+          "created_by": "revision_llm",
+          "created_at": "2026-03-31T01:00:00Z"
+        },
+        "best_candidate_version": 2,
+        "total_rounds_executed": 2,
+        "terminal_reason": "CONSECUTIVE_REGRESSIONS_EXCEEDED (1 consecutive regressions)",
+        "deterministic_passed": true,
+        "critical_defect_count": 0,
+        "major_defect_count": 3,
+        "rubric_scores": {
+          "factual_accuracy": 1.0,
+          "evidence_grounding": 1.0,
+          "citation_correctness": 1.0,
+          "completeness": 0.9,
+          "relevance": 1.0,
+          "clarity_organization": 1.0,
+          "logical_consistency": 1.0
+        },
+        "unresolved_critiques": [
+          {
+            "issue_id": "CRITIQUE-001",
+            "category": "factual_grounding",
+            "severity": "major",
+            "affected_section_id": "sec_exec_summary",
+            "affected_claim_id": null,
+            "explanation": "Section 'sec_exec_summary' contains ungrounded factual assertion in prose not captured as a claim: 'Traditional BFT consensus architectures experience bandwidth bottlenecks and high communication complexity during network partitions and leader failovers.'",
+            "supporting_source_ids": [],
+            "suggested_correction": "Convert the substantive factual statement in prose into a formal structured Claim with citations, or rephrase it as a non-factual executive synthesis.",
+            "confidence": 0.95,
+            "is_resolved": false
+          },
+          {
+            "issue_id": "CRITIQUE-002",
+            "category": "factual_grounding",
+            "severity": "major",
+            "affected_section_id": "sec_architectures",
+            "affected_claim_id": null,
+            "explanation": "Section 'sec_architectures' contains ungrounded factual assertion in prose not captured as a claim: 'Under partial synchrony models, liveness can be suspended during partitions exceeding Delta.'",
+            "supporting_source_ids": [],
+            "suggested_correction": "Convert the substantive factual statement in prose into a formal structured Claim with citations, or rephrase it as a non-factual executive synthesis.",
+            "confidence": 0.95,
+            "is_resolved": false
+          },
+          {
+            "issue_id": "CRITIQUE-003",
+            "category": "factual_grounding",
+            "severity": "major",
+            "affected_section_id": "sec_conclusion",
+            "affected_claim_id": null,
+            "explanation": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'Future research must continue addressing network partition vulnerabilities under asynchronous conditions to maintain liveness and low latency based on established partial synchrony models.'",
+            "supporting_source_ids": [],
+            "suggested_correction": "Convert the substantive factual statement in prose into a formal structured Claim with citations, or rephrase it as a non-factual executive synthesis.",
+            "confidence": 0.95,
+            "is_resolved": false
+          }
+        ],
+        "requires_human_action": true,
+        "created_at": "2026-11-11T17:50:26.634130Z"
+      }
+    },
+    "learned_lessons_count": 0
+  },
+  "llm_stats": {
+    "llm_calls": 23,
+    "llm_attempts": 34,
+    "transient_retries": 11,
+    "validation_retries": 0,
+    "timeout_resets": 0
+  }
+}

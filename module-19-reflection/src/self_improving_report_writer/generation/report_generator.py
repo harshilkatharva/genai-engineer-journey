@@ -8,10 +8,12 @@ from typing import TYPE_CHECKING
 
 from genai_core import ObservabilityEvent, safe_log
 
-from ..core.config import ReportWriterConfig, get_default_config
-from ..core.exceptions import GenerationError
-from ..models.report import Report, SourceReference
-from .prompts import build_report_generation_prompt
+from self_improving_report_writer.core.config import ReportWriterConfig, get_default_config
+from self_improving_report_writer.core.exceptions import GenerationError
+from self_improving_report_writer.core.json_parsing import unwrap_llm_response_payload
+from self_improving_report_writer.core.pricing import extract_or_estimate_cost
+from self_improving_report_writer.generation.prompts import build_report_generation_prompt
+from self_improving_report_writer.models.report import Report, SourceReference
 
 if TYPE_CHECKING:
     from genai_core import LLMService
@@ -27,11 +29,13 @@ class ReportGenerator:
         llm_service: LLMService,
         config: ReportWriterConfig | None = None,
         provider: str | None = None,
+        model: str | None = None,
     ) -> None:
         """Initialize generator with LLMService and configuration."""
         self.llm_service = llm_service
         self.config = config or get_default_config()
         self.provider = provider or self.config.generator_provider
+        self.model = model or self.config.generator_model
 
     async def generate_report(
         self,
@@ -70,7 +74,8 @@ class ReportGenerator:
             response = await self.llm_service.complete_structure(
                 prompt=prompt,
                 response_schema=Report,
-                # provider=self.provider,
+                provider=self.provider,
+                model=self.model,
             )
         except Exception as exc:
             safe_log(
@@ -93,23 +98,19 @@ class ReportGenerator:
             raise GenerationError(f"LLM generation error: {response.error.message}")
 
         # Extract token and cost usage
-        usage = getattr(response, "usage", {}) or {}
-        if isinstance(usage, dict):
-            in_tok = int(usage.get("input_tokens", 0))
-            out_tok = int(usage.get("output_tokens", 0))
-            tokens_used = int(usage.get("total_tokens", in_tok + out_tok))
-        else:
-            tokens_used = int(getattr(usage, "total_tokens", 0))
+        _, _, tokens_used, cost_usd = extract_or_estimate_cost(
+            response=response,
+            model=self.model,
+            default_model=self.config.generator_model,
+        )
 
-        cost_val = getattr(response, "cost_usd", None)
-        if cost_val is None and isinstance(getattr(response, "raw_response", None), dict):
-            cost_val = response.raw_response.get("cost") or response.raw_response.get("cost_usd")
-        cost_usd = float(cost_val or 0.0)
-
-        # Unwrap structured candidate
-        candidate = getattr(response, "structured_response", None)
-        if candidate is None and hasattr(response, "content"):
-            candidate = response.content
+        # Unwrap structured candidate (stripping Markdown fences on raw JSON text if needed)
+        try:
+            candidate = unwrap_llm_response_payload(response, allow_content_fallback=True)
+        except Exception as json_exc:
+            raise GenerationError(
+                f"Report JSON validation failed on raw text response: {json_exc}"
+            ) from json_exc
 
         report: Report
         if isinstance(candidate, Report):
@@ -121,13 +122,6 @@ class ReportGenerator:
                 raise GenerationError(
                     f"Report validation failed on dict response: {val_exc}"
                 ) from val_exc
-        elif hasattr(response, "text") and response.text:
-            try:
-                report = Report.model_validate_json(response.text)
-            except Exception as json_exc:
-                raise GenerationError(
-                    f"Report JSON validation failed on raw text response: {json_exc}"
-                ) from json_exc
         else:
             raise GenerationError(
                 f"Unexpected response structure from LLMService: {type(candidate).__name__}"

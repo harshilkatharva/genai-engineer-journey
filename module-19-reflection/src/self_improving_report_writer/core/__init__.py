@@ -12,6 +12,11 @@ from self_improving_report_writer.core.exceptions import (
     RetrievalError,
     VerificationError,
 )
+from self_improving_report_writer.core.json_parsing import (
+    parse_json_with_fence_stripping,
+    strip_markdown_json_fences,
+    unwrap_llm_response_payload,
+)
 from self_improving_report_writer.core.rate_limit_controller import (
     EvaluationRateLimitController,
     extract_retry_delay,
@@ -37,5 +42,8 @@ __all__ = [
     "get_default_config",
     "get_shared_rate_limit_controller",
     "is_rate_limit_error",
+    "parse_json_with_fence_stripping",
     "reset_shared_rate_limit_controller",
+    "strip_markdown_json_fences",
+    "unwrap_llm_response_payload",
 ]

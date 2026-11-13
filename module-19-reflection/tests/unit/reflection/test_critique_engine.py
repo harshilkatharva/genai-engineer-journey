@@ -206,7 +206,7 @@ def test_severity_based_revision_thresholds_critical(valid_report: Report) -> No
 
 
 def test_severity_based_revision_thresholds_major(valid_report: Report) -> None:
-    """Major issues trigger revision if score < threshold or grounding < 0.85."""
+    """Major issues always trigger revision even when composite score passes threshold."""
     engine = CritiqueEngine()
 
     grounding_report_low = SemanticGroundingReport(

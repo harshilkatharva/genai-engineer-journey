@@ -2,12 +2,39 @@
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 
 class ReportWriterConfig(BaseModel):
     """Runtime configuration for report generation, verification, and reflection."""
 
+    database_url: str = Field(
+        default="postgresql://localhost:5432/ai_search",
+        description="Default PostgreSQL database connection URL",
+    )
+    vector_store_backend: Literal["pgvector", "memory"] = Field(
+        default="pgvector",
+        description="Vector store backend ('pgvector' by default for runtime, 'memory' for offline testing)",
+    )
+    vector_store_table: str = Field(
+        default="document_chunks",
+        description="Database table name for vector storage",
+    )
+    embedding_provider: str = Field(
+        default="local",
+        description="Provider for text embeddings ('local', 'google', 'openai')",
+    )
+    embedding_model: str = Field(
+        default="all-MiniLM-L6-v2",
+        description="Model name for generating embeddings",
+    )
+    embedding_dimensions: int = Field(
+        default=384,
+        ge=1,
+        description="Dimensionality of vector embeddings",
+    )
     generator_provider: str | None = Field(
         default="google", description="LLM provider for report generation and revision"
     )

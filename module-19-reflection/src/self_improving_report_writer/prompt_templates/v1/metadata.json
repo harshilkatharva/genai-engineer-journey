@@ -1,0 +1,6 @@
+{
+  "version": "v1",
+  "created_at": "2026-11-06",
+  "description": "Calibrated prompt templates with XML injection defense barriers and strict NLI calibration."
+}
+

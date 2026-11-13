@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pytest
 
+from self_improving_report_writer.core.config import ReportWriterConfig
 from self_improving_report_writer.models.report import Report
 from self_improving_report_writer.models.rubric import (
     DimensionScore,
@@ -16,6 +17,10 @@ from self_improving_report_writer.models.verification import (
 from self_improving_report_writer.reflection.candidate_selector import (
     CandidateSelector,
     ReportCandidate,
+    compare_candidates,
+    is_candidate_regression,
+    rank_candidates,
+    select_best_candidate,
 )
 
 
@@ -88,6 +93,7 @@ def _make_candidate(
 
 def test_compare_tier1_deterministic_pass_beats_fail(valid_report: Report) -> None:
     """Tier 1: Gate 1 pass must strictly beat Gate 1 fail regardless of rubric scores."""
+    selector = CandidateSelector()
     c_pass = _make_candidate(
         round_number=1, report=valid_report, passed_g1=True, composite_score=0.70
     )
@@ -95,12 +101,13 @@ def test_compare_tier1_deterministic_pass_beats_fail(valid_report: Report) -> No
         round_number=0, report=valid_report, passed_g1=False, composite_score=0.99
     )
 
-    assert CandidateSelector.compare(c_pass, c_fail) > 0
-    assert CandidateSelector.compare(c_fail, c_pass) < 0
+    assert selector.compare(c_pass, c_fail) > 0
+    assert selector.compare(c_fail, c_pass) < 0
 
 
 def test_compare_tier2_critical_defect_count(valid_report: Report) -> None:
     """Tier 2: Fewer critical defects strictly beat more critical defects."""
+    selector = CandidateSelector()
     c_zero_crit = _make_candidate(
         round_number=1, report=valid_report, critical_count=0, composite_score=0.75
     )
@@ -108,12 +115,13 @@ def test_compare_tier2_critical_defect_count(valid_report: Report) -> None:
         round_number=0, report=valid_report, critical_count=1, composite_score=0.95
     )
 
-    assert CandidateSelector.compare(c_zero_crit, c_one_crit) > 0
-    assert CandidateSelector.compare(c_one_crit, c_zero_crit) < 0
+    assert selector.compare(c_zero_crit, c_one_crit) > 0
+    assert selector.compare(c_one_crit, c_zero_crit) < 0
 
 
 def test_compare_tier3_major_defect_count(valid_report: Report) -> None:
     """Tier 3: Fewer major defects strictly beat more major defects."""
+    selector = CandidateSelector()
     c_zero_maj = _make_candidate(
         round_number=1, report=valid_report, major_count=0, composite_score=0.80
     )
@@ -121,12 +129,13 @@ def test_compare_tier3_major_defect_count(valid_report: Report) -> None:
         round_number=0, report=valid_report, major_count=2, composite_score=0.90
     )
 
-    assert CandidateSelector.compare(c_zero_maj, c_two_maj) > 0
-    assert CandidateSelector.compare(c_two_maj, c_zero_maj) < 0
+    assert selector.compare(c_zero_maj, c_two_maj) > 0
+    assert selector.compare(c_two_maj, c_zero_maj) < 0
 
 
 def test_compare_tier4_grounding_status_and_score(valid_report: Report) -> None:
     """Tier 4: All claims grounded beats not grounded; higher grounding score beats lower."""
+    selector = CandidateSelector()
     c_grounded = _make_candidate(
         round_number=1, report=valid_report, all_grounded=True, grounding_score=0.90
     )
@@ -134,7 +143,7 @@ def test_compare_tier4_grounding_status_and_score(valid_report: Report) -> None:
         round_number=0, report=valid_report, all_grounded=False, grounding_score=0.90
     )
 
-    assert CandidateSelector.compare(c_grounded, c_ungrounded) > 0
+    assert selector.compare(c_grounded, c_ungrounded) > 0
 
     c_g_high = _make_candidate(
         round_number=1, report=valid_report, all_grounded=True, grounding_score=0.95
@@ -143,20 +152,22 @@ def test_compare_tier4_grounding_status_and_score(valid_report: Report) -> None:
         round_number=0, report=valid_report, all_grounded=True, grounding_score=0.85
     )
 
-    assert CandidateSelector.compare(c_g_high, c_g_low) > 0
+    assert selector.compare(c_g_high, c_g_low) > 0
 
 
 def test_compare_tier5_composite_rubric_score(valid_report: Report) -> None:
     """Tier 5: Higher composite score strictly beats lower composite score."""
+    selector = CandidateSelector()
     c_high = _make_candidate(round_number=1, report=valid_report, composite_score=0.92)
     c_low = _make_candidate(round_number=0, report=valid_report, composite_score=0.85)
 
-    assert CandidateSelector.compare(c_high, c_low) > 0
-    assert CandidateSelector.compare(c_low, c_high) < 0
+    assert selector.compare(c_high, c_low) > 0
+    assert selector.compare(c_low, c_high) < 0
 
 
 def test_compare_tier6_grounding_subscores(valid_report: Report) -> None:
     """Tier 6: Higher grounding sub-scores (factual + evidence) beats lower."""
+    selector = CandidateSelector()
     c_high_sub = _make_candidate(
         round_number=1,
         report=valid_report,
@@ -172,21 +183,23 @@ def test_compare_tier6_grounding_subscores(valid_report: Report) -> None:
         evidence_score=0.85,
     )
 
-    assert CandidateSelector.compare(c_high_sub, c_low_sub) > 0
-    assert CandidateSelector.compare(c_low_sub, c_high_sub) < 0
+    assert selector.compare(c_high_sub, c_low_sub) > 0
+    assert selector.compare(c_low_sub, c_high_sub) < 0
 
 
 def test_compare_tier7_parsimony_tiebreaker(valid_report: Report) -> None:
     """Tier 7: Earlier round candidate preferred to conserve cost when all else is tied."""
+    selector = CandidateSelector()
     c_round0 = _make_candidate(round_number=0, report=valid_report, composite_score=0.88)
     c_round1 = _make_candidate(round_number=1, report=valid_report, composite_score=0.88)
 
-    assert CandidateSelector.compare(c_round0, c_round1) > 0
-    assert CandidateSelector.compare(c_round1, c_round0) < 0
+    assert selector.compare(c_round0, c_round1) > 0
+    assert selector.compare(c_round1, c_round0) < 0
 
 
 def test_select_best_picks_optimal_amid_regressions(valid_report: Report) -> None:
     """Select best must pick candidate from earlier round when later round regresses."""
+    selector = CandidateSelector()
     c0 = _make_candidate(
         round_number=0, report=valid_report, critical_count=1, composite_score=0.75
     )
@@ -197,13 +210,14 @@ def test_select_best_picks_optimal_amid_regressions(valid_report: Report) -> Non
     c2 = _make_candidate(round_number=2, report=valid_report, passed_g1=False, composite_score=0.95)
 
     candidates = [c0, c1, c2]
-    best = CandidateSelector.select_best(candidates)
+    best = selector.select_best(candidates)
     assert best.round_number == 1
     assert best.judge_verdict.composite_score == 0.92
 
 
 def test_rank_candidates(valid_report: Report) -> None:
     """Rank candidates should sort from best to worst."""
+    selector = CandidateSelector()
     c0 = _make_candidate(round_number=0, report=valid_report, critical_count=1)
     c1 = _make_candidate(
         round_number=1, report=valid_report, critical_count=0, composite_score=0.90
@@ -212,20 +226,60 @@ def test_rank_candidates(valid_report: Report) -> None:
         round_number=2, report=valid_report, critical_count=0, composite_score=0.80
     )
 
-    ranked = CandidateSelector.rank_candidates([c0, c2, c1])
+    ranked = selector.rank_candidates([c0, c2, c1])
     assert [c.round_number for c in ranked] == [1, 2, 0]
 
 
 def test_is_regression(valid_report: Report) -> None:
     """Is regression should return True when new candidate is strictly worse."""
+    selector = CandidateSelector()
     c_good = _make_candidate(round_number=1, report=valid_report, composite_score=0.90)
     c_worse = _make_candidate(round_number=2, report=valid_report, composite_score=0.80)
 
-    assert CandidateSelector.is_regression(previous_candidate=c_good, current_candidate=c_worse)
-    assert not CandidateSelector.is_regression(previous_candidate=c_worse, current_candidate=c_good)
+    assert selector.is_regression(previous_candidate=c_good, current_candidate=c_worse)
+    assert not selector.is_regression(previous_candidate=c_worse, current_candidate=c_good)
 
 
 def test_select_best_empty_raises() -> None:
     """Select best on empty candidate list must raise ValueError."""
+    selector = CandidateSelector()
     with pytest.raises(ValueError, match="Cannot select best"):
-        CandidateSelector.select_best([])
+        selector.select_best([])
+
+
+def test_candidate_selector_configurable_options(valid_report: Report) -> None:
+    """Instance options configure score quantization precision, parsimony, and config."""
+    custom_config = ReportWriterConfig(acceptance_threshold=0.90)
+    fine_selector = CandidateSelector(
+        config=custom_config,
+        score_precision=3,
+        prefer_parsimony=False,
+    )
+    assert fine_selector.config is custom_config
+    assert fine_selector.score_precision == 3
+
+    c0 = _make_candidate(round_number=0, report=valid_report, composite_score=0.900)
+    c1 = _make_candidate(round_number=1, report=valid_report, composite_score=0.904)
+    # Fine precision (3 decimals) differentiates 0.904 > 0.900; default (2 decimals) ties at 0.90
+    assert fine_selector.compare(c1, c0) > 0
+    assert CandidateSelector(score_precision=2).compare(c0, c1) > 0
+
+    # With prefer_parsimony=False and equal quality scores across rounds, compare returns 0
+    c_tied_0 = _make_candidate(round_number=0, report=valid_report, composite_score=0.90)
+    c_tied_1 = _make_candidate(round_number=1, report=valid_report, composite_score=0.90)
+    assert fine_selector.compare(c_tied_0, c_tied_1) == 0
+
+    with pytest.raises(ValueError, match="score_precision"):
+        CandidateSelector(score_precision=-1)
+
+
+def test_candidate_selector_module_level_functions(valid_report: Report) -> None:
+    """Pure module-level functions provide clean stateless helpers alongside CandidateSelector."""
+    c_good = _make_candidate(round_number=1, report=valid_report, composite_score=0.92)
+    c_worse = _make_candidate(round_number=2, report=valid_report, composite_score=0.80)
+
+    assert compare_candidates(c_good, c_worse) > 0
+    assert select_best_candidate([c_worse, c_good]).round_number == 1
+    assert [c.round_number for c in rank_candidates([c_worse, c_good])] == [1, 2]
+    assert is_candidate_regression(c_good, c_worse)
+    assert not is_candidate_regression(c_worse, c_good)

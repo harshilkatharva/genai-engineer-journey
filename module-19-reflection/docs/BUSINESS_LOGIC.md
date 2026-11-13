@@ -321,8 +321,8 @@ class Critique(BaseModel):
 
 ### 4.2 Severity-Based Revision Thresholds
 - **Critical Issues Present:** Always triggers another revision round if the reflection budget permits.
-- **Major Issues Present:** Triggers revision if the composite score is below `acceptance_threshold` or if factual grounding score < `0.85`.
-- **Minor Issues Only:** If zero critical and zero major issues exist, the revision loop **terminates immediately**, accepting the report if composite score >= `0.85`.
+- **Major Issues Present:** Always triggers another revision round if the reflection budget permits (aligning loop halting with Gate 1 / AcceptanceGate zero-major-defect requirements).
+- **Minor Issues Only:** If zero critical and zero major issues exist and `grounding_score >= 0.85`, the revision loop **terminates immediately**, accepting the report if composite score >= `acceptance_threshold`.
 
 ### 4.3 Multi-Resource Budget Bounds
 The reflection loop enforces strict global budget limits across all rounds:

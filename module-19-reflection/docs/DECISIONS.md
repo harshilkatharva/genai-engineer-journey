@@ -277,3 +277,252 @@ In accordance with repository change control rules, decisions are marked with th
 - **Impact:** Eliminates 429-induced benchmark crashes under Google's 15 RPM limit, pauses all evaluation traffic during quota resets, guarantees zero budget deadline breaches, and maintains complete isolation from `packages/genai-core`.
 
 
+---
+
+### Decision 18: Integration Test Suite Gating via `INTEGRATION_TEST=1` Autouse Fixture
+- **Status:** Implemented (FINDING-15 - `tests/conftest.py`, `tests/integration/test_benchmark_pipeline.py`, `pyproject.toml`)
+- **Context:** Previously, running `uv run pytest tests/` unconditionally executed integration tests in `tests/integration/test_benchmark_pipeline.py`, violating the development workflow rule (`docs/DEVELOPMENT_WORKFLOW.md:62`) requiring integration tests to be gated behind `INTEGRATION_TEST=1`.
+- **Decision:**
+  1. Add autouse fixture `require_integration_test_flag` in `tests/conftest.py` with helper `check_integration_gate` skipping any test marked with `integration` when `INTEGRATION_TEST != "1"`.
+  2. Mark all tests in `tests/integration/test_benchmark_pipeline.py` with `pytestmark = pytest.mark.integration`.
+  3. Standardize marker in `pyproject.toml` to `"integration: marks tests that call external services"`.
+  4. Add unit test `tests/unit/core/test_integration_gating.py` to verify skipping when disabled and execution when enabled.
+- **Alternatives Considered:** Manual gating in each test function. Rejected due to code duplication and human error risk when adding new integration tests.
+- **Impact:** Aligns test execution with repository standard; pre-push checks run unit tests fast without inadvertently triggering integration suites unless explicitly requested.
+
+---
+
+### Decision 19: Comprehensive Schema Validation and Prompt Builder Unit Test Coverage
+- **Status:** Implemented (FINDING-16, FINDING-17, Observation 10, Observation 11 - `tests/unit/models/`, `tests/unit/core/test_config.py`, `tests/unit/judging/test_judge_prompts.py`)
+- **Context:** An audit of test coverage revealed that multiple Pydantic domain models (`DimensionScore`, `ReportJudgeVerdict`, `ClaimGroundingResult`, `SemanticGroundingReport`, `CritiqueIssue`, `Critique`, `ReportCandidate`, `HumanReviewPacket`, `HumanReviewDecision`, `AcceptanceResult`, `HumanReviewOutcome`, `DeterministicVerificationReport`, `PassageMatchResult`, `VerificationIssue`, `ReportWriterConfig`, and judging prompt response schemas) lacked dedicated unit tests. Furthermore, prompt construction functions in `judging/prompts.py` (`build_rubric_judge_prompt`, `build_claim_entailment_prompt`, `build_batch_claim_entailment_prompt`, `build_prose_consistency_prompt`) had zero test coverage, preventing early detection of prompt injection escapes and missing XML attributes.
+- **Decision:**
+  1. Add dedicated model unit test suites:
+     - `tests/unit/models/test_rubric_models.py`
+     - `tests/unit/models/test_critique_models.py`
+     - `tests/unit/models/test_outcome_models.py`
+     - `tests/unit/models/test_verification_models.py`
+     - `tests/unit/models/test_judge_schemas.py`
+     - `tests/unit/core/test_config.py`
+  2. Add dedicated prompt builder unit test suite:
+     - `tests/unit/judging/test_judge_prompts.py`
+  3. Validate score bounds ($0.0 \le score \le 1.0$), non-empty string constraints, enum serializations, property computations, XML character escaping, and error handling for missing/empty arguments.
+- **Alternatives Considered:** Relying exclusively on end-to-end integration tests. Rejected because integration tests mock LLM responses and do not validate Pydantic boundary conditions or prompt string structures.
+- **Impact:** Closes critical test coverage gaps, guarantees Pydantic validation invariant enforcement, and ensures prompt structures and XML sanitization remain verified across future refactorings.
+
+---
+
+### Decision 20: Isolated Prompt Templates via Jinja2 & Migration of Evaluation Schemas to Models
+- **Status:** Implemented (Observations 5 & 6 - `models/llm_schemas.py`, `prompt_templates/`, `prompts/manager.py`, `tests/unit/prompts/`)
+- **Context:** Previously, Pydantic response schemas for LLM structured output (`LLMJudgeEvaluation`, `ClaimEntailmentEvaluation`, `SingleClaimEntailmentVerdict`, `SectionClaimsEntailmentEvaluation`, `ProseConsistencyEvaluation`) were defined inside `judging/prompts.py`, causing `verification/` to cross-import models from `judging/`. In addition, prompt string templates and hardcoded system prompts were scattered across domain packages without a unified versioning or template loading mechanism.
+- **Decision:**
+  1. Move all LLM response schemas to `models/llm_schemas.py` and export from `models/__init__.py`. Re-export backwards-compatibly in `judging/prompts.py`.
+  2. Decouple `verification/semantic_grounding_verifier.py` to import models directly from `models.llm_schemas`.
+  3. Create a dedicated prompt template directory `prompt_templates/v1/` storing templates as individual `.jinja2` files organized by domain (`generation/`, `revision/`, `judging/`, `verification/`).
+  4. Implement `PromptTemplateManager` in `prompts/manager.py` using Jinja2 with custom `escape_xml` filter, versioning support, template listing, and version metadata.
+  5. Refactor `generation/prompts.py`, `judging/prompts.py`, and `reflection/revision_engine.py` to delegate rendering to `PromptTemplateManager`.
+  6. Add unit test suite in `tests/unit/prompts/` testing the template manager and each individual prompt template.
+- **Alternatives Considered:** Inlining templates as Python multiline strings. Rejected because Jinja2 template files allow external prompt version control, syntax highlighting, tracing, and dynamic inheritance without touching Python source code.
+- **Impact:** Enforces architectural layering consistency (all Pydantic schemas in `models/`), eliminates cross-domain import spaghetti, and establishes a versioned, traceable prompt management infrastructure powered by Jinja2.
+
+---
+
+### Decision 21: PostgreSQL Runtime Default for Vector Storage with Required Embedding Service
+- **Status:** Implemented (FINDING-01 & Observation 4 - `core/config.py`, `retrieval/source_retriever.py`, `tests/unit/retrieval/test_source_retriever.py`)
+- **Context:** Previously, `SourceRetriever` defaulted to `InMemoryVectorStore(dimensions=768)` without providing an `EmbeddingService` to `RetrievalService`. In `genai-core`, default retrieval queries execute in dense mode (`SearchMode.DENSE`), which requires an active `EmbeddingService` and matching vector dimensions. Calling retrieval or indexing on default instances crashed with `RetrievalError`. Furthermore, `SourceRetriever` hardcoded `InMemoryVectorStore` rather than utilizing PostgreSQL vector storage for runtime persistence.
+- **Decision:**
+  1. Add PostgreSQL database configuration fields to `ReportWriterConfig`: `database_url` (default `"postgresql://localhost:5432/ai_search"`), `vector_store_backend` (default `"pgvector"`), `vector_store_table` (default `"document_chunks"`), `embedding_provider` (default `"local"`), `embedding_model` (default `"all-MiniLM-L6-v2"`), and `embedding_dimensions` (default `384`).
+  2. In `SourceRetriever.__init__`:
+     - Default runtime store to `PGVectorStoreAdapter` with connection factory targeting `database_url`.
+     - When `vector_store_backend == "memory"` or when `vector_store` is explicitly injected, configure `InMemoryVectorStore` for fast, zero-dependency offline testing.
+     - Automatically instantiate and configure `EmbeddingService` with dimensions matching the vector store, ensuring non-silent failure if missing or misconfigured.
+  3. Wrap document indexing with error handling to guarantee informative logging and `RetrievalError` raising rather than unhandled store crashes.
+  4. Ensure unit tests remain offline and fast by injecting `InMemoryVectorStore` or mock retrieval/embedding services.
+- **Alternatives Considered:** Leaving `InMemoryVectorStore` as the default runtime store. Rejected because production search requires durable persistence and index scaling provided by PostgreSQL `pgvector`.
+- **Impact:** Eliminates crashes during autonomous source retrieval, configures production-grade PostgreSQL storage by default, satisfies `RetrievalService` embedding prerequisites, and preserves offline isolation for unit tests.
+
+---
+
+### Decision 22: Explicit Model Diversity Enforcement & Runtime Self-Judging Detection
+- **Status:** Implemented (FINDING-02 Option A - `judging/rubric_judge.py`, `generation/report_generator.py`, `reflection/revision_engine.py`, `core/rate_limit_controller.py`, `tests/unit/judging/test_model_diversity_enforcement.py`)
+- **Context:** Previously, `RubricJudge`, `ReportGenerator`, and `RevisionEngine` had `provider=target_model` commented out and omitted passing `model` and `provider` to `complete_structure`. Consequently, all components ran against the default model (`gemini-3.5-flash-lite`), causing the generator model to evaluate its own output while `is_self_judged` erroneously evaluated to `False` due to divergent config strings (`judge_model="gemini-3.1-flash-lite"` vs `generator_model="gemini-3.5-flash-lite"`). This completely bypassed the required +0.05 self-judging penalty and model diversity safeguards.
+- **Decision:**
+  1. Update `RubricJudge.evaluate` to pass `model=target_model` and `provider=target_provider` to `complete_structure` for primary judge calls, and `model=self.generator_model` and `provider=self.config.generator_provider` for fallback calls.
+  2. Implement Option A runtime model verification in `RubricJudge`: inspect `resp.model` in `LLMManagerResponse`; if the returned model matches `self.generator_model`, dynamically flag `is_self_judged = True`, adjust `effective_threshold = min(1.0, base_threshold + 0.05)`, and log an audit warning.
+  3. Update `ReportGenerator` and `RevisionEngine` to accept and forward `model` and `provider` to `complete_structure`.
+  4. Update `RateLimitController.complete_structure` to accept and forward `model` and `provider`, gracefully falling back if `deadline` is unsupported by the underlying LLM service.
+  5. Add dedicated test suite `tests/unit/judging/test_model_diversity_enforcement.py` validating explicit model routing, fallback behavior, dynamic self-judging detection, and generator/revision engine parameter forwarding.
+- **Alternatives Considered:** Option B (shared service injection with multiple `LLMService` instances). Rejected for Option A because Option A enforces model parameters at call sites and provides dynamic runtime detection without modifying `packages/genai-core`.
+- **Impact:** Guarantees model diversity between generator and judge, prevents self-affirmation bias, enforces the +0.05 penalty whenever the generator model evaluates reports, and provides complete traceability in audit logs.
+
+---
+
+### Decision 23: Deterministic Token-to-USD Pricing Estimation & Cost Budget Enforcement
+- **Status:** Implemented (FINDING-03 Option A - `core/pricing.py`, `core/budget.py`, `generation/report_generator.py`, `reflection/revision_engine.py`, `judging/rubric_judge.py`, `verification/semantic_grounding_verifier.py`, `tests/unit/core/test_cost_accounting.py`)
+- **Context:** Previously, `LLMManagerResponse` from `genai-core` provided no `cost_usd` attribute, and its `raw_response` held an SDK object rather than a dictionary. All components evaluated `cost_usd` as `0.0`. Consequently, `RunBudget.used_cost_usd` remained permanently `0.0`, rendering `max_total_cost_usd` budget constraints completely inert and exposing deployments to silent financial overruns.
+- **Decision:**
+  1. Create `core/pricing.py` defining published per-1M-token pricing rates (`MODEL_PRICING_PER_1M`) across Gemini and OpenAI models, and deterministic cost estimation functions `estimate_llm_cost` and `extract_or_estimate_cost`.
+  2. If an LLM response provides direct `cost_usd` or a dict with `'cost'`, respect it; otherwise, deterministically compute dollar expenditure using model token pricing.
+  3. Integrate `extract_or_estimate_cost` across all four LLM-invoking components: `ReportGenerator`, `RevisionEngine`, `RubricJudge`, and `SemanticGroundingVerifier`.
+  4. Enhance `RunBudget.record_usage` to support model-based estimation if cost is zero, guaranteeing accurate expenditure tracking and financial ceiling enforcement (`COST_EXHAUSTED`).
+  5. Add unit test suite in `tests/unit/core/test_cost_accounting.py` verifying pricing formulas, response precedence, caller cost calculation, and budget exhaustion.
+- **Alternatives Considered:** Option B (modifying `packages/genai-core` to inject pricing tables). Rejected in favor of Option A to keep shared core package decoupled from specific application pricing and maintain module isolation.
+- **Impact:** Fully activates financial cost accounting, eliminates silent budget bypass, and guarantees reflection loop termination when financial limits are reached.
+
+---
+
+### Decision 24: Uniform XML Delimiter & Attribute Sanitization Against Prompt Injection
+- **Status:** Implemented (FINDING-04 - `core/sanitization.py`, `prompts/manager.py`, `tests/unit/core/test_prompt_injection_sanitization.py`, `tests/unit/generation/test_report_generator.py`)
+- **Context:** `PromptTemplateManager.format_source_contexts` previously performed only an exact-substring replacement of `</untrusted_source_context>` with `[ESCAPED_TAG]`. Case variants (`</UNTRUSTED_SOURCE_CONTEXT>`), whitespace variants (`</untrusted_source_context >`), spoofed opening tags, unescaped XML attributes (`id`, `source_id`, `title`, `chunk_id`), and ampersands could break out of untrusted source data delimiters in generation and revision prompts, while judge and entailment prompts escaped content differently.
+- **Decision:**
+  1. Create `core/sanitization.py` providing `escape_xml_context` (`html.escape(..., quote=False)` for `&`, `<`, `>`), `escape_xml_attr` (`html.escape(..., quote=True)` for attributes), and a shared `format_untrusted_source_block` helper.
+  2. Update `PromptTemplateManager` (`format_source_contexts`, `render_rubric_judge_prompt`, `render_claim_entailment_prompt`, `render_batch_claim_entailment_prompt`) to use the shared sanitization module and `format_untrusted_source_block` uniformly, keeping `escape_xml_context` re-exported for backward compatibility.
+  3. Keep `SourceReference.content` unmutated so Gate 1 (`DeterministicVerifier`) exact-quotation and passage verification continues matching original source text.
+  4. Update `tests/unit/generation/test_report_generator.py` and add comprehensive tests in `tests/unit/core/test_prompt_injection_sanitization.py`.
+- **Alternatives Considered:** Regex-based blacklist stripping of `<untrusted_source_context>` variations. Rejected because blacklist patterns are fragile against parser quirks and omit attribute/tag smuggling.
+- **Impact:** Eliminates delimiter-escape and attribute-breakout prompt injection vectors uniformly across generation, revision, rubric judging, and entailment verification without breaking Gate 1 deterministic checks.
+
+---
+
+### Decision 25: Always Trigger Revision on Major Defects in CritiqueEngine
+- **Status:** Implemented (FINDING-05 - `reflection/critique_engine.py`, `docs/BUSINESS_LOGIC.md`, `docs/FLOW.md`, `tests/unit/reflection/test_critique_engine.py`, `tests/unit/reflection/test_critique_major_defect_triggers_revision.py`)
+- **Context:** `CritiqueEngine._determine_should_revise` previously returned `(composite_score < effective_threshold) or (grounding_score < 0.85)` when `major_count > 0` and `critical_count == 0`. Whenever a draft scored `>= 0.85` on both composite rubric and grounding while still carrying a major defect, the orchestrator halted early with `ALL_ACCEPTANCE_CRITERIA_MET`, whereas `AcceptanceGate` and `ReflectionRunResult.is_accepted` immediately rejected major defects as `UNRESOLVED`.
+- **Decision:**
+  1. Update `CritiqueEngine._determine_should_revise` so `critical_count > 0 or major_count > 0` always returns `True`, and enforce `grounding_score < 0.85` consistently before early acceptance.
+  2. Update `BUSINESS_LOGIC.md` (Section 4.2) and `FLOW.md` to reflect that major defects always trigger another revision round when budget permits.
+  3. Update `test_severity_based_revision_thresholds_major` docstring and add regression tests in `tests/unit/reflection/test_critique_major_defect_triggers_revision.py` verifying critique behavior and orchestrator/acceptance-gate consistency.
+- **Alternatives Considered:** Relaxing `AcceptanceGate` to accept major defects if scores exceed threshold. Rejected because Section 6.1 strictly requires zero major grounding defects and zero major defects for automated acceptance.
+- **Impact:** Eliminates contradictory `ALL_ACCEPTANCE_CRITERIA_MET` vs `UNRESOLVED` outcomes and allows the reflection loop to repair major defects whenever round/resource budgets permit.
+
+---
+
+### Decision 26: Separate Normal Max-Rounds Completion from Budget Exceeded Termination
+- **Status:** Implemented (FINDING-06 - `reflection/orchestrator.py`, `docs/FLOW.md`, `tests/unit/models/test_outcome_models.py`, `tests/unit/reflection/test_orchestrator_termination_reasons.py`)
+- **Context:** When `ReflectionLoopOrchestrator.run` completed all configured reflection rounds (`round_idx == max_reflection_rounds`) without triggering early acceptance or oscillation, `budget.check_budget_exceeded(current_round=round_idx)` returned `"MAX_ROUNDS_REACHED ..."`, and the orchestrator unconditionally formatted it as `"BUDGET_EXCEEDED: MAX_ROUNDS_REACHED ..."`. Normal scheduled loop completion was therefore mislabeled as a budget breach.
+- **Decision:**
+  1. Add `ReflectionLoopOrchestrator._format_budget_termination_reason` so breaches starting with `MAX_ROUNDS_REACHED` emit `"MAX_ROUNDS_REACHED"` (matching existing `orchestrator.py` and `review/` test conventions), while genuine resource exhaustions (`TOKENS_EXHAUSTED`, `COST_EXHAUSTED`, `TIME_EXHAUSTED`) continue emitting `"BUDGET_EXCEEDED: {breach}"`.
+  2. Replace duplicated `is_exhausted` + `check_budget_exceeded` calls at the end of each loop iteration with a single `check_budget_exceeded` check formatted through `_format_budget_termination_reason`.
+  3. Update `FLOW.md` Phase 3 termination branch and `tests/unit/models/test_outcome_models.py`, and add regression tests in `tests/unit/reflection/test_orchestrator_termination_reasons.py`.
+- **Alternatives Considered:** Removing round checks from `RunBudget.check_budget_exceeded`. Rejected because `RunBudget` intentionally enforces round limits (`test_budget_round_limit_exhaustion`) alongside token/cost/time bounds, whereas formatting the loop outcome belongs to `ReflectionLoopOrchestrator`.
+- **Impact:** Eliminates false-positive `BUDGET_EXCEEDED` labels on normal scheduled completion while preserving accurate error reporting when token, dollar, or wall-clock limits are breached.
+
+---
+
+### Decision 27: Strictly Transitive Tuple Ranking Key in CandidateSelector
+- **Status:** Implemented (FINDING-07 - `reflection/candidate_selector.py`, `tests/unit/reflection/test_candidate_selector_transitivity.py`)
+- **Context:** `CandidateSelector.compare` and `CandidateSelector.is_regression` previously used pairwise `abs(diff) >= 0.01` threshold checks across `grounding_score`, `composite_score`, and `grounding_subscore`. Because approximate equality within `< 0.01` is non-transitive, three candidates with small stepped score increments (`e.g., 0.800, 0.808, 0.816`) could create cyclic preferences ($A \succ B \succ C \succ A$), violating strict weak ordering for sorting and making `rank_candidates` / `select_best` depend on input list order.
+- **Decision:**
+  1. Introduce `CandidateSelector._quality_key` (Tiers 1-6) and `CandidateSelector.ranking_key` (Tiers 1-7) returning pure lexicographical tuples with 0.01-rounded continuous scores (`round(..., 2)`), preserving the exact 7-tier hierarchy including Gate 1 pass, critical/major defect counts, grounding status/score, composite score, grounding subscores, and parsimony tie-breaking (`-round_number`).
+  2. Implement `compare`, `select_best`, `rank_candidates`, and `is_regression` in terms of `_quality_key` and `ranking_key`, removing the intransitive pairwise `cmp_to_key` comparator.
+  3. Add permutation-invariance and strict-weak-ordering regression tests in `tests/unit/reflection/test_candidate_selector_transitivity.py`.
+- **Alternatives Considered:** Removing score quantization completely and comparing raw floats. Rejected because raw IEEE-754 floating-point noise in sub-0.01 differences should continue breaking via Tier 6/7 tie-breakers, whereas per-candidate `round(..., 2)` quantization preserves bucketing cleanly without sacrificing transitivity.
+- **Impact:** Guarantees deterministic, permutation-invariant candidate selection and regression detection across all candidate orderings.
+
+---
+
+### Decision 28: Judge Prompt `source_id` Attribution Regression Verification
+- **Status:** Verified & Regression-Tested (FINDING-08 - `tests/unit/judging/test_judge_prompt_construction.py`)
+- **Context:** Audit FINDING-08 identified that `build_rubric_judge_prompt` previously omitted `source_id` on `<untrusted_source_context>` tags when `sources` was keyed by `chunk_id`, preventing the judge LLM from verifying citation `source_id` attribution.
+- **Decision:**
+  1. Confirm via code inspection that [`PromptTemplateManager.render_rubric_judge_prompt`](src/self_improving_report_writer/prompts/manager.py) (backed by `format_untrusted_source_block`) already emits `<untrusted_source_context id="{s_id}" source_id="{s_ref.source_id}" title="{s_ref.title}">` for every retrieved chunk.
+  2. Add dedicated regression tests in `tests/unit/judging/test_judge_prompt_construction.py` verifying chunk-keyed source mappings, multi-source distinction, and end-to-end prompt emission through `RubricJudge.evaluate`.
+- **Alternatives Considered:** Re-keying `sources` dicts by `source_id` inside `ReflectionLoopOrchestrator`. Rejected because one source document can yield multiple chunks, so `chunk_id` keying with an explicit `source_id` XML attribute is required.
+- **Impact:** Locks in regression protection for citation `source_id` visibility in rubric judge prompts.
+
+---
+
+### Decision 29: Filter Unresolved Baseline Defects During Memory Distillation
+- **Status:** Implemented (FINDING-09 - `memory/reflection_memory_manager.py`, `tests/unit/memory/test_memory_distillation.py`)
+- **Context:** When `resolved_issues` was omitted in `ReflectionMemoryManager.distill_lessons`, `_distill_lessons_internal` unconditionally treated every issue in `baseline.deterministic_report.issues` as resolved and stored it into episodic memory as a learned guideline—even when those defects remained unresolved in `best_candidate`. Additionally, `DeterministicVerifier` restarts its sequential `DEFECT-001` counter on every evaluation, so naive `issue_id`-only filtering could mismatch renumbered unresolved issues.
+- **Decision:**
+  1. In `ReflectionMemoryManager._distill_lessons_internal`, compare baseline deterministic issues against `best.deterministic_report.issues` using `_is_det_issue_unresolved` and `_det_issue_signature`.
+  2. Match unresolved defects by semantic signature (`category`, `severity`, `section_id`, `claim_id`, `citation_id`, normalized `message`) across all issues plus stable custom `issue_id` checks for non-`DEFECT-NNN` identifiers, distilling only baseline issues genuinely absent from `best_candidate`.
+  3. Add regression tests in `tests/unit/memory/test_memory_distillation.py` covering unresolved defect suppression and sequential `DEFECT-NNN` renumbering across rounds.
+- **Alternatives Considered:** Matching strictly by `issue_id` alone. Rejected because `DeterministicVerifier` re-numbers `DEFECT-001`, `DEFECT-002` per round, which would misclassify renumbered unresolved issues after fixing earlier defects.
+- **Impact:** Prevents episodic memory poisoning by ensuring unresolved failures are never stored as positive writing rules.
+
+---
+
+### Decision 30: Centralize Self-Judging Threshold Resolution & Enforce Single-Bump [0.0, 1.0] Bounds
+- **Status:** Implemented (Observation 9 - `models/rubric.py`, `models/__init__.py`, `judging/rubric_judge.py`, `reflection/critique_engine.py`, `review/acceptance_gate.py`, `reflection/orchestrator.py`, `tests/unit/judging/test_self_judging_threshold.py`)
+- **Context:** Self-judging penalty computation (`+0.05`) was duplicated inconsistently across four components (`RubricJudge`, `CritiqueEngine`, `AcceptanceGate`, and `ReflectionRunResult.is_accepted`). `ReportJudgeVerdict` lacked an `effective_threshold` field, `RubricJudge.__init__` ignored `config.acceptance_threshold` when using the default rubric, `ReflectionRunResult.is_accepted` fell back to hardcoded `0.90`/`0.85`, and upper boundary clamping (`<= 1.0`) was missing in `RubricJudge`, `CritiqueEngine`, and `AcceptanceGate`.
+- **Decision:**
+  1. Add `SELF_JUDGING_THRESHOLD_PENALTY = 0.05`, `compute_effective_threshold`, and idempotent `resolve_effective_threshold` to `models/rubric.py` (re-exported from `models/__init__.py`), guaranteeing at most one `+0.05` increase capped strictly at `1.0`.
+  2. Add validated `effective_threshold: float | None` (`ge=0.0, le=1.0`) to `ReportJudgeVerdict` and populate it once inside `RubricJudge.evaluate` across direct self-judging, fallback, and runtime model-diversity detection; sync default `rubric_config.acceptance_threshold` with `config.acceptance_threshold` in `RubricJudge.__init__`.
+  3. Update `CritiqueEngine`, `AcceptanceGate`, and `ReflectionRunResult.is_accepted` (with `ReflectionRunResult.acceptance_threshold`) to call `resolve_effective_threshold(...)` instead of duplicating unguarded `+ 0.05` arithmetic or hardcoded `0.90/0.85` fallbacks.
+  4. Add unit and end-to-end boundary/idempotency tests in `tests/unit/judging/test_self_judging_threshold.py`.
+- **Alternatives Considered:** Leaving each component responsible for checking `is_self_judged` and adding `+ 0.05` independently. Rejected due to duplication, inability to inspect applied thresholds downstream, and risk of exceeding `1.0` or compounding adjustments.
+- **Impact:** Guarantees single-application semantics for self-judging penalties, respects custom `acceptance_threshold` configurations end-to-end, and prevents impossible `> 1.0` thresholds at boundary values.
+
+---
+
+### Decision 31: Strip Markdown Code Fences Across Module-19 JSON LLM Response Callers
+- **Status:** Implemented (FINDING-10 — `core/json_parsing.py`, `core/__init__.py`, `generation/report_generator.py`, `reflection/revision_engine.py`, `judging/rubric_judge.py`, `verification/semantic_grounding_verifier.py`, `tests/unit/core/test_json_response_stripping.py`)
+- **Context:** While `EvaluationRateLimitController` already protects concurrent rate-limit pause synchronization via `asyncio.Lock`, Module-19's raw text fallback parsers (`ReportGenerator` using `Report.model_validate_json(response.text)` and `RevisionEngine` using `json.loads(response.text)`) failed whenever an LLM returned JSON wrapped in Markdown code fences (e.g., ```` ```json ... ``` ````), and `RubricJudge` / `SemanticGroundingVerifier` did not normalize raw/fenced JSON strings when `structured_response` was absent or string-encoded. Per project boundaries keeping `packages/genai-core/` unmodified, only Markdown fence stripping is needed inside `module-19-reflection/`.
+- **Decision:**
+  1. Add [`core/json_parsing.py`](file:///home/harshilk/genai-engineer-journey/module-19-reflection/src/self_improving_report_writer/core/json_parsing.py) (`strip_markdown_json_fences`, `parse_json_with_fence_stripping`, `unwrap_llm_response_payload`) to cleanly remove outer Markdown code fences (` ```json `, ` ```JSON `, ` ``` `, and surrounding prose preambles/postambles) while preserving valid raw JSON payloads containing embedded backticks.
+  2. Route payload extraction through `unwrap_llm_response_payload` in `ReportGenerator`, `RevisionEngine`, `RubricJudge`, and `SemanticGroundingVerifier` (batch, fallback, sequential, and prose-consistency checks), leaving concurrency/rate-limit barrier logic untouched.
+  3. Add unit tests in `tests/unit/core/test_json_response_stripping.py`.
+- **Alternatives Considered:** Modifying `packages/genai-core/src/genai_core/llm/google_provider.py` directly or duplicating `.removeprefix("```json")` across individual callers. Rejected to preserve shared package isolation (`packages/genai-core/`) and avoid fragile duplicate fence-stripping logic.
+- **Impact:** Prevents JSON parsing failures caused by Markdown-fenced LLM outputs across every Module-19 structured response consumer without altering shared packages or concurrency behavior.
+
+---
+
+### Decision 32: Prevent PGVector Read-Transaction Leaks via Autocommit Managed Connection Factory
+- **Status:** Implemented (FINDING-12 Option A — `retrieval/source_retriever.py`, `tests/unit/retrieval/test_source_retriever.py`)
+- **Context:** In `SourceRetriever.__init__`, the default PostgreSQL `PGVectorStoreAdapter` connection factory returned a raw `psycopg.AsyncConnection.connect(self.config.database_url)` coroutine with `autocommit=False`. Because `PGVectorStoreAdapter._get_connection` only enters an async context manager when the returned object implements `__aenter__` (otherwise awaiting the coroutine without closing or terminating transactions), read queries could leave connections open and sessions lingering in `INTRANS` (idle in transaction) state.
+- **Decision:**
+  1. Keep `packages/genai-core/` unmodified (Option A) and add `SourceRetriever._create_pg_connection_factory`, returning an `@asynccontextmanager` for `PGVectorStoreAdapter(connection_factory=...)`.
+  2. Connect via `psycopg.AsyncConnection.connect(self.config.database_url, autocommit=True)` so read operations execute in autocommit mode without initiating idle transactions.
+  3. On context exit (`finally`), defensively issue `rollback()` if `autocommit` is ever disabled on a connection and cleanly `close()` every connection across both normal completion and error paths.
+  4. Add unit tests in `tests/unit/retrieval/test_source_retriever.py` verifying `autocommit=True`, clean `close()` on search, and defensive `rollback()` + `close()` on failure.
+- **Alternatives Considered:** Modifying `PGVectorStoreAdapter._get_connection()` in `packages/genai-core/` directly or reverting runtime defaults to `InMemoryVectorStore`. Rejected to keep `packages/genai-core/` isolated and preserve PostgreSQL runtime defaults established in Decision 21.
+- **Impact:** Eliminates `INTRANS` read-transaction and connection leaks on Module-19 PGVector retrieval without touching shared core packages.
+
+---
+
+### Decision 33: Integrate `AcceptanceGate` and Optional `ReflectionMemoryManager` into `ReflectionLoopOrchestrator`
+- **Status:** Implemented (FINDING-14 — `reflection/orchestrator.py`, `tests/unit/reflection/test_orchestrator_integration.py`, `docs/FLOW.md`)
+- **Context:** Previously, `ReflectionLoopOrchestrator.run()` terminated immediately after selecting `best_candidate` without evaluating `AcceptanceGate` or hooking into `ReflectionMemoryManager` for automatic lesson retrieval or post-run distillation. Meanwhile, `ReflectionRunResult.is_accepted` duplicated a subset of acceptance checks inline (omitting per-dimension `factual_accuracy`/`evidence_grounding` minimums and the `self_judged` threshold delta), so its verdict could diverge from `AcceptanceGate`.
+- **Decision:**
+  1. Inject optional `acceptance_gate: AcceptanceGate | None = None` (defaulting to `AcceptanceGate(config=self.config)`) and `memory_manager: ReflectionMemoryManager | None = None` into `ReflectionLoopOrchestrator.__init__`, plus per-call overrides in `run_and_evaluate(...)`.
+  2. Extend `ReflectionRunResult` with `acceptance_result: AcceptanceResult | None = None`, `learned_lessons_count: int = 0`, and `@property def review_packet`, and delegate `ReflectionRunResult.is_accepted` directly to `self.acceptance_result.is_accepted` (or `AcceptanceGate` when `acceptance_result` is `None`).
+  3. Extend `run(..., domain="general", run_id=None)` and internal helpers (`_execute_run`, `_finalize_run`, `_build_result`) to:
+     - retrieve domain lessons into effective generation guidelines when `guidelines is None`, `initial_report is None`, and `memory_manager` is configured;
+     - evaluate `best_candidate` through `AcceptanceGate.evaluate_candidate(...)` with tracked round critiques and `run_id`, storing the resulting `AcceptanceResult` and optional `HumanReviewPacket`;
+     - automatically distill lessons via `memory_manager.distill_lessons(...)` when `memory_manager` is configured and `result.is_accepted` holds.
+- **Alternatives Considered:** Leaving callers responsible for manually wiring `AcceptanceGate` and `ReflectionMemoryManager` around every `orchestrator.run()` invocation. Rejected because standalone orchestrator calls produced inconsistent `is_accepted` semantics and skipped review packet generation and episodic memory integration.
+- **Impact:** Unifies orchestrator run outcomes with Section 6.1 acceptance rules, surfaces ready-to-review `HumanReviewPacket` instances on unresolved runs, and automates pre-/post-run episodic memory hooks without breaking existing constructor or test call sites.
+
+---
+
+### Decision 34: Standardize All Intra-Package Imports to Explicit Absolute Paths
+- **Status:** Implemented (Observation 2 — `src/self_improving_report_writer/`, `tests/unit/core/test_import_style.py`)
+- **Context:** While newer modules (`reflection/orchestrator.py`, `judging/rubric_judge.py`, `review/human_review_gateway.py`) used explicit absolute `self_improving_report_writer.*` imports, earlier modules (`__init__.py`, `core/budget.py`, `eval/__init__.py`, `generation/__init__.py`, `generation/report_generator.py`, `models/__init__.py`, `retrieval/__init__.py`, `retrieval/source_retriever.py`, `verification/__init__.py`, `verification/deterministic_verifier.py`) still mixed `from .` and `from ..` relative imports.
+- **Decision:**
+  1. Replace every relative intra-package import (`level > 0`) across `src/self_improving_report_writer/` with explicit absolute `self_improving_report_writer.*` imports.
+  2. Add an AST-based regression test (`tests/unit/core/test_import_style.py`) verifying that zero relative imports exist anywhere under `src/self_improving_report_writer/` or `tests/`.
+- **Alternatives Considered:** Leaving sibling `from .` imports inside `__init__.py` re-export barrels while replacing only `from ..`. Rejected for uniform consistency and unambiguous static analysis across the entire package.
+- **Impact:** Eliminates mixed import styles across Module 19 and automatically prevents future relative-import regressions via unit tests.
+
+---
+
+### Decision 35: Refactor `CandidateSelector` from Classmethod-Only Antipattern into an Instantiable, Configurable Selector
+- **Status:** Implemented (Observation 8 — `reflection/candidate_selector.py`, `reflection/orchestrator.py`, `reflection/__init__.py`, `tests/unit/reflection/test_candidate_selector.py`, `tests/unit/reflection/test_candidate_selector_transitivity.py`)
+- **Context:** `CandidateSelector` exposed exclusively `@classmethod` methods with no `__init__`, storing no instance configuration while every sibling orchestrator dependency (`CritiqueEngine`, `OscillationDetector`, `AcceptanceGate`) followed constructor-injected instance semantics.
+- **Decision:**
+  1. Refactor `CandidateSelector` into an instantiable class with `__init__(config: ReportWriterConfig | None = None, *, score_precision: int = 2, prefer_parsimony: bool = True)` and instance methods (`_quality_key`, `ranking_key`, `compare`, `select_best`, `rank_candidates`, `is_regression`), preserving strict transitive quantization established in Decision 22.
+  2. Inject optional `candidate_selector: CandidateSelector | None = None` into `ReflectionLoopOrchestrator.__init__` and invoke `self.candidate_selector.is_regression(...)` and `self.candidate_selector.select_best(...)`.
+  3. Export pure module-level helper functions (`compare_candidates`, `select_best_candidate`, `rank_candidates`, `is_candidate_regression`) from `candidate_selector.py` and `reflection/__init__.py` for callers preferring stateless functional usage.
+- **Alternatives Considered:** Keeping `CandidateSelector` as a classmethod namespace or deleting the class completely in favor of module functions alone. Rejected because instantiability aligns with sibling orchestrator components, supports dependency injection and per-selector configuration (`score_precision`, `prefer_parsimony`), and still offers pure module functions cleanly.
+- **Impact:** Eliminates the stateless utility-class antipattern, enables per-instance selector configuration and injection in `ReflectionLoopOrchestrator`, and retains full transitive ranking guarantees.
+
+---
+
+### Decision 36: Validate Unique Rubric Criterion Names Before Aggregate Weight Sum
+- **Status:** Implemented (FINDING-18 & Observation 3 — `models/rubric.py`, `tests/unit/judging/test_rubric_validator.py`)
+- **Context:** In `RubricConfig.validate_weights_sum_to_one`, the total-weight check (`0.999 <= total_weight <= 1.001`) ran before checking duplicate criterion names (`names`). When a criterion was accidentally duplicated with non-unit aggregate weights (e.g., `0.6 + 0.6 = 1.2`), Pydantic failed on the misleading weight-sum error instead of reporting the duplicate criterion identity.
+- **Decision:**
+  1. Reorder `RubricConfig.validate_weights_sum_to_one` so non-emptiness and case-insensitive stripped criterion name uniqueness are validated before summing criteria weights.
+  2. Add `test_duplicate_criterion_detected_before_weight_sum` in `tests/unit/judging/test_rubric_validator.py` verifying that duplicate criteria with `total_weight != 1.0` raise `"Duplicate criterion name detected"`.
+- **Alternatives Considered:** Leaving aggregate weight check first and catching both simultaneously with a custom composite message. Rejected because sequential identity-first validation matches standard schema validation semantics and keeps existing error message contracts intact.
+- **Impact:** Improves validation diagnostics for malformed rubric definitions without altering valid rubric behavior or error formats.

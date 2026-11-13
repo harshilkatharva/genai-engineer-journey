@@ -1,0 +1,2843 @@
+{
+  "topic_id": "qc-03",
+  "topic_title": "Variational Quantum Algorithms for Constrained Portfolio Optimization",
+  "domain": "quantum_computing",
+  "recorded_at_utc": "2026-11-11T18:16:09.941273+00:00",
+  "rounds_executed": 3,
+  "best_round": 3,
+  "termination_reason": "ALL_ACCEPTANCE_CRITERIA_MET",
+  "is_accepted": true,
+  "terminal_status": "ACCEPTED",
+  "blinded_composite_score": 0.9925,
+  "latency_seconds": 608.281,
+  "llm_stats": {
+    "llm_calls": 40,
+    "llm_attempts": 44,
+    "transient_retries": 4,
+    "validation_retries": 0,
+    "timeout_resets": 0
+  },
+  "round_history": [
+    {
+      "round_number": 0,
+      "deterministic_passed": false,
+      "critical_defect_count": 0,
+      "major_defect_count": 16,
+      "grounding_score": 0.0,
+      "all_claims_grounded": false,
+      "composite_score": 0.8075,
+      "is_self_judged": false,
+      "tokens_used": 6737,
+      "cost_usd": 0.000991
+    },
+    {
+      "round_number": 1,
+      "deterministic_passed": true,
+      "critical_defect_count": 0,
+      "major_defect_count": 2,
+      "grounding_score": 0.9375,
+      "all_claims_grounded": false,
+      "composite_score": 0.9925,
+      "is_self_judged": false,
+      "tokens_used": 14872,
+      "cost_usd": 0.002042
+    },
+    {
+      "round_number": 2,
+      "deterministic_passed": true,
+      "critical_defect_count": 0,
+      "major_defect_count": 2,
+      "grounding_score": 1.0,
+      "all_claims_grounded": true,
+      "composite_score": 0.9925,
+      "is_self_judged": false,
+      "tokens_used": 14867,
+      "cost_usd": 0.002016
+    },
+    {
+      "round_number": 3,
+      "deterministic_passed": true,
+      "critical_defect_count": 0,
+      "major_defect_count": 0,
+      "grounding_score": 1.0,
+      "all_claims_grounded": true,
+      "composite_score": 0.9925,
+      "is_self_judged": false,
+      "tokens_used": 15891,
+      "cost_usd": 0.002214
+    }
+  ],
+  "budget_summary": {
+    "used_tokens": 52367,
+    "max_tokens": 50000,
+    "used_cost_usd": 0.007263,
+    "max_cost_usd": 0.2,
+    "elapsed_seconds": 603.487,
+    "max_seconds": 1800.0,
+    "rounds_executed": 3,
+    "max_rounds": 3,
+    "is_exhausted": true,
+    "exhaustion_reason": "TOKENS_EXHAUSTED (used 52367 >= max 50000)"
+  },
+  "reflection_run_result": {
+    "topic": "Variational Quantum Algorithms for Constrained Portfolio Optimization",
+    "best_candidate": {
+      "round_number": 3,
+      "report": {
+        "topic": "Variational Quantum Algorithms for Constrained Portfolio Optimization",
+        "title": "Benchmarking and Warm-Starting Variational Quantum Algorithms for Constrained Portfolio Optimization",
+        "executive_summary": {
+          "section_id": "sec_exec",
+          "title": "Executive Summary",
+          "content": "Recent research into variational quantum algorithms, specifically the Quantum Approximate Optimization Algorithm (QAOA), demonstrates significant potential as well as notable hurdles when applied to constrained portfolio optimization [cite_exec_1]. Standard parameter initializations on 50-asset Markowitz mean-variance problems hit performance ceilings and barren plateau issues at circuit depths beyond p=4 [cite_exec_1]. Conversely, warm-starting strategies involving the warm-start method which initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming markedly improve approximation ratios and save optimization iterations on larger asset subsets [cite_exec_2, cite_exec_3].",
+          "claims": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "text": "Variational quantum algorithms like QAOA face hurdles such as barren plateaus at depths beyond p=4 on 50-asset Markowitz problems.",
+              "citations": [
+                {
+                  "citation_id": "cite_exec_1",
+                  "source_id": "src_qc_03_a",
+                  "chunk_id": "chunk_qc_03_1",
+                  "citation_type": "quotation",
+                  "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "text": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "citations": [
+                {
+                  "citation_id": "cite_exec_3",
+                  "source_id": "src_qc_03_b",
+                  "chunk_id": "chunk_qc_03_2",
+                  "citation_type": "quotation",
+                  "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_exec_3",
+              "section_id": "sec_exec",
+              "text": "Warm-starting strategies utilize classical continuous relaxations and improve approximation ratios and iteration efficiency on larger asset subsets.",
+              "citations": [
+                {
+                  "citation_id": "cite_exec_2",
+                  "source_id": "src_qc_03_b",
+                  "chunk_id": "chunk_qc_03_2",
+                  "citation_type": "quotation",
+                  "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            }
+          ]
+        },
+        "sections": [
+          {
+            "section_id": "sec_findings",
+            "title": "Performance and Limitations of Standard QAOA",
+            "content": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces [cite_1]. Furthermore, standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4% [cite_2].",
+            "claims": [
+              {
+                "claim_id": "claim_1",
+                "section_id": "sec_findings",
+                "text": "Circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces when benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems.",
+                "citations": [
+                  {
+                    "citation_id": "cite_1",
+                    "source_id": "src_qc_03_a",
+                    "chunk_id": "chunk_qc_03_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_2",
+                "section_id": "sec_findings",
+                "text": "Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+                "citations": [
+                  {
+                    "citation_id": "cite_2",
+                    "source_id": "src_qc_03_a",
+                    "chunk_id": "chunk_qc_03_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          {
+            "section_id": "sec_warmstart",
+            "title": "Enhancing Performance via Warm-Started QAOA",
+            "content": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming [cite_3]. On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts [cite_4].",
+            "claims": [
+              {
+                "claim_id": "claim_3",
+                "section_id": "sec_warmstart",
+                "text": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+                "citations": [
+                  {
+                    "citation_id": "cite_3",
+                    "source_id": "src_qc_03_b",
+                    "chunk_id": "chunk_qc_03_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_4",
+                "section_id": "sec_warmstart",
+                "text": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+                "citations": [
+                  {
+                    "citation_id": "cite_4",
+                    "source_id": "src_qc_03_b",
+                    "chunk_id": "chunk_qc_03_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          }
+        ],
+        "conclusion": {
+          "section_id": "sec_conclusion",
+          "title": "Conclusion",
+          "content": "While standard QAOA implementations face severe hardware noise and barren plateau limitations at deeper circuits [cite_con_1], the warm-start method involves integrating classical continuous relaxations [cite_con_3] to warm-start the optimization process which significantly boosts approximation ratios and saves required optimization iterations [cite_con_2].",
+          "claims": [
+            {
+              "claim_id": "claim_con_1",
+              "section_id": "sec_conclusion",
+              "text": "Standard QAOA implementations face hardware noise and barren plateau limitations at deeper circuits.",
+              "citations": [
+                {
+                  "citation_id": "cite_con_1",
+                  "source_id": "src_qc_03_a",
+                  "chunk_id": "chunk_qc_03_1",
+                  "citation_type": "quotation",
+                  "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_con_3",
+              "section_id": "sec_conclusion",
+              "text": "The warm-start method involves integrating classical continuous relaxations.",
+              "citations": [
+                {
+                  "citation_id": "cite_con_3",
+                  "source_id": "src_qc_03_b",
+                  "chunk_id": "chunk_qc_03_2",
+                  "citation_type": "quotation",
+                  "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_con_2",
+              "section_id": "sec_conclusion",
+              "text": "Warm-started approaches significantly boost approximation ratios and decrease required optimization iterations on larger asset subsets.",
+              "citations": [
+                {
+                  "citation_id": "cite_con_2",
+                  "source_id": "src_qc_03_b",
+                  "chunk_id": "chunk_qc_03_2",
+                  "citation_type": "quotation",
+                  "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            }
+          ]
+        },
+        "limitations": [
+          "Barren plateaus limit circuit depths beyond p=4 in random ansatz spaces.",
+          "Hardware performance is heavily constrained by two-qubit gate error rates (0.4%).",
+          "Evaluated primarily on subset benchmarks (50-asset Markowitz and 100-asset S&P 500 subsets) rather than full-scale enterprise portfolios."
+        ],
+        "version": 4,
+        "created_by": "revision_llm",
+        "created_at": "2023-10-27T00:00:00Z"
+      },
+      "deterministic_report": {
+        "passed": true,
+        "schema_valid": true,
+        "citations_valid": true,
+        "passages_matched": true,
+        "total_claims": 10,
+        "total_citations": 10,
+        "passage_matches": [
+          {
+            "citation_id": "cite_exec_1",
+            "source_id": "src_qc_03_a",
+            "chunk_id": "chunk_qc_03_1",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+            "normalized_passage": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+            "normalized_source_chunk": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%."
+          },
+          {
+            "citation_id": "cite_exec_3",
+            "source_id": "src_qc_03_b",
+            "chunk_id": "chunk_qc_03_2",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+            "normalized_passage": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+            "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+          },
+          {
+            "citation_id": "cite_exec_2",
+            "source_id": "src_qc_03_b",
+            "chunk_id": "chunk_qc_03_2",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+            "normalized_passage": "on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+            "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+          },
+          {
+            "citation_id": "cite_1",
+            "source_id": "src_qc_03_a",
+            "chunk_id": "chunk_qc_03_1",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+            "normalized_passage": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+            "normalized_source_chunk": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%."
+          },
+          {
+            "citation_id": "cite_2",
+            "source_id": "src_qc_03_a",
+            "chunk_id": "chunk_qc_03_1",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+            "normalized_passage": "standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+            "normalized_source_chunk": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%."
+          },
+          {
+            "citation_id": "cite_3",
+            "source_id": "src_qc_03_b",
+            "chunk_id": "chunk_qc_03_2",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+            "normalized_passage": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+            "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+          },
+          {
+            "citation_id": "cite_4",
+            "source_id": "src_qc_03_b",
+            "chunk_id": "chunk_qc_03_2",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+            "normalized_passage": "on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+            "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+          },
+          {
+            "citation_id": "cite_con_1",
+            "source_id": "src_qc_03_a",
+            "chunk_id": "chunk_qc_03_1",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+            "normalized_passage": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+            "normalized_source_chunk": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%."
+          },
+          {
+            "citation_id": "cite_con_3",
+            "source_id": "src_qc_03_b",
+            "chunk_id": "chunk_qc_03_2",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+            "normalized_passage": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+            "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+          },
+          {
+            "citation_id": "cite_con_2",
+            "source_id": "src_qc_03_b",
+            "chunk_id": "chunk_qc_03_2",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+            "normalized_passage": "on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+            "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+          }
+        ],
+        "issues": [],
+        "critical_count": 0,
+        "major_count": 0,
+        "minor_count": 0
+      },
+      "grounding_report": {
+        "passed": true,
+        "all_claims_grounded": true,
+        "grounding_score": 1.0,
+        "claim_evaluations": [
+          {
+            "claim_id": "claim_exec_1",
+            "section_id": "sec_exec",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk explicitly states that benchmarking QAOA on 50-asset Markowitz problems shows circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus.",
+            "cited_chunk_ids": [
+              "chunk_qc_03_1"
+            ]
+          },
+          {
+            "claim_id": "claim_exec_2",
+            "section_id": "sec_exec",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk directly states that warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+            "cited_chunk_ids": [
+              "chunk_qc_03_2"
+            ]
+          },
+          {
+            "claim_id": "claim_exec_3",
+            "section_id": "sec_exec",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk confirms that warm-started QAOA uses continuous relaxations, achieves a higher approximation ratio (0.94), and saves 65% of optimization iterations on 100-asset subsets.",
+            "cited_chunk_ids": [
+              "chunk_qc_03_2"
+            ]
+          },
+          {
+            "claim_id": "claim_1",
+            "section_id": "sec_findings",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source explicitly states that benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems shows that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+            "cited_chunk_ids": [
+              "chunk_qc_03_1"
+            ]
+          },
+          {
+            "claim_id": "claim_2",
+            "section_id": "sec_findings",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source confirms that standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware and that this is constrained primarily by two-qubit gate error rates of 0.4%.",
+            "cited_chunk_ids": [
+              "chunk_qc_03_1"
+            ]
+          },
+          {
+            "claim_id": "claim_3",
+            "section_id": "sec_warmstart",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source text explicitly states that warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+            "cited_chunk_ids": [
+              "chunk_qc_03_2"
+            ]
+          },
+          {
+            "claim_id": "claim_4",
+            "section_id": "sec_warmstart",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source text confirms that on 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforms greedy classical heuristics, and saves 65% of optimization iterations compared to standard random starts.",
+            "cited_chunk_ids": [
+              "chunk_qc_03_2"
+            ]
+          },
+          {
+            "claim_id": "claim_con_1",
+            "section_id": "sec_conclusion",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source confirms that circuit depths beyond p=4 experience barren plateaus and that performance is constrained by two-qubit gate error rates (hardware noise).",
+            "cited_chunk_ids": [
+              "chunk_qc_03_1"
+            ]
+          },
+          {
+            "claim_id": "claim_con_3",
+            "section_id": "sec_conclusion",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source explicitly states that warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+            "cited_chunk_ids": [
+              "chunk_qc_03_2"
+            ]
+          },
+          {
+            "claim_id": "claim_con_2",
+            "section_id": "sec_conclusion",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source states that warm-started QAOA achieves an approximation ratio of 0.94 on 100-asset subsets and saves 65% of optimization iterations compared to standard random starts.",
+            "cited_chunk_ids": [
+              "chunk_qc_03_2"
+            ]
+          }
+        ],
+        "issues": [],
+        "critical_count": 0,
+        "major_count": 0,
+        "minor_count": 0,
+        "tokens_used": 5352,
+        "cost_usd": 0.000669
+      },
+      "judge_verdict": {
+        "composite_score": 0.9925,
+        "passed": true,
+        "dimension_scores": {
+          "factual_accuracy": {
+            "dimension_name": "factual_accuracy",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "All claims made in the report are directly supported by the provided source material. No hallucinations or factual errors were identified."
+          },
+          "evidence_grounding": {
+            "dimension_name": "evidence_grounding",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "Every factual assertion is backed by specific, relevant citations from the provided source chunks."
+          },
+          "citation_correctness": {
+            "dimension_name": "citation_correctness",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "All citations are accurate, correctly mapped to the source IDs and chunk IDs, and utilize valid quoted passages."
+          },
+          "completeness": {
+            "dimension_name": "completeness",
+            "score": 0.95,
+            "passed": true,
+            "reasoning": "The report covers the key aspects of the research topic, including performance limitations of standard QAOA and the benefits of warm-starting, while explicitly noting limitations in the scope of the benchmarks."
+          },
+          "relevance": {
+            "dimension_name": "relevance",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report maintains strict focus on the research topic of Variational Quantum Algorithms for Constrained Portfolio Optimization throughout all sections."
+          },
+          "clarity_organization": {
+            "dimension_name": "clarity_organization",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report is logically structured with a clear executive summary, findings, methodology, and conclusion, making it highly readable and professional."
+          },
+          "logical_consistency": {
+            "dimension_name": "logical_consistency",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report is internally consistent; there are no contradictions between the executive summary, the body sections, and the conclusion."
+          }
+        },
+        "overall_feedback": "The report is excellent, demonstrating high technical accuracy and strict adherence to the provided source material. It effectively synthesizes the performance challenges of standard QAOA with the improvements offered by warm-starting techniques. The structure is logical, and the citations are precise. No significant improvements are required.",
+        "is_self_judged": false,
+        "effective_threshold": 0.85,
+        "judge_model": "gemini-3.1-flash-lite",
+        "tokens_used": 4370,
+        "cost_usd": 0.00045
+      },
+      "tokens_used": 15891,
+      "cost_usd": 0.002214
+    },
+    "all_candidates": [
+      {
+        "round_number": 0,
+        "report": {
+          "topic": "Variational Quantum Algorithms for Constrained Portfolio Optimization",
+          "title": "Benchmarking and Warm-Starting Variational Quantum Algorithms for Constrained Portfolio Optimization",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Recent research into variational quantum algorithms, specifically the Quantum Approximate Optimization Algorithm (QAOA), demonstrates significant potential as well as notable hurdles when applied to constrained portfolio optimization [cite_exec_1]. Standard parameter initializations on 50-asset Markowitz mean-variance problems hit performance ceilings and barren plateau issues at circuit depths beyond p=4 [cite_exec_1]. Conversely, warm-starting strategies utilizing classical continuous relaxations markedly improve approximation ratios and iteration efficiency on larger asset subsets [cite_exec_2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Variational quantum algorithms like QAOA face hurdles such as barren plateaus at depths beyond p=4 on 50-asset Markowitz problems, while warm-starting improves efficiency.",
+                "citations": [],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_findings",
+              "title": "Performance and Limitations of Standard QAOA",
+              "content": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces [cite_1]. Furthermore, standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4% [cite_2].",
+              "claims": [
+                {
+                  "claim_id": "claim_1",
+                  "section_id": "sec_findings",
+                  "text": "Circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces when benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems.",
+                  "citations": [],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_2",
+                  "section_id": "sec_findings",
+                  "text": "Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+                  "citations": [],
+                  "is_factual": true
+                }
+              ]
+            },
+            {
+              "section_id": "sec_warmstart",
+              "title": "Enhancing Performance via Warm-Started QAOA",
+              "content": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming [cite_3]. On 100-asset S&amp;P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts [cite_4].",
+              "claims": [
+                {
+                  "claim_id": "claim_3",
+                  "section_id": "sec_warmstart",
+                  "text": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+                  "citations": [],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_4",
+                  "section_id": "sec_warmstart",
+                  "text": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+                  "citations": [],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion",
+            "content": "While standard QAOA implementations face severe hardware noise and barren plateau limitations at deeper circuits, integrating classical continuous relaxations to warm-start the optimization process provides a robust path forward [cite_con_1]. Warm-started approaches significantly boost approximation ratios while decreasing required optimization iterations on larger asset subsets [cite_con_2].",
+            "claims": [
+              {
+                "claim_id": "claim_con_1",
+                "section_id": "sec_conclusion",
+                "text": "Standard QAOA implementations face hardware noise and barren plateau limitations, but warm-starting provides a robust path forward.",
+                "citations": [],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Barren plateaus limit circuit depths beyond p=4 in random ansatz spaces.",
+            "Hardware performance is heavily constrained by two-qubit gate error rates (0.4%).",
+            "Evaluated primarily on subset benchmarks (50-asset Markowitz and 100-asset S&P 500 subsets) rather than full-scale enterprise portfolios."
+          ],
+          "version": 1,
+          "created_by": "generator_llm",
+          "created_at": "2023-10-27T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": false,
+          "schema_valid": true,
+          "citations_valid": false,
+          "passages_matched": true,
+          "total_claims": 6,
+          "total_citations": 0,
+          "passage_matches": [],
+          "issues": [
+            {
+              "issue_id": "DEFECT-001",
+              "category": "citation_integrity",
+              "severity": "major",
+              "message": "Factual claim 'claim_exec_1' lacks supporting citations.",
+              "section_id": "sec_exec",
+              "claim_id": "claim_exec_1",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "DEFECT-002",
+              "category": "citation_integrity",
+              "severity": "major",
+              "message": "Factual claim 'claim_1' lacks supporting citations.",
+              "section_id": "sec_findings",
+              "claim_id": "claim_1",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "DEFECT-003",
+              "category": "citation_integrity",
+              "severity": "major",
+              "message": "Factual claim 'claim_2' lacks supporting citations.",
+              "section_id": "sec_findings",
+              "claim_id": "claim_2",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "DEFECT-004",
+              "category": "citation_integrity",
+              "severity": "major",
+              "message": "Factual claim 'claim_3' lacks supporting citations.",
+              "section_id": "sec_warmstart",
+              "claim_id": "claim_3",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "DEFECT-005",
+              "category": "citation_integrity",
+              "severity": "major",
+              "message": "Factual claim 'claim_4' lacks supporting citations.",
+              "section_id": "sec_warmstart",
+              "claim_id": "claim_4",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "DEFECT-006",
+              "category": "citation_integrity",
+              "severity": "major",
+              "message": "Factual claim 'claim_con_1' lacks supporting citations.",
+              "section_id": "sec_conclusion",
+              "claim_id": "claim_con_1",
+              "citation_id": null,
+              "details": {}
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 6,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": false,
+          "grounding_score": 0.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "NEUTRAL",
+              "score": 0.0,
+              "reasoning": "Claim has no citations attached to substantiate the factual proposition.",
+              "cited_chunk_ids": []
+            },
+            {
+              "claim_id": "claim_1",
+              "section_id": "sec_findings",
+              "entailment": "NEUTRAL",
+              "score": 0.0,
+              "reasoning": "Claim has no citations attached to substantiate the factual proposition.",
+              "cited_chunk_ids": []
+            },
+            {
+              "claim_id": "claim_2",
+              "section_id": "sec_findings",
+              "entailment": "NEUTRAL",
+              "score": 0.0,
+              "reasoning": "Claim has no citations attached to substantiate the factual proposition.",
+              "cited_chunk_ids": []
+            },
+            {
+              "claim_id": "claim_3",
+              "section_id": "sec_warmstart",
+              "entailment": "NEUTRAL",
+              "score": 0.0,
+              "reasoning": "Claim has no citations attached to substantiate the factual proposition.",
+              "cited_chunk_ids": []
+            },
+            {
+              "claim_id": "claim_4",
+              "section_id": "sec_warmstart",
+              "entailment": "NEUTRAL",
+              "score": 0.0,
+              "reasoning": "Claim has no citations attached to substantiate the factual proposition.",
+              "cited_chunk_ids": []
+            },
+            {
+              "claim_id": "claim_con_1",
+              "section_id": "sec_conclusion",
+              "entailment": "NEUTRAL",
+              "score": 0.0,
+              "reasoning": "Claim has no citations attached to substantiate the factual proposition.",
+              "cited_chunk_ids": []
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Factual claim 'claim_exec_1' lacks supporting citations.",
+              "section_id": "sec_exec",
+              "claim_id": "claim_exec_1",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "G2-DEFECT-002",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec' contains ungrounded factual assertion in prose not captured as a claim: 'Warm-starting strategies utilize classical continuous relaxations.'",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Warm-starting strategies utilize classical continuous relaxations."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-003",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec' contains ungrounded factual assertion in prose not captured as a claim: 'Warm-starting strategies improve approximation ratios on larger asset subsets.'",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Warm-starting strategies improve approximation ratios on larger asset subsets."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-004",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Factual claim 'claim_1' lacks supporting citations.",
+              "section_id": "sec_findings",
+              "claim_id": "claim_1",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "G2-DEFECT-005",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Factual claim 'claim_2' lacks supporting citations.",
+              "section_id": "sec_findings",
+              "claim_id": "claim_2",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "G2-DEFECT-006",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Factual claim 'claim_3' lacks supporting citations.",
+              "section_id": "sec_warmstart",
+              "claim_id": "claim_3",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "G2-DEFECT-007",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Factual claim 'claim_4' lacks supporting citations.",
+              "section_id": "sec_warmstart",
+              "claim_id": "claim_4",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "G2-DEFECT-008",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Factual claim 'claim_con_1' lacks supporting citations.",
+              "section_id": "sec_conclusion",
+              "claim_id": "claim_con_1",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "G2-DEFECT-009",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'Warm-started approaches significantly boost approximation ratios.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Warm-started approaches significantly boost approximation ratios."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-010",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'Warm-started approaches decrease required optimization iterations on larger asset subsets.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Warm-started approaches decrease required optimization iterations on larger asset subsets."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 10,
+          "minor_count": 0,
+          "tokens_used": 1783,
+          "cost_usd": 0.000203
+        },
+        "judge_verdict": {
+          "composite_score": 0.8075,
+          "passed": false,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 0.95,
+              "passed": true,
+              "reasoning": "The report accurately reflects the technical findings from the provided source contexts regarding QAOA performance, barren plateaus, and warm-starting benefits. No hallucinations were detected."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 0.95,
+              "passed": true,
+              "reasoning": "All factual claims made in the report are directly supported by the provided source contexts. The content is well-aligned with the source material."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 0.0,
+              "passed": false,
+              "reasoning": "The report fails completely on citation correctness. While placeholders like [cite_1] are used, they are not mapped to the provided source IDs (src_qc_03_a, src_qc_03_b), and the deterministic verification report confirms that all major claims lack valid supporting citations."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.9,
+              "passed": true,
+              "reasoning": "The report provides a comprehensive overview of the topic, covering both standard QAOA limitations and the advantages of warm-starting, while also including a limitations section."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report stays strictly on topic, addressing the research prompt regarding variational quantum algorithms for constrained portfolio optimization without extraneous information."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 0.95,
+              "passed": true,
+              "reasoning": "The report is logically structured with clear headings, an executive summary, and a concise conclusion. The tone is professional and appropriate for a research summary."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally consistent; the findings in the body sections align perfectly with the executive summary and the conclusion."
+            }
+          },
+          "overall_feedback": "The report is technically sound and well-written, accurately synthesizing the provided research sources. However, it suffers from a critical failure in citation management. Although the report uses citation placeholders, they are not linked to the actual source IDs, resulting in a complete lack of verifiable attribution. To improve, the author must replace generic placeholders with specific, valid references to the provided source IDs (e.g., [src_qc_03_a]) for every factual claim.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 3055,
+          "cost_usd": 0.000373
+        },
+        "tokens_used": 6737,
+        "cost_usd": 0.000991
+      },
+      {
+        "round_number": 1,
+        "report": {
+          "topic": "Variational Quantum Algorithms for Constrained Portfolio Optimization",
+          "title": "Benchmarking and Warm-Starting Variational Quantum Algorithms for Constrained Portfolio Optimization",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Recent research into variational quantum algorithms, specifically the Quantum Approximate Optimization Algorithm (QAOA), demonstrates significant potential as well as notable hurdles when applied to constrained portfolio optimization [cite_exec_1]. Standard parameter initializations on 50-asset Markowitz mean-variance problems hit performance ceilings and barren plateau issues at circuit depths beyond p=4 [cite_exec_1]. Conversely, warm-starting strategies utilizing classical continuous relaxations markedly improve approximation ratios and iteration efficiency on larger asset subsets [cite_exec_2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Variational quantum algorithms like QAOA face hurdles such as barren plateaus at depths beyond p=4 on 50-asset Markowitz problems.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_1",
+                    "source_id": "src_qc_03_a",
+                    "chunk_id": "chunk_qc_03_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Warm-starting strategies utilize classical continuous relaxations and improve approximation ratios on larger asset subsets.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_2",
+                    "source_id": "src_qc_03_b",
+                    "chunk_id": "chunk_qc_03_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_findings",
+              "title": "Performance and Limitations of Standard QAOA",
+              "content": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces [cite_1]. Furthermore, standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4% [cite_2].",
+              "claims": [
+                {
+                  "claim_id": "claim_1",
+                  "section_id": "sec_findings",
+                  "text": "Circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces when benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_1",
+                      "source_id": "src_qc_03_a",
+                      "chunk_id": "chunk_qc_03_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_2",
+                  "section_id": "sec_findings",
+                  "text": "Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_2",
+                      "source_id": "src_qc_03_a",
+                      "chunk_id": "chunk_qc_03_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            },
+            {
+              "section_id": "sec_warmstart",
+              "title": "Enhancing Performance via Warm-Started QAOA",
+              "content": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming [cite_3]. On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts [cite_4].",
+              "claims": [
+                {
+                  "claim_id": "claim_3",
+                  "section_id": "sec_warmstart",
+                  "text": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_3",
+                      "source_id": "src_qc_03_b",
+                      "chunk_id": "chunk_qc_03_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_4",
+                  "section_id": "sec_warmstart",
+                  "text": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_4",
+                      "source_id": "src_qc_03_b",
+                      "chunk_id": "chunk_qc_03_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion",
+            "content": "While standard QAOA implementations face severe hardware noise and barren plateau limitations at deeper circuits, integrating classical continuous relaxations to warm-start the optimization process provides a robust path forward [cite_con_1]. Warm-started approaches significantly boost approximation ratios while decreasing required optimization iterations on larger asset subsets [cite_con_2].",
+            "claims": [
+              {
+                "claim_id": "claim_con_1",
+                "section_id": "sec_conclusion",
+                "text": "Standard QAOA implementations face hardware noise and barren plateau limitations, but warm-starting provides a robust path forward.",
+                "citations": [
+                  {
+                    "citation_id": "cite_con_1",
+                    "source_id": "src_qc_03_a",
+                    "chunk_id": "chunk_qc_03_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_con_2",
+                "section_id": "sec_conclusion",
+                "text": "Warm-started approaches significantly boost approximation ratios and decrease required optimization iterations on larger asset subsets.",
+                "citations": [
+                  {
+                    "citation_id": "cite_con_2",
+                    "source_id": "src_qc_03_b",
+                    "chunk_id": "chunk_qc_03_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Barren plateaus limit circuit depths beyond p=4 in random ansatz spaces.",
+            "Hardware performance is heavily constrained by two-qubit gate error rates (0.4%).",
+            "Evaluated primarily on subset benchmarks (50-asset Markowitz and 100-asset S&P 500 subsets) rather than full-scale enterprise portfolios."
+          ],
+          "version": 2,
+          "created_by": "revision_llm",
+          "created_at": "2023-10-27T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 8,
+          "total_citations": 8,
+          "passage_matches": [
+            {
+              "citation_id": "cite_exec_1",
+              "source_id": "src_qc_03_a",
+              "chunk_id": "chunk_qc_03_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+              "normalized_passage": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+              "normalized_source_chunk": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%."
+            },
+            {
+              "citation_id": "cite_exec_2",
+              "source_id": "src_qc_03_b",
+              "chunk_id": "chunk_qc_03_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_passage": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+            },
+            {
+              "citation_id": "cite_1",
+              "source_id": "src_qc_03_a",
+              "chunk_id": "chunk_qc_03_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+              "normalized_passage": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+              "normalized_source_chunk": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%."
+            },
+            {
+              "citation_id": "cite_2",
+              "source_id": "src_qc_03_a",
+              "chunk_id": "chunk_qc_03_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+              "normalized_passage": "standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+              "normalized_source_chunk": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%."
+            },
+            {
+              "citation_id": "cite_3",
+              "source_id": "src_qc_03_b",
+              "chunk_id": "chunk_qc_03_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "normalized_passage": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+            },
+            {
+              "citation_id": "cite_4",
+              "source_id": "src_qc_03_b",
+              "chunk_id": "chunk_qc_03_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_passage": "on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+            },
+            {
+              "citation_id": "cite_con_1",
+              "source_id": "src_qc_03_a",
+              "chunk_id": "chunk_qc_03_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+              "normalized_passage": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+              "normalized_source_chunk": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%."
+            },
+            {
+              "citation_id": "cite_con_2",
+              "source_id": "src_qc_03_b",
+              "chunk_id": "chunk_qc_03_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_passage": "on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": false,
+          "grounding_score": 0.9375,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that benchmarking QAOA on 50-asset Markowitz problems shows circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that warm-started QAOA initializes angles using continuous relaxations and achieves an approximation ratio of 0.94 on 100-asset S&P 500 subsets, which is a larger subset than the 50-asset problem mentioned elsewhere.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_1",
+              "section_id": "sec_findings",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_2",
+              "section_id": "sec_findings",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, and that this performance is constrained primarily by two-qubit gate error rates of 0.4%.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_3",
+              "section_id": "sec_warmstart",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_4",
+              "section_id": "sec_warmstart",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text confirms that on 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at p=2, outperforms greedy classical heuristics, and saves 65% of optimization iterations compared to standard random starts.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_con_1",
+              "section_id": "sec_conclusion",
+              "entailment": "NEUTRAL",
+              "score": 0.5,
+              "reasoning": "The cited chunk confirms that standard QAOA faces barren plateaus and hardware noise limitations. However, the chunk does not mention warm-starting, so it cannot support the claim that warm-starting provides a robust path forward.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_con_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The cited chunk explicitly states that warm-started QAOA achieves an approximation ratio of 0.94 and saves 65% of optimization iterations compared to standard random starts on 100-asset subsets.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_2"
+              ]
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec' contains ungrounded factual assertion in prose not captured as a claim: 'Warm-starting strategies improve iteration efficiency on larger asset subsets.'",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Warm-starting strategies improve iteration efficiency on larger asset subsets."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-002",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Claim 'claim_con_1' is only weakly supported or neutral with respect to cited evidence: The cited chunk confirms that standard QAOA faces barren plateaus and hardware noise limitations. However, the chunk does not mention warm-starting, so it cannot support the claim that warm-starting provides a robust path forward.",
+              "section_id": "sec_conclusion",
+              "claim_id": "claim_con_1",
+              "citation_id": null,
+              "details": {
+                "reasoning": "The cited chunk confirms that standard QAOA faces barren plateaus and hardware noise limitations. However, the chunk does not mention warm-starting, so it cannot support the claim that warm-starting provides a robust path forward."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 2,
+          "minor_count": 0,
+          "tokens_used": 5115,
+          "cost_usd": 0.000633
+        },
+        "judge_verdict": {
+          "composite_score": 0.9925,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All claims made in the report are directly supported by the provided source material without any hallucinations or inaccuracies."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every factual assertion is explicitly grounded in the provided source chunks, with clear and accurate mapping between claims and source text."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are correctly formatted, point to the appropriate source IDs and chunk IDs, and utilize accurate quoted passages."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.95,
+              "passed": true,
+              "reasoning": "The report provides a comprehensive overview of the two primary approaches (standard vs. warm-started QAOA) and includes a dedicated section on limitations, covering the scope of the provided sources effectively."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report remains strictly focused on the research topic of Variational Quantum Algorithms for Constrained Portfolio Optimization without extraneous information."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is exceptionally well-organized with a logical flow from executive summary to findings, specific methodology improvements, and a concluding synthesis."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report maintains internal coherence throughout, with no contradictions between the findings, executive summary, and conclusion."
+            }
+          },
+          "overall_feedback": "The report is of excellent quality, demonstrating high precision in its synthesis of the provided technical sources. It accurately captures the trade-offs between standard and warm-started QAOA, correctly identifies the hardware and algorithmic limitations, and adheres strictly to the provided evidence. No significant improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 4027,
+          "cost_usd": 0.000425
+        },
+        "tokens_used": 14872,
+        "cost_usd": 0.002042
+      },
+      {
+        "round_number": 2,
+        "report": {
+          "topic": "Variational Quantum Algorithms for Constrained Portfolio Optimization",
+          "title": "Benchmarking and Warm-Starting Variational Quantum Algorithms for Constrained Portfolio Optimization",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Recent research into variational quantum algorithms, specifically the Quantum Approximate Optimization Algorithm (QAOA), demonstrates significant potential as well as notable hurdles when applied to constrained portfolio optimization [cite_exec_1]. Standard parameter initializations on 50-asset Markowitz mean-variance problems hit performance ceilings and barren plateau issues at circuit depths beyond p=4 [cite_exec_1]. Conversely, warm-starting strategies utilizing classical continuous relaxations markedly improve approximation ratios and save optimization iterations on larger asset subsets [cite_exec_2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Variational quantum algorithms like QAOA face hurdles such as barren plateaus at depths beyond p=4 on 50-asset Markowitz problems.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_1",
+                    "source_id": "src_qc_03_a",
+                    "chunk_id": "chunk_qc_03_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Warm-starting strategies utilize classical continuous relaxations and improve approximation ratios and iteration efficiency on larger asset subsets.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_2",
+                    "source_id": "src_qc_03_b",
+                    "chunk_id": "chunk_qc_03_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_findings",
+              "title": "Performance and Limitations of Standard QAOA",
+              "content": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces [cite_1]. Furthermore, standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4% [cite_2].",
+              "claims": [
+                {
+                  "claim_id": "claim_1",
+                  "section_id": "sec_findings",
+                  "text": "Circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces when benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_1",
+                      "source_id": "src_qc_03_a",
+                      "chunk_id": "chunk_qc_03_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_2",
+                  "section_id": "sec_findings",
+                  "text": "Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_2",
+                      "source_id": "src_qc_03_a",
+                      "chunk_id": "chunk_qc_03_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            },
+            {
+              "section_id": "sec_warmstart",
+              "title": "Enhancing Performance via Warm-Started QAOA",
+              "content": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming [cite_3]. On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts [cite_4].",
+              "claims": [
+                {
+                  "claim_id": "claim_3",
+                  "section_id": "sec_warmstart",
+                  "text": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_3",
+                      "source_id": "src_qc_03_b",
+                      "chunk_id": "chunk_qc_03_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_4",
+                  "section_id": "sec_warmstart",
+                  "text": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_4",
+                      "source_id": "src_qc_03_b",
+                      "chunk_id": "chunk_qc_03_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion",
+            "content": "While standard QAOA implementations face severe hardware noise and barren plateau limitations at deeper circuits [cite_con_1], integrating classical continuous relaxations to warm-start the optimization process significantly boosts approximation ratios and saves required optimization iterations [cite_con_2].",
+            "claims": [
+              {
+                "claim_id": "claim_con_1",
+                "section_id": "sec_conclusion",
+                "text": "Standard QAOA implementations face hardware noise and barren plateau limitations at deeper circuits.",
+                "citations": [
+                  {
+                    "citation_id": "cite_con_1",
+                    "source_id": "src_qc_03_a",
+                    "chunk_id": "chunk_qc_03_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_con_2",
+                "section_id": "sec_conclusion",
+                "text": "Warm-started approaches significantly boost approximation ratios and decrease required optimization iterations on larger asset subsets.",
+                "citations": [
+                  {
+                    "citation_id": "cite_con_2",
+                    "source_id": "src_qc_03_b",
+                    "chunk_id": "chunk_qc_03_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Barren plateaus limit circuit depths beyond p=4 in random ansatz spaces.",
+            "Hardware performance is heavily constrained by two-qubit gate error rates (0.4%).",
+            "Evaluated primarily on subset benchmarks (50-asset Markowitz and 100-asset S&P 500 subsets) rather than full-scale enterprise portfolios."
+          ],
+          "version": 3,
+          "created_by": "revision_llm",
+          "created_at": "2023-10-27T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 8,
+          "total_citations": 8,
+          "passage_matches": [
+            {
+              "citation_id": "cite_exec_1",
+              "source_id": "src_qc_03_a",
+              "chunk_id": "chunk_qc_03_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+              "normalized_passage": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+              "normalized_source_chunk": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%."
+            },
+            {
+              "citation_id": "cite_exec_2",
+              "source_id": "src_qc_03_b",
+              "chunk_id": "chunk_qc_03_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_passage": "on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+            },
+            {
+              "citation_id": "cite_1",
+              "source_id": "src_qc_03_a",
+              "chunk_id": "chunk_qc_03_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+              "normalized_passage": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+              "normalized_source_chunk": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%."
+            },
+            {
+              "citation_id": "cite_2",
+              "source_id": "src_qc_03_a",
+              "chunk_id": "chunk_qc_03_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+              "normalized_passage": "standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+              "normalized_source_chunk": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%."
+            },
+            {
+              "citation_id": "cite_3",
+              "source_id": "src_qc_03_b",
+              "chunk_id": "chunk_qc_03_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "normalized_passage": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+            },
+            {
+              "citation_id": "cite_4",
+              "source_id": "src_qc_03_b",
+              "chunk_id": "chunk_qc_03_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_passage": "on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+            },
+            {
+              "citation_id": "cite_con_1",
+              "source_id": "src_qc_03_a",
+              "chunk_id": "chunk_qc_03_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+              "normalized_passage": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+              "normalized_source_chunk": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%."
+            },
+            {
+              "citation_id": "cite_con_2",
+              "source_id": "src_qc_03_b",
+              "chunk_id": "chunk_qc_03_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_passage": "on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that benchmarking QAOA on 50-asset Markowitz problems shows circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that warm-started QAOA uses classical continuous relaxations, achieves higher approximation ratios (0.94), and saves 65% of optimization iterations compared to standard starts on 100-asset subsets.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_1",
+              "section_id": "sec_findings",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source explicitly states that benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_2",
+              "section_id": "sec_findings",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms that standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware and that this is constrained primarily by two-qubit gate error rates of 0.4%.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_3",
+              "section_id": "sec_warmstart",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_4",
+              "section_id": "sec_warmstart",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text confirms that on 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforms greedy classical heuristics, and saves 65% of optimization iterations compared to standard random starts.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_con_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that circuit depths beyond p=4 experience barren plateaus and that performance is constrained by two-qubit gate error rates, supporting the claim regarding hardware noise and barren plateau limitations.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_con_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that warm-started QAOA achieves an approximation ratio of 0.94 on 100-asset subsets and saves 65% of optimization iterations compared to standard random starts, supporting the claim.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_2"
+              ]
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec' contains ungrounded factual assertion in prose not captured as a claim: 'Standard parameter initializations on 50-asset Markowitz mean-variance problems hit performance ceilings.'",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Standard parameter initializations on 50-asset Markowitz mean-variance problems hit performance ceilings."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-002",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'The warm-start method involves integrating classical continuous relaxations.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "The warm-start method involves integrating classical continuous relaxations."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 2,
+          "minor_count": 0,
+          "tokens_used": 5053,
+          "cost_usd": 0.000618
+        },
+        "judge_verdict": {
+          "composite_score": 0.9925,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All claims made in the report are directly supported by the provided source contexts. No hallucinations or factual errors were identified."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every factual statement is explicitly grounded in the provided source material, with clear mapping between claims and source passages."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are precise, correctly attributed to the source IDs, and utilize accurate quoted passages from the source chunks."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.95,
+              "passed": true,
+              "reasoning": "The report covers the key findings from the provided sources, including performance limitations and optimization strategies, and includes a relevant limitations section."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report stays strictly focused on the research topic of Variational Quantum Algorithms for Constrained Portfolio Optimization without extraneous information."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is exceptionally well-organized with a logical flow from executive summary to findings, specific strategies, and conclusions."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report maintains internal coherence throughout, with no contradictions between the executive summary, body sections, and conclusion."
+            }
+          },
+          "overall_feedback": "This is an exemplary research report. It is highly accurate, well-grounded in the provided evidence, and follows a logical structure that effectively synthesizes the technical findings. No significant improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 3958,
+          "cost_usd": 0.000413
+        },
+        "tokens_used": 14867,
+        "cost_usd": 0.002016
+      },
+      {
+        "round_number": 3,
+        "report": {
+          "topic": "Variational Quantum Algorithms for Constrained Portfolio Optimization",
+          "title": "Benchmarking and Warm-Starting Variational Quantum Algorithms for Constrained Portfolio Optimization",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Recent research into variational quantum algorithms, specifically the Quantum Approximate Optimization Algorithm (QAOA), demonstrates significant potential as well as notable hurdles when applied to constrained portfolio optimization [cite_exec_1]. Standard parameter initializations on 50-asset Markowitz mean-variance problems hit performance ceilings and barren plateau issues at circuit depths beyond p=4 [cite_exec_1]. Conversely, warm-starting strategies involving the warm-start method which initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming markedly improve approximation ratios and save optimization iterations on larger asset subsets [cite_exec_2, cite_exec_3].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Variational quantum algorithms like QAOA face hurdles such as barren plateaus at depths beyond p=4 on 50-asset Markowitz problems.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_1",
+                    "source_id": "src_qc_03_a",
+                    "chunk_id": "chunk_qc_03_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_3",
+                    "source_id": "src_qc_03_b",
+                    "chunk_id": "chunk_qc_03_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_3",
+                "section_id": "sec_exec",
+                "text": "Warm-starting strategies utilize classical continuous relaxations and improve approximation ratios and iteration efficiency on larger asset subsets.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_2",
+                    "source_id": "src_qc_03_b",
+                    "chunk_id": "chunk_qc_03_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_findings",
+              "title": "Performance and Limitations of Standard QAOA",
+              "content": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces [cite_1]. Furthermore, standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4% [cite_2].",
+              "claims": [
+                {
+                  "claim_id": "claim_1",
+                  "section_id": "sec_findings",
+                  "text": "Circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces when benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_1",
+                      "source_id": "src_qc_03_a",
+                      "chunk_id": "chunk_qc_03_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_2",
+                  "section_id": "sec_findings",
+                  "text": "Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_2",
+                      "source_id": "src_qc_03_a",
+                      "chunk_id": "chunk_qc_03_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            },
+            {
+              "section_id": "sec_warmstart",
+              "title": "Enhancing Performance via Warm-Started QAOA",
+              "content": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming [cite_3]. On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts [cite_4].",
+              "claims": [
+                {
+                  "claim_id": "claim_3",
+                  "section_id": "sec_warmstart",
+                  "text": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_3",
+                      "source_id": "src_qc_03_b",
+                      "chunk_id": "chunk_qc_03_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_4",
+                  "section_id": "sec_warmstart",
+                  "text": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_4",
+                      "source_id": "src_qc_03_b",
+                      "chunk_id": "chunk_qc_03_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion",
+            "content": "While standard QAOA implementations face severe hardware noise and barren plateau limitations at deeper circuits [cite_con_1], the warm-start method involves integrating classical continuous relaxations [cite_con_3] to warm-start the optimization process which significantly boosts approximation ratios and saves required optimization iterations [cite_con_2].",
+            "claims": [
+              {
+                "claim_id": "claim_con_1",
+                "section_id": "sec_conclusion",
+                "text": "Standard QAOA implementations face hardware noise and barren plateau limitations at deeper circuits.",
+                "citations": [
+                  {
+                    "citation_id": "cite_con_1",
+                    "source_id": "src_qc_03_a",
+                    "chunk_id": "chunk_qc_03_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_con_3",
+                "section_id": "sec_conclusion",
+                "text": "The warm-start method involves integrating classical continuous relaxations.",
+                "citations": [
+                  {
+                    "citation_id": "cite_con_3",
+                    "source_id": "src_qc_03_b",
+                    "chunk_id": "chunk_qc_03_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_con_2",
+                "section_id": "sec_conclusion",
+                "text": "Warm-started approaches significantly boost approximation ratios and decrease required optimization iterations on larger asset subsets.",
+                "citations": [
+                  {
+                    "citation_id": "cite_con_2",
+                    "source_id": "src_qc_03_b",
+                    "chunk_id": "chunk_qc_03_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Barren plateaus limit circuit depths beyond p=4 in random ansatz spaces.",
+            "Hardware performance is heavily constrained by two-qubit gate error rates (0.4%).",
+            "Evaluated primarily on subset benchmarks (50-asset Markowitz and 100-asset S&P 500 subsets) rather than full-scale enterprise portfolios."
+          ],
+          "version": 4,
+          "created_by": "revision_llm",
+          "created_at": "2023-10-27T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 10,
+          "total_citations": 10,
+          "passage_matches": [
+            {
+              "citation_id": "cite_exec_1",
+              "source_id": "src_qc_03_a",
+              "chunk_id": "chunk_qc_03_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+              "normalized_passage": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+              "normalized_source_chunk": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%."
+            },
+            {
+              "citation_id": "cite_exec_3",
+              "source_id": "src_qc_03_b",
+              "chunk_id": "chunk_qc_03_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "normalized_passage": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+            },
+            {
+              "citation_id": "cite_exec_2",
+              "source_id": "src_qc_03_b",
+              "chunk_id": "chunk_qc_03_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_passage": "on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+            },
+            {
+              "citation_id": "cite_1",
+              "source_id": "src_qc_03_a",
+              "chunk_id": "chunk_qc_03_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+              "normalized_passage": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+              "normalized_source_chunk": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%."
+            },
+            {
+              "citation_id": "cite_2",
+              "source_id": "src_qc_03_a",
+              "chunk_id": "chunk_qc_03_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+              "normalized_passage": "standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+              "normalized_source_chunk": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%."
+            },
+            {
+              "citation_id": "cite_3",
+              "source_id": "src_qc_03_b",
+              "chunk_id": "chunk_qc_03_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "normalized_passage": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+            },
+            {
+              "citation_id": "cite_4",
+              "source_id": "src_qc_03_b",
+              "chunk_id": "chunk_qc_03_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_passage": "on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+            },
+            {
+              "citation_id": "cite_con_1",
+              "source_id": "src_qc_03_a",
+              "chunk_id": "chunk_qc_03_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+              "normalized_passage": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+              "normalized_source_chunk": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%."
+            },
+            {
+              "citation_id": "cite_con_3",
+              "source_id": "src_qc_03_b",
+              "chunk_id": "chunk_qc_03_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "normalized_passage": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+            },
+            {
+              "citation_id": "cite_con_2",
+              "source_id": "src_qc_03_b",
+              "chunk_id": "chunk_qc_03_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_passage": "on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": true,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that benchmarking QAOA on 50-asset Markowitz problems shows circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk directly states that warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_3",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that warm-started QAOA uses continuous relaxations, achieves a higher approximation ratio (0.94), and saves 65% of optimization iterations on 100-asset subsets.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_1",
+              "section_id": "sec_findings",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source explicitly states that benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems shows that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_2",
+              "section_id": "sec_findings",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms that standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware and that this is constrained primarily by two-qubit gate error rates of 0.4%.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_3",
+              "section_id": "sec_warmstart",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_4",
+              "section_id": "sec_warmstart",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text confirms that on 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforms greedy classical heuristics, and saves 65% of optimization iterations compared to standard random starts.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_con_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms that circuit depths beyond p=4 experience barren plateaus and that performance is constrained by two-qubit gate error rates (hardware noise).",
+              "cited_chunk_ids": [
+                "chunk_qc_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_con_3",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source explicitly states that warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_con_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source states that warm-started QAOA achieves an approximation ratio of 0.94 on 100-asset subsets and saves 65% of optimization iterations compared to standard random starts.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_2"
+              ]
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0,
+          "tokens_used": 5352,
+          "cost_usd": 0.000669
+        },
+        "judge_verdict": {
+          "composite_score": 0.9925,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All claims made in the report are directly supported by the provided source material. No hallucinations or factual errors were identified."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every factual assertion is backed by specific, relevant citations from the provided source chunks."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All citations are accurate, correctly mapped to the source IDs and chunk IDs, and utilize valid quoted passages."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.95,
+              "passed": true,
+              "reasoning": "The report covers the key aspects of the research topic, including performance limitations of standard QAOA and the benefits of warm-starting, while explicitly noting limitations in the scope of the benchmarks."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report maintains strict focus on the research topic of Variational Quantum Algorithms for Constrained Portfolio Optimization throughout all sections."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is logically structured with a clear executive summary, findings, methodology, and conclusion, making it highly readable and professional."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally consistent; there are no contradictions between the executive summary, the body sections, and the conclusion."
+            }
+          },
+          "overall_feedback": "The report is excellent, demonstrating high technical accuracy and strict adherence to the provided source material. It effectively synthesizes the performance challenges of standard QAOA with the improvements offered by warm-starting techniques. The structure is logical, and the citations are precise. No significant improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 4370,
+          "cost_usd": 0.00045
+        },
+        "tokens_used": 15891,
+        "cost_usd": 0.002214
+      }
+    ],
+    "budget_summary": {
+      "used_tokens": 52367,
+      "max_tokens": 50000,
+      "used_cost_usd": 0.007263,
+      "max_cost_usd": 0.2,
+      "elapsed_seconds": 603.487,
+      "max_seconds": 1800.0,
+      "rounds_executed": 3,
+      "max_rounds": 3,
+      "is_exhausted": true,
+      "exhaustion_reason": "TOKENS_EXHAUSTED (used 52367 >= max 50000)"
+    },
+    "rounds_executed": 3,
+    "termination_reason": "ALL_ACCEPTANCE_CRITERIA_MET",
+    "acceptance_threshold": 0.85,
+    "acceptance_result": {
+      "status": "ACCEPTED",
+      "is_accepted": true,
+      "best_candidate": {
+        "round_number": 3,
+        "report": {
+          "topic": "Variational Quantum Algorithms for Constrained Portfolio Optimization",
+          "title": "Benchmarking and Warm-Starting Variational Quantum Algorithms for Constrained Portfolio Optimization",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Recent research into variational quantum algorithms, specifically the Quantum Approximate Optimization Algorithm (QAOA), demonstrates significant potential as well as notable hurdles when applied to constrained portfolio optimization [cite_exec_1]. Standard parameter initializations on 50-asset Markowitz mean-variance problems hit performance ceilings and barren plateau issues at circuit depths beyond p=4 [cite_exec_1]. Conversely, warm-starting strategies involving the warm-start method which initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming markedly improve approximation ratios and save optimization iterations on larger asset subsets [cite_exec_2, cite_exec_3].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Variational quantum algorithms like QAOA face hurdles such as barren plateaus at depths beyond p=4 on 50-asset Markowitz problems.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_1",
+                    "source_id": "src_qc_03_a",
+                    "chunk_id": "chunk_qc_03_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_3",
+                    "source_id": "src_qc_03_b",
+                    "chunk_id": "chunk_qc_03_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_3",
+                "section_id": "sec_exec",
+                "text": "Warm-starting strategies utilize classical continuous relaxations and improve approximation ratios and iteration efficiency on larger asset subsets.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_2",
+                    "source_id": "src_qc_03_b",
+                    "chunk_id": "chunk_qc_03_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_findings",
+              "title": "Performance and Limitations of Standard QAOA",
+              "content": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces [cite_1]. Furthermore, standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4% [cite_2].",
+              "claims": [
+                {
+                  "claim_id": "claim_1",
+                  "section_id": "sec_findings",
+                  "text": "Circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces when benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_1",
+                      "source_id": "src_qc_03_a",
+                      "chunk_id": "chunk_qc_03_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_2",
+                  "section_id": "sec_findings",
+                  "text": "Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_2",
+                      "source_id": "src_qc_03_a",
+                      "chunk_id": "chunk_qc_03_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            },
+            {
+              "section_id": "sec_warmstart",
+              "title": "Enhancing Performance via Warm-Started QAOA",
+              "content": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming [cite_3]. On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts [cite_4].",
+              "claims": [
+                {
+                  "claim_id": "claim_3",
+                  "section_id": "sec_warmstart",
+                  "text": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_3",
+                      "source_id": "src_qc_03_b",
+                      "chunk_id": "chunk_qc_03_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_4",
+                  "section_id": "sec_warmstart",
+                  "text": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_4",
+                      "source_id": "src_qc_03_b",
+                      "chunk_id": "chunk_qc_03_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion",
+            "content": "While standard QAOA implementations face severe hardware noise and barren plateau limitations at deeper circuits [cite_con_1], the warm-start method involves integrating classical continuous relaxations [cite_con_3] to warm-start the optimization process which significantly boosts approximation ratios and saves required optimization iterations [cite_con_2].",
+            "claims": [
+              {
+                "claim_id": "claim_con_1",
+                "section_id": "sec_conclusion",
+                "text": "Standard QAOA implementations face hardware noise and barren plateau limitations at deeper circuits.",
+                "citations": [
+                  {
+                    "citation_id": "cite_con_1",
+                    "source_id": "src_qc_03_a",
+                    "chunk_id": "chunk_qc_03_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_con_3",
+                "section_id": "sec_conclusion",
+                "text": "The warm-start method involves integrating classical continuous relaxations.",
+                "citations": [
+                  {
+                    "citation_id": "cite_con_3",
+                    "source_id": "src_qc_03_b",
+                    "chunk_id": "chunk_qc_03_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_con_2",
+                "section_id": "sec_conclusion",
+                "text": "Warm-started approaches significantly boost approximation ratios and decrease required optimization iterations on larger asset subsets.",
+                "citations": [
+                  {
+                    "citation_id": "cite_con_2",
+                    "source_id": "src_qc_03_b",
+                    "chunk_id": "chunk_qc_03_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Barren plateaus limit circuit depths beyond p=4 in random ansatz spaces.",
+            "Hardware performance is heavily constrained by two-qubit gate error rates (0.4%).",
+            "Evaluated primarily on subset benchmarks (50-asset Markowitz and 100-asset S&P 500 subsets) rather than full-scale enterprise portfolios."
+          ],
+          "version": 4,
+          "created_by": "revision_llm",
+          "created_at": "2023-10-27T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 10,
+          "total_citations": 10,
+          "passage_matches": [
+            {
+              "citation_id": "cite_exec_1",
+              "source_id": "src_qc_03_a",
+              "chunk_id": "chunk_qc_03_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+              "normalized_passage": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+              "normalized_source_chunk": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%."
+            },
+            {
+              "citation_id": "cite_exec_3",
+              "source_id": "src_qc_03_b",
+              "chunk_id": "chunk_qc_03_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "normalized_passage": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+            },
+            {
+              "citation_id": "cite_exec_2",
+              "source_id": "src_qc_03_b",
+              "chunk_id": "chunk_qc_03_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_passage": "on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+            },
+            {
+              "citation_id": "cite_1",
+              "source_id": "src_qc_03_a",
+              "chunk_id": "chunk_qc_03_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+              "normalized_passage": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+              "normalized_source_chunk": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%."
+            },
+            {
+              "citation_id": "cite_2",
+              "source_id": "src_qc_03_a",
+              "chunk_id": "chunk_qc_03_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+              "normalized_passage": "standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+              "normalized_source_chunk": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%."
+            },
+            {
+              "citation_id": "cite_3",
+              "source_id": "src_qc_03_b",
+              "chunk_id": "chunk_qc_03_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "normalized_passage": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+            },
+            {
+              "citation_id": "cite_4",
+              "source_id": "src_qc_03_b",
+              "chunk_id": "chunk_qc_03_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_passage": "on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+            },
+            {
+              "citation_id": "cite_con_1",
+              "source_id": "src_qc_03_a",
+              "chunk_id": "chunk_qc_03_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. Standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+              "normalized_passage": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%.",
+              "normalized_source_chunk": "benchmarking qaoa on 50-asset markowitz mean-variance portfolio problems reveals that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces. standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware, constrained primarily by two-qubit gate error rates of 0.4%."
+            },
+            {
+              "citation_id": "cite_con_3",
+              "source_id": "src_qc_03_b",
+              "chunk_id": "chunk_qc_03_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "normalized_passage": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+            },
+            {
+              "citation_id": "cite_con_2",
+              "source_id": "src_qc_03_b",
+              "chunk_id": "chunk_qc_03_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "On 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_passage": "on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts.",
+              "normalized_source_chunk": "warm-started qaoa initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming. on 100-asset s&p 500 subsets, warm-started qaoa achieves an approximation ratio of 0.94 at circuit depth p=2, outperforming greedy classical heuristics while saving 65% of optimization iterations compared to standard random starts."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": true,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that benchmarking QAOA on 50-asset Markowitz problems shows circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk directly states that warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_3",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that warm-started QAOA uses continuous relaxations, achieves a higher approximation ratio (0.94), and saves 65% of optimization iterations on 100-asset subsets.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_1",
+              "section_id": "sec_findings",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source explicitly states that benchmarking QAOA on 50-asset Markowitz mean-variance portfolio problems shows that circuit depths beyond p=4 experience exponential variance suppression due to barren plateaus in random ansatz spaces.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_2",
+              "section_id": "sec_findings",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms that standard parameter initialization yields approximation ratios of 0.72 on 27-qubit superconducting hardware and that this is constrained primarily by two-qubit gate error rates of 0.4%.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_3",
+              "section_id": "sec_warmstart",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_4",
+              "section_id": "sec_warmstart",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text confirms that on 100-asset S&P 500 subsets, warm-started QAOA achieves an approximation ratio of 0.94 at circuit depth p=2, outperforms greedy classical heuristics, and saves 65% of optimization iterations compared to standard random starts.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_con_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms that circuit depths beyond p=4 experience barren plateaus and that performance is constrained by two-qubit gate error rates (hardware noise).",
+              "cited_chunk_ids": [
+                "chunk_qc_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_con_3",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source explicitly states that warm-started QAOA initializes rotation angles using continuous relaxations solved via classical interior-point quadratic programming.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_con_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source states that warm-started QAOA achieves an approximation ratio of 0.94 on 100-asset subsets and saves 65% of optimization iterations compared to standard random starts.",
+              "cited_chunk_ids": [
+                "chunk_qc_03_2"
+              ]
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0,
+          "tokens_used": 5352,
+          "cost_usd": 0.000669
+        },
+        "judge_verdict": {
+          "composite_score": 0.9925,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All claims made in the report are directly supported by the provided source material. No hallucinations or factual errors were identified."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every factual assertion is backed by specific, relevant citations from the provided source chunks."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All citations are accurate, correctly mapped to the source IDs and chunk IDs, and utilize valid quoted passages."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.95,
+              "passed": true,
+              "reasoning": "The report covers the key aspects of the research topic, including performance limitations of standard QAOA and the benefits of warm-starting, while explicitly noting limitations in the scope of the benchmarks."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report maintains strict focus on the research topic of Variational Quantum Algorithms for Constrained Portfolio Optimization throughout all sections."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is logically structured with a clear executive summary, findings, methodology, and conclusion, making it highly readable and professional."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally consistent; there are no contradictions between the executive summary, the body sections, and the conclusion."
+            }
+          },
+          "overall_feedback": "The report is excellent, demonstrating high technical accuracy and strict adherence to the provided source material. It effectively synthesizes the performance challenges of standard QAOA with the improvements offered by warm-starting techniques. The structure is logical, and the citations are precise. No significant improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 4370,
+          "cost_usd": 0.00045
+        },
+        "tokens_used": 15891,
+        "cost_usd": 0.002214
+      },
+      "rationale": "Candidate meets all deterministic and semantic acceptance standards (composite_score=0.9925 >= 0.85, critical=0, major_grounding=0).",
+      "unresolved_reasons": [],
+      "review_packet": null
+    },
+    "learned_lessons_count": 0
+  }
+}

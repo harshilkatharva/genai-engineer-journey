@@ -1,0 +1,221 @@
+{
+  "topic_id": "bio-01",
+  "topic_title": "Deep Learning and Diffusion Models for De Novo Allosteric Drug Design",
+  "approach": "approach_c_grounded_reflection",
+  "approach_name": "Approach C: Grounded Reflection",
+  "final_report": {
+    "topic": "Deep Learning and Diffusion Models for De Novo Allosteric Drug Design",
+    "title": "Deep Learning and Diffusion Models for De Novo Allosteric Drug Design",
+    "executive_summary": {
+      "section_id": "sec_exec",
+      "title": "Executive Summary",
+      "content": "Targeting allosteric regulatory pockets provides high isoform selectivity across the human kinome, circumventing the off-target toxicity typical of ATP-competitive inhibitors [cite_exec_1]. Applying SE(3)-equivariant continuous-time diffusion models generates drug-like conformers that dock directly into transient cryptic pockets identified from molecular dynamics simulations, achieving a 22% experimental hit rate in biochemical assays [cite_exec_2]. Combining physics-based MM-GBSA binding free-energy calculations with ensemble machine-learned scoring functions improves the area under the receiver operating characteristic curve (AUROC) to 0.89 for identifying true sub-micromolar binders [cite_exec_3].",
+      "claims": [
+        {
+          "claim_id": "claim_exec_1",
+          "section_id": "sec_exec",
+          "text": "Targeting allosteric regulatory pockets provides high isoform selectivity across the human kinome, circumventing the off-target toxicity typical of ATP-competitive inhibitors.",
+          "citations": [
+            {
+              "citation_id": "cite_exec_1",
+              "source_id": "src_bio_01_a",
+              "chunk_id": "chunk_bio_01_1",
+              "citation_type": "quotation",
+              "quoted_passage": "Targeting allosteric regulatory pockets provides high isoform selectivity across the human kinome, circumventing the off-target toxicity typical of ATP-competitive inhibitors.",
+              "confidence": 1.0
+            }
+          ],
+          "is_factual": true
+        },
+        {
+          "claim_id": "claim_exec_2",
+          "section_id": "sec_exec",
+          "text": "Applying SE(3)-equivariant continuous-time diffusion models generates drug-like conformers that dock directly into transient cryptic pockets identified from molecular dynamics simulations, achieving a 22% experimental hit rate in biochemical assays.",
+          "citations": [
+            {
+              "citation_id": "cite_exec_2",
+              "source_id": "src_bio_01_a",
+              "chunk_id": "chunk_bio_01_1",
+              "citation_type": "quotation",
+              "quoted_passage": "Applying SE(3)-equivariant continuous-time diffusion models generates drug-like conformers that dock directly into transient cryptic pockets identified from molecular dynamics simulations, achieving a 22% experimental hit rate in biochemical assays.",
+              "confidence": 1.0
+            }
+          ],
+          "is_factual": true
+        },
+        {
+          "claim_id": "claim_exec_3",
+          "section_id": "sec_exec",
+          "text": "Combining physics-based MM-GBSA binding free-energy calculations with ensemble machine-learned scoring functions improves the area under the receiver operating characteristic curve (AUROC) to 0.89 for identifying true sub-micromolar binders.",
+          "citations": [
+            {
+              "citation_id": "cite_exec_3",
+              "source_id": "src_bio_01_b",
+              "chunk_id": "chunk_bio_01_2",
+              "citation_type": "quotation",
+              "quoted_passage": "Combining physics-based MM-GBSA binding free-energy calculations with ensemble machine-learned scoring functions improves the area under the receiver operating characteristic curve (AUROC) to 0.89 for identifying true sub-micromolar binders.",
+              "confidence": 1.0
+            }
+          ],
+          "is_factual": true
+        }
+      ]
+    },
+    "sections": [
+      {
+        "section_id": "sec_findings",
+        "title": "Generative Diffusion Models and Allosteric Target Selection",
+        "content": "Targeting allosteric regulatory pockets provides high isoform selectivity across the human kinome, circumventing the off-target toxicity typical of ATP-competitive inhibitors [cite_cite_1]. Applying SE(3)-equivariant continuous-time diffusion models generates drug-like conformers that dock directly into transient cryptic pockets identified from molecular dynamics simulations, achieving a 22% experimental hit rate in biochemical assays [cite_cite_3]. Standard empirical scoring functions (e.g. Glide SP, AutoDock Vina) exhibit high false-positive rates of 68% when evaluating generated allosteric ligands [cite_cite_2]. Combining physics-based MM-GBSA binding free-energy calculations with ensemble machine-learned scoring functions improves the area under the receiver operating characteristic curve (AUROC) to 0.89 for identifying true sub-micromolar binders [cite_cite_4].",
+        "claims": [
+          {
+            "claim_id": "claim_1",
+            "section_id": "sec_findings",
+            "text": "Targeting allosteric regulatory pockets provides high isoform selectivity across the human kinome, circumventing the off-target toxicity typical of ATP-competitive inhibitors.",
+            "citations": [
+              {
+                "citation_id": "cite_cite_1",
+                "source_id": "src_bio_01_a",
+                "chunk_id": "chunk_bio_01_1",
+                "citation_type": "quotation",
+                "quoted_passage": "Targeting allosteric regulatory pockets provides high isoform selectivity across the human kinome, circumventing the off-target toxicity typical of ATP-competitive inhibitors.",
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_2",
+            "section_id": "sec_findings",
+            "text": "Applying SE(3)-equivariant continuous-time diffusion models generates drug-like conformers that dock directly into transient cryptic pockets identified from molecular dynamics simulations, achieving a 22% experimental hit rate in biochemical assays.",
+            "citations": [
+              {
+                "citation_id": "cite_cite_3",
+                "source_id": "src_bio_01_a",
+                "chunk_id": "chunk_bio_01_1",
+                "citation_type": "quotation",
+                "quoted_passage": "Applying SE(3)-equivariant continuous-time diffusion models generates drug-like conformers that dock directly into transient cryptic pockets identified from molecular dynamics simulations, achieving a 22% experimental hit rate in biochemical assays.",
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_3",
+            "section_id": "sec_findings",
+            "text": "Standard empirical scoring functions (e.g. Glide SP, AutoDock Vina) exhibit high false-positive rates of 68% when evaluating generated allosteric ligands.",
+            "citations": [
+              {
+                "citation_id": "cite_cite_2",
+                "source_id": "src_bio_01_b",
+                "chunk_id": "chunk_bio_01_2",
+                "citation_type": "quotation",
+                "quoted_passage": "Standard empirical scoring functions (e.g. Glide SP, AutoDock Vina) exhibit high false-positive rates of 68% when evaluating generated allosteric ligands.",
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_4",
+            "section_id": "sec_findings",
+            "text": "Combining physics-based MM-GBSA binding free-energy calculations with ensemble machine-learned scoring functions improves the area under the receiver operating characteristic curve (AUROC) to 0.89 for identifying true sub-micromolar binders.",
+            "citations": [
+              {
+                "citation_id": "cite_cite_4",
+                "source_id": "src_bio_01_b",
+                "chunk_id": "chunk_bio_01_2",
+                "citation_type": "quotation",
+                "quoted_passage": "Combining physics-based MM-GBSA binding free-energy calculations with ensemble machine-learned scoring functions improves the area under the receiver operating characteristic curve (AUROC) to 0.89 for identifying true sub-micromolar binders.",
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          }
+        ]
+      }
+    ],
+    "conclusion": {
+      "section_id": "sec_conclusion",
+      "title": "Conclusion and Future Implications",
+      "content": "The framework specifically utilizes SE(3)-equivariant diffusion models [cite_conc_1]. The framework incorporates both physics-based and machine-learned scoring [cite_conc_2]. The framework results in improved selectivity for allosteric drugs [cite_conc_3].",
+      "claims": [
+        {
+          "claim_id": "claim_conc_1",
+          "section_id": "sec_conclusion",
+          "text": "Applying SE(3)-equivariant continuous-time diffusion models generates drug-like conformers that dock directly into transient cryptic pockets identified from molecular dynamics simulations, achieving a 22% experimental hit rate in biochemical assays.",
+          "citations": [
+            {
+              "citation_id": "cite_conc_1",
+              "source_id": "src_bio_01_a",
+              "chunk_id": "chunk_bio_01_1",
+              "citation_type": "quotation",
+              "quoted_passage": "Applying SE(3)-equivariant continuous-time diffusion models generates drug-like conformers that dock directly into transient cryptic pockets identified from molecular dynamics simulations, achieving a 22% experimental hit rate in biochemical assays.",
+              "confidence": 1.0
+            }
+          ],
+          "is_factual": true
+        },
+        {
+          "claim_id": "claim_conc_2",
+          "section_id": "sec_conclusion",
+          "text": "Combining physics-based MM-GBSA binding free-energy calculations with ensemble machine-learned scoring functions improves the area under the receiver operating characteristic curve (AUROC) to 0.89 for identifying true sub-micromolar binders.",
+          "citations": [
+            {
+              "citation_id": "cite_conc_2",
+              "source_id": "src_bio_01_b",
+              "chunk_id": "chunk_bio_01_2",
+              "citation_type": "quotation",
+              "quoted_passage": "Combining physics-based MM-GBSA binding free-energy calculations with ensemble machine-learned scoring functions improves the area under the receiver operating characteristic curve (AUROC) to 0.89 for identifying true sub-micromolar binders.",
+              "confidence": 1.0
+            }
+          ],
+          "is_factual": true
+        },
+        {
+          "claim_id": "claim_conc_3",
+          "section_id": "sec_conclusion",
+          "text": "Targeting allosteric regulatory pockets provides high isoform selectivity across the human kinome, circumventing the off-target toxicity typical of ATP-competitive inhibitors.",
+          "citations": [
+            {
+              "citation_id": "cite_conc_3",
+              "source_id": "src_bio_01_a",
+              "chunk_id": "chunk_bio_01_1",
+              "citation_type": "quotation",
+              "quoted_passage": "Targeting allosteric regulatory pockets provides high isoform selectivity across the human kinome, circumventing the off-target toxicity typical of ATP-competitive inhibitors.",
+              "confidence": 1.0
+            }
+          ],
+          "is_factual": true
+        }
+      ]
+    },
+    "limitations": [
+      "High initial false-positive rates in standard scoring functions require heavy reliance on specialized machine learning and physics-based corrections.",
+      "Data scope is limited to documented biochemical assays and specific molecular dynamics simulations."
+    ],
+    "version": 2,
+    "created_by": "revision_llm",
+    "created_at": "2023-10-25T00:00:00Z"
+  },
+  "rounds_executed": 1,
+  "deterministic_passed": true,
+  "critical_defect_count": 0,
+  "major_defect_count": 0,
+  "composite_rubric_score": 0.9675,
+  "factual_accuracy_score": 1.0,
+  "evidence_grounding_score": 1.0,
+  "dimension_scores": {
+    "factual_accuracy": 1.0,
+    "evidence_grounding": 1.0,
+    "citation_correctness": 1.0,
+    "completeness": 0.85,
+    "relevance": 1.0,
+    "clarity_organization": 0.9,
+    "logical_consistency": 1.0
+  },
+  "tokens_consumed": 24737,
+  "cost_usd": 0.003526,
+  "latency_seconds": 372.72166209499846,
+  "is_accepted": true,
+  "terminal_status": "ACCEPTED"
+}

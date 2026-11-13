@@ -1,0 +1,1088 @@
+{
+  "topic_id": "energy-01",
+  "topic_title": "Sulfide vs Oxide Solid Electrolytes for All-Solid-State Lithium Batteries",
+  "domain": "renewable_energy",
+  "recorded_at_utc": "2026-11-11T17:33:32.153781+00:00",
+  "rounds_executed": 0,
+  "best_round": 0,
+  "termination_reason": "ALL_ACCEPTANCE_CRITERIA_MET",
+  "is_accepted": true,
+  "terminal_status": "ACCEPTED",
+  "blinded_composite_score": 0.985,
+  "latency_seconds": 100.272,
+  "round_history": [
+    {
+      "round_number": 0,
+      "deterministic_passed": true,
+      "critical_defect_count": 0,
+      "major_defect_count": 0,
+      "grounding_score": 1.0,
+      "all_claims_grounded": true,
+      "composite_score": 0.985,
+      "is_self_judged": false,
+      "tokens_used": 10960,
+      "cost_usd": 0.001603
+    }
+  ],
+  "budget_summary": {
+    "used_tokens": 10960,
+    "max_tokens": 50000,
+    "used_cost_usd": 0.001603,
+    "max_cost_usd": 0.2,
+    "elapsed_seconds": 62.6,
+    "max_seconds": 1800.0,
+    "rounds_executed": 0,
+    "max_rounds": 3,
+    "is_exhausted": false,
+    "exhaustion_reason": null
+  },
+  "reflection_run_result": {
+    "topic": "Sulfide vs Oxide Solid Electrolytes for All-Solid-State Lithium Batteries",
+    "best_candidate": {
+      "round_number": 0,
+      "report": {
+        "topic": "Sulfide vs Oxide Solid Electrolytes for All-Solid-State Lithium Batteries",
+        "title": "Comparative Analysis of Sulfide and Oxide Solid Electrolytes for All-Solid-State Lithium Batteries",
+        "executive_summary": {
+          "section_id": "sec_exec",
+          "title": "Executive Summary",
+          "content": "Sulfide-based solid electrolytes offer exceptional room-temperature lithium-ion conductivities comparable to liquid electrolytes, but suffer from toxic hydrogen sulfide generation when exposed to moisture [cite_cite_1]. Conversely, oxide-based electrolytes like garnet-structured LLZO demonstrate high chemical stability against metallic lithium and easier air handling, albeit with lower bulk conductivity and higher interfacial resistance which can be mitigated through interlayer engineering [cite_cite_2].",
+          "claims": [
+            {
+              "claim_id": "claim_1",
+              "section_id": "sec_exec",
+              "text": "Sulfide-based solid electrolytes offer exceptional room-temperature lithium-ion conductivities comparable to liquid electrolytes, but suffer from toxic hydrogen sulfide generation when exposed to moisture.",
+              "citations": [
+                {
+                  "citation_id": "cite_cite_1",
+                  "source_id": "src_energy_01_a",
+                  "chunk_id": "chunk_energy_01_1",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_2",
+              "section_id": "sec_exec",
+              "text": "Oxide-based electrolytes like garnet-structured LLZO demonstrate high chemical stability against metallic lithium and easier air handling, albeit with lower bulk conductivity and higher interfacial resistance which can be mitigated through interlayer engineering.",
+              "citations": [
+                {
+                  "citation_id": "cite_cite_2",
+                  "source_id": "src_energy_01_b",
+                  "chunk_id": "chunk_energy_01_2",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            }
+          ]
+        },
+        "sections": [
+          {
+            "section_id": "sec_body",
+            "title": "Comparative Performance of Sulfide and Oxide Electrolytes",
+            "content": "Sulfide-based solid electrolytes such as LGPS and argyrodite Li6PS5Cl exhibit exceptional room-temperature lithium-ion conductivities exceeding 1.2e-2 S/cm [cite_cite_3]. However, a major safety concern is that sulfides react violently with ambient moisture to produce toxic hydrogen sulfide gas [cite_cite_4]. On the other hand, garnet-structured oxide electrolytes like LLZO possess superior chemical stability against metallic lithium [cite_cite_5]. While LLZO exhibits a lower bulk conductivity of 1.0e-3 S/cm and high initial interfacial resistance, modifying the interface with a 5-nanometer amorphous atomic-layer-deposited zinc oxide interlayer successfully reduces the interfacial area-specific resistance from 1200 ohm-cm^2 to 12 ohm-cm^2 [cite_cite_6].",
+            "claims": [
+              {
+                "claim_id": "claim_3",
+                "section_id": "sec_body",
+                "text": "Sulfide-based solid electrolytes such as LGPS and argyrodite Li6PS5Cl exhibit exceptional room-temperature lithium-ion conductivities exceeding 1.2e-2 S/cm.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_3",
+                    "source_id": "src_energy_01_a",
+                    "chunk_id": "chunk_energy_01_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Sulfide-based solid electrolytes such as Li10GeP2S12 (LGPS) and argyrodite Li6PS5Cl exhibit exceptional room-temperature lithium-ion conductivities exceeding 1.2e-2 S/cm",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_4",
+                "section_id": "sec_body",
+                "text": "Sulfides react violently with ambient moisture to produce toxic hydrogen sulfide (H2S) gas, necessitating strict dry-room assembly.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_4",
+                    "source_id": "src_energy_01_a",
+                    "chunk_id": "chunk_energy_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_5",
+                "section_id": "sec_body",
+                "text": "Garnet-structured oxide electrolytes such as LLZO possess superior chemical stability against metallic lithium and allow air handling.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_5",
+                    "source_id": "src_energy_01_b",
+                    "chunk_id": "chunk_energy_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_6",
+                "section_id": "sec_body",
+                "text": "LLZO exhibits a lower bulk conductivity of 1.0e-3 S/cm, but applying a 5-nanometer amorphous atomic-layer-deposited zinc oxide interlayer reduces interfacial area-specific resistance from 1200 ohm-cm^2 to 12 ohm-cm^2.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_6",
+                    "source_id": "src_energy_01_b",
+                    "chunk_id": "chunk_energy_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          }
+        ],
+        "conclusion": {
+          "section_id": "sec_conclusion",
+          "title": "Conclusion and Future Outlook",
+          "content": "Both sulfide and oxide electrolytes present distinct trade-offs for all-solid-state lithium batteries. Sulfides offer superior ionic conductivity at the cost of severe moisture reactivity and safety hazards [cite_cite_7]. Oxides provide enhanced safety and stability with metallic lithium, though engineering solutions like interlayers are required to overcome high interfacial resistance [cite_cite_8].",
+          "claims": [
+            {
+              "claim_id": "claim_7",
+              "section_id": "sec_conclusion",
+              "text": "Sulfides offer superior ionic conductivity at the cost of severe moisture reactivity and safety hazards.",
+              "citations": [
+                {
+                  "citation_id": "cite_cite_7",
+                  "source_id": "src_energy_01_a",
+                  "chunk_id": "chunk_energy_01_1",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_8",
+              "section_id": "sec_conclusion",
+              "text": "Oxides provide enhanced safety and stability with metallic lithium, though engineering solutions like interlayers are required to overcome high interfacial resistance.",
+              "citations": [
+                {
+                  "citation_id": "cite_cite_8",
+                  "source_id": "src_energy_01_b",
+                  "chunk_id": "chunk_energy_01_2",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            }
+          ]
+        },
+        "limitations": [
+          "Data is restricted to specific compositions (LGPS, Li6PS5Cl, and LLZO) without broader coverage of alternative solid electrolyte families.",
+          "Long-term cycling durability and scalability of ZnO interlayers remain to be fully evaluated across varying operational parameters."
+        ],
+        "version": 1,
+        "created_by": "generator_llm",
+        "created_at": "2026-03-30T00:00:00Z"
+      },
+      "deterministic_report": {
+        "passed": true,
+        "schema_valid": true,
+        "citations_valid": true,
+        "passages_matched": true,
+        "total_claims": 8,
+        "total_citations": 8,
+        "passage_matches": [
+          {
+            "citation_id": "cite_cite_3",
+            "source_id": "src_energy_01_a",
+            "chunk_id": "chunk_energy_01_1",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Sulfide-based solid electrolytes such as Li10GeP2S12 (LGPS) and argyrodite Li6PS5Cl exhibit exceptional room-temperature lithium-ion conductivities exceeding 1.2e-2 S/cm",
+            "normalized_passage": "sulfide-based solid electrolytes such as li10gep2s12 (lgps) and argyrodite li6ps5cl exhibit exceptional room-temperature lithium-ion conductivities exceeding 1.2e-2 s/cm",
+            "normalized_source_chunk": "sulfide-based solid electrolytes such as li10gep2s12 (lgps) and argyrodite li6ps5cl exhibit exceptional room-temperature lithium-ion conductivities exceeding 1.2e-2 s/cm, comparable to liquid organic carbonates. however, sulfides react violently with ambient moisture to produce toxic hydrogen sulfide (h2s) gas, necessitating dry-room assembly with dew points below -50 degrees celsius."
+          }
+        ],
+        "issues": [],
+        "critical_count": 0,
+        "major_count": 0,
+        "minor_count": 0
+      },
+      "grounding_report": {
+        "passed": true,
+        "all_claims_grounded": true,
+        "grounding_score": 1.0,
+        "claim_evaluations": [
+          {
+            "claim_id": "claim_1",
+            "section_id": "sec_exec",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source confirms that sulfide-based electrolytes like LGPS and argyrodite have conductivities exceeding 1.2e-2 S/cm (comparable to liquid organic carbonates) and that they react with moisture to produce toxic H2S gas.",
+            "cited_chunk_ids": [
+              "chunk_energy_01_1"
+            ]
+          },
+          {
+            "claim_id": "claim_2",
+            "section_id": "sec_exec",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source confirms LLZO has superior chemical stability against lithium, allows air handling, has lower bulk conductivity (1.0e-3 S/cm), and high interfacial resistance that can be reduced using a ZnO interlayer.",
+            "cited_chunk_ids": [
+              "chunk_energy_01_2"
+            ]
+          },
+          {
+            "claim_id": "claim_3",
+            "section_id": "sec_body",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk explicitly states that sulfide-based solid electrolytes like LGPS and argyrodite Li6PS5Cl have room-temperature lithium-ion conductivities exceeding 1.2e-2 S/cm.",
+            "cited_chunk_ids": [
+              "chunk_energy_01_1"
+            ]
+          },
+          {
+            "claim_id": "claim_4",
+            "section_id": "sec_body",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk confirms that sulfides react violently with moisture to produce H2S gas and require dry-room assembly with specific dew points.",
+            "cited_chunk_ids": [
+              "chunk_energy_01_1"
+            ]
+          },
+          {
+            "claim_id": "claim_5",
+            "section_id": "sec_body",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk states that garnet-structured oxide electrolytes like LLZO have superior chemical stability against metallic lithium and allow air handling.",
+            "cited_chunk_ids": [
+              "chunk_energy_01_2"
+            ]
+          },
+          {
+            "claim_id": "claim_6",
+            "section_id": "sec_body",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk confirms the bulk conductivity of LLZO is 1.0e-3 S/cm and that a 5-nanometer ZnO interlayer reduces interfacial resistance from 1200 ohm-cm^2 to 12 ohm-cm^2.",
+            "cited_chunk_ids": [
+              "chunk_energy_01_2"
+            ]
+          },
+          {
+            "claim_id": "claim_7",
+            "section_id": "sec_conclusion",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source confirms sulfides exhibit exceptional conductivity exceeding 1.2e-2 S/cm and notes they react violently with moisture to produce toxic H2S, confirming the safety hazards.",
+            "cited_chunk_ids": [
+              "chunk_energy_01_1"
+            ]
+          },
+          {
+            "claim_id": "claim_8",
+            "section_id": "sec_conclusion",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source confirms oxides like LLZO have superior chemical stability against metallic lithium and notes that interlayers (such as ZnO) are used to address high interfacial resistance.",
+            "cited_chunk_ids": [
+              "chunk_energy_01_2"
+            ]
+          }
+        ],
+        "issues": [],
+        "critical_count": 0,
+        "major_count": 0,
+        "minor_count": 0,
+        "tokens_used": 4480,
+        "cost_usd": 0.000534
+      },
+      "judge_verdict": {
+        "composite_score": 0.985,
+        "passed": true,
+        "dimension_scores": {
+          "factual_accuracy": {
+            "dimension_name": "factual_accuracy",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "All technical data, including conductivity values and chemical properties, are accurately represented and consistent with the provided source material."
+          },
+          "evidence_grounding": {
+            "dimension_name": "evidence_grounding",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "Every claim made in the report is directly supported by the provided source chunks, with no external or hallucinated information."
+          },
+          "citation_correctness": {
+            "dimension_name": "citation_correctness",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "Citations are correctly mapped to the relevant source IDs and chunk IDs. Quotations are accurate and correctly attributed."
+          },
+          "completeness": {
+            "dimension_name": "completeness",
+            "score": 0.9,
+            "passed": true,
+            "reasoning": "The report covers the core comparative aspects of the two electrolyte types well. It also explicitly lists limitations, which adds to the completeness of the analysis."
+          },
+          "relevance": {
+            "dimension_name": "relevance",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report stays strictly focused on the comparison between sulfide and oxide solid electrolytes as requested."
+          },
+          "clarity_organization": {
+            "dimension_name": "clarity_organization",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report is logically structured with a clear executive summary, body, and conclusion. The tone is professional and highly readable."
+          },
+          "logical_consistency": {
+            "dimension_name": "logical_consistency",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report is internally consistent, with no contradictions between the executive summary, body, and conclusion."
+          }
+        },
+        "overall_feedback": "This is an excellent, highly accurate, and well-structured report. It effectively synthesizes the provided source material to provide a clear comparison between sulfide and oxide solid electrolytes. The inclusion of a limitations section demonstrates a high level of academic rigor. No significant improvements are required.",
+        "is_self_judged": false,
+        "effective_threshold": 0.85,
+        "judge_model": "gemini-3.1-flash-lite",
+        "tokens_used": 3673,
+        "cost_usd": 0.000394
+      },
+      "tokens_used": 10960,
+      "cost_usd": 0.001603
+    },
+    "all_candidates": [
+      {
+        "round_number": 0,
+        "report": {
+          "topic": "Sulfide vs Oxide Solid Electrolytes for All-Solid-State Lithium Batteries",
+          "title": "Comparative Analysis of Sulfide and Oxide Solid Electrolytes for All-Solid-State Lithium Batteries",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Sulfide-based solid electrolytes offer exceptional room-temperature lithium-ion conductivities comparable to liquid electrolytes, but suffer from toxic hydrogen sulfide generation when exposed to moisture [cite_cite_1]. Conversely, oxide-based electrolytes like garnet-structured LLZO demonstrate high chemical stability against metallic lithium and easier air handling, albeit with lower bulk conductivity and higher interfacial resistance which can be mitigated through interlayer engineering [cite_cite_2].",
+            "claims": [
+              {
+                "claim_id": "claim_1",
+                "section_id": "sec_exec",
+                "text": "Sulfide-based solid electrolytes offer exceptional room-temperature lithium-ion conductivities comparable to liquid electrolytes, but suffer from toxic hydrogen sulfide generation when exposed to moisture.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_1",
+                    "source_id": "src_energy_01_a",
+                    "chunk_id": "chunk_energy_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_2",
+                "section_id": "sec_exec",
+                "text": "Oxide-based electrolytes like garnet-structured LLZO demonstrate high chemical stability against metallic lithium and easier air handling, albeit with lower bulk conductivity and higher interfacial resistance which can be mitigated through interlayer engineering.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_2",
+                    "source_id": "src_energy_01_b",
+                    "chunk_id": "chunk_energy_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_body",
+              "title": "Comparative Performance of Sulfide and Oxide Electrolytes",
+              "content": "Sulfide-based solid electrolytes such as LGPS and argyrodite Li6PS5Cl exhibit exceptional room-temperature lithium-ion conductivities exceeding 1.2e-2 S/cm [cite_cite_3]. However, a major safety concern is that sulfides react violently with ambient moisture to produce toxic hydrogen sulfide gas [cite_cite_4]. On the other hand, garnet-structured oxide electrolytes like LLZO possess superior chemical stability against metallic lithium [cite_cite_5]. While LLZO exhibits a lower bulk conductivity of 1.0e-3 S/cm and high initial interfacial resistance, modifying the interface with a 5-nanometer amorphous atomic-layer-deposited zinc oxide interlayer successfully reduces the interfacial area-specific resistance from 1200 ohm-cm^2 to 12 ohm-cm^2 [cite_cite_6].",
+              "claims": [
+                {
+                  "claim_id": "claim_3",
+                  "section_id": "sec_body",
+                  "text": "Sulfide-based solid electrolytes such as LGPS and argyrodite Li6PS5Cl exhibit exceptional room-temperature lithium-ion conductivities exceeding 1.2e-2 S/cm.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_3",
+                      "source_id": "src_energy_01_a",
+                      "chunk_id": "chunk_energy_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Sulfide-based solid electrolytes such as Li10GeP2S12 (LGPS) and argyrodite Li6PS5Cl exhibit exceptional room-temperature lithium-ion conductivities exceeding 1.2e-2 S/cm",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_4",
+                  "section_id": "sec_body",
+                  "text": "Sulfides react violently with ambient moisture to produce toxic hydrogen sulfide (H2S) gas, necessitating strict dry-room assembly.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_4",
+                      "source_id": "src_energy_01_a",
+                      "chunk_id": "chunk_energy_01_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_5",
+                  "section_id": "sec_body",
+                  "text": "Garnet-structured oxide electrolytes such as LLZO possess superior chemical stability against metallic lithium and allow air handling.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_5",
+                      "source_id": "src_energy_01_b",
+                      "chunk_id": "chunk_energy_01_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_6",
+                  "section_id": "sec_body",
+                  "text": "LLZO exhibits a lower bulk conductivity of 1.0e-3 S/cm, but applying a 5-nanometer amorphous atomic-layer-deposited zinc oxide interlayer reduces interfacial area-specific resistance from 1200 ohm-cm^2 to 12 ohm-cm^2.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_6",
+                      "source_id": "src_energy_01_b",
+                      "chunk_id": "chunk_energy_01_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Future Outlook",
+            "content": "Both sulfide and oxide electrolytes present distinct trade-offs for all-solid-state lithium batteries. Sulfides offer superior ionic conductivity at the cost of severe moisture reactivity and safety hazards [cite_cite_7]. Oxides provide enhanced safety and stability with metallic lithium, though engineering solutions like interlayers are required to overcome high interfacial resistance [cite_cite_8].",
+            "claims": [
+              {
+                "claim_id": "claim_7",
+                "section_id": "sec_conclusion",
+                "text": "Sulfides offer superior ionic conductivity at the cost of severe moisture reactivity and safety hazards.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_7",
+                    "source_id": "src_energy_01_a",
+                    "chunk_id": "chunk_energy_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_8",
+                "section_id": "sec_conclusion",
+                "text": "Oxides provide enhanced safety and stability with metallic lithium, though engineering solutions like interlayers are required to overcome high interfacial resistance.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_8",
+                    "source_id": "src_energy_01_b",
+                    "chunk_id": "chunk_energy_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Data is restricted to specific compositions (LGPS, Li6PS5Cl, and LLZO) without broader coverage of alternative solid electrolyte families.",
+            "Long-term cycling durability and scalability of ZnO interlayers remain to be fully evaluated across varying operational parameters."
+          ],
+          "version": 1,
+          "created_by": "generator_llm",
+          "created_at": "2026-03-30T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 8,
+          "total_citations": 8,
+          "passage_matches": [
+            {
+              "citation_id": "cite_cite_3",
+              "source_id": "src_energy_01_a",
+              "chunk_id": "chunk_energy_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Sulfide-based solid electrolytes such as Li10GeP2S12 (LGPS) and argyrodite Li6PS5Cl exhibit exceptional room-temperature lithium-ion conductivities exceeding 1.2e-2 S/cm",
+              "normalized_passage": "sulfide-based solid electrolytes such as li10gep2s12 (lgps) and argyrodite li6ps5cl exhibit exceptional room-temperature lithium-ion conductivities exceeding 1.2e-2 s/cm",
+              "normalized_source_chunk": "sulfide-based solid electrolytes such as li10gep2s12 (lgps) and argyrodite li6ps5cl exhibit exceptional room-temperature lithium-ion conductivities exceeding 1.2e-2 s/cm, comparable to liquid organic carbonates. however, sulfides react violently with ambient moisture to produce toxic hydrogen sulfide (h2s) gas, necessitating dry-room assembly with dew points below -50 degrees celsius."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": true,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms that sulfide-based electrolytes like LGPS and argyrodite have conductivities exceeding 1.2e-2 S/cm (comparable to liquid organic carbonates) and that they react with moisture to produce toxic H2S gas.",
+              "cited_chunk_ids": [
+                "chunk_energy_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms LLZO has superior chemical stability against lithium, allows air handling, has lower bulk conductivity (1.0e-3 S/cm), and high interfacial resistance that can be reduced using a ZnO interlayer.",
+              "cited_chunk_ids": [
+                "chunk_energy_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_3",
+              "section_id": "sec_body",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that sulfide-based solid electrolytes like LGPS and argyrodite Li6PS5Cl have room-temperature lithium-ion conductivities exceeding 1.2e-2 S/cm.",
+              "cited_chunk_ids": [
+                "chunk_energy_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_4",
+              "section_id": "sec_body",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that sulfides react violently with moisture to produce H2S gas and require dry-room assembly with specific dew points.",
+              "cited_chunk_ids": [
+                "chunk_energy_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_5",
+              "section_id": "sec_body",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk states that garnet-structured oxide electrolytes like LLZO have superior chemical stability against metallic lithium and allow air handling.",
+              "cited_chunk_ids": [
+                "chunk_energy_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_6",
+              "section_id": "sec_body",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms the bulk conductivity of LLZO is 1.0e-3 S/cm and that a 5-nanometer ZnO interlayer reduces interfacial resistance from 1200 ohm-cm^2 to 12 ohm-cm^2.",
+              "cited_chunk_ids": [
+                "chunk_energy_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_7",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms sulfides exhibit exceptional conductivity exceeding 1.2e-2 S/cm and notes they react violently with moisture to produce toxic H2S, confirming the safety hazards.",
+              "cited_chunk_ids": [
+                "chunk_energy_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_8",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms oxides like LLZO have superior chemical stability against metallic lithium and notes that interlayers (such as ZnO) are used to address high interfacial resistance.",
+              "cited_chunk_ids": [
+                "chunk_energy_01_2"
+              ]
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0,
+          "tokens_used": 4480,
+          "cost_usd": 0.000534
+        },
+        "judge_verdict": {
+          "composite_score": 0.985,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All technical data, including conductivity values and chemical properties, are accurately represented and consistent with the provided source material."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every claim made in the report is directly supported by the provided source chunks, with no external or hallucinated information."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are correctly mapped to the relevant source IDs and chunk IDs. Quotations are accurate and correctly attributed."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.9,
+              "passed": true,
+              "reasoning": "The report covers the core comparative aspects of the two electrolyte types well. It also explicitly lists limitations, which adds to the completeness of the analysis."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report stays strictly focused on the comparison between sulfide and oxide solid electrolytes as requested."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is logically structured with a clear executive summary, body, and conclusion. The tone is professional and highly readable."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally consistent, with no contradictions between the executive summary, body, and conclusion."
+            }
+          },
+          "overall_feedback": "This is an excellent, highly accurate, and well-structured report. It effectively synthesizes the provided source material to provide a clear comparison between sulfide and oxide solid electrolytes. The inclusion of a limitations section demonstrates a high level of academic rigor. No significant improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 3673,
+          "cost_usd": 0.000394
+        },
+        "tokens_used": 10960,
+        "cost_usd": 0.001603
+      }
+    ],
+    "budget_summary": {
+      "used_tokens": 10960,
+      "max_tokens": 50000,
+      "used_cost_usd": 0.001603,
+      "max_cost_usd": 0.2,
+      "elapsed_seconds": 62.6,
+      "max_seconds": 1800.0,
+      "rounds_executed": 0,
+      "max_rounds": 3,
+      "is_exhausted": false,
+      "exhaustion_reason": null
+    },
+    "rounds_executed": 0,
+    "termination_reason": "ALL_ACCEPTANCE_CRITERIA_MET",
+    "acceptance_threshold": 0.85,
+    "acceptance_result": {
+      "status": "ACCEPTED",
+      "is_accepted": true,
+      "best_candidate": {
+        "round_number": 0,
+        "report": {
+          "topic": "Sulfide vs Oxide Solid Electrolytes for All-Solid-State Lithium Batteries",
+          "title": "Comparative Analysis of Sulfide and Oxide Solid Electrolytes for All-Solid-State Lithium Batteries",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Sulfide-based solid electrolytes offer exceptional room-temperature lithium-ion conductivities comparable to liquid electrolytes, but suffer from toxic hydrogen sulfide generation when exposed to moisture [cite_cite_1]. Conversely, oxide-based electrolytes like garnet-structured LLZO demonstrate high chemical stability against metallic lithium and easier air handling, albeit with lower bulk conductivity and higher interfacial resistance which can be mitigated through interlayer engineering [cite_cite_2].",
+            "claims": [
+              {
+                "claim_id": "claim_1",
+                "section_id": "sec_exec",
+                "text": "Sulfide-based solid electrolytes offer exceptional room-temperature lithium-ion conductivities comparable to liquid electrolytes, but suffer from toxic hydrogen sulfide generation when exposed to moisture.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_1",
+                    "source_id": "src_energy_01_a",
+                    "chunk_id": "chunk_energy_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_2",
+                "section_id": "sec_exec",
+                "text": "Oxide-based electrolytes like garnet-structured LLZO demonstrate high chemical stability against metallic lithium and easier air handling, albeit with lower bulk conductivity and higher interfacial resistance which can be mitigated through interlayer engineering.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_2",
+                    "source_id": "src_energy_01_b",
+                    "chunk_id": "chunk_energy_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_body",
+              "title": "Comparative Performance of Sulfide and Oxide Electrolytes",
+              "content": "Sulfide-based solid electrolytes such as LGPS and argyrodite Li6PS5Cl exhibit exceptional room-temperature lithium-ion conductivities exceeding 1.2e-2 S/cm [cite_cite_3]. However, a major safety concern is that sulfides react violently with ambient moisture to produce toxic hydrogen sulfide gas [cite_cite_4]. On the other hand, garnet-structured oxide electrolytes like LLZO possess superior chemical stability against metallic lithium [cite_cite_5]. While LLZO exhibits a lower bulk conductivity of 1.0e-3 S/cm and high initial interfacial resistance, modifying the interface with a 5-nanometer amorphous atomic-layer-deposited zinc oxide interlayer successfully reduces the interfacial area-specific resistance from 1200 ohm-cm^2 to 12 ohm-cm^2 [cite_cite_6].",
+              "claims": [
+                {
+                  "claim_id": "claim_3",
+                  "section_id": "sec_body",
+                  "text": "Sulfide-based solid electrolytes such as LGPS and argyrodite Li6PS5Cl exhibit exceptional room-temperature lithium-ion conductivities exceeding 1.2e-2 S/cm.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_3",
+                      "source_id": "src_energy_01_a",
+                      "chunk_id": "chunk_energy_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Sulfide-based solid electrolytes such as Li10GeP2S12 (LGPS) and argyrodite Li6PS5Cl exhibit exceptional room-temperature lithium-ion conductivities exceeding 1.2e-2 S/cm",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_4",
+                  "section_id": "sec_body",
+                  "text": "Sulfides react violently with ambient moisture to produce toxic hydrogen sulfide (H2S) gas, necessitating strict dry-room assembly.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_4",
+                      "source_id": "src_energy_01_a",
+                      "chunk_id": "chunk_energy_01_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_5",
+                  "section_id": "sec_body",
+                  "text": "Garnet-structured oxide electrolytes such as LLZO possess superior chemical stability against metallic lithium and allow air handling.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_5",
+                      "source_id": "src_energy_01_b",
+                      "chunk_id": "chunk_energy_01_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_6",
+                  "section_id": "sec_body",
+                  "text": "LLZO exhibits a lower bulk conductivity of 1.0e-3 S/cm, but applying a 5-nanometer amorphous atomic-layer-deposited zinc oxide interlayer reduces interfacial area-specific resistance from 1200 ohm-cm^2 to 12 ohm-cm^2.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_6",
+                      "source_id": "src_energy_01_b",
+                      "chunk_id": "chunk_energy_01_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Future Outlook",
+            "content": "Both sulfide and oxide electrolytes present distinct trade-offs for all-solid-state lithium batteries. Sulfides offer superior ionic conductivity at the cost of severe moisture reactivity and safety hazards [cite_cite_7]. Oxides provide enhanced safety and stability with metallic lithium, though engineering solutions like interlayers are required to overcome high interfacial resistance [cite_cite_8].",
+            "claims": [
+              {
+                "claim_id": "claim_7",
+                "section_id": "sec_conclusion",
+                "text": "Sulfides offer superior ionic conductivity at the cost of severe moisture reactivity and safety hazards.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_7",
+                    "source_id": "src_energy_01_a",
+                    "chunk_id": "chunk_energy_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_8",
+                "section_id": "sec_conclusion",
+                "text": "Oxides provide enhanced safety and stability with metallic lithium, though engineering solutions like interlayers are required to overcome high interfacial resistance.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_8",
+                    "source_id": "src_energy_01_b",
+                    "chunk_id": "chunk_energy_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Data is restricted to specific compositions (LGPS, Li6PS5Cl, and LLZO) without broader coverage of alternative solid electrolyte families.",
+            "Long-term cycling durability and scalability of ZnO interlayers remain to be fully evaluated across varying operational parameters."
+          ],
+          "version": 1,
+          "created_by": "generator_llm",
+          "created_at": "2026-03-30T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 8,
+          "total_citations": 8,
+          "passage_matches": [
+            {
+              "citation_id": "cite_cite_3",
+              "source_id": "src_energy_01_a",
+              "chunk_id": "chunk_energy_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Sulfide-based solid electrolytes such as Li10GeP2S12 (LGPS) and argyrodite Li6PS5Cl exhibit exceptional room-temperature lithium-ion conductivities exceeding 1.2e-2 S/cm",
+              "normalized_passage": "sulfide-based solid electrolytes such as li10gep2s12 (lgps) and argyrodite li6ps5cl exhibit exceptional room-temperature lithium-ion conductivities exceeding 1.2e-2 s/cm",
+              "normalized_source_chunk": "sulfide-based solid electrolytes such as li10gep2s12 (lgps) and argyrodite li6ps5cl exhibit exceptional room-temperature lithium-ion conductivities exceeding 1.2e-2 s/cm, comparable to liquid organic carbonates. however, sulfides react violently with ambient moisture to produce toxic hydrogen sulfide (h2s) gas, necessitating dry-room assembly with dew points below -50 degrees celsius."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": true,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms that sulfide-based electrolytes like LGPS and argyrodite have conductivities exceeding 1.2e-2 S/cm (comparable to liquid organic carbonates) and that they react with moisture to produce toxic H2S gas.",
+              "cited_chunk_ids": [
+                "chunk_energy_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms LLZO has superior chemical stability against lithium, allows air handling, has lower bulk conductivity (1.0e-3 S/cm), and high interfacial resistance that can be reduced using a ZnO interlayer.",
+              "cited_chunk_ids": [
+                "chunk_energy_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_3",
+              "section_id": "sec_body",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that sulfide-based solid electrolytes like LGPS and argyrodite Li6PS5Cl have room-temperature lithium-ion conductivities exceeding 1.2e-2 S/cm.",
+              "cited_chunk_ids": [
+                "chunk_energy_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_4",
+              "section_id": "sec_body",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that sulfides react violently with moisture to produce H2S gas and require dry-room assembly with specific dew points.",
+              "cited_chunk_ids": [
+                "chunk_energy_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_5",
+              "section_id": "sec_body",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk states that garnet-structured oxide electrolytes like LLZO have superior chemical stability against metallic lithium and allow air handling.",
+              "cited_chunk_ids": [
+                "chunk_energy_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_6",
+              "section_id": "sec_body",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms the bulk conductivity of LLZO is 1.0e-3 S/cm and that a 5-nanometer ZnO interlayer reduces interfacial resistance from 1200 ohm-cm^2 to 12 ohm-cm^2.",
+              "cited_chunk_ids": [
+                "chunk_energy_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_7",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms sulfides exhibit exceptional conductivity exceeding 1.2e-2 S/cm and notes they react violently with moisture to produce toxic H2S, confirming the safety hazards.",
+              "cited_chunk_ids": [
+                "chunk_energy_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_8",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms oxides like LLZO have superior chemical stability against metallic lithium and notes that interlayers (such as ZnO) are used to address high interfacial resistance.",
+              "cited_chunk_ids": [
+                "chunk_energy_01_2"
+              ]
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0,
+          "tokens_used": 4480,
+          "cost_usd": 0.000534
+        },
+        "judge_verdict": {
+          "composite_score": 0.985,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All technical data, including conductivity values and chemical properties, are accurately represented and consistent with the provided source material."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every claim made in the report is directly supported by the provided source chunks, with no external or hallucinated information."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are correctly mapped to the relevant source IDs and chunk IDs. Quotations are accurate and correctly attributed."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.9,
+              "passed": true,
+              "reasoning": "The report covers the core comparative aspects of the two electrolyte types well. It also explicitly lists limitations, which adds to the completeness of the analysis."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report stays strictly focused on the comparison between sulfide and oxide solid electrolytes as requested."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is logically structured with a clear executive summary, body, and conclusion. The tone is professional and highly readable."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally consistent, with no contradictions between the executive summary, body, and conclusion."
+            }
+          },
+          "overall_feedback": "This is an excellent, highly accurate, and well-structured report. It effectively synthesizes the provided source material to provide a clear comparison between sulfide and oxide solid electrolytes. The inclusion of a limitations section demonstrates a high level of academic rigor. No significant improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 3673,
+          "cost_usd": 0.000394
+        },
+        "tokens_used": 10960,
+        "cost_usd": 0.001603
+      },
+      "rationale": "Candidate meets all deterministic and semantic acceptance standards (composite_score=0.9850 >= 0.85, critical=0, major_grounding=0).",
+      "unresolved_reasons": [],
+      "review_packet": null
+    },
+    "learned_lessons_count": 0
+  },
+  "llm_stats": {
+    "llm_calls": 9,
+    "llm_attempts": 13,
+    "transient_retries": 4,
+    "validation_retries": 0,
+    "timeout_resets": 0
+  }
+}

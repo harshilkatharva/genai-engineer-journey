@@ -1,0 +1,25 @@
+Please evaluate the following research report according to the specified rubric criteria.
+
+### Evaluation Criteria:
+{{ criteria_block }}
+
+### Deterministic Verification Context:
+{{ det_status }}
+
+### Research Topic:
+{{ topic }}
+
+### Retrieved Sources (Ground Truth Context):
+{{ sources_text }}
+
+### Research Report Under Evaluation:
+```json
+{{ report_json }}
+```
+
+Instructions:
+1. Score each of the {{ num_criteria }} dimensions from 0.0 to 1.0.
+2. Ensure dimension_name matches the exact criterion name.
+3. Provide objective, evidence-based reasoning for each dimension score.
+4. Summarize your overall verdict and specific improvement areas in overall_feedback.
+

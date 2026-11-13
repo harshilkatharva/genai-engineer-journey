@@ -9,20 +9,23 @@ from genai_core import ObservabilityEvent, safe_log
 
 from self_improving_report_writer.core.config import ReportWriterConfig
 from self_improving_report_writer.core.exceptions import JudgingError
+from self_improving_report_writer.core.json_parsing import unwrap_llm_response_payload
+from self_improving_report_writer.core.pricing import extract_or_estimate_cost
 from self_improving_report_writer.core.rate_limit_controller import (
     EvaluationRateLimitController,
     get_shared_rate_limit_controller,
 )
 from self_improving_report_writer.judging.prompts import (
     RUBRIC_JUDGE_SYSTEM_PROMPT,
-    LLMJudgeEvaluation,
     build_rubric_judge_prompt,
 )
+from self_improving_report_writer.models.llm_schemas import LLMJudgeEvaluation
 from self_improving_report_writer.models.report import Report, SourceReference
 from self_improving_report_writer.models.rubric import (
     DimensionScore,
     ReportJudgeVerdict,
     RubricConfig,
+    compute_effective_threshold,
     get_default_rubric_config,
 )
 from self_improving_report_writer.models.verification import DeterministicVerificationReport
@@ -43,13 +46,22 @@ class RubricJudge:
         rubric_config: RubricConfig | None = None,
         judge_model: str | None = None,
         generator_model: str | None = None,
+        judge_provider: str | None = None,
         rate_limit_controller: EvaluationRateLimitController | None = None,
     ) -> None:
         self.llm_service = llm_service
         self.config = config or ReportWriterConfig()
-        self.rubric_config = rubric_config or get_default_rubric_config()
+        if rubric_config is not None:
+            self.rubric_config = rubric_config
+        elif config is not None:
+            self.rubric_config = get_default_rubric_config().model_copy(
+                update={"acceptance_threshold": self.config.acceptance_threshold}
+            )
+        else:
+            self.rubric_config = get_default_rubric_config()
         self.judge_model = judge_model or self.config.judge_model
         self.generator_model = generator_model or self.config.generator_model
+        self.judge_provider = judge_provider or self.config.judge_provider
         self.rate_limit_controller = rate_limit_controller or get_shared_rate_limit_controller(
             config=self.config
         )
@@ -66,8 +78,11 @@ class RubricJudge:
 
         # Check model diversity
         is_self_judged = self.judge_model == self.generator_model
-        effective_threshold = base_threshold + (0.05 if is_self_judged else 0.0)
+        effective_threshold = compute_effective_threshold(
+            base_threshold, is_self_judged=is_self_judged
+        )
         target_model = self.judge_model
+        target_provider = self.judge_provider
 
         if is_self_judged:
             safe_log(
@@ -98,7 +113,8 @@ class RubricJudge:
             prompt=f"{RUBRIC_JUDGE_SYSTEM_PROMPT}\n\n{prompt}",
             response_schema=LLMJudgeEvaluation,
             deadline=deadline,
-            # provider=target_model,
+            provider=target_provider,
+            model=target_model,
         )
 
         # Check for error and fallback if applicable
@@ -110,14 +126,16 @@ class RubricJudge:
                 f"Falling back to generator model {self.generator_model}.",
             )
             target_model = self.generator_model
+            target_provider = self.config.generator_provider
             is_self_judged = True
-            effective_threshold = base_threshold + 0.05
+            effective_threshold = compute_effective_threshold(base_threshold, is_self_judged=True)
             resp = await self.rate_limit_controller.complete_structure(
                 self.llm_service,
                 prompt=f"{RUBRIC_JUDGE_SYSTEM_PROMPT}\n\n{prompt}",
                 response_schema=LLMJudgeEvaluation,
                 deadline=deadline,
-                # provider=target_model,
+                provider=target_provider,
+                model=target_model,
             )
 
         if resp.error is not None:
@@ -125,13 +143,34 @@ class RubricJudge:
                 f"Rubric judge execution failed for model {target_model}: {resp.error.message}"
             )
 
-        raw_eval = resp.structured_response
+        # Runtime model identity verification (Option A)
+        actual_model = getattr(resp, "model", None)
+        if actual_model and actual_model == self.generator_model and not is_self_judged:
+            is_self_judged = True
+            effective_threshold = compute_effective_threshold(base_threshold, is_self_judged=True)
+            safe_log(
+                logger,
+                logging.WARNING,
+                f"Model diversity check: Returned model '{actual_model}' matches generator model '{self.generator_model}'. "
+                f"Engaging self-judging penalty (+0.05) to raise effective threshold to {effective_threshold:.2f}.",
+                event=ObservabilityEvent.LLM_REQUEST_START,
+            )
+        if actual_model:
+            target_model = actual_model
+
+        try:
+            raw_eval = unwrap_llm_response_payload(resp)
+        except Exception as exc:
+            raise JudgingError(f"Failed to parse text response from judge: {exc}") from exc
         if raw_eval is None:
             raise JudgingError("Rubric judge returned empty structured response.")
 
         # Parse raw evaluation
         if isinstance(raw_eval, dict):
-            raw_eval = LLMJudgeEvaluation.model_validate(raw_eval)
+            try:
+                raw_eval = LLMJudgeEvaluation.model_validate(raw_eval)
+            except Exception as exc:
+                raise JudgingError(f"Failed to validate dict response from judge: {exc}") from exc
         elif not isinstance(raw_eval, LLMJudgeEvaluation):
             raise JudgingError(f"Unexpected response type from judge: {type(raw_eval)}")
 
@@ -176,22 +215,11 @@ class RubricJudge:
         passed = (composite_score >= effective_threshold) and all_dimensions_passed
 
         # Track token usage and costs
-        tokens_used = 0
-        if resp.usage:
-            if isinstance(resp.usage, dict):
-                tokens_used = resp.usage.get("total_tokens") or (
-                    resp.usage.get("input_tokens", 0) + resp.usage.get("output_tokens", 0)
-                )
-            else:
-                tokens_used = getattr(resp.usage, "total_tokens", 0) or (
-                    getattr(resp.usage, "input_tokens", 0) + getattr(resp.usage, "output_tokens", 0)
-                )
-
-        cost_usd = 0.0
-        if getattr(resp, "cost_usd", None) is not None:
-            cost_usd = float(resp.cost_usd)
-        elif isinstance(resp.raw_response, dict) and "cost" in resp.raw_response:
-            cost_usd = float(resp.raw_response["cost"])
+        _, _, tokens_used, cost_usd = extract_or_estimate_cost(
+            response=resp,
+            model=target_model,
+            default_model=self.judge_model,
+        )
 
         verdict = ReportJudgeVerdict(
             composite_score=composite_score,
@@ -199,6 +227,7 @@ class RubricJudge:
             dimension_scores=final_dim_scores,
             overall_feedback=raw_eval.overall_feedback,
             is_self_judged=is_self_judged,
+            effective_threshold=effective_threshold,
             judge_model=target_model,
             tokens_used=tokens_used,
             cost_usd=cost_usd,

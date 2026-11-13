@@ -10,6 +10,8 @@ from genai_core import ObservabilityEvent, safe_log
 
 from self_improving_report_writer.core.config import ReportWriterConfig
 from self_improving_report_writer.core.exceptions import VerificationError
+from self_improving_report_writer.core.json_parsing import unwrap_llm_response_payload
+from self_improving_report_writer.core.pricing import extract_or_estimate_cost
 from self_improving_report_writer.core.rate_limit_controller import (
     EvaluationRateLimitController,
     get_shared_rate_limit_controller,
@@ -17,13 +19,15 @@ from self_improving_report_writer.core.rate_limit_controller import (
 from self_improving_report_writer.judging.prompts import (
     CLAIM_ENTAILMENT_SYSTEM_PROMPT,
     PROSE_CONSISTENCY_SYSTEM_PROMPT,
+    build_batch_claim_entailment_prompt,
+    build_claim_entailment_prompt,
+    build_prose_consistency_prompt,
+)
+from self_improving_report_writer.models.llm_schemas import (
     ClaimEntailmentEvaluation,
     ProseConsistencyEvaluation,
     SectionClaimsEntailmentEvaluation,
     SingleClaimEntailmentVerdict,
-    build_batch_claim_entailment_prompt,
-    build_claim_entailment_prompt,
-    build_prose_consistency_prompt,
 )
 from self_improving_report_writer.models.report import Claim, Report, SourceReference
 from self_improving_report_writer.models.rubric import ClaimGroundingResult, SemanticGroundingReport
@@ -221,23 +225,20 @@ class SemanticGroundingVerifier:
                         )
 
                     # Accumulate token usage and costs
-                    if resp.usage:
-                        if isinstance(resp.usage, dict):
-                            total_tokens += resp.usage.get("total_tokens") or (
-                                resp.usage.get("input_tokens", 0)
-                                + resp.usage.get("output_tokens", 0)
-                            )
-                        else:
-                            total_tokens += getattr(resp.usage, "total_tokens", 0) or (
-                                getattr(resp.usage, "input_tokens", 0)
-                                + getattr(resp.usage, "output_tokens", 0)
-                            )
-                    if getattr(resp, "cost_usd", None) is not None:
-                        total_cost += float(resp.cost_usd)
-                    elif isinstance(resp.raw_response, dict) and "cost" in resp.raw_response:
-                        total_cost += float(resp.raw_response["cost"])
+                    _, _, call_tokens, call_cost = extract_or_estimate_cost(
+                        response=resp,
+                        model=self.evaluator_model,
+                        default_model=self.config.judge_model,
+                    )
+                    total_tokens += call_tokens
+                    total_cost += call_cost
 
-                    batch_data = resp.structured_response
+                    try:
+                        batch_data = unwrap_llm_response_payload(resp)
+                    except Exception as exc:
+                        raise VerificationError(
+                            f"Failed to parse batch entailment response JSON: {exc}"
+                        ) from exc
                     if isinstance(batch_data, ClaimEntailmentEvaluation):
                         batch_data = SectionClaimsEntailmentEvaluation(
                             evaluations=[
@@ -299,9 +300,18 @@ class SemanticGroundingVerifier:
                                 raise VerificationError(
                                     f"Fallback claim entailment check failed for claim '{claim_item.claim_id}': {f_resp.error.message}"
                                 )
-                            f_data = f_resp.structured_response
+                            try:
+                                f_data = unwrap_llm_response_payload(f_resp)
+                            except Exception as exc:
+                                raise VerificationError(
+                                    f"Failed to parse fallback claim entailment response JSON for claim '{claim_item.claim_id}': {exc}"
+                                ) from exc
                             if isinstance(f_data, dict):
                                 f_data = ClaimEntailmentEvaluation.model_validate(f_data)
+                            elif not isinstance(f_data, ClaimEntailmentEvaluation):
+                                raise VerificationError(
+                                    f"Unexpected response type from fallback entailment evaluator: {type(f_data)}"
+                                )
                             eval_entry = SingleClaimEntailmentVerdict(
                                 claim_id=claim_item.claim_id,
                                 entailment=f_data.entailment,
@@ -375,23 +385,20 @@ class SemanticGroundingVerifier:
                             f"Claim entailment check failed for claim '{claim_item.claim_id}': {resp.error.message}"
                         )
 
-                    if resp.usage:
-                        if isinstance(resp.usage, dict):
-                            total_tokens += resp.usage.get("total_tokens") or (
-                                resp.usage.get("input_tokens", 0)
-                                + resp.usage.get("output_tokens", 0)
-                            )
-                        else:
-                            total_tokens += getattr(resp.usage, "total_tokens", 0) or (
-                                getattr(resp.usage, "input_tokens", 0)
-                                + getattr(resp.usage, "output_tokens", 0)
-                            )
-                    if getattr(resp, "cost_usd", None) is not None:
-                        total_cost += float(resp.cost_usd)
-                    elif isinstance(resp.raw_response, dict) and "cost" in resp.raw_response:
-                        total_cost += float(resp.raw_response["cost"])
+                    _, _, call_tokens, call_cost = extract_or_estimate_cost(
+                        response=resp,
+                        model=self.evaluator_model,
+                        default_model=self.config.judge_model,
+                    )
+                    total_tokens += call_tokens
+                    total_cost += call_cost
 
-                    eval_data = resp.structured_response
+                    try:
+                        eval_data = unwrap_llm_response_payload(resp)
+                    except Exception as exc:
+                        raise VerificationError(
+                            f"Failed to parse claim entailment response JSON for claim '{claim_item.claim_id}': {exc}"
+                        ) from exc
                     if isinstance(eval_data, dict):
                         eval_data = ClaimEntailmentEvaluation.model_validate(eval_data)
                     elif not isinstance(eval_data, ClaimEntailmentEvaluation):
@@ -464,25 +471,25 @@ class SemanticGroundingVerifier:
                     model=self.evaluator_model,
                 )
 
-                if p_resp.error is None and p_resp.structured_response:
-                    if p_resp.usage:
-                        if isinstance(p_resp.usage, dict):
-                            total_tokens += p_resp.usage.get("total_tokens") or (
-                                p_resp.usage.get("input_tokens", 0)
-                                + p_resp.usage.get("output_tokens", 0)
-                            )
-                        else:
-                            total_tokens += getattr(p_resp.usage, "total_tokens", 0) or (
-                                getattr(p_resp.usage, "input_tokens", 0)
-                                + getattr(p_resp.usage, "output_tokens", 0)
-                            )
+                if p_resp.error is None:
+                    _, _, call_tokens, call_cost = extract_or_estimate_cost(
+                        response=p_resp,
+                        model=self.evaluator_model,
+                        default_model=self.config.judge_model,
+                    )
+                    total_tokens += call_tokens
+                    total_cost += call_cost
 
-                    if getattr(p_resp, "cost_usd", None) is not None:
-                        total_cost += float(p_resp.cost_usd)
-                    elif isinstance(p_resp.raw_response, dict) and "cost" in p_resp.raw_response:
-                        total_cost += float(p_resp.raw_response["cost"])
+                    try:
+                        p_eval = unwrap_llm_response_payload(p_resp)
+                    except (ValueError, TypeError) as exc:
+                        safe_log(
+                            logger,
+                            logging.WARNING,
+                            f"Failed to parse prose consistency response JSON for section '{sec.section_id}': {exc}",
+                        )
+                        p_eval = None
 
-                    p_eval = p_resp.structured_response
                     if isinstance(p_eval, dict):
                         p_eval = ProseConsistencyEvaluation.model_validate(p_eval)
 

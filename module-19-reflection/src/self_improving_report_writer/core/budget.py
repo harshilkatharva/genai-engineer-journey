@@ -73,10 +73,32 @@ class RunBudget:
         """Execution time remaining before wall-clock deadline."""
         return max(0.0, round(self.max_seconds - self.elapsed_seconds, 3))
 
-    def record_usage(self, tokens: int = 0, cost_usd: float = 0.0) -> None:
+    def record_usage(
+        self,
+        tokens: int = 0,
+        cost_usd: float = 0.0,
+        model: str | None = None,
+        input_tokens: int | None = None,
+        output_tokens: int | None = None,
+    ) -> None:
         """Record token consumption and dollar expenditure."""
-        self.used_tokens += max(0, tokens)
-        self.used_cost_usd = round(self.used_cost_usd + max(0.0, cost_usd), 6)
+        effective_tokens = max(0, tokens)
+        if effective_tokens == 0 and (input_tokens or output_tokens):
+            effective_tokens = (input_tokens or 0) + (output_tokens or 0)
+
+        effective_cost = max(0.0, cost_usd)
+        if effective_cost == 0.0 and effective_tokens > 0 and model:
+            from self_improving_report_writer.core.pricing import estimate_llm_cost
+
+            effective_cost = estimate_llm_cost(
+                model=model,
+                input_tokens=input_tokens or 0,
+                output_tokens=output_tokens or 0,
+                total_tokens=effective_tokens,
+            )
+
+        self.used_tokens += effective_tokens
+        self.used_cost_usd = round(self.used_cost_usd + effective_cost, 6)
 
         if self.is_exhausted():
             reason = self.check_budget_exceeded()

@@ -7,15 +7,18 @@ from self_improving_report_writer.core.rate_limit_controller import (
     is_rate_limit_error,
     reset_shared_rate_limit_controller,
 )
-
-from .blinded_judge import BlindedJudge
-from .dataset import BenchmarkTopic, get_benchmark_dataset, get_topic_by_id
-from .metrics import (
+from self_improving_report_writer.eval.blinded_judge import BlindedJudge
+from self_improving_report_writer.eval.dataset import (
+    BenchmarkTopic,
+    get_benchmark_dataset,
+    get_topic_by_id,
+)
+from self_improving_report_writer.eval.metrics import (
     ApproachSummaryMetrics,
     ComparativeEvaluationSummary,
     compute_comparative_summary,
 )
-from .runners import (
+from self_improving_report_writer.eval.runners import (
     ApproachRunResult,
     ApproachType,
     run_approach_a,
