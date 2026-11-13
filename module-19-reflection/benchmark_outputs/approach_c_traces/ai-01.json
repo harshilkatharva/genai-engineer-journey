@@ -1,0 +1,2285 @@
+{
+  "topic_id": "ai-01",
+  "topic_title": "Speculative Decoding and Medusa Multi-Head Architectures for LLM Inference",
+  "domain": "ai_systems",
+  "recorded_at_utc": "2026-11-11T17:31:51.836817+00:00",
+  "rounds_executed": 2,
+  "best_round": 2,
+  "termination_reason": "ALL_ACCEPTANCE_CRITERIA_MET",
+  "is_accepted": true,
+  "terminal_status": "ACCEPTED",
+  "blinded_composite_score": 0.9925,
+  "latency_seconds": 754.123,
+  "round_history": [
+    {
+      "round_number": 0,
+      "deterministic_passed": false,
+      "critical_defect_count": 0,
+      "major_defect_count": 9,
+      "grounding_score": 0.5714,
+      "all_claims_grounded": false,
+      "composite_score": 0.8025,
+      "is_self_judged": false,
+      "tokens_used": 8225,
+      "cost_usd": 0.001242
+    },
+    {
+      "round_number": 1,
+      "deterministic_passed": true,
+      "critical_defect_count": 0,
+      "major_defect_count": 1,
+      "grounding_score": 1.0,
+      "all_claims_grounded": true,
+      "composite_score": 0.92,
+      "is_self_judged": false,
+      "tokens_used": 14105,
+      "cost_usd": 0.00193
+    },
+    {
+      "round_number": 2,
+      "deterministic_passed": true,
+      "critical_defect_count": 0,
+      "major_defect_count": 0,
+      "grounding_score": 1.0,
+      "all_claims_grounded": true,
+      "composite_score": 0.9925,
+      "is_self_judged": false,
+      "tokens_used": 13899,
+      "cost_usd": 0.001892
+    }
+  ],
+  "budget_summary": {
+    "used_tokens": 36229,
+    "max_tokens": 50000,
+    "used_cost_usd": 0.005064,
+    "max_cost_usd": 0.2,
+    "elapsed_seconds": 711.114,
+    "max_seconds": 1800.0,
+    "rounds_executed": 2,
+    "max_rounds": 3,
+    "is_exhausted": false,
+    "exhaustion_reason": null
+  },
+  "reflection_run_result": {
+    "topic": "Speculative Decoding and Medusa Multi-Head Architectures for LLM Inference",
+    "best_candidate": {
+      "round_number": 2,
+      "report": {
+        "topic": "Speculative Decoding and Medusa Multi-Head Architectures for LLM Inference",
+        "title": "Accelerating Large Language Model Inference: A Comparative Analysis of Speculative Decoding and Medusa Multi-Head Architectures",
+        "executive_summary": {
+          "section_id": "sec_exec",
+          "title": "Executive Summary",
+          "content": "Speculative decoding and Medusa multi-head architectures offer prominent pathways for accelerating large language model inference. Speculative decoding leverages a smaller draft model alongside a target model [cite_exec_1], whereas Medusa eliminates the separate draft model by integrating lightweight feedforward heads directly onto a frozen base transformer [cite_exec_2].",
+          "claims": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "text": "Speculative decoding pairs a small draft model with a large target model to accelerate inference.",
+              "citations": [
+                {
+                  "citation_id": "cite_exec_1",
+                  "source_id": "src_ai_01_a",
+                  "chunk_id": "chunk_ai_01_1",
+                  "citation_type": "quotation",
+                  "quoted_passage": "Speculative decoding pairs a small draft model with a large target model",
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "text": "Medusa replaces separate draft models with multiple lightweight feedforward heads trained on top of a frozen base transformer trunk.",
+              "citations": [
+                {
+                  "citation_id": "cite_exec_2",
+                  "source_id": "src_ai_01_b",
+                  "chunk_id": "chunk_ai_01_2",
+                  "citation_type": "quotation",
+                  "quoted_passage": "The Medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk.",
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            }
+          ]
+        },
+        "sections": [
+          {
+            "section_id": "sec_mechanisms",
+            "title": "Architectural Mechanisms and Performance",
+            "content": "Speculative decoding generates gamma candidate tokens in parallel and validates them in a single target forward pass using modified rejection sampling [cite_mech_1]. When the draft acceptance rate exceeds 75%, it achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution [cite_mech_2]. Conversely, Medusa utilizes tree-structured attention masks to validate candidate token paths concurrently, delivering a 2.2x speedup on single-GPU deployments [cite_mech_3]. Furthermore, Medusa avoids the additional 4GB VRAM footprint typically required to host a separate 7B draft model [cite_mech_4].",
+            "claims": [
+              {
+                "claim_id": "claim_mech_1",
+                "section_id": "sec_mechanisms",
+                "text": "Speculative decoding generates gamma candidate tokens in parallel and validates them in a single target forward pass using modified rejection sampling.",
+                "citations": [
+                  {
+                    "citation_id": "cite_mech_1",
+                    "source_id": "src_ai_01_a",
+                    "chunk_id": "chunk_ai_01_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_mech_2",
+                "section_id": "sec_mechanisms",
+                "text": "When draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution.",
+                "citations": [
+                  {
+                    "citation_id": "cite_mech_2",
+                    "source_id": "src_ai_01_a",
+                    "chunk_id": "chunk_ai_01_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "When draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_mech_3",
+                "section_id": "sec_mechanisms",
+                "text": "Medusa utilizes tree-structured attention masks to validate candidate token paths concurrently, delivering a 2.2x speedup on single-GPU deployments.",
+                "citations": [
+                  {
+                    "citation_id": "cite_mech_3",
+                    "source_id": "src_ai_01_b",
+                    "chunk_id": "chunk_ai_01_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Utilizing tree-structured attention masks, Medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-GPU deployments",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_mech_4",
+                "section_id": "sec_mechanisms",
+                "text": "Medusa avoids the additional 4GB VRAM footprint of hosting a separate 7B draft model.",
+                "citations": [
+                  {
+                    "citation_id": "cite_mech_4",
+                    "source_id": "src_ai_01_b",
+                    "chunk_id": "chunk_ai_01_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "while avoiding the additional 4GB VRAM footprint of hosting a separate 7B draft model.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          }
+        ],
+        "conclusion": {
+          "section_id": "sec_conclusion",
+          "title": "Conclusion and Implications",
+          "content": "Both speculative decoding and Medusa provide robust acceleration for large language models, balancing compute efficiency and memory footprints differently [cite_conc_2]. While standard speculative decoding provides high speedups on massive parameter scales given high acceptance rates [cite_conc_1], Medusa offers a memory-efficient single-GPU alternative through integrated multi-head prediction [cite_conc_3].",
+          "claims": [
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "text": "Speculative decoding provides substantial speedups at high parameter scales given favorable acceptance rates, whereas Medusa provides a memory-efficient single-GPU alternative.",
+              "citations": [
+                {
+                  "citation_id": "cite_conc_1",
+                  "source_id": "src_ai_01_a",
+                  "chunk_id": "chunk_ai_01_1",
+                  "citation_type": "quotation",
+                  "quoted_passage": "achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models",
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "text": "Speculative decoding and Medusa balance compute efficiency and memory footprints differently.",
+              "citations": [
+                {
+                  "citation_id": "cite_conc_2",
+                  "source_id": "src_ai_01_b",
+                  "chunk_id": "chunk_ai_01_2",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 0.95
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_conc_3",
+              "section_id": "sec_conclusion",
+              "text": "Medusa utilizes integrated multi-head prediction.",
+              "citations": [
+                {
+                  "citation_id": "cite_conc_3",
+                  "source_id": "src_ai_01_b",
+                  "chunk_id": "chunk_ai_01_2",
+                  "citation_type": "quotation",
+                  "quoted_passage": "multiple lightweight feedforward heads trained on top of the frozen base transformer trunk",
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            }
+          ]
+        },
+        "limitations": [
+          "The analysis is constrained by the provided source evidence and lacks broader performance benchmarking across diverse hardware configurations beyond single-GPU deployments.",
+          "Specific draft acceptance rate thresholds for Medusa architectures were not detailed in the available context."
+        ],
+        "version": 3,
+        "created_by": "revision_llm",
+        "created_at": "2024-05-18T00:00:00Z"
+      },
+      "deterministic_report": {
+        "passed": true,
+        "schema_valid": true,
+        "citations_valid": true,
+        "passages_matched": true,
+        "total_claims": 9,
+        "total_citations": 9,
+        "passage_matches": [
+          {
+            "citation_id": "cite_exec_1",
+            "source_id": "src_ai_01_a",
+            "chunk_id": "chunk_ai_01_1",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Speculative decoding pairs a small draft model with a large target model",
+            "normalized_passage": "speculative decoding pairs a small draft model with a large target model",
+            "normalized_source_chunk": "speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling. when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution."
+          },
+          {
+            "citation_id": "cite_exec_2",
+            "source_id": "src_ai_01_b",
+            "chunk_id": "chunk_ai_01_2",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "The Medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk.",
+            "normalized_passage": "the medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk.",
+            "normalized_source_chunk": "the medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk. utilizing tree-structured attention masks, medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-gpu deployments while avoiding the additional 4gb vram footprint of hosting a separate 7b draft model."
+          },
+          {
+            "citation_id": "cite_mech_1",
+            "source_id": "src_ai_01_a",
+            "chunk_id": "chunk_ai_01_1",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling.",
+            "normalized_passage": "generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling.",
+            "normalized_source_chunk": "speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling. when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution."
+          },
+          {
+            "citation_id": "cite_mech_2",
+            "source_id": "src_ai_01_a",
+            "chunk_id": "chunk_ai_01_1",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "When draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution.",
+            "normalized_passage": "when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution.",
+            "normalized_source_chunk": "speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling. when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution."
+          },
+          {
+            "citation_id": "cite_mech_3",
+            "source_id": "src_ai_01_b",
+            "chunk_id": "chunk_ai_01_2",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Utilizing tree-structured attention masks, Medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-GPU deployments",
+            "normalized_passage": "utilizing tree-structured attention masks, medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-gpu deployments",
+            "normalized_source_chunk": "the medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk. utilizing tree-structured attention masks, medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-gpu deployments while avoiding the additional 4gb vram footprint of hosting a separate 7b draft model."
+          },
+          {
+            "citation_id": "cite_mech_4",
+            "source_id": "src_ai_01_b",
+            "chunk_id": "chunk_ai_01_2",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "while avoiding the additional 4GB VRAM footprint of hosting a separate 7B draft model.",
+            "normalized_passage": "while avoiding the additional 4gb vram footprint of hosting a separate 7b draft model.",
+            "normalized_source_chunk": "the medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk. utilizing tree-structured attention masks, medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-gpu deployments while avoiding the additional 4gb vram footprint of hosting a separate 7b draft model."
+          },
+          {
+            "citation_id": "cite_conc_1",
+            "source_id": "src_ai_01_a",
+            "chunk_id": "chunk_ai_01_1",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models",
+            "normalized_passage": "achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models",
+            "normalized_source_chunk": "speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling. when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution."
+          },
+          {
+            "citation_id": "cite_conc_3",
+            "source_id": "src_ai_01_b",
+            "chunk_id": "chunk_ai_01_2",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "multiple lightweight feedforward heads trained on top of the frozen base transformer trunk",
+            "normalized_passage": "multiple lightweight feedforward heads trained on top of the frozen base transformer trunk",
+            "normalized_source_chunk": "the medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk. utilizing tree-structured attention masks, medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-gpu deployments while avoiding the additional 4gb vram footprint of hosting a separate 7b draft model."
+          }
+        ],
+        "issues": [],
+        "critical_count": 0,
+        "major_count": 0,
+        "minor_count": 0
+      },
+      "grounding_report": {
+        "passed": true,
+        "all_claims_grounded": true,
+        "grounding_score": 1.0,
+        "claim_evaluations": [
+          {
+            "claim_id": "claim_exec_1",
+            "section_id": "sec_exec",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk explicitly states that speculative decoding pairs a small draft model with a large target model and achieves speedups, which supports the claim of accelerating inference.",
+            "cited_chunk_ids": [
+              "chunk_ai_01_1"
+            ]
+          },
+          {
+            "claim_id": "claim_exec_2",
+            "section_id": "sec_exec",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk directly confirms that the Medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk.",
+            "cited_chunk_ids": [
+              "chunk_ai_01_2"
+            ]
+          },
+          {
+            "claim_id": "claim_mech_1",
+            "section_id": "sec_mechanisms",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk explicitly states that speculative decoding generates gamma candidate tokens in parallel and validates them in a single target forward pass using modified rejection sampling.",
+            "cited_chunk_ids": [
+              "chunk_ai_01_1"
+            ]
+          },
+          {
+            "claim_id": "claim_mech_2",
+            "section_id": "sec_mechanisms",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk confirms that when the draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution.",
+            "cited_chunk_ids": [
+              "chunk_ai_01_1"
+            ]
+          },
+          {
+            "claim_id": "claim_mech_3",
+            "section_id": "sec_mechanisms",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk states that Medusa uses tree-structured attention masks to validate candidate token paths concurrently and delivers a 2.2x speedup on single-GPU deployments.",
+            "cited_chunk_ids": [
+              "chunk_ai_01_2"
+            ]
+          },
+          {
+            "claim_id": "claim_mech_4",
+            "section_id": "sec_mechanisms",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk explicitly mentions that Medusa avoids the additional 4GB VRAM footprint required to host a separate 7B draft model.",
+            "cited_chunk_ids": [
+              "chunk_ai_01_2"
+            ]
+          },
+          {
+            "claim_id": "claim_conc_1",
+            "section_id": "sec_conclusion",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source confirms speculative decoding achieves 2.3x-2.8x speedups on 70B models with high acceptance rates, and the second source confirms Medusa is a memory-efficient single-GPU alternative.",
+            "cited_chunk_ids": [
+              "chunk_ai_01_1"
+            ]
+          },
+          {
+            "claim_id": "claim_conc_2",
+            "section_id": "sec_conclusion",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The sources describe different approaches: speculative decoding uses a separate draft model (impacting memory) while Medusa uses lightweight heads on a frozen base (avoiding extra VRAM footprint), confirming they balance efficiency and memory differently.",
+            "cited_chunk_ids": [
+              "chunk_ai_01_2"
+            ]
+          },
+          {
+            "claim_id": "claim_conc_3",
+            "section_id": "sec_conclusion",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source explicitly states that the Medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the base transformer.",
+            "cited_chunk_ids": [
+              "chunk_ai_01_2"
+            ]
+          }
+        ],
+        "issues": [],
+        "critical_count": 0,
+        "major_count": 0,
+        "minor_count": 0,
+        "tokens_used": 4317,
+        "cost_usd": 0.000546
+      },
+      "judge_verdict": {
+        "composite_score": 0.9925,
+        "passed": true,
+        "dimension_scores": {
+          "factual_accuracy": {
+            "dimension_name": "factual_accuracy",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report accurately reflects the technical details provided in the source contexts, including performance metrics, architectural differences, and memory footprint implications without any hallucinations."
+          },
+          "evidence_grounding": {
+            "dimension_name": "evidence_grounding",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "Every claim made in the report is directly supported by the provided source chunks. No external or unverified information was introduced."
+          },
+          "citation_correctness": {
+            "dimension_name": "citation_correctness",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "Citations are precise, correctly mapped to the source IDs and chunk IDs, and utilize accurate quotations or appropriate paraphrasing as indicated."
+          },
+          "completeness": {
+            "dimension_name": "completeness",
+            "score": 0.95,
+            "passed": true,
+            "reasoning": "The report covers the core mechanisms and performance characteristics of both architectures well. It appropriately includes a limitations section to address gaps in the provided source material."
+          },
+          "relevance": {
+            "dimension_name": "relevance",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report remains strictly focused on the research topic of speculative decoding and Medusa architectures, with no off-topic content."
+          },
+          "clarity_organization": {
+            "dimension_name": "clarity_organization",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report is exceptionally well-organized, using a logical flow from executive summary to technical mechanisms and concluding with implications."
+          },
+          "logical_consistency": {
+            "dimension_name": "logical_consistency",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report is internally coherent, with no contradictions between the executive summary, body sections, and conclusion."
+          }
+        },
+        "overall_feedback": "This is an exemplary research report. It demonstrates high precision in technical synthesis, rigorous adherence to the provided source material, and excellent structural organization. The inclusion of a limitations section demonstrates a mature understanding of the scope of the provided evidence. No improvements are necessary.",
+        "is_self_judged": false,
+        "effective_threshold": 0.85,
+        "judge_model": "gemini-3.1-flash-lite",
+        "tokens_used": 3810,
+        "cost_usd": 0.000408
+      },
+      "tokens_used": 13899,
+      "cost_usd": 0.001892
+    },
+    "all_candidates": [
+      {
+        "round_number": 0,
+        "report": {
+          "topic": "Speculative Decoding and Medusa Multi-Head Architectures for LLM Inference",
+          "title": "Accelerating Large Language Model Inference: A Comparative Analysis of Speculative Decoding and Medusa Multi-Head Architectures",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Speculative decoding and Medusa multi-head architectures offer prominent pathways for accelerating large language model inference. Speculative decoding leverages a smaller draft model alongside a target model [cite_cite_1], whereas Medusa eliminates the separate draft model by integrating lightweight feedforward heads directly onto a frozen base transformer [cite_cite_2]. Both approaches significantly enhance generation speed while maintaining accuracy and output distribution integrity.",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Speculative decoding pairs a small draft model with a large target model to accelerate inference.",
+                "citations": [],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Medusa replaces separate draft models with multiple lightweight feedforward heads trained on top of a frozen base transformer trunk.",
+                "citations": [],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_mechanisms",
+              "title": "Architectural Mechanisms and Performance",
+              "content": "Speculative decoding generates gamma candidate tokens in parallel and validates them in a single target forward pass using modified rejection sampling [cite_cite_1]. When the draft acceptance rate exceeds 75%, it achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution [cite_cite_1]. Conversely, Medusa utilizes tree-structured attention masks to validate candidate token paths concurrently, delivering a 2.2x speedup on single-GPU deployments [cite_cite_2]. Furthermore, Medusa avoids the additional 4GB VRAM footprint typically required to host a separate 7B draft model [cite_cite_2].",
+              "claims": [
+                {
+                  "claim_id": "claim_mech_1",
+                  "section_id": "sec_mechanisms",
+                  "text": "Speculative decoding generates gamma candidate tokens in parallel and validates them in a single target forward pass using modified rejection sampling.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_1",
+                      "source_id": "src_ai_01_a",
+                      "chunk_id": "chunk_ai_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_mech_2",
+                  "section_id": "sec_mechanisms",
+                  "text": "When draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_3",
+                      "source_id": "src_ai_01_a",
+                      "chunk_id": "chunk_ai_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "When draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_mech_3",
+                  "section_id": "sec_mechanisms",
+                  "text": "Medusa utilizes tree-structured attention masks to validate candidate token paths concurrently, delivering a 2.2x speedup on single-GPU deployments.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_2",
+                      "source_id": "src_ai_01_b",
+                      "chunk_id": "chunk_ai_01_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 0.95
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_mech_4",
+                  "section_id": "sec_mechanisms",
+                  "text": "Medusa avoids the additional 4GB VRAM footprint of hosting a separate 7B draft model.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_4",
+                      "source_id": "src_ai_01_b",
+                      "chunk_id": "chunk_ai_01_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "while avoiding the additional 4GB VRAM footprint of hosting a separate 7B draft model.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Implications",
+            "content": "Both speculative decoding and Medusa provide robust acceleration for large language models, balancing compute efficiency and memory footprints differently. While standard speculative decoding provides high speedups on massive parameter scales given high acceptance rates [cite_cite_1], Medusa offers a memory-efficient single-GPU alternative through integrated multi-head prediction [cite_cite_2].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Speculative decoding provides substantial speedups at high parameter scales given favorable acceptance rates, whereas Medusa provides a memory-efficient single-GPU alternative.",
+                "citations": [],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "The analysis is constrained by the provided source evidence and lacks broader performance benchmarking across diverse hardware configurations beyond single-GPU deployments.",
+            "Specific draft acceptance rate thresholds for Medusa architectures were not detailed in the available context."
+          ],
+          "version": 1,
+          "created_by": "generator_llm",
+          "created_at": "2024-05-18T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": false,
+          "schema_valid": true,
+          "citations_valid": false,
+          "passages_matched": true,
+          "total_claims": 7,
+          "total_citations": 4,
+          "passage_matches": [
+            {
+              "citation_id": "cite_cite_1",
+              "source_id": "src_ai_01_a",
+              "chunk_id": "chunk_ai_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling.",
+              "normalized_passage": "speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling.",
+              "normalized_source_chunk": "speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling. when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution."
+            },
+            {
+              "citation_id": "cite_cite_3",
+              "source_id": "src_ai_01_a",
+              "chunk_id": "chunk_ai_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "When draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution.",
+              "normalized_passage": "when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution.",
+              "normalized_source_chunk": "speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling. when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution."
+            },
+            {
+              "citation_id": "cite_cite_4",
+              "source_id": "src_ai_01_b",
+              "chunk_id": "chunk_ai_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "while avoiding the additional 4GB VRAM footprint of hosting a separate 7B draft model.",
+              "normalized_passage": "while avoiding the additional 4gb vram footprint of hosting a separate 7b draft model.",
+              "normalized_source_chunk": "the medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk. utilizing tree-structured attention masks, medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-gpu deployments while avoiding the additional 4gb vram footprint of hosting a separate 7b draft model."
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "DEFECT-001",
+              "category": "citation_integrity",
+              "severity": "major",
+              "message": "Factual claim 'claim_exec_1' lacks supporting citations.",
+              "section_id": "sec_exec",
+              "claim_id": "claim_exec_1",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "DEFECT-002",
+              "category": "citation_integrity",
+              "severity": "major",
+              "message": "Factual claim 'claim_exec_2' lacks supporting citations.",
+              "section_id": "sec_exec",
+              "claim_id": "claim_exec_2",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "DEFECT-003",
+              "category": "organization_clarity",
+              "severity": "minor",
+              "message": "Citation 'cite_cite_3' is defined on claim in section 'sec_mechanisms' but its identifier does not appear in section prose.",
+              "section_id": "sec_mechanisms",
+              "claim_id": null,
+              "citation_id": "cite_cite_3",
+              "details": {}
+            },
+            {
+              "issue_id": "DEFECT-004",
+              "category": "organization_clarity",
+              "severity": "minor",
+              "message": "Citation 'cite_cite_4' is defined on claim in section 'sec_mechanisms' but its identifier does not appear in section prose.",
+              "section_id": "sec_mechanisms",
+              "claim_id": null,
+              "citation_id": "cite_cite_4",
+              "details": {}
+            },
+            {
+              "issue_id": "DEFECT-005",
+              "category": "citation_integrity",
+              "severity": "major",
+              "message": "Factual claim 'claim_conc_1' lacks supporting citations.",
+              "section_id": "sec_conclusion",
+              "claim_id": "claim_conc_1",
+              "citation_id": null,
+              "details": {}
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 3,
+          "minor_count": 2
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": false,
+          "grounding_score": 0.5714,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "NEUTRAL",
+              "score": 0.0,
+              "reasoning": "Claim has no citations attached to substantiate the factual proposition.",
+              "cited_chunk_ids": []
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "NEUTRAL",
+              "score": 0.0,
+              "reasoning": "Claim has no citations attached to substantiate the factual proposition.",
+              "cited_chunk_ids": []
+            },
+            {
+              "claim_id": "claim_mech_1",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that speculative decoding generates gamma candidate tokens in parallel and validates them in a single target forward pass using modified rejection sampling.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_2",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that when the draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_3",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk states that Medusa utilizes tree-structured attention masks to validate candidate token paths concurrently and delivers a 2.2x speedup on single-GPU deployments.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_4",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly mentions that Medusa avoids the additional 4GB VRAM footprint associated with hosting a separate 7B draft model.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "NEUTRAL",
+              "score": 0.0,
+              "reasoning": "Claim has no citations attached to substantiate the factual proposition.",
+              "cited_chunk_ids": []
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Factual claim 'claim_exec_1' lacks supporting citations.",
+              "section_id": "sec_exec",
+              "claim_id": "claim_exec_1",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "G2-DEFECT-002",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Factual claim 'claim_exec_2' lacks supporting citations.",
+              "section_id": "sec_exec",
+              "claim_id": "claim_exec_2",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "G2-DEFECT-003",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec' contains ungrounded factual assertion in prose not captured as a claim: 'Both speculative decoding and Medusa significantly enhance generation speed while maintaining accuracy and output distribution integrity.'",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Both speculative decoding and Medusa significantly enhance generation speed while maintaining accuracy and output distribution integrity."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-004",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Factual claim 'claim_conc_1' lacks supporting citations.",
+              "section_id": "sec_conclusion",
+              "claim_id": "claim_conc_1",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "G2-DEFECT-005",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'Speculative decoding and Medusa balance compute efficiency and memory footprints differently.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Speculative decoding and Medusa balance compute efficiency and memory footprints differently."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-006",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'Medusa utilizes integrated multi-head prediction.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Medusa utilizes integrated multi-head prediction."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 6,
+          "minor_count": 0,
+          "tokens_used": 2538,
+          "cost_usd": 0.00032
+        },
+        "judge_verdict": {
+          "composite_score": 0.8025,
+          "passed": false,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All factual claims made in the report are consistent with the provided source material. No hallucinations or false claims were detected."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 0.6,
+              "passed": false,
+              "reasoning": "While the content is factually accurate, several key claims in the Executive Summary and Conclusion sections lack any supporting citations, failing to ground the assertions in the provided source context."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 0.5,
+              "passed": false,
+              "reasoning": "The report fails to include citations for multiple claims (claim_exec_1, claim_exec_2, claim_conc_1). Furthermore, the deterministic verification indicates that citation identifiers 'cite_cite_3' and 'cite_cite_4' are defined in the metadata but are missing from the prose, indicating poor citation management."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.85,
+              "passed": true,
+              "reasoning": "The report covers the core mechanisms and performance characteristics of both architectures well. It also includes a helpful limitations section that acknowledges the scope of the provided evidence."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report stays strictly on topic, addressing speculative decoding and Medusa architectures as requested without extraneous information."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 0.8,
+              "passed": true,
+              "reasoning": "The report is well-structured with a logical flow from summary to mechanisms to conclusion. Readability is high, though the citation errors detract from professional presentation."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally coherent, with no contradictory statements across the different sections."
+            }
+          },
+          "overall_feedback": "The report provides a clear and accurate technical summary of the requested topics. However, it suffers from significant citation failures. Several major claims in the executive summary and conclusion are entirely unreferenced, and the internal citation mapping is broken (missing identifiers in the prose). To improve, the author must ensure that every factual claim is explicitly linked to a source and that all cited identifiers are correctly embedded within the text.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 3411,
+          "cost_usd": 0.000395
+        },
+        "tokens_used": 8225,
+        "cost_usd": 0.001242
+      },
+      {
+        "round_number": 1,
+        "report": {
+          "topic": "Speculative Decoding and Medusa Multi-Head Architectures for LLM Inference",
+          "title": "Accelerating Large Language Model Inference: A Comparative Analysis of Speculative Decoding and Medusa Multi-Head Architectures",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Speculative decoding and Medusa multi-head architectures offer prominent pathways for accelerating large language model inference. Speculative decoding leverages a smaller draft model alongside a target model [cite_cite_1], whereas Medusa eliminates the separate draft model by integrating lightweight feedforward heads directly onto a frozen base transformer [cite_cite_2]. Both approaches significantly enhance generation speed while maintaining accuracy and output distribution integrity [cite_cite_1].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Speculative decoding pairs a small draft model with a large target model to accelerate inference.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_1",
+                    "source_id": "src_ai_01_a",
+                    "chunk_id": "chunk_ai_01_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Speculative decoding pairs a small draft model with a large target model",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Medusa replaces separate draft models with multiple lightweight feedforward heads trained on top of a frozen base transformer trunk.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_2",
+                    "source_id": "src_ai_01_b",
+                    "chunk_id": "chunk_ai_01_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "The Medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_mechanisms",
+              "title": "Architectural Mechanisms and Performance",
+              "content": "Speculative decoding generates gamma candidate tokens in parallel and validates them in a single target forward pass using modified rejection sampling [cite_cite_1]. When the draft acceptance rate exceeds 75%, it achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution [cite_cite_3]. Conversely, Medusa utilizes tree-structured attention masks to validate candidate token paths concurrently, delivering a 2.2x speedup on single-GPU deployments [cite_cite_2]. Furthermore, Medusa avoids the additional 4GB VRAM footprint typically required to host a separate 7B draft model [cite_cite_4].",
+              "claims": [
+                {
+                  "claim_id": "claim_mech_1",
+                  "section_id": "sec_mechanisms",
+                  "text": "Speculative decoding generates gamma candidate tokens in parallel and validates them in a single target forward pass using modified rejection sampling.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_1",
+                      "source_id": "src_ai_01_a",
+                      "chunk_id": "chunk_ai_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_mech_2",
+                  "section_id": "sec_mechanisms",
+                  "text": "When draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_3",
+                      "source_id": "src_ai_01_a",
+                      "chunk_id": "chunk_ai_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "When draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_mech_3",
+                  "section_id": "sec_mechanisms",
+                  "text": "Medusa utilizes tree-structured attention masks to validate candidate token paths concurrently, delivering a 2.2x speedup on single-GPU deployments.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_2",
+                      "source_id": "src_ai_01_b",
+                      "chunk_id": "chunk_ai_01_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 0.95
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_mech_4",
+                  "section_id": "sec_mechanisms",
+                  "text": "Medusa avoids the additional 4GB VRAM footprint of hosting a separate 7B draft model.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_4",
+                      "source_id": "src_ai_01_b",
+                      "chunk_id": "chunk_ai_01_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "while avoiding the additional 4GB VRAM footprint of hosting a separate 7B draft model.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Implications",
+            "content": "Both speculative decoding and Medusa provide robust acceleration for large language models, balancing compute efficiency and memory footprints differently [cite_conc_2]. While standard speculative decoding provides high speedups on massive parameter scales given high acceptance rates [cite_cite_1], Medusa offers a memory-efficient single-GPU alternative through integrated multi-head prediction [cite_conc_3].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Speculative decoding provides substantial speedups at high parameter scales given favorable acceptance rates, whereas Medusa provides a memory-efficient single-GPU alternative.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_1",
+                    "source_id": "src_ai_01_a",
+                    "chunk_id": "chunk_ai_01_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "Speculative decoding and Medusa balance compute efficiency and memory footprints differently.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_2",
+                    "source_id": "src_ai_01_b",
+                    "chunk_id": "chunk_ai_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.95
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_3",
+                "section_id": "sec_conclusion",
+                "text": "Medusa utilizes integrated multi-head prediction.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_3",
+                    "source_id": "src_ai_01_b",
+                    "chunk_id": "chunk_ai_01_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "multiple lightweight feedforward heads trained on top of the frozen base transformer trunk",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "The analysis is constrained by the provided source evidence and lacks broader performance benchmarking across diverse hardware configurations beyond single-GPU deployments.",
+            "Specific draft acceptance rate thresholds for Medusa architectures were not detailed in the available context."
+          ],
+          "version": 2,
+          "created_by": "revision_llm",
+          "created_at": "2024-05-18T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 9,
+          "total_citations": 9,
+          "passage_matches": [
+            {
+              "citation_id": "cite_exec_1",
+              "source_id": "src_ai_01_a",
+              "chunk_id": "chunk_ai_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Speculative decoding pairs a small draft model with a large target model",
+              "normalized_passage": "speculative decoding pairs a small draft model with a large target model",
+              "normalized_source_chunk": "speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling. when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution."
+            },
+            {
+              "citation_id": "cite_exec_2",
+              "source_id": "src_ai_01_b",
+              "chunk_id": "chunk_ai_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "The Medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk.",
+              "normalized_passage": "the medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk.",
+              "normalized_source_chunk": "the medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk. utilizing tree-structured attention masks, medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-gpu deployments while avoiding the additional 4gb vram footprint of hosting a separate 7b draft model."
+            },
+            {
+              "citation_id": "cite_cite_1",
+              "source_id": "src_ai_01_a",
+              "chunk_id": "chunk_ai_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling.",
+              "normalized_passage": "speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling.",
+              "normalized_source_chunk": "speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling. when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution."
+            },
+            {
+              "citation_id": "cite_cite_3",
+              "source_id": "src_ai_01_a",
+              "chunk_id": "chunk_ai_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "When draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution.",
+              "normalized_passage": "when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution.",
+              "normalized_source_chunk": "speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling. when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution."
+            },
+            {
+              "citation_id": "cite_cite_4",
+              "source_id": "src_ai_01_b",
+              "chunk_id": "chunk_ai_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "while avoiding the additional 4GB VRAM footprint of hosting a separate 7B draft model.",
+              "normalized_passage": "while avoiding the additional 4gb vram footprint of hosting a separate 7b draft model.",
+              "normalized_source_chunk": "the medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk. utilizing tree-structured attention masks, medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-gpu deployments while avoiding the additional 4gb vram footprint of hosting a separate 7b draft model."
+            },
+            {
+              "citation_id": "cite_conc_1",
+              "source_id": "src_ai_01_a",
+              "chunk_id": "chunk_ai_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models",
+              "normalized_passage": "achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models",
+              "normalized_source_chunk": "speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling. when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution."
+            },
+            {
+              "citation_id": "cite_conc_3",
+              "source_id": "src_ai_01_b",
+              "chunk_id": "chunk_ai_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "multiple lightweight feedforward heads trained on top of the frozen base transformer trunk",
+              "normalized_passage": "multiple lightweight feedforward heads trained on top of the frozen base transformer trunk",
+              "normalized_source_chunk": "the medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk. utilizing tree-structured attention masks, medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-gpu deployments while avoiding the additional 4gb vram footprint of hosting a separate 7b draft model."
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "DEFECT-001",
+              "category": "organization_clarity",
+              "severity": "minor",
+              "message": "Citation 'cite_exec_2' is defined on claim in section 'sec_exec' but its identifier does not appear in section prose.",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": "cite_exec_2",
+              "details": {}
+            },
+            {
+              "issue_id": "DEFECT-002",
+              "category": "organization_clarity",
+              "severity": "minor",
+              "message": "Citation 'cite_exec_1' is defined on claim in section 'sec_exec' but its identifier does not appear in section prose.",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": "cite_exec_1",
+              "details": {}
+            },
+            {
+              "issue_id": "DEFECT-003",
+              "category": "organization_clarity",
+              "severity": "minor",
+              "message": "Citation 'cite_conc_1' is defined on claim in section 'sec_conclusion' but its identifier does not appear in section prose.",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": "cite_conc_1",
+              "details": {}
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 3
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that speculative decoding pairs a small draft model with a large target model to generate and validate tokens, which results in a wall-clock speedup.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that the Medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_1",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that speculative decoding generates gamma candidate tokens in parallel and validates them in a single target forward pass using modified rejection sampling.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_2",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that when the draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_3",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk states that Medusa utilizes tree-structured attention masks to validate candidate token paths concurrently and delivers a 2.2x speedup on single-GPU deployments.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_4",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly mentions that Medusa avoids the additional 4GB VRAM footprint required to host a separate 7B draft model.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms speculative decoding achieves 2.3x-2.8x speedups on 70B models with high acceptance rates, and the second source confirms Medusa is a memory-efficient single-GPU alternative.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The sources describe different approaches: speculative decoding uses a separate draft model (impacting memory) while Medusa uses lightweight heads on a frozen trunk (avoiding the extra VRAM footprint), confirming they balance these factors differently.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_3",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source explicitly states that the Medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the base transformer.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_2"
+              ]
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec' contains ungrounded factual assertion in prose not captured as a claim: 'Both speculative decoding and Medusa approaches significantly enhance generation speed while maintaining accuracy and output distribution integrity.'",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Both speculative decoding and Medusa approaches significantly enhance generation speed while maintaining accuracy and output distribution integrity."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 1,
+          "minor_count": 0,
+          "tokens_used": 4344,
+          "cost_usd": 0.000551
+        },
+        "judge_verdict": {
+          "composite_score": 0.92,
+          "passed": false,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All factual claims regarding speculative decoding and Medusa architectures are consistent with the provided source material. No hallucinations or false claims were detected."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every claim made in the report is directly supported by the provided source chunks. The report accurately reflects the performance metrics and architectural descriptions found in the source text."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 0.7,
+              "passed": false,
+              "reasoning": "While the citations are accurate in their content, the report contains several broken or missing citation references in the prose (e.g., [cite_cite_1], [cite_cite_2], [cite_cite_3], [cite_cite_4] in the executive summary and conclusion sections do not correspond to the actual citation IDs defined in the claim objects)."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.9,
+              "passed": true,
+              "reasoning": "The report provides a comprehensive overview of both architectures, their mechanisms, and their performance benefits. It also includes a helpful limitations section."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report remains strictly focused on the research topic of speculative decoding and Medusa architectures without any irrelevant filler."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 0.8,
+              "passed": true,
+              "reasoning": "The report is well-structured with a logical flow from executive summary to mechanism analysis and conclusion. However, the presence of broken citation placeholders detracts from the professional readability."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally consistent, with no contradictory statements across the different sections."
+            }
+          },
+          "overall_feedback": "The report is technically accurate and well-grounded in the provided sources, offering a clear and concise comparison of the two inference acceleration methods. The primary deficit is the poor management of citation identifiers in the prose, where several placeholders (e.g., [cite_cite_1]) do not map to the actual citation objects provided in the JSON structure. Correcting these references will bring the report to a high standard.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 4032,
+          "cost_usd": 0.000444
+        },
+        "tokens_used": 14105,
+        "cost_usd": 0.00193
+      },
+      {
+        "round_number": 2,
+        "report": {
+          "topic": "Speculative Decoding and Medusa Multi-Head Architectures for LLM Inference",
+          "title": "Accelerating Large Language Model Inference: A Comparative Analysis of Speculative Decoding and Medusa Multi-Head Architectures",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Speculative decoding and Medusa multi-head architectures offer prominent pathways for accelerating large language model inference. Speculative decoding leverages a smaller draft model alongside a target model [cite_exec_1], whereas Medusa eliminates the separate draft model by integrating lightweight feedforward heads directly onto a frozen base transformer [cite_exec_2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Speculative decoding pairs a small draft model with a large target model to accelerate inference.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_1",
+                    "source_id": "src_ai_01_a",
+                    "chunk_id": "chunk_ai_01_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Speculative decoding pairs a small draft model with a large target model",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Medusa replaces separate draft models with multiple lightweight feedforward heads trained on top of a frozen base transformer trunk.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_2",
+                    "source_id": "src_ai_01_b",
+                    "chunk_id": "chunk_ai_01_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "The Medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_mechanisms",
+              "title": "Architectural Mechanisms and Performance",
+              "content": "Speculative decoding generates gamma candidate tokens in parallel and validates them in a single target forward pass using modified rejection sampling [cite_mech_1]. When the draft acceptance rate exceeds 75%, it achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution [cite_mech_2]. Conversely, Medusa utilizes tree-structured attention masks to validate candidate token paths concurrently, delivering a 2.2x speedup on single-GPU deployments [cite_mech_3]. Furthermore, Medusa avoids the additional 4GB VRAM footprint typically required to host a separate 7B draft model [cite_mech_4].",
+              "claims": [
+                {
+                  "claim_id": "claim_mech_1",
+                  "section_id": "sec_mechanisms",
+                  "text": "Speculative decoding generates gamma candidate tokens in parallel and validates them in a single target forward pass using modified rejection sampling.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_mech_1",
+                      "source_id": "src_ai_01_a",
+                      "chunk_id": "chunk_ai_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_mech_2",
+                  "section_id": "sec_mechanisms",
+                  "text": "When draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_mech_2",
+                      "source_id": "src_ai_01_a",
+                      "chunk_id": "chunk_ai_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "When draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_mech_3",
+                  "section_id": "sec_mechanisms",
+                  "text": "Medusa utilizes tree-structured attention masks to validate candidate token paths concurrently, delivering a 2.2x speedup on single-GPU deployments.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_mech_3",
+                      "source_id": "src_ai_01_b",
+                      "chunk_id": "chunk_ai_01_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Utilizing tree-structured attention masks, Medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-GPU deployments",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_mech_4",
+                  "section_id": "sec_mechanisms",
+                  "text": "Medusa avoids the additional 4GB VRAM footprint of hosting a separate 7B draft model.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_mech_4",
+                      "source_id": "src_ai_01_b",
+                      "chunk_id": "chunk_ai_01_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "while avoiding the additional 4GB VRAM footprint of hosting a separate 7B draft model.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Implications",
+            "content": "Both speculative decoding and Medusa provide robust acceleration for large language models, balancing compute efficiency and memory footprints differently [cite_conc_2]. While standard speculative decoding provides high speedups on massive parameter scales given high acceptance rates [cite_conc_1], Medusa offers a memory-efficient single-GPU alternative through integrated multi-head prediction [cite_conc_3].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Speculative decoding provides substantial speedups at high parameter scales given favorable acceptance rates, whereas Medusa provides a memory-efficient single-GPU alternative.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_1",
+                    "source_id": "src_ai_01_a",
+                    "chunk_id": "chunk_ai_01_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "Speculative decoding and Medusa balance compute efficiency and memory footprints differently.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_2",
+                    "source_id": "src_ai_01_b",
+                    "chunk_id": "chunk_ai_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.95
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_3",
+                "section_id": "sec_conclusion",
+                "text": "Medusa utilizes integrated multi-head prediction.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_3",
+                    "source_id": "src_ai_01_b",
+                    "chunk_id": "chunk_ai_01_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "multiple lightweight feedforward heads trained on top of the frozen base transformer trunk",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "The analysis is constrained by the provided source evidence and lacks broader performance benchmarking across diverse hardware configurations beyond single-GPU deployments.",
+            "Specific draft acceptance rate thresholds for Medusa architectures were not detailed in the available context."
+          ],
+          "version": 3,
+          "created_by": "revision_llm",
+          "created_at": "2024-05-18T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 9,
+          "total_citations": 9,
+          "passage_matches": [
+            {
+              "citation_id": "cite_exec_1",
+              "source_id": "src_ai_01_a",
+              "chunk_id": "chunk_ai_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Speculative decoding pairs a small draft model with a large target model",
+              "normalized_passage": "speculative decoding pairs a small draft model with a large target model",
+              "normalized_source_chunk": "speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling. when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution."
+            },
+            {
+              "citation_id": "cite_exec_2",
+              "source_id": "src_ai_01_b",
+              "chunk_id": "chunk_ai_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "The Medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk.",
+              "normalized_passage": "the medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk.",
+              "normalized_source_chunk": "the medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk. utilizing tree-structured attention masks, medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-gpu deployments while avoiding the additional 4gb vram footprint of hosting a separate 7b draft model."
+            },
+            {
+              "citation_id": "cite_mech_1",
+              "source_id": "src_ai_01_a",
+              "chunk_id": "chunk_ai_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling.",
+              "normalized_passage": "generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling.",
+              "normalized_source_chunk": "speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling. when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution."
+            },
+            {
+              "citation_id": "cite_mech_2",
+              "source_id": "src_ai_01_a",
+              "chunk_id": "chunk_ai_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "When draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution.",
+              "normalized_passage": "when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution.",
+              "normalized_source_chunk": "speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling. when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution."
+            },
+            {
+              "citation_id": "cite_mech_3",
+              "source_id": "src_ai_01_b",
+              "chunk_id": "chunk_ai_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Utilizing tree-structured attention masks, Medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-GPU deployments",
+              "normalized_passage": "utilizing tree-structured attention masks, medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-gpu deployments",
+              "normalized_source_chunk": "the medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk. utilizing tree-structured attention masks, medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-gpu deployments while avoiding the additional 4gb vram footprint of hosting a separate 7b draft model."
+            },
+            {
+              "citation_id": "cite_mech_4",
+              "source_id": "src_ai_01_b",
+              "chunk_id": "chunk_ai_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "while avoiding the additional 4GB VRAM footprint of hosting a separate 7B draft model.",
+              "normalized_passage": "while avoiding the additional 4gb vram footprint of hosting a separate 7b draft model.",
+              "normalized_source_chunk": "the medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk. utilizing tree-structured attention masks, medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-gpu deployments while avoiding the additional 4gb vram footprint of hosting a separate 7b draft model."
+            },
+            {
+              "citation_id": "cite_conc_1",
+              "source_id": "src_ai_01_a",
+              "chunk_id": "chunk_ai_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models",
+              "normalized_passage": "achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models",
+              "normalized_source_chunk": "speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling. when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution."
+            },
+            {
+              "citation_id": "cite_conc_3",
+              "source_id": "src_ai_01_b",
+              "chunk_id": "chunk_ai_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "multiple lightweight feedforward heads trained on top of the frozen base transformer trunk",
+              "normalized_passage": "multiple lightweight feedforward heads trained on top of the frozen base transformer trunk",
+              "normalized_source_chunk": "the medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk. utilizing tree-structured attention masks, medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-gpu deployments while avoiding the additional 4gb vram footprint of hosting a separate 7b draft model."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": true,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that speculative decoding pairs a small draft model with a large target model and achieves speedups, which supports the claim of accelerating inference.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk directly confirms that the Medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_1",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that speculative decoding generates gamma candidate tokens in parallel and validates them in a single target forward pass using modified rejection sampling.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_2",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that when the draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_3",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk states that Medusa uses tree-structured attention masks to validate candidate token paths concurrently and delivers a 2.2x speedup on single-GPU deployments.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_4",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly mentions that Medusa avoids the additional 4GB VRAM footprint required to host a separate 7B draft model.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms speculative decoding achieves 2.3x-2.8x speedups on 70B models with high acceptance rates, and the second source confirms Medusa is a memory-efficient single-GPU alternative.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The sources describe different approaches: speculative decoding uses a separate draft model (impacting memory) while Medusa uses lightweight heads on a frozen base (avoiding extra VRAM footprint), confirming they balance efficiency and memory differently.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_3",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source explicitly states that the Medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the base transformer.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_2"
+              ]
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0,
+          "tokens_used": 4317,
+          "cost_usd": 0.000546
+        },
+        "judge_verdict": {
+          "composite_score": 0.9925,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report accurately reflects the technical details provided in the source contexts, including performance metrics, architectural differences, and memory footprint implications without any hallucinations."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every claim made in the report is directly supported by the provided source chunks. No external or unverified information was introduced."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are precise, correctly mapped to the source IDs and chunk IDs, and utilize accurate quotations or appropriate paraphrasing as indicated."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.95,
+              "passed": true,
+              "reasoning": "The report covers the core mechanisms and performance characteristics of both architectures well. It appropriately includes a limitations section to address gaps in the provided source material."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report remains strictly focused on the research topic of speculative decoding and Medusa architectures, with no off-topic content."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is exceptionally well-organized, using a logical flow from executive summary to technical mechanisms and concluding with implications."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally coherent, with no contradictions between the executive summary, body sections, and conclusion."
+            }
+          },
+          "overall_feedback": "This is an exemplary research report. It demonstrates high precision in technical synthesis, rigorous adherence to the provided source material, and excellent structural organization. The inclusion of a limitations section demonstrates a mature understanding of the scope of the provided evidence. No improvements are necessary.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 3810,
+          "cost_usd": 0.000408
+        },
+        "tokens_used": 13899,
+        "cost_usd": 0.001892
+      }
+    ],
+    "budget_summary": {
+      "used_tokens": 36229,
+      "max_tokens": 50000,
+      "used_cost_usd": 0.005064,
+      "max_cost_usd": 0.2,
+      "elapsed_seconds": 711.114,
+      "max_seconds": 1800.0,
+      "rounds_executed": 2,
+      "max_rounds": 3,
+      "is_exhausted": false,
+      "exhaustion_reason": null
+    },
+    "rounds_executed": 2,
+    "termination_reason": "ALL_ACCEPTANCE_CRITERIA_MET",
+    "acceptance_threshold": 0.85,
+    "acceptance_result": {
+      "status": "ACCEPTED",
+      "is_accepted": true,
+      "best_candidate": {
+        "round_number": 2,
+        "report": {
+          "topic": "Speculative Decoding and Medusa Multi-Head Architectures for LLM Inference",
+          "title": "Accelerating Large Language Model Inference: A Comparative Analysis of Speculative Decoding and Medusa Multi-Head Architectures",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Speculative decoding and Medusa multi-head architectures offer prominent pathways for accelerating large language model inference. Speculative decoding leverages a smaller draft model alongside a target model [cite_exec_1], whereas Medusa eliminates the separate draft model by integrating lightweight feedforward heads directly onto a frozen base transformer [cite_exec_2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Speculative decoding pairs a small draft model with a large target model to accelerate inference.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_1",
+                    "source_id": "src_ai_01_a",
+                    "chunk_id": "chunk_ai_01_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Speculative decoding pairs a small draft model with a large target model",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Medusa replaces separate draft models with multiple lightweight feedforward heads trained on top of a frozen base transformer trunk.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_2",
+                    "source_id": "src_ai_01_b",
+                    "chunk_id": "chunk_ai_01_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "The Medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_mechanisms",
+              "title": "Architectural Mechanisms and Performance",
+              "content": "Speculative decoding generates gamma candidate tokens in parallel and validates them in a single target forward pass using modified rejection sampling [cite_mech_1]. When the draft acceptance rate exceeds 75%, it achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution [cite_mech_2]. Conversely, Medusa utilizes tree-structured attention masks to validate candidate token paths concurrently, delivering a 2.2x speedup on single-GPU deployments [cite_mech_3]. Furthermore, Medusa avoids the additional 4GB VRAM footprint typically required to host a separate 7B draft model [cite_mech_4].",
+              "claims": [
+                {
+                  "claim_id": "claim_mech_1",
+                  "section_id": "sec_mechanisms",
+                  "text": "Speculative decoding generates gamma candidate tokens in parallel and validates them in a single target forward pass using modified rejection sampling.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_mech_1",
+                      "source_id": "src_ai_01_a",
+                      "chunk_id": "chunk_ai_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_mech_2",
+                  "section_id": "sec_mechanisms",
+                  "text": "When draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_mech_2",
+                      "source_id": "src_ai_01_a",
+                      "chunk_id": "chunk_ai_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "When draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_mech_3",
+                  "section_id": "sec_mechanisms",
+                  "text": "Medusa utilizes tree-structured attention masks to validate candidate token paths concurrently, delivering a 2.2x speedup on single-GPU deployments.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_mech_3",
+                      "source_id": "src_ai_01_b",
+                      "chunk_id": "chunk_ai_01_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Utilizing tree-structured attention masks, Medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-GPU deployments",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_mech_4",
+                  "section_id": "sec_mechanisms",
+                  "text": "Medusa avoids the additional 4GB VRAM footprint of hosting a separate 7B draft model.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_mech_4",
+                      "source_id": "src_ai_01_b",
+                      "chunk_id": "chunk_ai_01_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "while avoiding the additional 4GB VRAM footprint of hosting a separate 7B draft model.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Implications",
+            "content": "Both speculative decoding and Medusa provide robust acceleration for large language models, balancing compute efficiency and memory footprints differently [cite_conc_2]. While standard speculative decoding provides high speedups on massive parameter scales given high acceptance rates [cite_conc_1], Medusa offers a memory-efficient single-GPU alternative through integrated multi-head prediction [cite_conc_3].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Speculative decoding provides substantial speedups at high parameter scales given favorable acceptance rates, whereas Medusa provides a memory-efficient single-GPU alternative.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_1",
+                    "source_id": "src_ai_01_a",
+                    "chunk_id": "chunk_ai_01_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "Speculative decoding and Medusa balance compute efficiency and memory footprints differently.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_2",
+                    "source_id": "src_ai_01_b",
+                    "chunk_id": "chunk_ai_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.95
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_3",
+                "section_id": "sec_conclusion",
+                "text": "Medusa utilizes integrated multi-head prediction.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_3",
+                    "source_id": "src_ai_01_b",
+                    "chunk_id": "chunk_ai_01_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "multiple lightweight feedforward heads trained on top of the frozen base transformer trunk",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "The analysis is constrained by the provided source evidence and lacks broader performance benchmarking across diverse hardware configurations beyond single-GPU deployments.",
+            "Specific draft acceptance rate thresholds for Medusa architectures were not detailed in the available context."
+          ],
+          "version": 3,
+          "created_by": "revision_llm",
+          "created_at": "2024-05-18T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 9,
+          "total_citations": 9,
+          "passage_matches": [
+            {
+              "citation_id": "cite_exec_1",
+              "source_id": "src_ai_01_a",
+              "chunk_id": "chunk_ai_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Speculative decoding pairs a small draft model with a large target model",
+              "normalized_passage": "speculative decoding pairs a small draft model with a large target model",
+              "normalized_source_chunk": "speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling. when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution."
+            },
+            {
+              "citation_id": "cite_exec_2",
+              "source_id": "src_ai_01_b",
+              "chunk_id": "chunk_ai_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "The Medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk.",
+              "normalized_passage": "the medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk.",
+              "normalized_source_chunk": "the medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk. utilizing tree-structured attention masks, medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-gpu deployments while avoiding the additional 4gb vram footprint of hosting a separate 7b draft model."
+            },
+            {
+              "citation_id": "cite_mech_1",
+              "source_id": "src_ai_01_a",
+              "chunk_id": "chunk_ai_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling.",
+              "normalized_passage": "generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling.",
+              "normalized_source_chunk": "speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling. when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution."
+            },
+            {
+              "citation_id": "cite_mech_2",
+              "source_id": "src_ai_01_a",
+              "chunk_id": "chunk_ai_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "When draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution.",
+              "normalized_passage": "when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution.",
+              "normalized_source_chunk": "speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling. when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution."
+            },
+            {
+              "citation_id": "cite_mech_3",
+              "source_id": "src_ai_01_b",
+              "chunk_id": "chunk_ai_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Utilizing tree-structured attention masks, Medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-GPU deployments",
+              "normalized_passage": "utilizing tree-structured attention masks, medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-gpu deployments",
+              "normalized_source_chunk": "the medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk. utilizing tree-structured attention masks, medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-gpu deployments while avoiding the additional 4gb vram footprint of hosting a separate 7b draft model."
+            },
+            {
+              "citation_id": "cite_mech_4",
+              "source_id": "src_ai_01_b",
+              "chunk_id": "chunk_ai_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "while avoiding the additional 4GB VRAM footprint of hosting a separate 7B draft model.",
+              "normalized_passage": "while avoiding the additional 4gb vram footprint of hosting a separate 7b draft model.",
+              "normalized_source_chunk": "the medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk. utilizing tree-structured attention masks, medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-gpu deployments while avoiding the additional 4gb vram footprint of hosting a separate 7b draft model."
+            },
+            {
+              "citation_id": "cite_conc_1",
+              "source_id": "src_ai_01_a",
+              "chunk_id": "chunk_ai_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models",
+              "normalized_passage": "achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models",
+              "normalized_source_chunk": "speculative decoding pairs a small draft model with a large target model, generating gamma candidate tokens in parallel and validating them in a single target forward pass using modified rejection sampling. when draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70b parameter models without altering the output probability distribution."
+            },
+            {
+              "citation_id": "cite_conc_3",
+              "source_id": "src_ai_01_b",
+              "chunk_id": "chunk_ai_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "multiple lightweight feedforward heads trained on top of the frozen base transformer trunk",
+              "normalized_passage": "multiple lightweight feedforward heads trained on top of the frozen base transformer trunk",
+              "normalized_source_chunk": "the medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk. utilizing tree-structured attention masks, medusa validates candidate token paths concurrently, delivering a 2.2x speedup on single-gpu deployments while avoiding the additional 4gb vram footprint of hosting a separate 7b draft model."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": true,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that speculative decoding pairs a small draft model with a large target model and achieves speedups, which supports the claim of accelerating inference.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk directly confirms that the Medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the frozen base transformer trunk.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_1",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that speculative decoding generates gamma candidate tokens in parallel and validates them in a single target forward pass using modified rejection sampling.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_2",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that when the draft acceptance rate exceeds 75%, speculative decoding achieves a 2.3x to 2.8x wall-clock speedup on 70B parameter models without altering the output probability distribution.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_3",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk states that Medusa uses tree-structured attention masks to validate candidate token paths concurrently and delivers a 2.2x speedup on single-GPU deployments.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_4",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly mentions that Medusa avoids the additional 4GB VRAM footprint required to host a separate 7B draft model.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms speculative decoding achieves 2.3x-2.8x speedups on 70B models with high acceptance rates, and the second source confirms Medusa is a memory-efficient single-GPU alternative.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The sources describe different approaches: speculative decoding uses a separate draft model (impacting memory) while Medusa uses lightweight heads on a frozen base (avoiding extra VRAM footprint), confirming they balance efficiency and memory differently.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_3",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source explicitly states that the Medusa architecture replaces separate draft models with multiple lightweight feedforward heads trained on top of the base transformer.",
+              "cited_chunk_ids": [
+                "chunk_ai_01_2"
+              ]
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0,
+          "tokens_used": 4317,
+          "cost_usd": 0.000546
+        },
+        "judge_verdict": {
+          "composite_score": 0.9925,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report accurately reflects the technical details provided in the source contexts, including performance metrics, architectural differences, and memory footprint implications without any hallucinations."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every claim made in the report is directly supported by the provided source chunks. No external or unverified information was introduced."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are precise, correctly mapped to the source IDs and chunk IDs, and utilize accurate quotations or appropriate paraphrasing as indicated."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.95,
+              "passed": true,
+              "reasoning": "The report covers the core mechanisms and performance characteristics of both architectures well. It appropriately includes a limitations section to address gaps in the provided source material."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report remains strictly focused on the research topic of speculative decoding and Medusa architectures, with no off-topic content."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is exceptionally well-organized, using a logical flow from executive summary to technical mechanisms and concluding with implications."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally coherent, with no contradictions between the executive summary, body sections, and conclusion."
+            }
+          },
+          "overall_feedback": "This is an exemplary research report. It demonstrates high precision in technical synthesis, rigorous adherence to the provided source material, and excellent structural organization. The inclusion of a limitations section demonstrates a mature understanding of the scope of the provided evidence. No improvements are necessary.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 3810,
+          "cost_usd": 0.000408
+        },
+        "tokens_used": 13899,
+        "cost_usd": 0.001892
+      },
+      "rationale": "Candidate meets all deterministic and semantic acceptance standards (composite_score=0.9925 >= 0.85, critical=0, major_grounding=0).",
+      "unresolved_reasons": [],
+      "review_packet": null
+    },
+    "learned_lessons_count": 0
+  },
+  "llm_stats": {
+    "llm_calls": 23,
+    "llm_attempts": 40,
+    "transient_retries": 17,
+    "validation_retries": 0,
+    "timeout_resets": 0
+  }
+}

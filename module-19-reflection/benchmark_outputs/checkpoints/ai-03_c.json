@@ -1,0 +1,221 @@
+{
+  "topic_id": "ai-03",
+  "topic_title": "Verifiable Retrieval-Augmented Generation via Natural Language Inference",
+  "approach": "approach_c_grounded_reflection",
+  "approach_name": "Approach C: Grounded Reflection",
+  "final_report": {
+    "topic": "Verifiable Retrieval-Augmented Generation via Natural Language Inference",
+    "title": "Enhancing Retrieval-Augmented Generation Reliability Through Natural Language Inference Verification",
+    "executive_summary": {
+      "section_id": "sec_exec",
+      "title": "Executive Summary",
+      "content": "Traditional vector cosine similarity approaches for retrieval-augmented generation fall short when detecting subtle negations and numerical errors [cite_cite_1]. By breaking down generated text into atomic factual claims and applying calibrated Natural Language Inference (NLI) models, systems achieve significantly higher citation precision [cite_cite_2]. Furthermore, implementing selective two-stage verification strategies can dramatically reduce computational overhead without sacrificing recall on critical hallucinations [cite_cite_3].",
+      "claims": [
+        {
+          "claim_id": "claim_1",
+          "section_id": "sec_exec",
+          "text": "Vector cosine similarity between generated text and source chunks fails to identify subtle negation and numerical hallucinations, with false-positive attribution rates reaching 34%.",
+          "citations": [
+            {
+              "citation_id": "cite_cite_1",
+              "source_id": "src_ai_03_a",
+              "chunk_id": "chunk_ai_03_1",
+              "citation_type": "paraphrase",
+              "quoted_passage": null,
+              "confidence": 1.0
+            }
+          ],
+          "is_factual": true
+        },
+        {
+          "claim_id": "claim_2",
+          "section_id": "sec_exec",
+          "text": "Decomposing answers into atomic factual claims and evaluating them using calibrated Natural Language Inference (NLI) models increases citation precision from 62% to 91% on open-domain QA benchmarks.",
+          "citations": [
+            {
+              "citation_id": "cite_cite_2",
+              "source_id": "src_ai_03_a",
+              "chunk_id": "chunk_ai_03_1",
+              "citation_type": "quotation",
+              "quoted_passage": "Decomposing answers into atomic factual claims and evaluating them using calibrated Natural Language Inference (NLI) models increases citation precision from 62% to 91% on open-domain QA benchmarks.",
+              "confidence": 1.0
+            }
+          ],
+          "is_factual": true
+        },
+        {
+          "claim_id": "claim_3",
+          "section_id": "sec_exec",
+          "text": "Applying selective two-stage verification reduces verification cost by 55% while maintaining a 94% recall on critical hallucinations.",
+          "citations": [
+            {
+              "citation_id": "cite_cite_3",
+              "source_id": "src_ai_03_b",
+              "chunk_id": "chunk_ai_03_2",
+              "citation_type": "paraphrase",
+              "quoted_passage": null,
+              "confidence": 1.0
+            }
+          ],
+          "is_factual": true
+        }
+      ]
+    },
+    "sections": [
+      {
+        "section_id": "sec_findings",
+        "title": "NLI Verification and Performance Metrics",
+        "content": "Evaluating generation accuracy via vector cosine similarity leaves an opening for high false-positive attribution rates, which can reach up to 34% when handling subtle negations and numerical inaccuracies [cite_cite_4]. Utilizing Natural Language Inference to check atomic claims substantially enhances precision from 62% up to 91% [cite_cite_5]. However, cross-encoder verification introduces performance overhead, adding an average latency of 180ms per query on 8-core CPU instances for up to 10 atomic claims [cite_cite_6]. This latency can be mitigated through selective two-stage filtering [cite_cite_9].",
+        "claims": [
+          {
+            "claim_id": "claim_4",
+            "section_id": "sec_findings",
+            "text": "Vector cosine similarity between generated text and source chunks fails to identify subtle negation and numerical hallucinations, with false-positive attribution rates reaching 34%.",
+            "citations": [
+              {
+                "citation_id": "cite_cite_4",
+                "source_id": "src_ai_03_a",
+                "chunk_id": "chunk_ai_03_1",
+                "citation_type": "quotation",
+                "quoted_passage": "Vector cosine similarity between generated text and source chunks fails to identify subtle negation and numerical hallucinations, with false-positive attribution rates reaching 34%.",
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_5",
+            "section_id": "sec_findings",
+            "text": "Decomposing answers into atomic factual claims and evaluating them using calibrated Natural Language Inference (NLI) models increases citation precision from 62% to 91% on open-domain QA benchmarks.",
+            "citations": [
+              {
+                "citation_id": "cite_cite_5",
+                "source_id": "src_ai_03_a",
+                "chunk_id": "chunk_ai_03_1",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_6",
+            "section_id": "sec_findings",
+            "text": "Fine-grained cross-encoder NLI verification adds an average latency of 180ms per query on 8-core CPU instances when processing up to 10 atomic claims.",
+            "citations": [
+              {
+                "citation_id": "cite_cite_6",
+                "source_id": "src_ai_03_b",
+                "chunk_id": "chunk_ai_03_2",
+                "citation_type": "quotation",
+                "quoted_passage": "Fine-grained cross-encoder NLI verification adds an average latency of 180ms per query on 8-core CPU instances when processing up to 10 atomic claims.",
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_9",
+            "section_id": "sec_findings",
+            "text": "The latency of cross-encoder verification can be mitigated through selective two-stage filtering.",
+            "citations": [
+              {
+                "citation_id": "cite_cite_9",
+                "source_id": "src_ai_03_b",
+                "chunk_id": "chunk_ai_03_2",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          }
+        ]
+      }
+    ],
+    "conclusion": {
+      "section_id": "sec_conclusion",
+      "title": "Conclusion",
+      "content": "Integrating Natural Language Inference models into retrieval-augmented generation workflows offers a robust defense against attribution errors and hallucinations [cite_cite_8]. Latency increases due to cross-encoder processing [cite_cite_10], but hybrid approaches using rapid regex filters successfully optimize cost and performance trade-offs [cite_cite_11].",
+      "claims": [
+        {
+          "claim_id": "claim_8",
+          "section_id": "sec_conclusion",
+          "text": "Integrating Natural Language Inference models into retrieval-augmented generation workflows offers a robust defense against attribution errors and hallucinations.",
+          "citations": [
+            {
+              "citation_id": "cite_cite_8",
+              "source_id": "src_ai_03_a",
+              "chunk_id": "chunk_ai_03_1",
+              "citation_type": "paraphrase",
+              "quoted_passage": null,
+              "confidence": 0.9
+            }
+          ],
+          "is_factual": true
+        },
+        {
+          "claim_id": "claim_10",
+          "section_id": "sec_conclusion",
+          "text": "Latency increases due to cross-encoder processing.",
+          "citations": [
+            {
+              "citation_id": "cite_cite_10",
+              "source_id": "src_ai_03_b",
+              "chunk_id": "chunk_ai_03_2",
+              "citation_type": "paraphrase",
+              "quoted_passage": null,
+              "confidence": 1.0
+            }
+          ],
+          "is_factual": true
+        },
+        {
+          "claim_id": "claim_11",
+          "section_id": "sec_conclusion",
+          "text": "Hybrid approaches using rapid regex filters successfully optimize cost and performance trade-offs.",
+          "citations": [
+            {
+              "citation_id": "cite_cite_11",
+              "source_id": "src_ai_03_b",
+              "chunk_id": "chunk_ai_03_2",
+              "citation_type": "paraphrase",
+              "quoted_passage": null,
+              "confidence": 1.0
+            }
+          ],
+          "is_factual": true
+        }
+      ]
+    },
+    "limitations": [
+      "Data is limited to open-domain QA benchmarks and specific CPU hardware configurations (8-core instances).",
+      "Performance scaling beyond 10 atomic claims per query remains underexplored in the provided evidence."
+    ],
+    "version": 3,
+    "created_by": "revision_llm",
+    "created_at": "2026-03-31T02:00:00Z"
+  },
+  "rounds_executed": 2,
+  "deterministic_passed": true,
+  "critical_defect_count": 0,
+  "major_defect_count": 0,
+  "composite_rubric_score": 0.9925,
+  "factual_accuracy_score": 1.0,
+  "evidence_grounding_score": 1.0,
+  "dimension_scores": {
+    "factual_accuracy": 1.0,
+    "evidence_grounding": 1.0,
+    "citation_correctness": 1.0,
+    "completeness": 0.95,
+    "relevance": 1.0,
+    "clarity_organization": 1.0,
+    "logical_consistency": 1.0
+  },
+  "tokens_consumed": 40401,
+  "cost_usd": 0.005732,
+  "latency_seconds": 261.15251349699975,
+  "is_accepted": true,
+  "terminal_status": "ACCEPTED"
+}

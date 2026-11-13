@@ -1,0 +1,2884 @@
+{
+  "topic_id": "dist-03",
+  "topic_title": "High-Dimensional Approximate Nearest Neighbor Search in Vector Databases",
+  "domain": "distributed_systems",
+  "recorded_at_utc": "2026-11-11T18:56:55.852224+00:00",
+  "rounds_executed": 3,
+  "best_round": 3,
+  "termination_reason": "BUDGET_EXCEEDED: TOKENS_EXHAUSTED (used 55532 >= max 50000)",
+  "is_accepted": false,
+  "terminal_status": "UNRESOLVED",
+  "blinded_composite_score": 0.9925,
+  "latency_seconds": 299.981,
+  "llm_stats": {
+    "llm_calls": 41,
+    "llm_attempts": 51,
+    "transient_retries": 10,
+    "validation_retries": 0,
+    "timeout_resets": 0
+  },
+  "round_history": [
+    {
+      "round_number": 0,
+      "deterministic_passed": false,
+      "critical_defect_count": 0,
+      "major_defect_count": 7,
+      "grounding_score": 0.75,
+      "all_claims_grounded": false,
+      "composite_score": 0.88,
+      "is_self_judged": false,
+      "tokens_used": 10376,
+      "cost_usd": 0.001519
+    },
+    {
+      "round_number": 1,
+      "deterministic_passed": true,
+      "critical_defect_count": 0,
+      "major_defect_count": 4,
+      "grounding_score": 1.0,
+      "all_claims_grounded": true,
+      "composite_score": 0.9925,
+      "is_self_judged": false,
+      "tokens_used": 14354,
+      "cost_usd": 0.001925
+    },
+    {
+      "round_number": 2,
+      "deterministic_passed": true,
+      "critical_defect_count": 0,
+      "major_defect_count": 2,
+      "grounding_score": 0.95,
+      "all_claims_grounded": false,
+      "composite_score": 0.985,
+      "is_self_judged": false,
+      "tokens_used": 15069,
+      "cost_usd": 0.002054
+    },
+    {
+      "round_number": 3,
+      "deterministic_passed": true,
+      "critical_defect_count": 0,
+      "major_defect_count": 1,
+      "grounding_score": 0.9545,
+      "all_claims_grounded": false,
+      "composite_score": 0.9925,
+      "is_self_judged": false,
+      "tokens_used": 15733,
+      "cost_usd": 0.00216
+    }
+  ],
+  "budget_summary": {
+    "used_tokens": 55532,
+    "max_tokens": 50000,
+    "used_cost_usd": 0.007658,
+    "max_cost_usd": 0.2,
+    "elapsed_seconds": 295.813,
+    "max_seconds": 1800.0,
+    "rounds_executed": 3,
+    "max_rounds": 3,
+    "is_exhausted": true,
+    "exhaustion_reason": "TOKENS_EXHAUSTED (used 55532 >= max 50000)"
+  },
+  "reflection_run_result": {
+    "topic": "High-Dimensional Approximate Nearest Neighbor Search in Vector Databases",
+    "best_candidate": {
+      "round_number": 3,
+      "report": {
+        "topic": "High-Dimensional Approximate Nearest Neighbor Search in Vector Databases",
+        "title": "High-Dimensional Approximate Nearest Neighbor Search: Architectural Strategies and Performance Benchmarks",
+        "executive_summary": {
+          "section_id": "sec_exec",
+          "title": "Executive Summary",
+          "content": "High-dimensional approximate nearest neighbor (ANN) search presents significant computational and storage challenges for modern vector databases. Hierarchical Navigable Small World (HNSW) graphs offer exceptional search performance, achieving 98% 10-recall at 12,000 queries per second when evaluated on 768-dimensional benchmarks [cite_1]. Furthermore, handling 1536-dimensional vectors for 1 billion items requires significant storage [cite_2], where memory overheads are mitigated using distributed architectures and Product Quantization [cite_3].",
+          "claims": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "text": "HNSW performance is evaluated on 768-dimensional benchmarks achieving 98% 10-recall at 12,000 queries per second.",
+              "citations": [
+                {
+                  "citation_id": "cite_1",
+                  "source_id": "src_dist_03_a",
+                  "chunk_id": "chunk_dist_03_1",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "text": "Storing 1536-dimensional vectors for 1 billion items requires significant memory capacity.",
+              "citations": [
+                {
+                  "citation_id": "cite_2",
+                  "source_id": "src_dist_03_b",
+                  "chunk_id": "chunk_dist_03_2",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_exec_3",
+              "section_id": "sec_exec",
+              "text": "Memory overheads for billion-scale search are mitigated using distributed architectures combined with Product Quantization.",
+              "citations": [
+                {
+                  "citation_id": "cite_3",
+                  "source_id": "src_dist_03_b",
+                  "chunk_id": "chunk_dist_03_2",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            }
+          ]
+        },
+        "sections": [
+          {
+            "section_id": "sec_hnsw",
+            "title": "Graph-Based ANN Search with HNSW",
+            "content": "Hierarchical Navigable Small World (HNSW) graphs construct multi-layer proximity networks [cite_4]. Top layers utilize long-range edges for coarse exploration, while lower layers contain dense clusters optimized for fine-grained local search [cite_5]. When evaluated on 768-dimensional embedding benchmarks, HNSW outperforms tree-based KD-trees by two orders of magnitude [cite_6].",
+            "claims": [
+              {
+                "claim_id": "claim_hnsw_1",
+                "section_id": "sec_hnsw",
+                "text": "HNSW graphs construct multi-layer proximity networks with long-range edges in top layers and dense clusters in lower layers.",
+                "citations": [
+                  {
+                    "citation_id": "cite_4",
+                    "source_id": "src_dist_03_a",
+                    "chunk_id": "chunk_dist_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  },
+                  {
+                    "citation_id": "cite_5",
+                    "source_id": "src_dist_03_a",
+                    "chunk_id": "chunk_dist_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_hnsw_2",
+                "section_id": "sec_hnsw",
+                "text": "HNSW outperforms tree-based KD-trees by two orders of magnitude on 768-dimensional embedding benchmarks.",
+                "citations": [
+                  {
+                    "citation_id": "cite_6",
+                    "source_id": "src_dist_03_a",
+                    "chunk_id": "chunk_dist_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          {
+            "section_id": "sec_scaling",
+            "title": "Billion-Scale Storage and Quantization",
+            "content": "Storing raw 1536-dimensional float32 vectors for 1 billion items requires 6.14 TB of RAM [cite_7]. To address this storage bottleneck, applying 8x Product Quantization (PQ) compresses vectors into compact 96-byte codes, reducing memory requirements to 96 GB with an acceptable 4.2% drop in top-10 recall [cite_8]. Additionally, distributing partitions across Raft consensus groups with asynchronous graph consolidation prevents index lockups during high-frequency ingestion [cite_9].",
+            "claims": [
+              {
+                "claim_id": "claim_scale_1",
+                "section_id": "sec_scaling",
+                "text": "Storing raw 1536-dimensional float32 vectors for 1 billion items requires 6.14 TB of RAM.",
+                "citations": [
+                  {
+                    "citation_id": "cite_7",
+                    "source_id": "src_dist_03_b",
+                    "chunk_id": "chunk_dist_03_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_scale_2",
+                "section_id": "sec_scaling",
+                "text": "Applying 8x Product Quantization compresses vectors into 96-byte codes, fitting the index into 96 GB of memory with a 4.2% drop in top-10 recall.",
+                "citations": [
+                  {
+                    "citation_id": "cite_8",
+                    "source_id": "src_dist_03_b",
+                    "chunk_id": "chunk_dist_03_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_scale_3",
+                "section_id": "sec_scaling",
+                "text": "Distributing partitions across Raft consensus groups with asynchronous graph consolidation prevents index lockups during high-frequency ingestion.",
+                "citations": [
+                  {
+                    "citation_id": "cite_9",
+                    "source_id": "src_dist_03_b",
+                    "chunk_id": "chunk_dist_03_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          }
+        ],
+        "conclusion": {
+          "section_id": "sec_conclusion",
+          "title": "Conclusion",
+          "content": "Balancing high recall, query throughput, and memory consumption remains essential for scalable vector database design [cite_12]. HNSW graphs deliver outstanding search speeds and accuracy [cite_10], while techniques such as Product Quantization and distributed consensus groups enable massive billion-scale datasets to run efficiently [cite_11].",
+          "claims": [
+            {
+              "claim_id": "claim_conc_0",
+              "section_id": "sec_conclusion",
+              "text": "Balancing high recall, query throughput, and memory consumption remains essential for scalable vector database design.",
+              "citations": [
+                {
+                  "citation_id": "cite_12",
+                  "source_id": "src_dist_03_b",
+                  "chunk_id": "chunk_dist_03_2",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "text": "HNSW graphs deliver outstanding search speeds and accuracy.",
+              "citations": [
+                {
+                  "citation_id": "cite_10",
+                  "source_id": "src_dist_03_a",
+                  "chunk_id": "chunk_dist_03_1",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "text": "Combining HNSW graphs, Product Quantization, and distributed consensus allows massive billion-scale datasets to run efficiently.",
+              "citations": [
+                {
+                  "citation_id": "cite_11",
+                  "source_id": "src_dist_03_b",
+                  "chunk_id": "chunk_dist_03_2",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            }
+          ]
+        },
+        "limitations": [
+          "Performance data is limited to 768-dimensional and 1536-dimensional embedding benchmarks provided in the source context.",
+          "Evaluation metrics are restricted to top-10 recall, query throughput, and raw memory footprint calculations."
+        ],
+        "version": 4,
+        "created_by": "revision_llm",
+        "created_at": "2023-10-27T00:00:00Z"
+      },
+      "deterministic_report": {
+        "passed": true,
+        "schema_valid": true,
+        "citations_valid": true,
+        "passages_matched": true,
+        "total_claims": 11,
+        "total_citations": 12,
+        "passage_matches": [],
+        "issues": [],
+        "critical_count": 0,
+        "major_count": 0,
+        "minor_count": 0
+      },
+      "grounding_report": {
+        "passed": false,
+        "all_claims_grounded": false,
+        "grounding_score": 0.9545,
+        "claim_evaluations": [
+          {
+            "claim_id": "claim_exec_1",
+            "section_id": "sec_exec",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk explicitly states that HNSW achieves 98% 10-recall at 12,000 queries per second on 768-dimensional embedding benchmarks.",
+            "cited_chunk_ids": [
+              "chunk_dist_03_1"
+            ]
+          },
+          {
+            "claim_id": "claim_exec_2",
+            "section_id": "sec_exec",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk confirms that storing 1 billion 1536-dimensional float32 vectors requires 6.14 TB of RAM, which constitutes a significant memory capacity.",
+            "cited_chunk_ids": [
+              "chunk_dist_03_2"
+            ]
+          },
+          {
+            "claim_id": "claim_exec_3",
+            "section_id": "sec_exec",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk describes using Product Quantization to compress vectors and distributing partitions across Raft consensus groups to manage index storage and ingestion, which supports the claim that these methods mitigate memory overheads.",
+            "cited_chunk_ids": [
+              "chunk_dist_03_2"
+            ]
+          },
+          {
+            "claim_id": "claim_hnsw_1",
+            "section_id": "sec_hnsw",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk explicitly states that HNSW graphs construct multi-layer proximity networks where top layers feature long-range edges and lower layers contain dense clusters.",
+            "cited_chunk_ids": [
+              "chunk_dist_03_1",
+              "chunk_dist_03_1"
+            ]
+          },
+          {
+            "claim_id": "claim_hnsw_2",
+            "section_id": "sec_hnsw",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk confirms that on 768-dimensional embedding benchmarks, HNSW outperforms tree-based KD-trees by two orders of magnitude.",
+            "cited_chunk_ids": [
+              "chunk_dist_03_1"
+            ]
+          },
+          {
+            "claim_id": "claim_scale_1",
+            "section_id": "sec_scaling",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source text explicitly states that storing raw 1536-dimensional float32 vectors for 1 billion items requires 6.14 TB of RAM.",
+            "cited_chunk_ids": [
+              "chunk_dist_03_2"
+            ]
+          },
+          {
+            "claim_id": "claim_scale_2",
+            "section_id": "sec_scaling",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source text confirms that 8x Product Quantization compresses vectors into 96-byte codes, resulting in a 96 GB index size and a 4.2% drop in top-10 recall.",
+            "cited_chunk_ids": [
+              "chunk_dist_03_2"
+            ]
+          },
+          {
+            "claim_id": "claim_scale_3",
+            "section_id": "sec_scaling",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source text directly states that distributing partitions across Raft consensus groups with asynchronous graph consolidation prevents index lockups during high-frequency ingestion.",
+            "cited_chunk_ids": [
+              "chunk_dist_03_2"
+            ]
+          },
+          {
+            "claim_id": "claim_conc_0",
+            "section_id": "sec_conclusion",
+            "entailment": "NEUTRAL",
+            "score": 0.5,
+            "reasoning": "The source chunk discusses memory consumption, recall, and ingestion, but it does not explicitly state that balancing these factors is 'essential' for scalable vector database design.",
+            "cited_chunk_ids": [
+              "chunk_dist_03_2"
+            ]
+          },
+          {
+            "claim_id": "claim_conc_1",
+            "section_id": "sec_conclusion",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk confirms HNSW achieves 98% 10-recall at 12,000 queries per second, which supports the claim of outstanding search speeds and accuracy.",
+            "cited_chunk_ids": [
+              "chunk_dist_03_1"
+            ]
+          },
+          {
+            "claim_id": "claim_conc_2",
+            "section_id": "sec_conclusion",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk describes using Product Quantization for memory efficiency and Raft consensus groups for distributed ingestion at a billion-item scale, supporting the combination of these techniques for efficiency.",
+            "cited_chunk_ids": [
+              "chunk_dist_03_2"
+            ]
+          }
+        ],
+        "issues": [
+          {
+            "issue_id": "G2-DEFECT-001",
+            "category": "factual_grounding",
+            "severity": "major",
+            "message": "Claim 'claim_conc_0' is only weakly supported or neutral with respect to cited evidence: The source chunk discusses memory consumption, recall, and ingestion, but it does not explicitly state that balancing these factors is 'essential' for scalable vector database design.",
+            "section_id": "sec_conclusion",
+            "claim_id": "claim_conc_0",
+            "citation_id": null,
+            "details": {
+              "reasoning": "The source chunk discusses memory consumption, recall, and ingestion, but it does not explicitly state that balancing these factors is 'essential' for scalable vector database design."
+            }
+          }
+        ],
+        "critical_count": 0,
+        "major_count": 1,
+        "minor_count": 0,
+        "tokens_used": 5508,
+        "cost_usd": 0.000687
+      },
+      "judge_verdict": {
+        "composite_score": 0.9925,
+        "passed": true,
+        "dimension_scores": {
+          "factual_accuracy": {
+            "dimension_name": "factual_accuracy",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "All claims made in the report are directly supported by the provided source contexts. No hallucinations or factual errors were detected."
+          },
+          "evidence_grounding": {
+            "dimension_name": "evidence_grounding",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "Every factual assertion is explicitly grounded in the provided source material (src_dist_03_a and src_dist_03_b)."
+          },
+          "citation_correctness": {
+            "dimension_name": "citation_correctness",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "Citations are correctly mapped to the relevant source chunks. The report uses a consistent citation format that accurately reflects the source content."
+          },
+          "completeness": {
+            "dimension_name": "completeness",
+            "score": 0.95,
+            "passed": true,
+            "reasoning": "The report covers the core aspects of the research topic (HNSW, storage, and scaling) comprehensively based on the provided sources. It also includes a helpful limitations section."
+          },
+          "relevance": {
+            "dimension_name": "relevance",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report remains strictly focused on the research topic of high-dimensional ANN search and vector database architectures without extraneous information."
+          },
+          "clarity_organization": {
+            "dimension_name": "clarity_organization",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report is exceptionally well-organized with a clear executive summary, logical section headers, and a concise conclusion."
+          },
+          "logical_consistency": {
+            "dimension_name": "logical_consistency",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report is internally consistent, with no contradictory statements across sections."
+          }
+        },
+        "overall_feedback": "This is an exemplary research report. It demonstrates high precision in technical reporting, excellent grounding in the provided source material, and a clear, professional structure. The report effectively synthesizes complex technical concepts like HNSW graphs, Product Quantization, and distributed consensus mechanisms. No significant improvements are required.",
+        "is_self_judged": false,
+        "effective_threshold": 0.85,
+        "judge_model": "gemini-3.1-flash-lite",
+        "tokens_used": 4196,
+        "cost_usd": 0.000438
+      },
+      "tokens_used": 15733,
+      "cost_usd": 0.00216
+    },
+    "all_candidates": [
+      {
+        "round_number": 0,
+        "report": {
+          "topic": "High-Dimensional Approximate Nearest Neighbor Search in Vector Databases",
+          "title": "High-Dimensional Approximate Nearest Neighbor Search: Architectural Strategies and Performance Benchmarks",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "High-dimensional approximate nearest neighbor (ANN) search presents significant computational and storage challenges for modern vector databases. Hierarchical Navigable Small World (HNSW) graphs offer exceptional search performance, achieving 98% 10-recall at 12,000 queries per second on 768-dimensional benchmarks [cite_1]. Furthermore, for billion-scale multimodal search with 1536-dimensional vectors, memory overheads can be successfully mitigated using Product Quantization (PQ) combined with distributed architectures [cite_2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "HNSW graphs achieve 98% 10-recall at 12,000 queries per second on 768-dimensional embedding benchmarks.",
+                "citations": [],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Memory overheads for billion-scale 1536-dimensional vectors can be mitigated using Product Quantization and distributed architectures.",
+                "citations": [],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_hnsw",
+              "title": "Graph-Based ANN Search with HNSW",
+              "content": "Hierarchical Navigable Small World (HNSW) graphs construct multi-layer proximity networks [cite_3]. Top layers utilize long-range edges for coarse exploration, while lower layers contain dense clusters optimized for fine-grained local search [cite_4]. When evaluated on 768-dimensional embedding benchmarks, HNSW outperforms tree-based KD-trees by two orders of magnitude [cite_5].",
+              "claims": [
+                {
+                  "claim_id": "claim_hnsw_1",
+                  "section_id": "sec_hnsw",
+                  "text": "HNSW graphs construct multi-layer proximity networks with long-range edges in top layers and dense clusters in lower layers.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_3",
+                      "source_id": "src_dist_03_a",
+                      "chunk_id": "chunk_dist_03_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    },
+                    {
+                      "citation_id": "cite_4",
+                      "source_id": "src_dist_03_a",
+                      "chunk_id": "chunk_dist_03_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_hnsw_2",
+                  "section_id": "sec_hnsw",
+                  "text": "HNSW outperforms tree-based KD-trees by two orders of magnitude on 768-dimensional embedding benchmarks.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_5",
+                      "source_id": "src_dist_03_a",
+                      "chunk_id": "chunk_dist_03_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            },
+            {
+              "section_id": "sec_scaling",
+              "title": "Billion-Scale Storage and Quantization",
+              "content": "Storing raw 1536-dimensional float32 vectors for 1 billion items requires 6.14 TB of RAM [cite_6]. To address this storage bottleneck, applying 8x Product Quantization (PQ) compresses vectors into compact 96-byte codes, reducing memory requirements to 96 GB with an acceptable 4.2% drop in top-10 recall [cite_7]. Additionally, distributing partitions across Raft consensus groups with asynchronous graph consolidation prevents index lockups during high-frequency ingestion [cite_8].",
+              "claims": [
+                {
+                  "claim_id": "claim_scale_1",
+                  "section_id": "sec_scaling",
+                  "text": "Storing raw 1536-dimensional float32 vectors for 1 billion items requires 6.14 TB of RAM.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_6",
+                      "source_id": "src_dist_03_b",
+                      "chunk_id": "chunk_dist_03_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_scale_2",
+                  "section_id": "sec_scaling",
+                  "text": "Applying 8x Product Quantization compresses vectors into 96-byte codes, fitting the index into 96 GB of memory with a 4.2% drop in top-10 recall.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_7",
+                      "source_id": "src_dist_03_b",
+                      "chunk_id": "chunk_dist_03_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_scale_3",
+                  "section_id": "sec_scaling",
+                  "text": "Distributing partitions across Raft consensus groups with asynchronous graph consolidation prevents index lockups during high-frequency ingestion.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_8",
+                      "source_id": "src_dist_03_b",
+                      "chunk_id": "chunk_dist_03_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion",
+            "content": "Balancing high recall, query throughput, and memory consumption remains essential for scalable vector database design. HNSW graphs deliver outstanding search speeds and accuracy, while techniques such as Product Quantization and distributed consensus groups enable massive billion-scale datasets to run efficiently without hardware exhaustion or high-frequency write bottlenecks [cite_9].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Combining HNSW graphs, Product Quantization, and distributed consensus allows massive billion-scale datasets to run efficiently.",
+                "citations": [
+                  {
+                    "citation_id": "cite_9",
+                    "source_id": "src_dist_03_b",
+                    "chunk_id": "chunk_dist_03_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Performance data is limited to 768-dimensional and 1536-dimensional embedding benchmarks provided in the source context.",
+            "Evaluation metrics are restricted to top-10 recall, query throughput, and raw memory footprint calculations."
+          ],
+          "version": 1,
+          "created_by": "generator_llm",
+          "created_at": "2023-10-25T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": false,
+          "schema_valid": true,
+          "citations_valid": false,
+          "passages_matched": true,
+          "total_claims": 8,
+          "total_citations": 7,
+          "passage_matches": [],
+          "issues": [
+            {
+              "issue_id": "DEFECT-001",
+              "category": "citation_integrity",
+              "severity": "major",
+              "message": "Factual claim 'claim_exec_1' lacks supporting citations.",
+              "section_id": "sec_exec",
+              "claim_id": "claim_exec_1",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "DEFECT-002",
+              "category": "citation_integrity",
+              "severity": "major",
+              "message": "Factual claim 'claim_exec_2' lacks supporting citations.",
+              "section_id": "sec_exec",
+              "claim_id": "claim_exec_2",
+              "citation_id": null,
+              "details": {}
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 2,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": false,
+          "grounding_score": 0.75,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "NEUTRAL",
+              "score": 0.0,
+              "reasoning": "Claim has no citations attached to substantiate the factual proposition.",
+              "cited_chunk_ids": []
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "NEUTRAL",
+              "score": 0.0,
+              "reasoning": "Claim has no citations attached to substantiate the factual proposition.",
+              "cited_chunk_ids": []
+            },
+            {
+              "claim_id": "claim_hnsw_1",
+              "section_id": "sec_hnsw",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that HNSW graphs construct multi-layer proximity networks where top layers feature long-range edges and lower layers contain dense clusters.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_1",
+                "chunk_dist_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_hnsw_2",
+              "section_id": "sec_hnsw",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that on 768-dimensional embedding benchmarks, HNSW outperforms tree-based KD-trees by two orders of magnitude.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_scale_1",
+              "section_id": "sec_scaling",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source explicitly states that storing raw 1536-dimensional float32 vectors for 1 billion items requires 6.14 TB of RAM.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_scale_2",
+              "section_id": "sec_scaling",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms that 8x Product Quantization compresses vectors into 96-byte codes, fits the index into 96 GB of memory, and results in a 4.2% drop in top-10 recall.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_scale_3",
+              "section_id": "sec_scaling",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source states that distributing partitions across Raft consensus groups with asynchronous graph consolidation prevents index lockups during high-frequency ingestion.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that Product Quantization enables billion-scale datasets to fit into memory and that distributing partitions across Raft consensus groups allows for efficient, non-blocking ingestion, supporting the claim's assertion regarding these techniques.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Factual claim 'claim_exec_1' lacks supporting citations.",
+              "section_id": "sec_exec",
+              "claim_id": "claim_exec_1",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "G2-DEFECT-002",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Factual claim 'claim_exec_2' lacks supporting citations.",
+              "section_id": "sec_exec",
+              "claim_id": "claim_exec_2",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "G2-DEFECT-003",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'HNSW graphs deliver outstanding search speeds and accuracy.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "HNSW graphs deliver outstanding search speeds and accuracy."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-004",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'Product Quantization and distributed consensus groups prevent hardware exhaustion.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Product Quantization and distributed consensus groups prevent hardware exhaustion."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-005",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'Product Quantization and distributed consensus groups prevent high-frequency write bottlenecks.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Product Quantization and distributed consensus groups prevent high-frequency write bottlenecks."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 5,
+          "minor_count": 0,
+          "tokens_used": 4105,
+          "cost_usd": 0.000494
+        },
+        "judge_verdict": {
+          "composite_score": 0.88,
+          "passed": false,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All factual claims made in the report are consistent with the provided source contexts. No hallucinations or false claims were detected."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 0.85,
+              "passed": true,
+              "reasoning": "The report content is well-supported by the provided sources. However, the executive summary contains factual claims that lack explicit citation markers, which slightly weakens the grounding of the summary section."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 0.5,
+              "passed": false,
+              "reasoning": "The report fails to provide citations for the claims in the executive summary (claim_exec_1 and claim_exec_2), leading to a failure in the deterministic verification check for citation integrity."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.9,
+              "passed": true,
+              "reasoning": "The report covers the key aspects of the research topic, including HNSW graph mechanics, memory optimization via PQ, and distributed architecture strategies. It also includes a helpful limitations section."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report adheres strictly to the research topic of high-dimensional ANN search in vector databases without extraneous information."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is logically structured with clear headings, a concise executive summary, and a coherent flow from graph-based search to scaling strategies."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report maintains internal consistency throughout, with no contradictory statements between the executive summary, body sections, and conclusion."
+            }
+          },
+          "overall_feedback": "The report is technically sound and well-organized, accurately reflecting the provided source material. However, it failed the deterministic verification due to missing citations in the executive summary. To improve, the author must ensure that all factual claims, particularly those in the executive summary, are explicitly linked to their corresponding source citations.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 3658,
+          "cost_usd": 0.000405
+        },
+        "tokens_used": 10376,
+        "cost_usd": 0.001519
+      },
+      {
+        "round_number": 1,
+        "report": {
+          "topic": "High-Dimensional Approximate Nearest Neighbor Search in Vector Databases",
+          "title": "High-Dimensional Approximate Nearest Neighbor Search: Architectural Strategies and Performance Benchmarks",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "High-dimensional approximate nearest neighbor (ANN) search presents significant computational and storage challenges for modern vector databases. Hierarchical Navigable Small World (HNSW) graphs offer exceptional search performance, achieving 98% 10-recall at 12,000 queries per second on 768-dimensional benchmarks [cite_1]. Furthermore, for billion-scale multimodal search with 1536-dimensional vectors, memory overheads can be successfully mitigated using Product Quantization (PQ) combined with distributed architectures [cite_2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "HNSW achieves 98% 10-recall at 12,000 queries per second, outperforming tree-based KD-trees by two orders of magnitude.",
+                "citations": [
+                  {
+                    "citation_id": "cite_1",
+                    "source_id": "src_dist_03_a",
+                    "chunk_id": "chunk_dist_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Applying 8x Product Quantization (PQ) compresses vectors into compact 96-byte codes, fitting the index into 96 GB of memory.",
+                "citations": [
+                  {
+                    "citation_id": "cite_2",
+                    "source_id": "src_dist_03_b",
+                    "chunk_id": "chunk_dist_03_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_hnsw",
+              "title": "Graph-Based ANN Search with HNSW",
+              "content": "Hierarchical Navigable Small World (HNSW) graphs construct multi-layer proximity networks [cite_3]. Top layers utilize long-range edges for coarse exploration, while lower layers contain dense clusters optimized for fine-grained local search [cite_4]. When evaluated on 768-dimensional embedding benchmarks, HNSW outperforms tree-based KD-trees by two orders of magnitude [cite_5].",
+              "claims": [
+                {
+                  "claim_id": "claim_hnsw_1",
+                  "section_id": "sec_hnsw",
+                  "text": "HNSW graphs construct multi-layer proximity networks with long-range edges in top layers and dense clusters in lower layers.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_3",
+                      "source_id": "src_dist_03_a",
+                      "chunk_id": "chunk_dist_03_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    },
+                    {
+                      "citation_id": "cite_4",
+                      "source_id": "src_dist_03_a",
+                      "chunk_id": "chunk_dist_03_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_hnsw_2",
+                  "section_id": "sec_hnsw",
+                  "text": "HNSW outperforms tree-based KD-trees by two orders of magnitude on 768-dimensional embedding benchmarks.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_5",
+                      "source_id": "src_dist_03_a",
+                      "chunk_id": "chunk_dist_03_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            },
+            {
+              "section_id": "sec_scaling",
+              "title": "Billion-Scale Storage and Quantization",
+              "content": "Storing raw 1536-dimensional float32 vectors for 1 billion items requires 6.14 TB of RAM [cite_6]. To address this storage bottleneck, applying 8x Product Quantization (PQ) compresses vectors into compact 96-byte codes, reducing memory requirements to 96 GB with an acceptable 4.2% drop in top-10 recall [cite_7]. Additionally, distributing partitions across Raft consensus groups with asynchronous graph consolidation prevents index lockups during high-frequency ingestion [cite_8].",
+              "claims": [
+                {
+                  "claim_id": "claim_scale_1",
+                  "section_id": "sec_scaling",
+                  "text": "Storing raw 1536-dimensional float32 vectors for 1 billion items requires 6.14 TB of RAM.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_6",
+                      "source_id": "src_dist_03_b",
+                      "chunk_id": "chunk_dist_03_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_scale_2",
+                  "section_id": "sec_scaling",
+                  "text": "Applying 8x Product Quantization compresses vectors into 96-byte codes, fitting the index into 96 GB of memory with a 4.2% drop in top-10 recall.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_7",
+                      "source_id": "src_dist_03_b",
+                      "chunk_id": "chunk_dist_03_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_scale_3",
+                  "section_id": "sec_scaling",
+                  "text": "Distributing partitions across Raft consensus groups with asynchronous graph consolidation prevents index lockups during high-frequency ingestion.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_8",
+                      "source_id": "src_dist_03_b",
+                      "chunk_id": "chunk_dist_03_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion",
+            "content": "Balancing high recall, query throughput, and memory consumption remains essential for scalable vector database design. HNSW graphs deliver outstanding search speeds and accuracy, while techniques such as Product Quantization and distributed consensus groups enable massive billion-scale datasets to run efficiently [cite_9].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Combining HNSW graphs, Product Quantization, and distributed consensus allows massive billion-scale datasets to run efficiently.",
+                "citations": [
+                  {
+                    "citation_id": "cite_9",
+                    "source_id": "src_dist_03_b",
+                    "chunk_id": "chunk_dist_03_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Performance data is limited to 768-dimensional and 1536-dimensional embedding benchmarks provided in the source context.",
+            "Evaluation metrics are restricted to top-10 recall, query throughput, and raw memory footprint calculations."
+          ],
+          "version": 2,
+          "created_by": "revision_llm",
+          "created_at": "2023-10-26T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 8,
+          "total_citations": 9,
+          "passage_matches": [],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The cited chunk explicitly states that HNSW achieves 98% 10-recall at 12,000 queries per second and outperforms KD-trees by two orders of magnitude.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The cited chunk confirms that applying 8x Product Quantization compresses vectors into 96-byte codes and fits the index into 96 GB of memory.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_hnsw_1",
+              "section_id": "sec_hnsw",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that HNSW graphs construct multi-layer proximity networks where top layers feature long-range edges and lower layers contain dense clusters.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_1",
+                "chunk_dist_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_hnsw_2",
+              "section_id": "sec_hnsw",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that on 768-dimensional embedding benchmarks, HNSW outperforms tree-based KD-trees by two orders of magnitude.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_scale_1",
+              "section_id": "sec_scaling",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source explicitly states that storing raw 1536-dimensional float32 vectors for 1 billion items requires 6.14 TB of RAM.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_scale_2",
+              "section_id": "sec_scaling",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms that 8x Product Quantization compresses vectors into 96-byte codes, fits the index into 96 GB of memory, and results in a 4.2% drop in top-10 recall.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_scale_3",
+              "section_id": "sec_scaling",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source states that distributing partitions across Raft consensus groups with asynchronous graph consolidation prevents index lockups during high-frequency ingestion.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that Product Quantization (PQ) enables billion-scale datasets to fit into memory and that distributing partitions across Raft consensus groups prevents lockups during ingestion, supporting the claim that these techniques allow for efficient operation of massive datasets.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec' contains ungrounded factual assertion in prose not captured as a claim: 'HNSW performance is evaluated on 768-dimensional benchmarks.'",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "HNSW performance is evaluated on 768-dimensional benchmarks."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-002",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec' contains ungrounded factual assertion in prose not captured as a claim: 'Billion-scale multimodal search utilizes 1536-dimensional vectors.'",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Billion-scale multimodal search utilizes 1536-dimensional vectors."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-003",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec' contains ungrounded factual assertion in prose not captured as a claim: 'Memory overheads for billion-scale search are mitigated using distributed architectures.'",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Memory overheads for billion-scale search are mitigated using distributed architectures."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-004",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'HNSW graphs deliver outstanding search speeds and accuracy.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "HNSW graphs deliver outstanding search speeds and accuracy."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 4,
+          "minor_count": 0,
+          "tokens_used": 5058,
+          "cost_usd": 0.000619
+        },
+        "judge_verdict": {
+          "composite_score": 0.9925,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All factual claims regarding HNSW performance metrics, memory requirements for 1536-dimensional vectors, and the benefits of PQ and Raft consensus are accurately derived from the provided source contexts."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every claim made in the report is directly supported by the provided source chunks. No external or unverified information was introduced."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are correctly mapped to the relevant source IDs and chunk IDs. The attribution is precise and consistent throughout the document."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.95,
+              "passed": true,
+              "reasoning": "The report covers the core aspects of the prompt, including HNSW architecture, storage challenges, and scaling strategies. It appropriately includes a limitations section to acknowledge the scope of the provided data."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report remains strictly focused on high-dimensional ANN search and vector database architectures, adhering perfectly to the research topic."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is logically structured with a clear executive summary, distinct sections for graph-based search and scaling, and a concise conclusion. The tone is professional and academic."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally coherent, with no contradictions between the executive summary, body sections, and the conclusion."
+            }
+          },
+          "overall_feedback": "This is an exemplary research report. It demonstrates high precision in synthesizing technical information from the provided sources, maintains a professional tone, and adheres strictly to the requested constraints. The inclusion of a limitations section adds significant value by contextualizing the findings. No improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 3762,
+          "cost_usd": 0.000411
+        },
+        "tokens_used": 14354,
+        "cost_usd": 0.001925
+      },
+      {
+        "round_number": 2,
+        "report": {
+          "topic": "High-Dimensional Approximate Nearest Neighbor Search in Vector Databases",
+          "title": "High-Dimensional Approximate Nearest Neighbor Search: Architectural Strategies and Performance Benchmarks",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "High-dimensional approximate nearest neighbor (ANN) search presents significant computational and storage challenges for modern vector databases. Hierarchical Navigable Small World (HNSW) graphs offer exceptional search performance, achieving 98% 10-recall at 12,000 queries per second when evaluated on 768-dimensional benchmarks [cite_1]. Furthermore, billion-scale multimodal search utilizes 1536-dimensional vectors [cite_2], where memory overheads are mitigated using distributed architectures and Product Quantization [cite_3].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "HNSW performance is evaluated on 768-dimensional benchmarks achieving 98% 10-recall at 12,000 queries per second.",
+                "citations": [
+                  {
+                    "citation_id": "cite_1",
+                    "source_id": "src_dist_03_a",
+                    "chunk_id": "chunk_dist_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Billion-scale multimodal search utilizes 1536-dimensional vectors.",
+                "citations": [
+                  {
+                    "citation_id": "cite_2",
+                    "source_id": "src_dist_03_b",
+                    "chunk_id": "chunk_dist_03_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_3",
+                "section_id": "sec_exec",
+                "text": "Memory overheads for billion-scale search are mitigated using distributed architectures combined with Product Quantization.",
+                "citations": [
+                  {
+                    "citation_id": "cite_3",
+                    "source_id": "src_dist_03_b",
+                    "chunk_id": "chunk_dist_03_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_hnsw",
+              "title": "Graph-Based ANN Search with HNSW",
+              "content": "Hierarchical Navigable Small World (HNSW) graphs construct multi-layer proximity networks [cite_4]. Top layers utilize long-range edges for coarse exploration, while lower layers contain dense clusters optimized for fine-grained local search [cite_5]. When evaluated on 768-dimensional embedding benchmarks, HNSW outperforms tree-based KD-trees by two orders of magnitude [cite_6].",
+              "claims": [
+                {
+                  "claim_id": "claim_hnsw_1",
+                  "section_id": "sec_hnsw",
+                  "text": "HNSW graphs construct multi-layer proximity networks with long-range edges in top layers and dense clusters in lower layers.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_4",
+                      "source_id": "src_dist_03_a",
+                      "chunk_id": "chunk_dist_03_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    },
+                    {
+                      "citation_id": "cite_5",
+                      "source_id": "src_dist_03_a",
+                      "chunk_id": "chunk_dist_03_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_hnsw_2",
+                  "section_id": "sec_hnsw",
+                  "text": "HNSW outperforms tree-based KD-trees by two orders of magnitude on 768-dimensional embedding benchmarks.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_6",
+                      "source_id": "src_dist_03_a",
+                      "chunk_id": "chunk_dist_03_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            },
+            {
+              "section_id": "sec_scaling",
+              "title": "Billion-Scale Storage and Quantization",
+              "content": "Storing raw 1536-dimensional float32 vectors for 1 billion items requires 6.14 TB of RAM [cite_7]. To address this storage bottleneck, applying 8x Product Quantization (PQ) compresses vectors into compact 96-byte codes, reducing memory requirements to 96 GB with an acceptable 4.2% drop in top-10 recall [cite_8]. Additionally, distributing partitions across Raft consensus groups with asynchronous graph consolidation prevents index lockups during high-frequency ingestion [cite_9].",
+              "claims": [
+                {
+                  "claim_id": "claim_scale_1",
+                  "section_id": "sec_scaling",
+                  "text": "Storing raw 1536-dimensional float32 vectors for 1 billion items requires 6.14 TB of RAM.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_7",
+                      "source_id": "src_dist_03_b",
+                      "chunk_id": "chunk_dist_03_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_scale_2",
+                  "section_id": "sec_scaling",
+                  "text": "Applying 8x Product Quantization compresses vectors into 96-byte codes, fitting the index into 96 GB of memory with a 4.2% drop in top-10 recall.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_8",
+                      "source_id": "src_dist_03_b",
+                      "chunk_id": "chunk_dist_03_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_scale_3",
+                  "section_id": "sec_scaling",
+                  "text": "Distributing partitions across Raft consensus groups with asynchronous graph consolidation prevents index lockups during high-frequency ingestion.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_9",
+                      "source_id": "src_dist_03_b",
+                      "chunk_id": "chunk_dist_03_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion",
+            "content": "Balancing high recall, query throughput, and memory consumption remains essential for scalable vector database design. HNSW graphs deliver outstanding search speeds and accuracy [cite_10], while techniques such as Product Quantization and distributed consensus groups enable massive billion-scale datasets to run efficiently [cite_11].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "HNSW graphs deliver outstanding search speeds and accuracy.",
+                "citations": [
+                  {
+                    "citation_id": "cite_10",
+                    "source_id": "src_dist_03_a",
+                    "chunk_id": "chunk_dist_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "Combining HNSW graphs, Product Quantization, and distributed consensus allows massive billion-scale datasets to run efficiently.",
+                "citations": [
+                  {
+                    "citation_id": "cite_11",
+                    "source_id": "src_dist_03_b",
+                    "chunk_id": "chunk_dist_03_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Performance data is limited to 768-dimensional and 1536-dimensional embedding benchmarks provided in the source context.",
+            "Evaluation metrics are restricted to top-10 recall, query throughput, and raw memory footprint calculations."
+          ],
+          "version": 3,
+          "created_by": "revision_llm",
+          "created_at": "2023-10-26T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 10,
+          "total_citations": 11,
+          "passage_matches": [],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": false,
+          "grounding_score": 0.95,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that HNSW achieves 98% 10-recall at 12,000 queries per second on 768-dimensional embedding benchmarks.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "NEUTRAL",
+              "score": 0.5,
+              "reasoning": "The source chunk mentions that storing 1536-dimensional float32 vectors for 1 billion items is a scenario requiring significant RAM, but it does not explicitly label this as 'multimodal search'.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_3",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that Product Quantization is used to compress vectors to reduce memory usage and that distributing partitions is used to manage high-frequency ingestion.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_hnsw_1",
+              "section_id": "sec_hnsw",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source explicitly states that HNSW graphs construct multi-layer proximity networks where top layers feature long-range edges and lower layers contain dense clusters.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_1",
+                "chunk_dist_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_hnsw_2",
+              "section_id": "sec_hnsw",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms that on 768-dimensional embedding benchmarks, HNSW outperforms tree-based KD-trees by two orders of magnitude.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_scale_1",
+              "section_id": "sec_scaling",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source explicitly states that storing raw 1536-dimensional float32 vectors for 1 billion items requires 6.14 TB of RAM.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_scale_2",
+              "section_id": "sec_scaling",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms that 8x Product Quantization compresses vectors into 96-byte codes, fits the index into 96 GB of memory, and results in a 4.2% drop in top-10 recall.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_scale_3",
+              "section_id": "sec_scaling",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source states that distributing partitions across Raft consensus groups with asynchronous graph consolidation prevents index lockups during high-frequency ingestion.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source states that HNSW achieves 98% 10-recall and outperforms KD-trees by two orders of magnitude in query speed, which supports the claim of outstanding speed and accuracy.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms that Product Quantization enables billion-scale datasets to fit into memory with acceptable recall loss, and distributed Raft consensus prevents lockups during high-frequency ingestion, supporting efficient operation.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Claim 'claim_exec_2' is only weakly supported or neutral with respect to cited evidence: The source chunk mentions that storing 1536-dimensional float32 vectors for 1 billion items is a scenario requiring significant RAM, but it does not explicitly label this as 'multimodal search'.",
+              "section_id": "sec_exec",
+              "claim_id": "claim_exec_2",
+              "citation_id": null,
+              "details": {
+                "reasoning": "The source chunk mentions that storing 1536-dimensional float32 vectors for 1 billion items is a scenario requiring significant RAM, but it does not explicitly label this as 'multimodal search'."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-002",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'Balancing high recall, query throughput, and memory consumption remains essential for scalable vector database design.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Balancing high recall, query throughput, and memory consumption remains essential for scalable vector database design."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 2,
+          "minor_count": 0,
+          "tokens_used": 5362,
+          "cost_usd": 0.000664
+        },
+        "judge_verdict": {
+          "composite_score": 0.985,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All factual claims regarding HNSW performance, vector dimensions, memory requirements, and quantization impacts are accurately derived from the provided source contexts."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every claim made in the report is directly supported by the provided source chunks. No external or hallucinated information was introduced."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are correctly mapped to the relevant source IDs and chunks. The attribution is precise and consistent throughout the document."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.9,
+              "passed": true,
+              "reasoning": "The report covers the key aspects of the prompt, including HNSW architecture, storage challenges, and mitigation strategies. It appropriately includes a limitations section."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report remains strictly focused on high-dimensional ANN search and vector database architectures as requested."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is logically structured with a clear executive summary, distinct technical sections, and a concise conclusion."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report maintains internal coherence, with no contradictory statements across the various sections."
+            }
+          },
+          "overall_feedback": "This is an excellent, highly accurate, and well-structured report. It effectively synthesizes the provided technical sources to address the research topic. The grounding is flawless, and the organization facilitates easy reading. No significant improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 4000,
+          "cost_usd": 0.000417
+        },
+        "tokens_used": 15069,
+        "cost_usd": 0.002054
+      },
+      {
+        "round_number": 3,
+        "report": {
+          "topic": "High-Dimensional Approximate Nearest Neighbor Search in Vector Databases",
+          "title": "High-Dimensional Approximate Nearest Neighbor Search: Architectural Strategies and Performance Benchmarks",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "High-dimensional approximate nearest neighbor (ANN) search presents significant computational and storage challenges for modern vector databases. Hierarchical Navigable Small World (HNSW) graphs offer exceptional search performance, achieving 98% 10-recall at 12,000 queries per second when evaluated on 768-dimensional benchmarks [cite_1]. Furthermore, handling 1536-dimensional vectors for 1 billion items requires significant storage [cite_2], where memory overheads are mitigated using distributed architectures and Product Quantization [cite_3].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "HNSW performance is evaluated on 768-dimensional benchmarks achieving 98% 10-recall at 12,000 queries per second.",
+                "citations": [
+                  {
+                    "citation_id": "cite_1",
+                    "source_id": "src_dist_03_a",
+                    "chunk_id": "chunk_dist_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Storing 1536-dimensional vectors for 1 billion items requires significant memory capacity.",
+                "citations": [
+                  {
+                    "citation_id": "cite_2",
+                    "source_id": "src_dist_03_b",
+                    "chunk_id": "chunk_dist_03_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_3",
+                "section_id": "sec_exec",
+                "text": "Memory overheads for billion-scale search are mitigated using distributed architectures combined with Product Quantization.",
+                "citations": [
+                  {
+                    "citation_id": "cite_3",
+                    "source_id": "src_dist_03_b",
+                    "chunk_id": "chunk_dist_03_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_hnsw",
+              "title": "Graph-Based ANN Search with HNSW",
+              "content": "Hierarchical Navigable Small World (HNSW) graphs construct multi-layer proximity networks [cite_4]. Top layers utilize long-range edges for coarse exploration, while lower layers contain dense clusters optimized for fine-grained local search [cite_5]. When evaluated on 768-dimensional embedding benchmarks, HNSW outperforms tree-based KD-trees by two orders of magnitude [cite_6].",
+              "claims": [
+                {
+                  "claim_id": "claim_hnsw_1",
+                  "section_id": "sec_hnsw",
+                  "text": "HNSW graphs construct multi-layer proximity networks with long-range edges in top layers and dense clusters in lower layers.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_4",
+                      "source_id": "src_dist_03_a",
+                      "chunk_id": "chunk_dist_03_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    },
+                    {
+                      "citation_id": "cite_5",
+                      "source_id": "src_dist_03_a",
+                      "chunk_id": "chunk_dist_03_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_hnsw_2",
+                  "section_id": "sec_hnsw",
+                  "text": "HNSW outperforms tree-based KD-trees by two orders of magnitude on 768-dimensional embedding benchmarks.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_6",
+                      "source_id": "src_dist_03_a",
+                      "chunk_id": "chunk_dist_03_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            },
+            {
+              "section_id": "sec_scaling",
+              "title": "Billion-Scale Storage and Quantization",
+              "content": "Storing raw 1536-dimensional float32 vectors for 1 billion items requires 6.14 TB of RAM [cite_7]. To address this storage bottleneck, applying 8x Product Quantization (PQ) compresses vectors into compact 96-byte codes, reducing memory requirements to 96 GB with an acceptable 4.2% drop in top-10 recall [cite_8]. Additionally, distributing partitions across Raft consensus groups with asynchronous graph consolidation prevents index lockups during high-frequency ingestion [cite_9].",
+              "claims": [
+                {
+                  "claim_id": "claim_scale_1",
+                  "section_id": "sec_scaling",
+                  "text": "Storing raw 1536-dimensional float32 vectors for 1 billion items requires 6.14 TB of RAM.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_7",
+                      "source_id": "src_dist_03_b",
+                      "chunk_id": "chunk_dist_03_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_scale_2",
+                  "section_id": "sec_scaling",
+                  "text": "Applying 8x Product Quantization compresses vectors into 96-byte codes, fitting the index into 96 GB of memory with a 4.2% drop in top-10 recall.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_8",
+                      "source_id": "src_dist_03_b",
+                      "chunk_id": "chunk_dist_03_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_scale_3",
+                  "section_id": "sec_scaling",
+                  "text": "Distributing partitions across Raft consensus groups with asynchronous graph consolidation prevents index lockups during high-frequency ingestion.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_9",
+                      "source_id": "src_dist_03_b",
+                      "chunk_id": "chunk_dist_03_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion",
+            "content": "Balancing high recall, query throughput, and memory consumption remains essential for scalable vector database design [cite_12]. HNSW graphs deliver outstanding search speeds and accuracy [cite_10], while techniques such as Product Quantization and distributed consensus groups enable massive billion-scale datasets to run efficiently [cite_11].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_0",
+                "section_id": "sec_conclusion",
+                "text": "Balancing high recall, query throughput, and memory consumption remains essential for scalable vector database design.",
+                "citations": [
+                  {
+                    "citation_id": "cite_12",
+                    "source_id": "src_dist_03_b",
+                    "chunk_id": "chunk_dist_03_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "HNSW graphs deliver outstanding search speeds and accuracy.",
+                "citations": [
+                  {
+                    "citation_id": "cite_10",
+                    "source_id": "src_dist_03_a",
+                    "chunk_id": "chunk_dist_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "Combining HNSW graphs, Product Quantization, and distributed consensus allows massive billion-scale datasets to run efficiently.",
+                "citations": [
+                  {
+                    "citation_id": "cite_11",
+                    "source_id": "src_dist_03_b",
+                    "chunk_id": "chunk_dist_03_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Performance data is limited to 768-dimensional and 1536-dimensional embedding benchmarks provided in the source context.",
+            "Evaluation metrics are restricted to top-10 recall, query throughput, and raw memory footprint calculations."
+          ],
+          "version": 4,
+          "created_by": "revision_llm",
+          "created_at": "2023-10-27T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 11,
+          "total_citations": 12,
+          "passage_matches": [],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": false,
+          "grounding_score": 0.9545,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that HNSW achieves 98% 10-recall at 12,000 queries per second on 768-dimensional embedding benchmarks.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that storing 1 billion 1536-dimensional float32 vectors requires 6.14 TB of RAM, which constitutes a significant memory capacity.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_3",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk describes using Product Quantization to compress vectors and distributing partitions across Raft consensus groups to manage index storage and ingestion, which supports the claim that these methods mitigate memory overheads.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_hnsw_1",
+              "section_id": "sec_hnsw",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that HNSW graphs construct multi-layer proximity networks where top layers feature long-range edges and lower layers contain dense clusters.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_1",
+                "chunk_dist_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_hnsw_2",
+              "section_id": "sec_hnsw",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that on 768-dimensional embedding benchmarks, HNSW outperforms tree-based KD-trees by two orders of magnitude.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_scale_1",
+              "section_id": "sec_scaling",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that storing raw 1536-dimensional float32 vectors for 1 billion items requires 6.14 TB of RAM.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_scale_2",
+              "section_id": "sec_scaling",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text confirms that 8x Product Quantization compresses vectors into 96-byte codes, resulting in a 96 GB index size and a 4.2% drop in top-10 recall.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_scale_3",
+              "section_id": "sec_scaling",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text directly states that distributing partitions across Raft consensus groups with asynchronous graph consolidation prevents index lockups during high-frequency ingestion.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_0",
+              "section_id": "sec_conclusion",
+              "entailment": "NEUTRAL",
+              "score": 0.5,
+              "reasoning": "The source chunk discusses memory consumption, recall, and ingestion, but it does not explicitly state that balancing these factors is 'essential' for scalable vector database design.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms HNSW achieves 98% 10-recall at 12,000 queries per second, which supports the claim of outstanding search speeds and accuracy.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk describes using Product Quantization for memory efficiency and Raft consensus groups for distributed ingestion at a billion-item scale, supporting the combination of these techniques for efficiency.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Claim 'claim_conc_0' is only weakly supported or neutral with respect to cited evidence: The source chunk discusses memory consumption, recall, and ingestion, but it does not explicitly state that balancing these factors is 'essential' for scalable vector database design.",
+              "section_id": "sec_conclusion",
+              "claim_id": "claim_conc_0",
+              "citation_id": null,
+              "details": {
+                "reasoning": "The source chunk discusses memory consumption, recall, and ingestion, but it does not explicitly state that balancing these factors is 'essential' for scalable vector database design."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 1,
+          "minor_count": 0,
+          "tokens_used": 5508,
+          "cost_usd": 0.000687
+        },
+        "judge_verdict": {
+          "composite_score": 0.9925,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All claims made in the report are directly supported by the provided source contexts. No hallucinations or factual errors were detected."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every factual assertion is explicitly grounded in the provided source material (src_dist_03_a and src_dist_03_b)."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are correctly mapped to the relevant source chunks. The report uses a consistent citation format that accurately reflects the source content."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.95,
+              "passed": true,
+              "reasoning": "The report covers the core aspects of the research topic (HNSW, storage, and scaling) comprehensively based on the provided sources. It also includes a helpful limitations section."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report remains strictly focused on the research topic of high-dimensional ANN search and vector database architectures without extraneous information."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is exceptionally well-organized with a clear executive summary, logical section headers, and a concise conclusion."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally consistent, with no contradictory statements across sections."
+            }
+          },
+          "overall_feedback": "This is an exemplary research report. It demonstrates high precision in technical reporting, excellent grounding in the provided source material, and a clear, professional structure. The report effectively synthesizes complex technical concepts like HNSW graphs, Product Quantization, and distributed consensus mechanisms. No significant improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 4196,
+          "cost_usd": 0.000438
+        },
+        "tokens_used": 15733,
+        "cost_usd": 0.00216
+      }
+    ],
+    "budget_summary": {
+      "used_tokens": 55532,
+      "max_tokens": 50000,
+      "used_cost_usd": 0.007658,
+      "max_cost_usd": 0.2,
+      "elapsed_seconds": 295.813,
+      "max_seconds": 1800.0,
+      "rounds_executed": 3,
+      "max_rounds": 3,
+      "is_exhausted": true,
+      "exhaustion_reason": "TOKENS_EXHAUSTED (used 55532 >= max 50000)"
+    },
+    "rounds_executed": 3,
+    "termination_reason": "BUDGET_EXCEEDED: TOKENS_EXHAUSTED (used 55532 >= max 50000)",
+    "acceptance_threshold": 0.85,
+    "acceptance_result": {
+      "status": "UNRESOLVED",
+      "is_accepted": false,
+      "best_candidate": {
+        "round_number": 3,
+        "report": {
+          "topic": "High-Dimensional Approximate Nearest Neighbor Search in Vector Databases",
+          "title": "High-Dimensional Approximate Nearest Neighbor Search: Architectural Strategies and Performance Benchmarks",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "High-dimensional approximate nearest neighbor (ANN) search presents significant computational and storage challenges for modern vector databases. Hierarchical Navigable Small World (HNSW) graphs offer exceptional search performance, achieving 98% 10-recall at 12,000 queries per second when evaluated on 768-dimensional benchmarks [cite_1]. Furthermore, handling 1536-dimensional vectors for 1 billion items requires significant storage [cite_2], where memory overheads are mitigated using distributed architectures and Product Quantization [cite_3].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "HNSW performance is evaluated on 768-dimensional benchmarks achieving 98% 10-recall at 12,000 queries per second.",
+                "citations": [
+                  {
+                    "citation_id": "cite_1",
+                    "source_id": "src_dist_03_a",
+                    "chunk_id": "chunk_dist_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Storing 1536-dimensional vectors for 1 billion items requires significant memory capacity.",
+                "citations": [
+                  {
+                    "citation_id": "cite_2",
+                    "source_id": "src_dist_03_b",
+                    "chunk_id": "chunk_dist_03_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_3",
+                "section_id": "sec_exec",
+                "text": "Memory overheads for billion-scale search are mitigated using distributed architectures combined with Product Quantization.",
+                "citations": [
+                  {
+                    "citation_id": "cite_3",
+                    "source_id": "src_dist_03_b",
+                    "chunk_id": "chunk_dist_03_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_hnsw",
+              "title": "Graph-Based ANN Search with HNSW",
+              "content": "Hierarchical Navigable Small World (HNSW) graphs construct multi-layer proximity networks [cite_4]. Top layers utilize long-range edges for coarse exploration, while lower layers contain dense clusters optimized for fine-grained local search [cite_5]. When evaluated on 768-dimensional embedding benchmarks, HNSW outperforms tree-based KD-trees by two orders of magnitude [cite_6].",
+              "claims": [
+                {
+                  "claim_id": "claim_hnsw_1",
+                  "section_id": "sec_hnsw",
+                  "text": "HNSW graphs construct multi-layer proximity networks with long-range edges in top layers and dense clusters in lower layers.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_4",
+                      "source_id": "src_dist_03_a",
+                      "chunk_id": "chunk_dist_03_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    },
+                    {
+                      "citation_id": "cite_5",
+                      "source_id": "src_dist_03_a",
+                      "chunk_id": "chunk_dist_03_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_hnsw_2",
+                  "section_id": "sec_hnsw",
+                  "text": "HNSW outperforms tree-based KD-trees by two orders of magnitude on 768-dimensional embedding benchmarks.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_6",
+                      "source_id": "src_dist_03_a",
+                      "chunk_id": "chunk_dist_03_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            },
+            {
+              "section_id": "sec_scaling",
+              "title": "Billion-Scale Storage and Quantization",
+              "content": "Storing raw 1536-dimensional float32 vectors for 1 billion items requires 6.14 TB of RAM [cite_7]. To address this storage bottleneck, applying 8x Product Quantization (PQ) compresses vectors into compact 96-byte codes, reducing memory requirements to 96 GB with an acceptable 4.2% drop in top-10 recall [cite_8]. Additionally, distributing partitions across Raft consensus groups with asynchronous graph consolidation prevents index lockups during high-frequency ingestion [cite_9].",
+              "claims": [
+                {
+                  "claim_id": "claim_scale_1",
+                  "section_id": "sec_scaling",
+                  "text": "Storing raw 1536-dimensional float32 vectors for 1 billion items requires 6.14 TB of RAM.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_7",
+                      "source_id": "src_dist_03_b",
+                      "chunk_id": "chunk_dist_03_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_scale_2",
+                  "section_id": "sec_scaling",
+                  "text": "Applying 8x Product Quantization compresses vectors into 96-byte codes, fitting the index into 96 GB of memory with a 4.2% drop in top-10 recall.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_8",
+                      "source_id": "src_dist_03_b",
+                      "chunk_id": "chunk_dist_03_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_scale_3",
+                  "section_id": "sec_scaling",
+                  "text": "Distributing partitions across Raft consensus groups with asynchronous graph consolidation prevents index lockups during high-frequency ingestion.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_9",
+                      "source_id": "src_dist_03_b",
+                      "chunk_id": "chunk_dist_03_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion",
+            "content": "Balancing high recall, query throughput, and memory consumption remains essential for scalable vector database design [cite_12]. HNSW graphs deliver outstanding search speeds and accuracy [cite_10], while techniques such as Product Quantization and distributed consensus groups enable massive billion-scale datasets to run efficiently [cite_11].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_0",
+                "section_id": "sec_conclusion",
+                "text": "Balancing high recall, query throughput, and memory consumption remains essential for scalable vector database design.",
+                "citations": [
+                  {
+                    "citation_id": "cite_12",
+                    "source_id": "src_dist_03_b",
+                    "chunk_id": "chunk_dist_03_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "HNSW graphs deliver outstanding search speeds and accuracy.",
+                "citations": [
+                  {
+                    "citation_id": "cite_10",
+                    "source_id": "src_dist_03_a",
+                    "chunk_id": "chunk_dist_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "Combining HNSW graphs, Product Quantization, and distributed consensus allows massive billion-scale datasets to run efficiently.",
+                "citations": [
+                  {
+                    "citation_id": "cite_11",
+                    "source_id": "src_dist_03_b",
+                    "chunk_id": "chunk_dist_03_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Performance data is limited to 768-dimensional and 1536-dimensional embedding benchmarks provided in the source context.",
+            "Evaluation metrics are restricted to top-10 recall, query throughput, and raw memory footprint calculations."
+          ],
+          "version": 4,
+          "created_by": "revision_llm",
+          "created_at": "2023-10-27T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 11,
+          "total_citations": 12,
+          "passage_matches": [],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": false,
+          "grounding_score": 0.9545,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that HNSW achieves 98% 10-recall at 12,000 queries per second on 768-dimensional embedding benchmarks.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that storing 1 billion 1536-dimensional float32 vectors requires 6.14 TB of RAM, which constitutes a significant memory capacity.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_3",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk describes using Product Quantization to compress vectors and distributing partitions across Raft consensus groups to manage index storage and ingestion, which supports the claim that these methods mitigate memory overheads.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_hnsw_1",
+              "section_id": "sec_hnsw",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that HNSW graphs construct multi-layer proximity networks where top layers feature long-range edges and lower layers contain dense clusters.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_1",
+                "chunk_dist_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_hnsw_2",
+              "section_id": "sec_hnsw",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that on 768-dimensional embedding benchmarks, HNSW outperforms tree-based KD-trees by two orders of magnitude.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_scale_1",
+              "section_id": "sec_scaling",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that storing raw 1536-dimensional float32 vectors for 1 billion items requires 6.14 TB of RAM.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_scale_2",
+              "section_id": "sec_scaling",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text confirms that 8x Product Quantization compresses vectors into 96-byte codes, resulting in a 96 GB index size and a 4.2% drop in top-10 recall.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_scale_3",
+              "section_id": "sec_scaling",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text directly states that distributing partitions across Raft consensus groups with asynchronous graph consolidation prevents index lockups during high-frequency ingestion.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_0",
+              "section_id": "sec_conclusion",
+              "entailment": "NEUTRAL",
+              "score": 0.5,
+              "reasoning": "The source chunk discusses memory consumption, recall, and ingestion, but it does not explicitly state that balancing these factors is 'essential' for scalable vector database design.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms HNSW achieves 98% 10-recall at 12,000 queries per second, which supports the claim of outstanding search speeds and accuracy.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk describes using Product Quantization for memory efficiency and Raft consensus groups for distributed ingestion at a billion-item scale, supporting the combination of these techniques for efficiency.",
+              "cited_chunk_ids": [
+                "chunk_dist_03_2"
+              ]
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Claim 'claim_conc_0' is only weakly supported or neutral with respect to cited evidence: The source chunk discusses memory consumption, recall, and ingestion, but it does not explicitly state that balancing these factors is 'essential' for scalable vector database design.",
+              "section_id": "sec_conclusion",
+              "claim_id": "claim_conc_0",
+              "citation_id": null,
+              "details": {
+                "reasoning": "The source chunk discusses memory consumption, recall, and ingestion, but it does not explicitly state that balancing these factors is 'essential' for scalable vector database design."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 1,
+          "minor_count": 0,
+          "tokens_used": 5508,
+          "cost_usd": 0.000687
+        },
+        "judge_verdict": {
+          "composite_score": 0.9925,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All claims made in the report are directly supported by the provided source contexts. No hallucinations or factual errors were detected."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every factual assertion is explicitly grounded in the provided source material (src_dist_03_a and src_dist_03_b)."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are correctly mapped to the relevant source chunks. The report uses a consistent citation format that accurately reflects the source content."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.95,
+              "passed": true,
+              "reasoning": "The report covers the core aspects of the research topic (HNSW, storage, and scaling) comprehensively based on the provided sources. It also includes a helpful limitations section."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report remains strictly focused on the research topic of high-dimensional ANN search and vector database architectures without extraneous information."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is exceptionally well-organized with a clear executive summary, logical section headers, and a concise conclusion."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally consistent, with no contradictory statements across sections."
+            }
+          },
+          "overall_feedback": "This is an exemplary research report. It demonstrates high precision in technical reporting, excellent grounding in the provided source material, and a clear, professional structure. The report effectively synthesizes complex technical concepts like HNSW graphs, Product Quantization, and distributed consensus mechanisms. No significant improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 4196,
+          "cost_usd": 0.000438
+        },
+        "tokens_used": 15733,
+        "cost_usd": 0.00216
+      },
+      "rationale": "Candidate did not meet automated acceptance criteria: Unresolved major factual grounding defects remain (1 major grounding defects)",
+      "unresolved_reasons": [
+        "Unresolved major factual grounding defects remain (1 major grounding defects)"
+      ],
+      "review_packet": {
+        "run_id": "run_08f5106357b4",
+        "topic": "High-Dimensional Approximate Nearest Neighbor Search in Vector Databases",
+        "best_candidate": {
+          "topic": "High-Dimensional Approximate Nearest Neighbor Search in Vector Databases",
+          "title": "High-Dimensional Approximate Nearest Neighbor Search: Architectural Strategies and Performance Benchmarks",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "High-dimensional approximate nearest neighbor (ANN) search presents significant computational and storage challenges for modern vector databases. Hierarchical Navigable Small World (HNSW) graphs offer exceptional search performance, achieving 98% 10-recall at 12,000 queries per second when evaluated on 768-dimensional benchmarks [cite_1]. Furthermore, handling 1536-dimensional vectors for 1 billion items requires significant storage [cite_2], where memory overheads are mitigated using distributed architectures and Product Quantization [cite_3].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "HNSW performance is evaluated on 768-dimensional benchmarks achieving 98% 10-recall at 12,000 queries per second.",
+                "citations": [
+                  {
+                    "citation_id": "cite_1",
+                    "source_id": "src_dist_03_a",
+                    "chunk_id": "chunk_dist_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Storing 1536-dimensional vectors for 1 billion items requires significant memory capacity.",
+                "citations": [
+                  {
+                    "citation_id": "cite_2",
+                    "source_id": "src_dist_03_b",
+                    "chunk_id": "chunk_dist_03_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_3",
+                "section_id": "sec_exec",
+                "text": "Memory overheads for billion-scale search are mitigated using distributed architectures combined with Product Quantization.",
+                "citations": [
+                  {
+                    "citation_id": "cite_3",
+                    "source_id": "src_dist_03_b",
+                    "chunk_id": "chunk_dist_03_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_hnsw",
+              "title": "Graph-Based ANN Search with HNSW",
+              "content": "Hierarchical Navigable Small World (HNSW) graphs construct multi-layer proximity networks [cite_4]. Top layers utilize long-range edges for coarse exploration, while lower layers contain dense clusters optimized for fine-grained local search [cite_5]. When evaluated on 768-dimensional embedding benchmarks, HNSW outperforms tree-based KD-trees by two orders of magnitude [cite_6].",
+              "claims": [
+                {
+                  "claim_id": "claim_hnsw_1",
+                  "section_id": "sec_hnsw",
+                  "text": "HNSW graphs construct multi-layer proximity networks with long-range edges in top layers and dense clusters in lower layers.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_4",
+                      "source_id": "src_dist_03_a",
+                      "chunk_id": "chunk_dist_03_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    },
+                    {
+                      "citation_id": "cite_5",
+                      "source_id": "src_dist_03_a",
+                      "chunk_id": "chunk_dist_03_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_hnsw_2",
+                  "section_id": "sec_hnsw",
+                  "text": "HNSW outperforms tree-based KD-trees by two orders of magnitude on 768-dimensional embedding benchmarks.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_6",
+                      "source_id": "src_dist_03_a",
+                      "chunk_id": "chunk_dist_03_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            },
+            {
+              "section_id": "sec_scaling",
+              "title": "Billion-Scale Storage and Quantization",
+              "content": "Storing raw 1536-dimensional float32 vectors for 1 billion items requires 6.14 TB of RAM [cite_7]. To address this storage bottleneck, applying 8x Product Quantization (PQ) compresses vectors into compact 96-byte codes, reducing memory requirements to 96 GB with an acceptable 4.2% drop in top-10 recall [cite_8]. Additionally, distributing partitions across Raft consensus groups with asynchronous graph consolidation prevents index lockups during high-frequency ingestion [cite_9].",
+              "claims": [
+                {
+                  "claim_id": "claim_scale_1",
+                  "section_id": "sec_scaling",
+                  "text": "Storing raw 1536-dimensional float32 vectors for 1 billion items requires 6.14 TB of RAM.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_7",
+                      "source_id": "src_dist_03_b",
+                      "chunk_id": "chunk_dist_03_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_scale_2",
+                  "section_id": "sec_scaling",
+                  "text": "Applying 8x Product Quantization compresses vectors into 96-byte codes, fitting the index into 96 GB of memory with a 4.2% drop in top-10 recall.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_8",
+                      "source_id": "src_dist_03_b",
+                      "chunk_id": "chunk_dist_03_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_scale_3",
+                  "section_id": "sec_scaling",
+                  "text": "Distributing partitions across Raft consensus groups with asynchronous graph consolidation prevents index lockups during high-frequency ingestion.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_9",
+                      "source_id": "src_dist_03_b",
+                      "chunk_id": "chunk_dist_03_2",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion",
+            "content": "Balancing high recall, query throughput, and memory consumption remains essential for scalable vector database design [cite_12]. HNSW graphs deliver outstanding search speeds and accuracy [cite_10], while techniques such as Product Quantization and distributed consensus groups enable massive billion-scale datasets to run efficiently [cite_11].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_0",
+                "section_id": "sec_conclusion",
+                "text": "Balancing high recall, query throughput, and memory consumption remains essential for scalable vector database design.",
+                "citations": [
+                  {
+                    "citation_id": "cite_12",
+                    "source_id": "src_dist_03_b",
+                    "chunk_id": "chunk_dist_03_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "HNSW graphs deliver outstanding search speeds and accuracy.",
+                "citations": [
+                  {
+                    "citation_id": "cite_10",
+                    "source_id": "src_dist_03_a",
+                    "chunk_id": "chunk_dist_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "Combining HNSW graphs, Product Quantization, and distributed consensus allows massive billion-scale datasets to run efficiently.",
+                "citations": [
+                  {
+                    "citation_id": "cite_11",
+                    "source_id": "src_dist_03_b",
+                    "chunk_id": "chunk_dist_03_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Performance data is limited to 768-dimensional and 1536-dimensional embedding benchmarks provided in the source context.",
+            "Evaluation metrics are restricted to top-10 recall, query throughput, and raw memory footprint calculations."
+          ],
+          "version": 4,
+          "created_by": "revision_llm",
+          "created_at": "2023-10-27T00:00:00Z"
+        },
+        "best_candidate_version": 4,
+        "total_rounds_executed": 3,
+        "terminal_reason": "BUDGET_EXCEEDED: TOKENS_EXHAUSTED (used 55532 >= max 50000)",
+        "deterministic_passed": true,
+        "critical_defect_count": 0,
+        "major_defect_count": 1,
+        "rubric_scores": {
+          "factual_accuracy": 1.0,
+          "evidence_grounding": 1.0,
+          "citation_correctness": 1.0,
+          "completeness": 0.95,
+          "relevance": 1.0,
+          "clarity_organization": 1.0,
+          "logical_consistency": 1.0
+        },
+        "unresolved_critiques": [
+          {
+            "issue_id": "CRITIQUE-001",
+            "category": "factual_grounding",
+            "severity": "major",
+            "affected_section_id": "sec_conclusion",
+            "affected_claim_id": "claim_conc_0",
+            "explanation": "Claim 'claim_conc_0' is only weakly supported or neutral with respect to cited evidence: The source chunk discusses memory consumption, recall, and ingestion, but it does not explicitly state that balancing these factors is 'essential' for scalable vector database design.",
+            "supporting_source_ids": [],
+            "suggested_correction": "The cited source does not substantiate the specific claim. Either cite a source that directly proves the proposition, or soften the assertion to match the available evidence.",
+            "confidence": 0.95,
+            "is_resolved": false
+          }
+        ],
+        "requires_human_action": true,
+        "created_at": "2026-11-11T18:56:51.684062Z"
+      }
+    },
+    "learned_lessons_count": 0
+  }
+}

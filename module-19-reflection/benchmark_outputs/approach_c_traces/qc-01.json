@@ -1,0 +1,3030 @@
+{
+  "topic_id": "qc-01",
+  "topic_title": "Fault-Tolerant Quantum Error Correction in Neutral Atom Arrays",
+  "domain": "quantum_computing",
+  "recorded_at_utc": "2026-11-11T17:19:17.685890+00:00",
+  "rounds_executed": 3,
+  "best_round": 2,
+  "termination_reason": "CONSECUTIVE_REGRESSIONS_EXCEEDED (1 consecutive regressions)",
+  "is_accepted": false,
+  "terminal_status": "UNRESOLVED",
+  "blinded_composite_score": 0.9925,
+  "latency_seconds": 418.312,
+  "round_history": [
+    {
+      "round_number": 0,
+      "deterministic_passed": false,
+      "critical_defect_count": 0,
+      "major_defect_count": 7,
+      "grounding_score": 0.75,
+      "all_claims_grounded": false,
+      "composite_score": 0.8675,
+      "is_self_judged": false,
+      "tokens_used": 10527,
+      "cost_usd": 0.00157
+    },
+    {
+      "round_number": 1,
+      "deterministic_passed": true,
+      "critical_defect_count": 0,
+      "major_defect_count": 3,
+      "grounding_score": 1.0,
+      "all_claims_grounded": true,
+      "composite_score": 0.9925,
+      "is_self_judged": false,
+      "tokens_used": 14562,
+      "cost_usd": 0.001949
+    },
+    {
+      "round_number": 2,
+      "deterministic_passed": true,
+      "critical_defect_count": 0,
+      "major_defect_count": 1,
+      "grounding_score": 1.0,
+      "all_claims_grounded": true,
+      "composite_score": 0.9925,
+      "is_self_judged": false,
+      "tokens_used": 15166,
+      "cost_usd": 0.002105
+    },
+    {
+      "round_number": 3,
+      "deterministic_passed": true,
+      "critical_defect_count": 0,
+      "major_defect_count": 2,
+      "grounding_score": 1.0,
+      "all_claims_grounded": true,
+      "composite_score": 0.985,
+      "is_self_judged": false,
+      "tokens_used": 15431,
+      "cost_usd": 0.002141
+    }
+  ],
+  "budget_summary": {
+    "used_tokens": 55686,
+    "max_tokens": 50000,
+    "used_cost_usd": 0.007765,
+    "max_cost_usd": 0.2,
+    "elapsed_seconds": 414.805,
+    "max_seconds": 1800.0,
+    "rounds_executed": 3,
+    "max_rounds": 3,
+    "is_exhausted": true,
+    "exhaustion_reason": "TOKENS_EXHAUSTED (used 55686 >= max 50000)"
+  },
+  "reflection_run_result": {
+    "topic": "Fault-Tolerant Quantum Error Correction in Neutral Atom Arrays",
+    "best_candidate": {
+      "round_number": 2,
+      "report": {
+        "topic": "Fault-Tolerant Quantum Error Correction in Neutral Atom Arrays",
+        "title": "Fault-Tolerant Quantum Error Correction in Neutral Atom Arrays: Architectures, Gate Fidelities, and Surface Code Thresholds",
+        "executive_summary": {
+          "section_id": "sec_exec",
+          "title": "Executive Summary",
+          "content": "Neutral atom quantum processors employ optical tweezer arrays to manipulate rubidium and cesium atoms [cite_exec_c1]. Recent experiments achieve two-qubit Rydberg controlled-Z gate fidelities of 99.5% [cite_exec_c2], and surface code simulations demonstrate favorable fault-tolerance thresholds [cite_exec_c3].",
+          "claims": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "text": "Neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision.",
+              "citations": [
+                {
+                  "citation_id": "cite_exec_c1",
+                  "source_id": "src_qc_01_a",
+                  "chunk_id": "chunk_qc_01_1",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "text": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+              "citations": [
+                {
+                  "citation_id": "cite_exec_c2",
+                  "source_id": "src_qc_01_a",
+                  "chunk_id": "chunk_qc_01_1",
+                  "citation_type": "quotation",
+                  "quoted_passage": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_exec_3",
+              "section_id": "sec_exec",
+              "text": "Surface code simulations on neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic noise models.",
+              "citations": [
+                {
+                  "citation_id": "cite_exec_c3",
+                  "source_id": "src_qc_01_b",
+                  "chunk_id": "chunk_qc_01_2",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            }
+          ]
+        },
+        "sections": [
+          {
+            "section_id": "sec_architecture",
+            "title": "Processor Architectures and Gate Fidelities",
+            "content": "Neutral atom quantum computing platforms rely on two-dimensional optical tweezer arrays to position rubidium-87 and cesium-133 atoms with sub-micron precision [cite_cite_3]. Experimental setups have attained two-qubit Rydberg controlled-Z gate fidelities reaching 99.5% through adiabatic passage pulses [cite_cite_4]. Additionally, dual-species configurations facilitate non-destructive mid-circuit syndrome measurements that avoid decohering neighboring data qubits [cite_cite_5].",
+            "claims": [
+              {
+                "claim_id": "claim_arch_1",
+                "section_id": "sec_architecture",
+                "text": "Neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_3",
+                    "source_id": "src_qc_01_a",
+                    "chunk_id": "chunk_qc_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_arch_2",
+                "section_id": "sec_architecture",
+                "text": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_4",
+                    "source_id": "src_qc_01_a",
+                    "chunk_id": "chunk_qc_01_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_arch_3",
+                "section_id": "sec_architecture",
+                "text": "Dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_5",
+                    "source_id": "src_qc_01_a",
+                    "chunk_id": "chunk_qc_01_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          {
+            "section_id": "sec_codes",
+            "title": "Fault-Tolerance Thresholds and Surface Codes",
+            "content": "Simulations of surface codes on hexagonal and square neutral atom grids reveal a fault-tolerance threshold of 1.25% when accounting for realistic atom loss and photon scattering noise models [cite_cite_6]. To accomplish a logical error rate below 1e-6 per gate, a distance-7 rotated surface code needs 98 physical data qubits and 97 auxiliary syndrome qubits for every logical qubit block [cite_cite_7].",
+            "claims": [
+              {
+                "claim_id": "claim_codes_1",
+                "section_id": "sec_codes",
+                "text": "Surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_6",
+                    "source_id": "src_qc_01_b",
+                    "chunk_id": "chunk_qc_01_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_codes_2",
+                "section_id": "sec_codes",
+                "text": "To achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_7",
+                    "source_id": "src_qc_01_b",
+                    "chunk_id": "chunk_qc_01_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "To achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          }
+        ],
+        "conclusion": {
+          "section_id": "sec_conclusion",
+          "title": "Conclusion",
+          "content": "Neutral atom arrays provide high-fidelity control capabilities and defined fault-tolerance thresholds [cite_cite_8]. The demonstrated two-qubit gate fidelities and surface code threshold simulations support the continued development of this quantum architecture [cite_cite_9].",
+          "claims": [
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "text": "Neutral atom arrays utilize two-dimensional optical tweezer arrays and achieve high fidelity control as demonstrated in recent experiments.",
+              "citations": [
+                {
+                  "citation_id": "cite_cite_8",
+                  "source_id": "src_qc_01_a",
+                  "chunk_id": "chunk_qc_01_1",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "text": "Surface code simulations on neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic noise models.",
+              "citations": [
+                {
+                  "citation_id": "cite_cite_9",
+                  "source_id": "src_qc_01_b",
+                  "chunk_id": "chunk_qc_01_2",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            }
+          ]
+        },
+        "limitations": [
+          "Limited availability of long-term multi-qubit physical scaling data beyond small logical blocks.",
+          "Dependence on specific noise models such as atom loss and photon scattering rates which may vary in hardware implementations."
+        ],
+        "version": 3,
+        "created_by": "revision_llm",
+        "created_at": "2024-05-19T00:00:00Z"
+      },
+      "deterministic_report": {
+        "passed": true,
+        "schema_valid": true,
+        "citations_valid": true,
+        "passages_matched": true,
+        "total_claims": 10,
+        "total_citations": 10,
+        "passage_matches": [
+          {
+            "citation_id": "cite_exec_c2",
+            "source_id": "src_qc_01_a",
+            "chunk_id": "chunk_qc_01_1",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+            "normalized_passage": "recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses.",
+            "normalized_source_chunk": "neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision. recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses. dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits."
+          },
+          {
+            "citation_id": "cite_cite_4",
+            "source_id": "src_qc_01_a",
+            "chunk_id": "chunk_qc_01_1",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+            "normalized_passage": "recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses.",
+            "normalized_source_chunk": "neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision. recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses. dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits."
+          },
+          {
+            "citation_id": "cite_cite_5",
+            "source_id": "src_qc_01_a",
+            "chunk_id": "chunk_qc_01_1",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+            "normalized_passage": "dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+            "normalized_source_chunk": "neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision. recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses. dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits."
+          },
+          {
+            "citation_id": "cite_cite_6",
+            "source_id": "src_qc_01_b",
+            "chunk_id": "chunk_qc_01_2",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+            "normalized_passage": "surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+            "normalized_source_chunk": "surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models. to achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block."
+          },
+          {
+            "citation_id": "cite_cite_7",
+            "source_id": "src_qc_01_b",
+            "chunk_id": "chunk_qc_01_2",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "To achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+            "normalized_passage": "to achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+            "normalized_source_chunk": "surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models. to achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block."
+          }
+        ],
+        "issues": [],
+        "critical_count": 0,
+        "major_count": 0,
+        "minor_count": 0
+      },
+      "grounding_report": {
+        "passed": false,
+        "all_claims_grounded": true,
+        "grounding_score": 1.0,
+        "claim_evaluations": [
+          {
+            "claim_id": "claim_exec_1",
+            "section_id": "sec_exec",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The claim is a verbatim match to the information provided in chunk_qc_01_1.",
+            "cited_chunk_ids": [
+              "chunk_qc_01_1"
+            ]
+          },
+          {
+            "claim_id": "claim_exec_2",
+            "section_id": "sec_exec",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The claim is a verbatim match to the information provided in chunk_qc_01_1.",
+            "cited_chunk_ids": [
+              "chunk_qc_01_1"
+            ]
+          },
+          {
+            "claim_id": "claim_exec_3",
+            "section_id": "sec_exec",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The claim accurately reflects the information in chunk_qc_01_2, which states a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+            "cited_chunk_ids": [
+              "chunk_qc_01_2"
+            ]
+          },
+          {
+            "claim_id": "claim_arch_1",
+            "section_id": "sec_architecture",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source text explicitly states that neutral atom quantum computers use two-dimensional optical tweezer arrays to rearrange rubidium-87 and cesium-133 atoms with sub-micron precision.",
+            "cited_chunk_ids": [
+              "chunk_qc_01_1"
+            ]
+          },
+          {
+            "claim_id": "claim_arch_2",
+            "section_id": "sec_architecture",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source text confirms that recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+            "cited_chunk_ids": [
+              "chunk_qc_01_1"
+            ]
+          },
+          {
+            "claim_id": "claim_arch_3",
+            "section_id": "sec_architecture",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source text directly states that dual-species configurations allow for non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+            "cited_chunk_ids": [
+              "chunk_qc_01_1"
+            ]
+          },
+          {
+            "claim_id": "claim_codes_1",
+            "section_id": "sec_codes",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The cited source explicitly states that surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+            "cited_chunk_ids": [
+              "chunk_qc_01_2"
+            ]
+          },
+          {
+            "claim_id": "claim_codes_2",
+            "section_id": "sec_codes",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The cited source confirms that a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block to achieve a logical error rate below 1e-6 per gate.",
+            "cited_chunk_ids": [
+              "chunk_qc_01_2"
+            ]
+          },
+          {
+            "claim_id": "claim_conc_1",
+            "section_id": "sec_conclusion",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk explicitly states that neutral atom quantum computers use two-dimensional optical tweezer arrays and that recent experiments achieved two-qubit gate fidelities of 99.5%.",
+            "cited_chunk_ids": [
+              "chunk_qc_01_1"
+            ]
+          },
+          {
+            "claim_id": "claim_conc_2",
+            "section_id": "sec_conclusion",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk confirms that surface code simulations on neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+            "cited_chunk_ids": [
+              "chunk_qc_01_2"
+            ]
+          }
+        ],
+        "issues": [
+          {
+            "issue_id": "G2-DEFECT-001",
+            "category": "factual_grounding",
+            "severity": "major",
+            "message": "Section 'sec_exec' contains ungrounded factual assertion in prose not captured as a claim: 'Neutral atom quantum processors employ optical tweezer arrays to manipulate rubidium and cesium atoms.'",
+            "section_id": "sec_exec",
+            "claim_id": null,
+            "citation_id": null,
+            "details": {
+              "unstructured_claim": "Neutral atom quantum processors employ optical tweezer arrays to manipulate rubidium and cesium atoms."
+            }
+          }
+        ],
+        "critical_count": 0,
+        "major_count": 1,
+        "minor_count": 0,
+        "tokens_used": 5384,
+        "cost_usd": 0.000685
+      },
+      "judge_verdict": {
+        "composite_score": 0.9925,
+        "passed": true,
+        "dimension_scores": {
+          "factual_accuracy": {
+            "dimension_name": "factual_accuracy",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "All claims made in the report are consistent with the provided source material. No hallucinations or fabricated statistics were detected."
+          },
+          "evidence_grounding": {
+            "dimension_name": "evidence_grounding",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "Every factual claim is directly supported by the provided source chunks. The report accurately reflects the technical data regarding gate fidelities, qubit counts, and fault-tolerance thresholds."
+          },
+          "citation_correctness": {
+            "dimension_name": "citation_correctness",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "Citations are correctly mapped to the relevant source IDs and chunk IDs. Quotations are verbatim and accurately attributed."
+          },
+          "completeness": {
+            "dimension_name": "completeness",
+            "score": 0.95,
+            "passed": true,
+            "reasoning": "The report covers the key aspects of the prompt, including architecture, gate performance, and error correction thresholds. It also includes a helpful limitations section."
+          },
+          "relevance": {
+            "dimension_name": "relevance",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report remains strictly focused on fault-tolerant quantum error correction in neutral atom arrays, with no extraneous or off-topic information."
+          },
+          "clarity_organization": {
+            "dimension_name": "clarity_organization",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report is logically structured with a clear executive summary, technical sections, and a conclusion. The tone is professional and appropriate for a technical research summary."
+          },
+          "logical_consistency": {
+            "dimension_name": "logical_consistency",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report is internally coherent, with no contradictions between the executive summary, body sections, and the conclusion."
+          }
+        },
+        "overall_feedback": "This is an excellent, highly accurate, and well-structured report. It effectively synthesizes the provided technical data regarding neutral atom quantum computing architectures and fault-tolerance thresholds. The citations are precise, and the inclusion of a limitations section adds significant value. No major improvements are required.",
+        "is_self_judged": false,
+        "effective_threshold": 0.85,
+        "judge_model": "gemini-3.1-flash-lite",
+        "tokens_used": 4069,
+        "cost_usd": 0.000431
+      },
+      "tokens_used": 15166,
+      "cost_usd": 0.002105
+    },
+    "all_candidates": [
+      {
+        "round_number": 0,
+        "report": {
+          "topic": "Fault-Tolerant Quantum Error Correction in Neutral Atom Arrays",
+          "title": "Fault-Tolerant Quantum Error Correction in Neutral Atom Arrays: Architectures, Gate Fidelities, and Surface Code Thresholds",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Neutral atom quantum processors employ optical tweezer arrays to manipulate rubidium and cesium atoms [cite_cite_1]. Recent breakthroughs demonstrate high gate fidelities and favorable fault-tolerance thresholds for topological surface codes [cite_cite_2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision.",
+                "citations": [],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Surface code simulations on neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic noise models.",
+                "citations": [],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_architecture",
+              "title": "Processor Architectures and Gate Fidelities",
+              "content": "Neutral atom quantum computing platforms rely on two-dimensional optical tweezer arrays to position rubidium-87 and cesium-133 atoms with sub-micron precision [cite_cite_3]. Experimental setups have attained two-qubit Rydberg controlled-Z gate fidelities reaching 99.5% through adiabatic passage pulses [cite_cite_4]. Additionally, dual-species configurations facilitate non-destructive mid-circuit syndrome measurements that avoid decohering neighboring data qubits [cite_cite_5].",
+              "claims": [
+                {
+                  "claim_id": "claim_arch_1",
+                  "section_id": "sec_architecture",
+                  "text": "Neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_3",
+                      "source_id": "src_qc_01_a",
+                      "chunk_id": "chunk_qc_01_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_arch_2",
+                  "section_id": "sec_architecture",
+                  "text": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_4",
+                      "source_id": "src_qc_01_a",
+                      "chunk_id": "chunk_qc_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_arch_3",
+                  "section_id": "sec_architecture",
+                  "text": "Dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_5",
+                      "source_id": "src_qc_01_a",
+                      "chunk_id": "chunk_qc_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            },
+            {
+              "section_id": "sec_codes",
+              "title": "Fault-Tolerance Thresholds and Surface Codes",
+              "content": "Simulations of surface codes on hexagonal and square neutral atom grids reveal a fault-tolerance threshold of 1.25% when accounting for realistic atom loss and photon scattering noise models [cite_cite_6]. To accomplish a logical error rate below 1e-6 per gate, a distance-7 rotated surface code needs 98 physical data qubits and 97 auxiliary syndrome qubits for every logical qubit block [cite_cite_7].",
+              "claims": [
+                {
+                  "claim_id": "claim_codes_1",
+                  "section_id": "sec_codes",
+                  "text": "Surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_6",
+                      "source_id": "src_qc_01_b",
+                      "chunk_id": "chunk_qc_01_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_codes_2",
+                  "section_id": "sec_codes",
+                  "text": "To achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_7",
+                      "source_id": "src_qc_01_b",
+                      "chunk_id": "chunk_qc_01_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "To achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion",
+            "content": "Neutral atom arrays offer a promising architecture for scalable quantum error correction [cite_cite_8]. Combining 99.5% gate fidelities with surface code thresholds of 1.25% under realistic noise demonstrates strong potential for achieving target logical error rates [cite_cite_9].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Neutral atom arrays demonstrate high fidelity control and robust surface code fault tolerance thresholds.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_8",
+                    "source_id": "src_qc_01_a",
+                    "chunk_id": "chunk_qc_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  },
+                  {
+                    "citation_id": "cite_cite_9",
+                    "source_id": "src_qc_01_b",
+                    "chunk_id": "chunk_qc_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Limited availability of long-term multi-qubit physical scaling data beyond small logical blocks.",
+            "Dependence on specific noise models such as atom loss and photon scattering rates which may vary in hardware implementations."
+          ],
+          "version": 1,
+          "created_by": "generator_llm",
+          "created_at": "2024-05-18T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": false,
+          "schema_valid": true,
+          "citations_valid": false,
+          "passages_matched": true,
+          "total_claims": 8,
+          "total_citations": 7,
+          "passage_matches": [
+            {
+              "citation_id": "cite_cite_4",
+              "source_id": "src_qc_01_a",
+              "chunk_id": "chunk_qc_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+              "normalized_passage": "recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses.",
+              "normalized_source_chunk": "neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision. recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses. dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits."
+            },
+            {
+              "citation_id": "cite_cite_5",
+              "source_id": "src_qc_01_a",
+              "chunk_id": "chunk_qc_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+              "normalized_passage": "dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+              "normalized_source_chunk": "neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision. recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses. dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits."
+            },
+            {
+              "citation_id": "cite_cite_6",
+              "source_id": "src_qc_01_b",
+              "chunk_id": "chunk_qc_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+              "normalized_passage": "surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+              "normalized_source_chunk": "surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models. to achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block."
+            },
+            {
+              "citation_id": "cite_cite_7",
+              "source_id": "src_qc_01_b",
+              "chunk_id": "chunk_qc_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "To achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+              "normalized_passage": "to achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+              "normalized_source_chunk": "surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models. to achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block."
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "DEFECT-001",
+              "category": "citation_integrity",
+              "severity": "major",
+              "message": "Factual claim 'claim_exec_1' lacks supporting citations.",
+              "section_id": "sec_exec",
+              "claim_id": "claim_exec_1",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "DEFECT-002",
+              "category": "citation_integrity",
+              "severity": "major",
+              "message": "Factual claim 'claim_exec_2' lacks supporting citations.",
+              "section_id": "sec_exec",
+              "claim_id": "claim_exec_2",
+              "citation_id": null,
+              "details": {}
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 2,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": false,
+          "grounding_score": 0.75,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "NEUTRAL",
+              "score": 0.0,
+              "reasoning": "Claim has no citations attached to substantiate the factual proposition.",
+              "cited_chunk_ids": []
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "NEUTRAL",
+              "score": 0.0,
+              "reasoning": "Claim has no citations attached to substantiate the factual proposition.",
+              "cited_chunk_ids": []
+            },
+            {
+              "claim_id": "claim_arch_1",
+              "section_id": "sec_architecture",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that neutral atom quantum computers use two-dimensional optical tweezer arrays to rearrange rubidium-87 and cesium-133 atoms with sub-micron precision.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_arch_2",
+              "section_id": "sec_architecture",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text confirms that recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_arch_3",
+              "section_id": "sec_architecture",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text directly supports the claim that dual-species configurations enable non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_codes_1",
+              "section_id": "sec_codes",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The cited source explicitly states that surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_codes_2",
+              "section_id": "sec_codes",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The cited source confirms that a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block to achieve a logical error rate below 1e-6 per gate.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunks confirm two-qubit gate fidelities of 99.5% and a fault-tolerance threshold of 1.25% for surface code simulations on neutral atom grids.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1",
+                "chunk_qc_01_2"
+              ]
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Factual claim 'claim_exec_1' lacks supporting citations.",
+              "section_id": "sec_exec",
+              "claim_id": "claim_exec_1",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "G2-DEFECT-002",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Factual claim 'claim_exec_2' lacks supporting citations.",
+              "section_id": "sec_exec",
+              "claim_id": "claim_exec_2",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "G2-DEFECT-003",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec' contains ungrounded factual assertion in prose not captured as a claim: 'Recent breakthroughs demonstrate high gate fidelities.'",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Recent breakthroughs demonstrate high gate fidelities."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-004",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'The gate fidelity of neutral atom arrays is 99.5%.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "The gate fidelity of neutral atom arrays is 99.5%."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-005",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'The surface code threshold for neutral atom arrays is 1.25% under realistic noise.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "The surface code threshold for neutral atom arrays is 1.25% under realistic noise."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 5,
+          "minor_count": 0,
+          "tokens_used": 4160,
+          "cost_usd": 0.000512
+        },
+        "judge_verdict": {
+          "composite_score": 0.8675,
+          "passed": false,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 0.95,
+              "passed": true,
+              "reasoning": "The report accurately reflects the technical details provided in the source contexts regarding gate fidelities, atom types, and surface code requirements. No hallucinations were detected."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 0.7,
+              "passed": false,
+              "reasoning": "While the body sections are well-grounded, the Executive Summary contains two major factual claims (claim_exec_1 and claim_exec_2) that lack any citations, failing the grounding requirement for those specific statements."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 0.7,
+              "passed": false,
+              "reasoning": "The report fails to provide citations for the claims in the Executive Summary. While citations in the body sections are accurate and correctly mapped to the source chunks, the missing citations in the summary constitute a major integrity issue."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.9,
+              "passed": true,
+              "reasoning": "The report covers the requested topic thoroughly, including architecture, gate fidelities, and surface code thresholds. It also includes a useful limitations section."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The content is strictly focused on fault-tolerant quantum error correction in neutral atom arrays as requested."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is logically structured with clear headings and a professional, executive tone."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally consistent; there are no contradictions between the executive summary, body sections, and conclusion."
+            }
+          },
+          "overall_feedback": "The report provides a high-quality technical summary of the subject matter. However, it fails the deterministic verification due to missing citations in the Executive Summary. To improve, the author must ensure that all factual claims, including those in the summary, are explicitly supported by the provided source material. The body sections and conclusion are well-cited and demonstrate a strong understanding of the source material.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 3694,
+          "cost_usd": 0.000411
+        },
+        "tokens_used": 10527,
+        "cost_usd": 0.00157
+      },
+      {
+        "round_number": 1,
+        "report": {
+          "topic": "Fault-Tolerant Quantum Error Correction in Neutral Atom Arrays",
+          "title": "Fault-Tolerant Quantum Error Correction in Neutral Atom Arrays: Architectures, Gate Fidelities, and Surface Code Thresholds",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Neutral atom quantum processors employ optical tweezer arrays to manipulate rubidium and cesium atoms [cite_exec_c1]. Recent experiments demonstrate high gate fidelities and favorable fault-tolerance thresholds for topological surface codes [cite_exec_c2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_c1",
+                    "source_id": "src_qc_01_a",
+                    "chunk_id": "chunk_qc_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Surface code simulations on neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic noise models.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_c2",
+                    "source_id": "src_qc_01_b",
+                    "chunk_id": "chunk_qc_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_architecture",
+              "title": "Processor Architectures and Gate Fidelities",
+              "content": "Neutral atom quantum computing platforms rely on two-dimensional optical tweezer arrays to position rubidium-87 and cesium-133 atoms with sub-micron precision [cite_cite_3]. Experimental setups have attained two-qubit Rydberg controlled-Z gate fidelities reaching 99.5% through adiabatic passage pulses [cite_cite_4]. Additionally, dual-species configurations facilitate non-destructive mid-circuit syndrome measurements that avoid decohering neighboring data qubits [cite_cite_5].",
+              "claims": [
+                {
+                  "claim_id": "claim_arch_1",
+                  "section_id": "sec_architecture",
+                  "text": "Neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_3",
+                      "source_id": "src_qc_01_a",
+                      "chunk_id": "chunk_qc_01_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_arch_2",
+                  "section_id": "sec_architecture",
+                  "text": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_4",
+                      "source_id": "src_qc_01_a",
+                      "chunk_id": "chunk_qc_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_arch_3",
+                  "section_id": "sec_architecture",
+                  "text": "Dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_5",
+                      "source_id": "src_qc_01_a",
+                      "chunk_id": "chunk_qc_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            },
+            {
+              "section_id": "sec_codes",
+              "title": "Fault-Tolerance Thresholds and Surface Codes",
+              "content": "Simulations of surface codes on hexagonal and square neutral atom grids reveal a fault-tolerance threshold of 1.25% when accounting for realistic atom loss and photon scattering noise models [cite_cite_6]. To accomplish a logical error rate below 1e-6 per gate, a distance-7 rotated surface code needs 98 physical data qubits and 97 auxiliary syndrome qubits for every logical qubit block [cite_cite_7].",
+              "claims": [
+                {
+                  "claim_id": "claim_codes_1",
+                  "section_id": "sec_codes",
+                  "text": "Surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_6",
+                      "source_id": "src_qc_01_b",
+                      "chunk_id": "chunk_qc_01_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_codes_2",
+                  "section_id": "sec_codes",
+                  "text": "To achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_7",
+                      "source_id": "src_qc_01_b",
+                      "chunk_id": "chunk_qc_01_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "To achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion",
+            "content": "Neutral atom arrays offer a promising architecture for scalable quantum error correction [cite_cite_8]. Combining demonstrated high gate fidelities with surface code fault-tolerance thresholds under realistic noise models shows strong potential for achieving target logical error rates [cite_cite_9].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Neutral atom arrays demonstrate high fidelity control and robust surface code fault tolerance thresholds.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_8",
+                    "source_id": "src_qc_01_a",
+                    "chunk_id": "chunk_qc_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  },
+                  {
+                    "citation_id": "cite_cite_9",
+                    "source_id": "src_qc_01_b",
+                    "chunk_id": "chunk_qc_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Limited availability of long-term multi-qubit physical scaling data beyond small logical blocks.",
+            "Dependence on specific noise models such as atom loss and photon scattering rates which may vary in hardware implementations."
+          ],
+          "version": 2,
+          "created_by": "revision_llm",
+          "created_at": "2024-05-19T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 8,
+          "total_citations": 9,
+          "passage_matches": [
+            {
+              "citation_id": "cite_cite_4",
+              "source_id": "src_qc_01_a",
+              "chunk_id": "chunk_qc_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+              "normalized_passage": "recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses.",
+              "normalized_source_chunk": "neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision. recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses. dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits."
+            },
+            {
+              "citation_id": "cite_cite_5",
+              "source_id": "src_qc_01_a",
+              "chunk_id": "chunk_qc_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+              "normalized_passage": "dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+              "normalized_source_chunk": "neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision. recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses. dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits."
+            },
+            {
+              "citation_id": "cite_cite_6",
+              "source_id": "src_qc_01_b",
+              "chunk_id": "chunk_qc_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+              "normalized_passage": "surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+              "normalized_source_chunk": "surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models. to achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block."
+            },
+            {
+              "citation_id": "cite_cite_7",
+              "source_id": "src_qc_01_b",
+              "chunk_id": "chunk_qc_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "To achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+              "normalized_passage": "to achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+              "normalized_source_chunk": "surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models. to achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim is a verbatim match to the information provided in chunk_qc_01_1, which confirms the use of two-dimensional optical tweezer arrays to rearrange rubidium-87 and cesium-133 atoms with sub-micron precision.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "Chunk_qc_01_2 explicitly states that surface code simulations on neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_arch_1",
+              "section_id": "sec_architecture",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that neutral atom quantum computers use two-dimensional optical tweezer arrays to rearrange rubidium-87 and cesium-133 atoms with sub-micron precision.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_arch_2",
+              "section_id": "sec_architecture",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text confirms that recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_arch_3",
+              "section_id": "sec_architecture",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text directly supports the claim that dual-species configurations enable non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_codes_1",
+              "section_id": "sec_codes",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The cited source explicitly states that surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_codes_2",
+              "section_id": "sec_codes",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The cited source confirms that a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block to achieve a logical error rate below 1e-6 per gate.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunks confirm two-qubit gate fidelities of 99.5% and a fault-tolerance threshold of 1.25% for surface code simulations on neutral atom grids.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1",
+                "chunk_qc_01_2"
+              ]
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec' contains ungrounded factual assertion in prose not captured as a claim: 'Recent experiments demonstrate high gate fidelities.'",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Recent experiments demonstrate high gate fidelities."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-002",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'Neutral atom arrays offer a promising architecture for scalable quantum error correction.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Neutral atom arrays offer a promising architecture for scalable quantum error correction."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-003",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'The combination of gate fidelities and surface code thresholds shows strong potential for achieving target logical error rates.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "The combination of gate fidelities and surface code thresholds shows strong potential for achieving target logical error rates."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 3,
+          "minor_count": 0,
+          "tokens_used": 5040,
+          "cost_usd": 0.000623
+        },
+        "judge_verdict": {
+          "composite_score": 0.9925,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All claims regarding gate fidelities, atom types, and surface code requirements are accurate and align perfectly with the provided source material."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every factual assertion is directly supported by the provided source chunks. No external or unverified information was introduced."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are precise, correctly mapped to the source IDs and chunk IDs, and utilize appropriate quotation excerpts where applicable."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.95,
+              "passed": true,
+              "reasoning": "The report covers the key technical aspects of the prompt, including architecture, gate performance, and error correction thresholds. It also includes a helpful limitations section."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The content is strictly focused on fault-tolerant quantum error correction in neutral atom arrays, adhering fully to the research topic."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is logically structured with a clear executive summary, distinct sections for architecture and codes, and a concise conclusion."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report maintains internal coherence throughout, with no contradictions between the summary, body sections, and conclusion."
+            }
+          },
+          "overall_feedback": "The report is excellent, demonstrating high technical accuracy, precise citation management, and clear logical flow. It effectively synthesizes the provided source material to address the research topic. No significant improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 3737,
+          "cost_usd": 0.000398
+        },
+        "tokens_used": 14562,
+        "cost_usd": 0.001949
+      },
+      {
+        "round_number": 2,
+        "report": {
+          "topic": "Fault-Tolerant Quantum Error Correction in Neutral Atom Arrays",
+          "title": "Fault-Tolerant Quantum Error Correction in Neutral Atom Arrays: Architectures, Gate Fidelities, and Surface Code Thresholds",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Neutral atom quantum processors employ optical tweezer arrays to manipulate rubidium and cesium atoms [cite_exec_c1]. Recent experiments achieve two-qubit Rydberg controlled-Z gate fidelities of 99.5% [cite_exec_c2], and surface code simulations demonstrate favorable fault-tolerance thresholds [cite_exec_c3].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_c1",
+                    "source_id": "src_qc_01_a",
+                    "chunk_id": "chunk_qc_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_c2",
+                    "source_id": "src_qc_01_a",
+                    "chunk_id": "chunk_qc_01_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_3",
+                "section_id": "sec_exec",
+                "text": "Surface code simulations on neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic noise models.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_c3",
+                    "source_id": "src_qc_01_b",
+                    "chunk_id": "chunk_qc_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_architecture",
+              "title": "Processor Architectures and Gate Fidelities",
+              "content": "Neutral atom quantum computing platforms rely on two-dimensional optical tweezer arrays to position rubidium-87 and cesium-133 atoms with sub-micron precision [cite_cite_3]. Experimental setups have attained two-qubit Rydberg controlled-Z gate fidelities reaching 99.5% through adiabatic passage pulses [cite_cite_4]. Additionally, dual-species configurations facilitate non-destructive mid-circuit syndrome measurements that avoid decohering neighboring data qubits [cite_cite_5].",
+              "claims": [
+                {
+                  "claim_id": "claim_arch_1",
+                  "section_id": "sec_architecture",
+                  "text": "Neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_3",
+                      "source_id": "src_qc_01_a",
+                      "chunk_id": "chunk_qc_01_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_arch_2",
+                  "section_id": "sec_architecture",
+                  "text": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_4",
+                      "source_id": "src_qc_01_a",
+                      "chunk_id": "chunk_qc_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_arch_3",
+                  "section_id": "sec_architecture",
+                  "text": "Dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_5",
+                      "source_id": "src_qc_01_a",
+                      "chunk_id": "chunk_qc_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            },
+            {
+              "section_id": "sec_codes",
+              "title": "Fault-Tolerance Thresholds and Surface Codes",
+              "content": "Simulations of surface codes on hexagonal and square neutral atom grids reveal a fault-tolerance threshold of 1.25% when accounting for realistic atom loss and photon scattering noise models [cite_cite_6]. To accomplish a logical error rate below 1e-6 per gate, a distance-7 rotated surface code needs 98 physical data qubits and 97 auxiliary syndrome qubits for every logical qubit block [cite_cite_7].",
+              "claims": [
+                {
+                  "claim_id": "claim_codes_1",
+                  "section_id": "sec_codes",
+                  "text": "Surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_6",
+                      "source_id": "src_qc_01_b",
+                      "chunk_id": "chunk_qc_01_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_codes_2",
+                  "section_id": "sec_codes",
+                  "text": "To achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_7",
+                      "source_id": "src_qc_01_b",
+                      "chunk_id": "chunk_qc_01_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "To achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion",
+            "content": "Neutral atom arrays provide high-fidelity control capabilities and defined fault-tolerance thresholds [cite_cite_8]. The demonstrated two-qubit gate fidelities and surface code threshold simulations support the continued development of this quantum architecture [cite_cite_9].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Neutral atom arrays utilize two-dimensional optical tweezer arrays and achieve high fidelity control as demonstrated in recent experiments.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_8",
+                    "source_id": "src_qc_01_a",
+                    "chunk_id": "chunk_qc_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "Surface code simulations on neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic noise models.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_9",
+                    "source_id": "src_qc_01_b",
+                    "chunk_id": "chunk_qc_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Limited availability of long-term multi-qubit physical scaling data beyond small logical blocks.",
+            "Dependence on specific noise models such as atom loss and photon scattering rates which may vary in hardware implementations."
+          ],
+          "version": 3,
+          "created_by": "revision_llm",
+          "created_at": "2024-05-19T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 10,
+          "total_citations": 10,
+          "passage_matches": [
+            {
+              "citation_id": "cite_exec_c2",
+              "source_id": "src_qc_01_a",
+              "chunk_id": "chunk_qc_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+              "normalized_passage": "recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses.",
+              "normalized_source_chunk": "neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision. recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses. dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits."
+            },
+            {
+              "citation_id": "cite_cite_4",
+              "source_id": "src_qc_01_a",
+              "chunk_id": "chunk_qc_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+              "normalized_passage": "recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses.",
+              "normalized_source_chunk": "neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision. recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses. dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits."
+            },
+            {
+              "citation_id": "cite_cite_5",
+              "source_id": "src_qc_01_a",
+              "chunk_id": "chunk_qc_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+              "normalized_passage": "dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+              "normalized_source_chunk": "neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision. recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses. dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits."
+            },
+            {
+              "citation_id": "cite_cite_6",
+              "source_id": "src_qc_01_b",
+              "chunk_id": "chunk_qc_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+              "normalized_passage": "surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+              "normalized_source_chunk": "surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models. to achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block."
+            },
+            {
+              "citation_id": "cite_cite_7",
+              "source_id": "src_qc_01_b",
+              "chunk_id": "chunk_qc_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "To achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+              "normalized_passage": "to achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+              "normalized_source_chunk": "surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models. to achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim is a verbatim match to the information provided in chunk_qc_01_1.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim is a verbatim match to the information provided in chunk_qc_01_1.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_3",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim accurately reflects the information in chunk_qc_01_2, which states a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_arch_1",
+              "section_id": "sec_architecture",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that neutral atom quantum computers use two-dimensional optical tweezer arrays to rearrange rubidium-87 and cesium-133 atoms with sub-micron precision.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_arch_2",
+              "section_id": "sec_architecture",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text confirms that recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_arch_3",
+              "section_id": "sec_architecture",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text directly states that dual-species configurations allow for non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_codes_1",
+              "section_id": "sec_codes",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The cited source explicitly states that surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_codes_2",
+              "section_id": "sec_codes",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The cited source confirms that a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block to achieve a logical error rate below 1e-6 per gate.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that neutral atom quantum computers use two-dimensional optical tweezer arrays and that recent experiments achieved two-qubit gate fidelities of 99.5%.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that surface code simulations on neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_2"
+              ]
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec' contains ungrounded factual assertion in prose not captured as a claim: 'Neutral atom quantum processors employ optical tweezer arrays to manipulate rubidium and cesium atoms.'",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Neutral atom quantum processors employ optical tweezer arrays to manipulate rubidium and cesium atoms."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 1,
+          "minor_count": 0,
+          "tokens_used": 5384,
+          "cost_usd": 0.000685
+        },
+        "judge_verdict": {
+          "composite_score": 0.9925,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All claims made in the report are consistent with the provided source material. No hallucinations or fabricated statistics were detected."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every factual claim is directly supported by the provided source chunks. The report accurately reflects the technical data regarding gate fidelities, qubit counts, and fault-tolerance thresholds."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are correctly mapped to the relevant source IDs and chunk IDs. Quotations are verbatim and accurately attributed."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.95,
+              "passed": true,
+              "reasoning": "The report covers the key aspects of the prompt, including architecture, gate performance, and error correction thresholds. It also includes a helpful limitations section."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report remains strictly focused on fault-tolerant quantum error correction in neutral atom arrays, with no extraneous or off-topic information."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is logically structured with a clear executive summary, technical sections, and a conclusion. The tone is professional and appropriate for a technical research summary."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally coherent, with no contradictions between the executive summary, body sections, and the conclusion."
+            }
+          },
+          "overall_feedback": "This is an excellent, highly accurate, and well-structured report. It effectively synthesizes the provided technical data regarding neutral atom quantum computing architectures and fault-tolerance thresholds. The citations are precise, and the inclusion of a limitations section adds significant value. No major improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 4069,
+          "cost_usd": 0.000431
+        },
+        "tokens_used": 15166,
+        "cost_usd": 0.002105
+      },
+      {
+        "round_number": 3,
+        "report": {
+          "topic": "Fault-Tolerant Quantum Error Correction in Neutral Atom Arrays",
+          "title": "Fault-Tolerant Quantum Error Correction in Neutral Atom Arrays: Architectures, Gate Fidelities, and Surface Code Thresholds",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision [cite_exec_c1]. Recent experiments achieve two-qubit Rydberg controlled-Z gate fidelities of 99.5% [cite_exec_c2], and surface code simulations demonstrate favorable fault-tolerance thresholds [cite_exec_c3].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_c1",
+                    "source_id": "src_qc_01_a",
+                    "chunk_id": "chunk_qc_01_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_c2",
+                    "source_id": "src_qc_01_a",
+                    "chunk_id": "chunk_qc_01_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_3",
+                "section_id": "sec_exec",
+                "text": "Surface code simulations on neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic noise models.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_c3",
+                    "source_id": "src_qc_01_b",
+                    "chunk_id": "chunk_qc_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_architecture",
+              "title": "Processor Architectures and Gate Fidelities",
+              "content": "Neutral atom quantum computing platforms rely on two-dimensional optical tweezer arrays to position rubidium-87 and cesium-133 atoms with sub-micron precision [cite_cite_3]. Experimental setups have attained two-qubit Rydberg controlled-Z gate fidelities reaching 99.5% through adiabatic passage pulses [cite_cite_4]. Additionally, dual-species configurations facilitate non-destructive mid-circuit syndrome measurements that avoid decohering neighboring data qubits [cite_cite_5].",
+              "claims": [
+                {
+                  "claim_id": "claim_arch_1",
+                  "section_id": "sec_architecture",
+                  "text": "Neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_3",
+                      "source_id": "src_qc_01_a",
+                      "chunk_id": "chunk_qc_01_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_arch_2",
+                  "section_id": "sec_architecture",
+                  "text": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_4",
+                      "source_id": "src_qc_01_a",
+                      "chunk_id": "chunk_qc_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_arch_3",
+                  "section_id": "sec_architecture",
+                  "text": "Dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_5",
+                      "source_id": "src_qc_01_a",
+                      "chunk_id": "chunk_qc_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            },
+            {
+              "section_id": "sec_codes",
+              "title": "Fault-Tolerance Thresholds and Surface Codes",
+              "content": "Simulations of surface codes on hexagonal and square neutral atom grids reveal a fault-tolerance threshold of 1.25% when accounting for realistic atom loss and photon scattering noise models [cite_cite_6]. To accomplish a logical error rate below 1e-6 per gate, a distance-7 rotated surface code needs 98 physical data qubits and 97 auxiliary syndrome qubits for every logical qubit block [cite_cite_7].",
+              "claims": [
+                {
+                  "claim_id": "claim_codes_1",
+                  "section_id": "sec_codes",
+                  "text": "Surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_6",
+                      "source_id": "src_qc_01_b",
+                      "chunk_id": "chunk_qc_01_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_codes_2",
+                  "section_id": "sec_codes",
+                  "text": "To achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_7",
+                      "source_id": "src_qc_01_b",
+                      "chunk_id": "chunk_qc_01_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "To achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion",
+            "content": "Neutral atom arrays provide high-fidelity control capabilities and defined fault-tolerance thresholds [cite_cite_8]. The demonstrated two-qubit gate fidelities and surface code threshold simulations support the continued development of this quantum architecture [cite_cite_9].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Neutral atom arrays utilize two-dimensional optical tweezer arrays and achieve high fidelity control as demonstrated in recent experiments.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_8",
+                    "source_id": "src_qc_01_a",
+                    "chunk_id": "chunk_qc_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "Surface code simulations on neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic noise models.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_9",
+                    "source_id": "src_qc_01_b",
+                    "chunk_id": "chunk_qc_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Limited availability of long-term multi-qubit physical scaling data beyond small logical blocks.",
+            "Dependence on specific noise models such as atom loss and photon scattering rates which may vary in hardware implementations."
+          ],
+          "version": 4,
+          "created_by": "revision_llm",
+          "created_at": "2024-05-19T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 10,
+          "total_citations": 10,
+          "passage_matches": [
+            {
+              "citation_id": "cite_exec_c1",
+              "source_id": "src_qc_01_a",
+              "chunk_id": "chunk_qc_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision.",
+              "normalized_passage": "neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision.",
+              "normalized_source_chunk": "neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision. recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses. dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits."
+            },
+            {
+              "citation_id": "cite_exec_c2",
+              "source_id": "src_qc_01_a",
+              "chunk_id": "chunk_qc_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+              "normalized_passage": "recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses.",
+              "normalized_source_chunk": "neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision. recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses. dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits."
+            },
+            {
+              "citation_id": "cite_cite_4",
+              "source_id": "src_qc_01_a",
+              "chunk_id": "chunk_qc_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+              "normalized_passage": "recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses.",
+              "normalized_source_chunk": "neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision. recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses. dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits."
+            },
+            {
+              "citation_id": "cite_cite_5",
+              "source_id": "src_qc_01_a",
+              "chunk_id": "chunk_qc_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+              "normalized_passage": "dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+              "normalized_source_chunk": "neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision. recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses. dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits."
+            },
+            {
+              "citation_id": "cite_cite_6",
+              "source_id": "src_qc_01_b",
+              "chunk_id": "chunk_qc_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+              "normalized_passage": "surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+              "normalized_source_chunk": "surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models. to achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block."
+            },
+            {
+              "citation_id": "cite_cite_7",
+              "source_id": "src_qc_01_b",
+              "chunk_id": "chunk_qc_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "To achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+              "normalized_passage": "to achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+              "normalized_source_chunk": "surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models. to achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim is a verbatim match to the information provided in chunk_qc_01_1 regarding the use of two-dimensional optical tweezer arrays for rubidium-87 and cesium-133 atoms.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim accurately reflects the experimental results for two-qubit Rydberg controlled-Z gate fidelities and the methodology described in chunk_qc_01_1.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_3",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "Chunk_qc_01_2 explicitly states that surface code simulations on neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_arch_1",
+              "section_id": "sec_architecture",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that neutral atom quantum computers use two-dimensional optical tweezer arrays to rearrange rubidium-87 and cesium-133 atoms with sub-micron precision.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_arch_2",
+              "section_id": "sec_architecture",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text confirms that recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_arch_3",
+              "section_id": "sec_architecture",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text directly supports the claim that dual-species configurations enable non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_codes_1",
+              "section_id": "sec_codes",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The cited passage explicitly states that surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_codes_2",
+              "section_id": "sec_codes",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The cited passage confirms that to achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that neutral atom quantum computers use two-dimensional optical tweezer arrays and that recent experiments achieved high two-qubit gate fidelities of 99.5%.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that surface code simulations on neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_2"
+              ]
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec' contains ungrounded factual assertion in prose not captured as a claim: 'The structured claim regarding gate fidelities mentions the use of adiabatic passage pulses, which is not stated in the prose.'",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "The structured claim regarding gate fidelities mentions the use of adiabatic passage pulses, which is not stated in the prose."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-002",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec' contains ungrounded factual assertion in prose not captured as a claim: 'The structured claim regarding surface code simulations specifies a fault-tolerance threshold of 1.25% and realistic noise models, which are not stated in the prose.'",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "The structured claim regarding surface code simulations specifies a fault-tolerance threshold of 1.25% and realistic noise models, which are not stated in the prose."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 2,
+          "minor_count": 0,
+          "tokens_used": 5457,
+          "cost_usd": 0.000701
+        },
+        "judge_verdict": {
+          "composite_score": 0.985,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All claims made in the report are directly supported by the provided source contexts. No hallucinations or factual errors were identified."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every factual assertion is explicitly grounded in the provided source material (src_qc_01_a and src_qc_01_b)."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are correctly mapped to the source IDs and chunk IDs. Quotations are accurate and appropriately used."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.9,
+              "passed": true,
+              "reasoning": "The report covers the key aspects of the topic including architecture, gate fidelity, and error correction thresholds. It also includes a useful limitations section."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report remains strictly focused on the research topic of fault-tolerant quantum error correction in neutral atom arrays."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is well-structured with a logical flow from architecture to error correction, utilizing clear headings and an executive summary."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally consistent, with no contradictions between the executive summary, body sections, and conclusion."
+            }
+          },
+          "overall_feedback": "The report is excellent, demonstrating high accuracy, strong grounding in the provided sources, and clear logical organization. It effectively synthesizes the provided technical data regarding neutral atom quantum architectures and surface code thresholds. No significant improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 4092,
+          "cost_usd": 0.000426
+        },
+        "tokens_used": 15431,
+        "cost_usd": 0.002141
+      }
+    ],
+    "budget_summary": {
+      "used_tokens": 55686,
+      "max_tokens": 50000,
+      "used_cost_usd": 0.007765,
+      "max_cost_usd": 0.2,
+      "elapsed_seconds": 414.805,
+      "max_seconds": 1800.0,
+      "rounds_executed": 3,
+      "max_rounds": 3,
+      "is_exhausted": true,
+      "exhaustion_reason": "TOKENS_EXHAUSTED (used 55686 >= max 50000)"
+    },
+    "rounds_executed": 3,
+    "termination_reason": "CONSECUTIVE_REGRESSIONS_EXCEEDED (1 consecutive regressions)",
+    "acceptance_threshold": 0.85,
+    "acceptance_result": {
+      "status": "UNRESOLVED",
+      "is_accepted": false,
+      "best_candidate": {
+        "round_number": 2,
+        "report": {
+          "topic": "Fault-Tolerant Quantum Error Correction in Neutral Atom Arrays",
+          "title": "Fault-Tolerant Quantum Error Correction in Neutral Atom Arrays: Architectures, Gate Fidelities, and Surface Code Thresholds",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Neutral atom quantum processors employ optical tweezer arrays to manipulate rubidium and cesium atoms [cite_exec_c1]. Recent experiments achieve two-qubit Rydberg controlled-Z gate fidelities of 99.5% [cite_exec_c2], and surface code simulations demonstrate favorable fault-tolerance thresholds [cite_exec_c3].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_c1",
+                    "source_id": "src_qc_01_a",
+                    "chunk_id": "chunk_qc_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_c2",
+                    "source_id": "src_qc_01_a",
+                    "chunk_id": "chunk_qc_01_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_3",
+                "section_id": "sec_exec",
+                "text": "Surface code simulations on neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic noise models.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_c3",
+                    "source_id": "src_qc_01_b",
+                    "chunk_id": "chunk_qc_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_architecture",
+              "title": "Processor Architectures and Gate Fidelities",
+              "content": "Neutral atom quantum computing platforms rely on two-dimensional optical tweezer arrays to position rubidium-87 and cesium-133 atoms with sub-micron precision [cite_cite_3]. Experimental setups have attained two-qubit Rydberg controlled-Z gate fidelities reaching 99.5% through adiabatic passage pulses [cite_cite_4]. Additionally, dual-species configurations facilitate non-destructive mid-circuit syndrome measurements that avoid decohering neighboring data qubits [cite_cite_5].",
+              "claims": [
+                {
+                  "claim_id": "claim_arch_1",
+                  "section_id": "sec_architecture",
+                  "text": "Neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_3",
+                      "source_id": "src_qc_01_a",
+                      "chunk_id": "chunk_qc_01_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_arch_2",
+                  "section_id": "sec_architecture",
+                  "text": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_4",
+                      "source_id": "src_qc_01_a",
+                      "chunk_id": "chunk_qc_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_arch_3",
+                  "section_id": "sec_architecture",
+                  "text": "Dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_5",
+                      "source_id": "src_qc_01_a",
+                      "chunk_id": "chunk_qc_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            },
+            {
+              "section_id": "sec_codes",
+              "title": "Fault-Tolerance Thresholds and Surface Codes",
+              "content": "Simulations of surface codes on hexagonal and square neutral atom grids reveal a fault-tolerance threshold of 1.25% when accounting for realistic atom loss and photon scattering noise models [cite_cite_6]. To accomplish a logical error rate below 1e-6 per gate, a distance-7 rotated surface code needs 98 physical data qubits and 97 auxiliary syndrome qubits for every logical qubit block [cite_cite_7].",
+              "claims": [
+                {
+                  "claim_id": "claim_codes_1",
+                  "section_id": "sec_codes",
+                  "text": "Surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_6",
+                      "source_id": "src_qc_01_b",
+                      "chunk_id": "chunk_qc_01_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_codes_2",
+                  "section_id": "sec_codes",
+                  "text": "To achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_7",
+                      "source_id": "src_qc_01_b",
+                      "chunk_id": "chunk_qc_01_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "To achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion",
+            "content": "Neutral atom arrays provide high-fidelity control capabilities and defined fault-tolerance thresholds [cite_cite_8]. The demonstrated two-qubit gate fidelities and surface code threshold simulations support the continued development of this quantum architecture [cite_cite_9].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Neutral atom arrays utilize two-dimensional optical tweezer arrays and achieve high fidelity control as demonstrated in recent experiments.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_8",
+                    "source_id": "src_qc_01_a",
+                    "chunk_id": "chunk_qc_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "Surface code simulations on neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic noise models.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_9",
+                    "source_id": "src_qc_01_b",
+                    "chunk_id": "chunk_qc_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Limited availability of long-term multi-qubit physical scaling data beyond small logical blocks.",
+            "Dependence on specific noise models such as atom loss and photon scattering rates which may vary in hardware implementations."
+          ],
+          "version": 3,
+          "created_by": "revision_llm",
+          "created_at": "2024-05-19T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 10,
+          "total_citations": 10,
+          "passage_matches": [
+            {
+              "citation_id": "cite_exec_c2",
+              "source_id": "src_qc_01_a",
+              "chunk_id": "chunk_qc_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+              "normalized_passage": "recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses.",
+              "normalized_source_chunk": "neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision. recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses. dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits."
+            },
+            {
+              "citation_id": "cite_cite_4",
+              "source_id": "src_qc_01_a",
+              "chunk_id": "chunk_qc_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+              "normalized_passage": "recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses.",
+              "normalized_source_chunk": "neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision. recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses. dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits."
+            },
+            {
+              "citation_id": "cite_cite_5",
+              "source_id": "src_qc_01_a",
+              "chunk_id": "chunk_qc_01_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+              "normalized_passage": "dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+              "normalized_source_chunk": "neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision. recent experiments achieved two-qubit rydberg controlled-z gate fidelities of 99.5% using adiabatic passage pulses. dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits."
+            },
+            {
+              "citation_id": "cite_cite_6",
+              "source_id": "src_qc_01_b",
+              "chunk_id": "chunk_qc_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+              "normalized_passage": "surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+              "normalized_source_chunk": "surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models. to achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block."
+            },
+            {
+              "citation_id": "cite_cite_7",
+              "source_id": "src_qc_01_b",
+              "chunk_id": "chunk_qc_01_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "To achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+              "normalized_passage": "to achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+              "normalized_source_chunk": "surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models. to achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim is a verbatim match to the information provided in chunk_qc_01_1.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim is a verbatim match to the information provided in chunk_qc_01_1.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_3",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim accurately reflects the information in chunk_qc_01_2, which states a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_arch_1",
+              "section_id": "sec_architecture",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that neutral atom quantum computers use two-dimensional optical tweezer arrays to rearrange rubidium-87 and cesium-133 atoms with sub-micron precision.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_arch_2",
+              "section_id": "sec_architecture",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text confirms that recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_arch_3",
+              "section_id": "sec_architecture",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text directly states that dual-species configurations allow for non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_codes_1",
+              "section_id": "sec_codes",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The cited source explicitly states that surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_codes_2",
+              "section_id": "sec_codes",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The cited source confirms that a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block to achieve a logical error rate below 1e-6 per gate.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that neutral atom quantum computers use two-dimensional optical tweezer arrays and that recent experiments achieved two-qubit gate fidelities of 99.5%.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that surface code simulations on neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+              "cited_chunk_ids": [
+                "chunk_qc_01_2"
+              ]
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec' contains ungrounded factual assertion in prose not captured as a claim: 'Neutral atom quantum processors employ optical tweezer arrays to manipulate rubidium and cesium atoms.'",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Neutral atom quantum processors employ optical tweezer arrays to manipulate rubidium and cesium atoms."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 1,
+          "minor_count": 0,
+          "tokens_used": 5384,
+          "cost_usd": 0.000685
+        },
+        "judge_verdict": {
+          "composite_score": 0.9925,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All claims made in the report are consistent with the provided source material. No hallucinations or fabricated statistics were detected."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every factual claim is directly supported by the provided source chunks. The report accurately reflects the technical data regarding gate fidelities, qubit counts, and fault-tolerance thresholds."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are correctly mapped to the relevant source IDs and chunk IDs. Quotations are verbatim and accurately attributed."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.95,
+              "passed": true,
+              "reasoning": "The report covers the key aspects of the prompt, including architecture, gate performance, and error correction thresholds. It also includes a helpful limitations section."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report remains strictly focused on fault-tolerant quantum error correction in neutral atom arrays, with no extraneous or off-topic information."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is logically structured with a clear executive summary, technical sections, and a conclusion. The tone is professional and appropriate for a technical research summary."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally coherent, with no contradictions between the executive summary, body sections, and the conclusion."
+            }
+          },
+          "overall_feedback": "This is an excellent, highly accurate, and well-structured report. It effectively synthesizes the provided technical data regarding neutral atom quantum computing architectures and fault-tolerance thresholds. The citations are precise, and the inclusion of a limitations section adds significant value. No major improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 4069,
+          "cost_usd": 0.000431
+        },
+        "tokens_used": 15166,
+        "cost_usd": 0.002105
+      },
+      "rationale": "Candidate did not meet automated acceptance criteria: Unresolved major factual grounding defects remain (1 major grounding defects)",
+      "unresolved_reasons": [
+        "Unresolved major factual grounding defects remain (1 major grounding defects)"
+      ],
+      "review_packet": {
+        "run_id": "run_40242f46b74c",
+        "topic": "Fault-Tolerant Quantum Error Correction in Neutral Atom Arrays",
+        "best_candidate": {
+          "topic": "Fault-Tolerant Quantum Error Correction in Neutral Atom Arrays",
+          "title": "Fault-Tolerant Quantum Error Correction in Neutral Atom Arrays: Architectures, Gate Fidelities, and Surface Code Thresholds",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Neutral atom quantum processors employ optical tweezer arrays to manipulate rubidium and cesium atoms [cite_exec_c1]. Recent experiments achieve two-qubit Rydberg controlled-Z gate fidelities of 99.5% [cite_exec_c2], and surface code simulations demonstrate favorable fault-tolerance thresholds [cite_exec_c3].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_c1",
+                    "source_id": "src_qc_01_a",
+                    "chunk_id": "chunk_qc_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_c2",
+                    "source_id": "src_qc_01_a",
+                    "chunk_id": "chunk_qc_01_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_3",
+                "section_id": "sec_exec",
+                "text": "Surface code simulations on neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic noise models.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_c3",
+                    "source_id": "src_qc_01_b",
+                    "chunk_id": "chunk_qc_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_architecture",
+              "title": "Processor Architectures and Gate Fidelities",
+              "content": "Neutral atom quantum computing platforms rely on two-dimensional optical tweezer arrays to position rubidium-87 and cesium-133 atoms with sub-micron precision [cite_cite_3]. Experimental setups have attained two-qubit Rydberg controlled-Z gate fidelities reaching 99.5% through adiabatic passage pulses [cite_cite_4]. Additionally, dual-species configurations facilitate non-destructive mid-circuit syndrome measurements that avoid decohering neighboring data qubits [cite_cite_5].",
+              "claims": [
+                {
+                  "claim_id": "claim_arch_1",
+                  "section_id": "sec_architecture",
+                  "text": "Neutral atom quantum computers utilize two-dimensional optical tweezer arrays to dynamically rearrange individual rubidium-87 and cesium-133 atoms with sub-micron positional precision.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_3",
+                      "source_id": "src_qc_01_a",
+                      "chunk_id": "chunk_qc_01_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_arch_2",
+                  "section_id": "sec_architecture",
+                  "text": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_4",
+                      "source_id": "src_qc_01_a",
+                      "chunk_id": "chunk_qc_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Recent experiments achieved two-qubit Rydberg controlled-Z gate fidelities of 99.5% using adiabatic passage pulses.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_arch_3",
+                  "section_id": "sec_architecture",
+                  "text": "Dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_5",
+                      "source_id": "src_qc_01_a",
+                      "chunk_id": "chunk_qc_01_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Dual-species configurations allow non-destructive mid-circuit syndrome measurement without decohering neighboring data qubits.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            },
+            {
+              "section_id": "sec_codes",
+              "title": "Fault-Tolerance Thresholds and Surface Codes",
+              "content": "Simulations of surface codes on hexagonal and square neutral atom grids reveal a fault-tolerance threshold of 1.25% when accounting for realistic atom loss and photon scattering noise models [cite_cite_6]. To accomplish a logical error rate below 1e-6 per gate, a distance-7 rotated surface code needs 98 physical data qubits and 97 auxiliary syndrome qubits for every logical qubit block [cite_cite_7].",
+              "claims": [
+                {
+                  "claim_id": "claim_codes_1",
+                  "section_id": "sec_codes",
+                  "text": "Surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_6",
+                      "source_id": "src_qc_01_b",
+                      "chunk_id": "chunk_qc_01_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Surface code simulations on hexagonal and square neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic atom loss and photon scattering noise models.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_codes_2",
+                  "section_id": "sec_codes",
+                  "text": "To achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_7",
+                      "source_id": "src_qc_01_b",
+                      "chunk_id": "chunk_qc_01_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "To achieve a logical error rate below 1e-6 per gate, a distance-7 rotated surface code requires 98 physical data qubits and 97 auxiliary syndrome qubits per logical qubit block.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion",
+            "content": "Neutral atom arrays provide high-fidelity control capabilities and defined fault-tolerance thresholds [cite_cite_8]. The demonstrated two-qubit gate fidelities and surface code threshold simulations support the continued development of this quantum architecture [cite_cite_9].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Neutral atom arrays utilize two-dimensional optical tweezer arrays and achieve high fidelity control as demonstrated in recent experiments.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_8",
+                    "source_id": "src_qc_01_a",
+                    "chunk_id": "chunk_qc_01_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "Surface code simulations on neutral atom grids demonstrate a fault-tolerance threshold of 1.25% under realistic noise models.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_9",
+                    "source_id": "src_qc_01_b",
+                    "chunk_id": "chunk_qc_01_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Limited availability of long-term multi-qubit physical scaling data beyond small logical blocks.",
+            "Dependence on specific noise models such as atom loss and photon scattering rates which may vary in hardware implementations."
+          ],
+          "version": 3,
+          "created_by": "revision_llm",
+          "created_at": "2024-05-19T00:00:00Z"
+        },
+        "best_candidate_version": 3,
+        "total_rounds_executed": 3,
+        "terminal_reason": "CONSECUTIVE_REGRESSIONS_EXCEEDED (1 consecutive regressions)",
+        "deterministic_passed": true,
+        "critical_defect_count": 0,
+        "major_defect_count": 1,
+        "rubric_scores": {
+          "factual_accuracy": 1.0,
+          "evidence_grounding": 1.0,
+          "citation_correctness": 1.0,
+          "completeness": 0.95,
+          "relevance": 1.0,
+          "clarity_organization": 1.0,
+          "logical_consistency": 1.0
+        },
+        "unresolved_critiques": [
+          {
+            "issue_id": "CRITIQUE-001",
+            "category": "factual_grounding",
+            "severity": "major",
+            "affected_section_id": "sec_exec",
+            "affected_claim_id": null,
+            "explanation": "Section 'sec_exec' contains ungrounded factual assertion in prose not captured as a claim: 'Neutral atom quantum processors employ optical tweezer arrays to manipulate rubidium and cesium atoms.'",
+            "supporting_source_ids": [],
+            "suggested_correction": "The cited source does not substantiate the specific claim. Either cite a source that directly proves the proposition, or soften the assertion to match the available evidence.",
+            "confidence": 0.95,
+            "is_resolved": false
+          }
+        ],
+        "requires_human_action": true,
+        "created_at": "2026-11-11T17:19:14.177019Z"
+      }
+    },
+    "learned_lessons_count": 0
+  },
+  "llm_stats": {
+    "llm_calls": 40,
+    "llm_attempts": 43,
+    "transient_retries": 3,
+    "validation_retries": 0,
+    "timeout_resets": 0
+  }
+}

@@ -1,0 +1,368 @@
+{
+  "verified_at_utc": "2026-11-11T14:38:09.304384+00:00",
+  "vector_store_class": "InMemoryVectorStore",
+  "embedding_model": "all-MiniLM-L6-v2",
+  "total_topics": 15,
+  "total_chunks_indexed": 29,
+  "all_topics_hit_gold_chunks": true,
+  "topics": [
+    {
+      "topic_id": "qc-01",
+      "expected_chunk_ids": [
+        "chunk_qc_01_1",
+        "chunk_qc_01_2"
+      ],
+      "retrieved_chunk_ids": [
+        "chunk_qc_01_2",
+        "chunk_qc_01_1",
+        "chunk_qc_02_2",
+        "chunk_qc_03_1"
+      ],
+      "matched_gold_chunks": [
+        "chunk_qc_01_2",
+        "chunk_qc_01_1"
+      ],
+      "recall_hit": true,
+      "scores": {
+        "chunk_qc_01_2": 0.6747,
+        "chunk_qc_01_1": 0.6375,
+        "chunk_qc_02_2": 0.3629,
+        "chunk_qc_03_1": 0.3183
+      }
+    },
+    {
+      "topic_id": "qc-02",
+      "expected_chunk_ids": [
+        "chunk_qc_02_1",
+        "chunk_qc_02_2"
+      ],
+      "retrieved_chunk_ids": [
+        "chunk_qc_02_1",
+        "chunk_qc_02_2",
+        "chunk_qc_03_1",
+        "chunk_qc_01_2"
+      ],
+      "matched_gold_chunks": [
+        "chunk_qc_02_1",
+        "chunk_qc_02_2"
+      ],
+      "recall_hit": true,
+      "scores": {
+        "chunk_qc_02_1": 0.5905,
+        "chunk_qc_02_2": 0.516,
+        "chunk_qc_03_1": 0.4068,
+        "chunk_qc_01_2": 0.2836
+      }
+    },
+    {
+      "topic_id": "qc-03",
+      "expected_chunk_ids": [
+        "chunk_qc_03_1",
+        "chunk_qc_03_2"
+      ],
+      "retrieved_chunk_ids": [
+        "chunk_qc_03_1",
+        "chunk_qc_03_2",
+        "chunk_dist_03_2",
+        "chunk_qc_01_1"
+      ],
+      "matched_gold_chunks": [
+        "chunk_qc_03_1",
+        "chunk_qc_03_2"
+      ],
+      "recall_hit": true,
+      "scores": {
+        "chunk_qc_03_1": 0.5789,
+        "chunk_qc_03_2": 0.5312,
+        "chunk_dist_03_2": 0.2732,
+        "chunk_qc_01_1": 0.2679
+      }
+    },
+    {
+      "topic_id": "ai-01",
+      "expected_chunk_ids": [
+        "chunk_ai_01_1",
+        "chunk_ai_01_2"
+      ],
+      "retrieved_chunk_ids": [
+        "chunk_ai_01_1",
+        "chunk_ai_01_2",
+        "chunk_ai_03_2",
+        "chunk_ai_02_2"
+      ],
+      "matched_gold_chunks": [
+        "chunk_ai_01_1",
+        "chunk_ai_01_2"
+      ],
+      "recall_hit": true,
+      "scores": {
+        "chunk_ai_01_1": 0.4788,
+        "chunk_ai_01_2": 0.4054,
+        "chunk_ai_03_2": 0.3956,
+        "chunk_ai_02_2": 0.2975
+      }
+    },
+    {
+      "topic_id": "ai-02",
+      "expected_chunk_ids": [
+        "chunk_ai_02_1",
+        "chunk_ai_02_2"
+      ],
+      "retrieved_chunk_ids": [
+        "chunk_ai_02_1",
+        "chunk_ai_02_2",
+        "chunk_ai_01_2",
+        "chunk_qc_03_2"
+      ],
+      "matched_gold_chunks": [
+        "chunk_ai_02_1",
+        "chunk_ai_02_2"
+      ],
+      "recall_hit": true,
+      "scores": {
+        "chunk_ai_02_1": 0.47,
+        "chunk_ai_02_2": 0.3963,
+        "chunk_ai_01_2": 0.2674,
+        "chunk_qc_03_2": 0.2227
+      }
+    },
+    {
+      "topic_id": "ai-03",
+      "expected_chunk_ids": [
+        "chunk_ai_03_1",
+        "chunk_ai_03_2"
+      ],
+      "retrieved_chunk_ids": [
+        "chunk_ai_03_1",
+        "chunk_ai_03_2",
+        "chunk_dist_02_1",
+        "chunk_ai_01_1"
+      ],
+      "matched_gold_chunks": [
+        "chunk_ai_03_1",
+        "chunk_ai_03_2"
+      ],
+      "recall_hit": true,
+      "scores": {
+        "chunk_ai_03_1": 0.5444,
+        "chunk_ai_03_2": 0.4268,
+        "chunk_dist_02_1": 0.1749,
+        "chunk_ai_01_1": 0.1461
+      }
+    },
+    {
+      "topic_id": "energy-01",
+      "expected_chunk_ids": [
+        "chunk_energy_01_1",
+        "chunk_energy_01_2"
+      ],
+      "retrieved_chunk_ids": [
+        "chunk_energy_01_1",
+        "chunk_energy_01_2",
+        "chunk_energy_03_1",
+        "chunk_energy_02_2"
+      ],
+      "matched_gold_chunks": [
+        "chunk_energy_01_1",
+        "chunk_energy_01_2"
+      ],
+      "recall_hit": true,
+      "scores": {
+        "chunk_energy_01_1": 0.6487,
+        "chunk_energy_01_2": 0.5289,
+        "chunk_energy_03_1": 0.3718,
+        "chunk_energy_02_2": 0.2292
+      }
+    },
+    {
+      "topic_id": "energy-02",
+      "expected_chunk_ids": [
+        "chunk_energy_02_1",
+        "chunk_energy_02_2"
+      ],
+      "retrieved_chunk_ids": [
+        "chunk_energy_02_1",
+        "chunk_energy_02_2",
+        "chunk_energy_01_1",
+        "chunk_energy_01_2"
+      ],
+      "matched_gold_chunks": [
+        "chunk_energy_02_1",
+        "chunk_energy_02_2"
+      ],
+      "recall_hit": true,
+      "scores": {
+        "chunk_energy_02_1": 0.7237,
+        "chunk_energy_02_2": 0.3881,
+        "chunk_energy_01_1": 0.2498,
+        "chunk_energy_01_2": 0.2324
+      }
+    },
+    {
+      "topic_id": "energy-03",
+      "expected_chunk_ids": [
+        "chunk_energy_03_1",
+        "chunk_energy_03_2"
+      ],
+      "retrieved_chunk_ids": [
+        "chunk_energy_03_1",
+        "chunk_energy_03_2",
+        "chunk_energy_01_1",
+        "chunk_energy_02_2"
+      ],
+      "matched_gold_chunks": [
+        "chunk_energy_03_1",
+        "chunk_energy_03_2"
+      ],
+      "recall_hit": true,
+      "scores": {
+        "chunk_energy_03_1": 0.5787,
+        "chunk_energy_03_2": 0.4632,
+        "chunk_energy_01_1": 0.2627,
+        "chunk_energy_02_2": 0.2129
+      }
+    },
+    {
+      "topic_id": "bio-01",
+      "expected_chunk_ids": [
+        "chunk_bio_01_1",
+        "chunk_bio_01_2"
+      ],
+      "retrieved_chunk_ids": [
+        "chunk_bio_01_1",
+        "chunk_bio_01_2",
+        "chunk_bio_03_1",
+        "chunk_bio_02_1"
+      ],
+      "matched_gold_chunks": [
+        "chunk_bio_01_1",
+        "chunk_bio_01_2"
+      ],
+      "recall_hit": true,
+      "scores": {
+        "chunk_bio_01_1": 0.5435,
+        "chunk_bio_01_2": 0.4239,
+        "chunk_bio_03_1": 0.274,
+        "chunk_bio_02_1": 0.2677
+      }
+    },
+    {
+      "topic_id": "bio-02",
+      "expected_chunk_ids": [
+        "chunk_bio_02_1",
+        "chunk_bio_02_2"
+      ],
+      "retrieved_chunk_ids": [
+        "chunk_bio_02_1",
+        "chunk_bio_02_2",
+        "chunk_bio_03_1",
+        "chunk_bio_01_2"
+      ],
+      "matched_gold_chunks": [
+        "chunk_bio_02_1",
+        "chunk_bio_02_2"
+      ],
+      "recall_hit": true,
+      "scores": {
+        "chunk_bio_02_1": 0.6904,
+        "chunk_bio_02_2": 0.4671,
+        "chunk_bio_03_1": 0.3081,
+        "chunk_bio_01_2": 0.2663
+      }
+    },
+    {
+      "topic_id": "bio-03",
+      "expected_chunk_ids": [
+        "chunk_bio_03_1"
+      ],
+      "retrieved_chunk_ids": [
+        "chunk_bio_03_1",
+        "chunk_bio_02_2",
+        "chunk_bio_02_1",
+        "chunk_bio_01_2"
+      ],
+      "matched_gold_chunks": [
+        "chunk_bio_03_1"
+      ],
+      "recall_hit": true,
+      "scores": {
+        "chunk_bio_03_1": 0.6384,
+        "chunk_bio_02_2": 0.3039,
+        "chunk_bio_02_1": 0.2881,
+        "chunk_bio_01_2": 0.2773
+      }
+    },
+    {
+      "topic_id": "dist-01",
+      "expected_chunk_ids": [
+        "chunk_dist_01_1",
+        "chunk_dist_01_2"
+      ],
+      "retrieved_chunk_ids": [
+        "chunk_dist_01_1",
+        "chunk_dist_01_2",
+        "chunk_dist_02_2",
+        "chunk_ai_02_2"
+      ],
+      "matched_gold_chunks": [
+        "chunk_dist_01_1",
+        "chunk_dist_01_2"
+      ],
+      "recall_hit": true,
+      "scores": {
+        "chunk_dist_01_1": 0.6654,
+        "chunk_dist_01_2": 0.6151,
+        "chunk_dist_02_2": 0.3806,
+        "chunk_ai_02_2": 0.3689
+      }
+    },
+    {
+      "topic_id": "dist-02",
+      "expected_chunk_ids": [
+        "chunk_dist_02_1",
+        "chunk_dist_02_2"
+      ],
+      "retrieved_chunk_ids": [
+        "chunk_dist_02_1",
+        "chunk_dist_02_2",
+        "chunk_dist_03_2",
+        "chunk_ai_03_2"
+      ],
+      "matched_gold_chunks": [
+        "chunk_dist_02_1",
+        "chunk_dist_02_2"
+      ],
+      "recall_hit": true,
+      "scores": {
+        "chunk_dist_02_1": 0.7658,
+        "chunk_dist_02_2": 0.3602,
+        "chunk_dist_03_2": 0.2745,
+        "chunk_ai_03_2": 0.2732
+      }
+    },
+    {
+      "topic_id": "dist-03",
+      "expected_chunk_ids": [
+        "chunk_dist_03_1",
+        "chunk_dist_03_2"
+      ],
+      "retrieved_chunk_ids": [
+        "chunk_dist_03_1",
+        "chunk_dist_03_2",
+        "chunk_ai_02_2",
+        "chunk_ai_03_1"
+      ],
+      "matched_gold_chunks": [
+        "chunk_dist_03_1",
+        "chunk_dist_03_2"
+      ],
+      "recall_hit": true,
+      "scores": {
+        "chunk_dist_03_1": 0.7332,
+        "chunk_dist_03_2": 0.3579,
+        "chunk_ai_02_2": 0.219,
+        "chunk_ai_03_1": 0.2139
+      }
+    }
+  ]
+}

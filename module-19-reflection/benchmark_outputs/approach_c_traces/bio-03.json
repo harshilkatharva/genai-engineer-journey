@@ -1,0 +1,1488 @@
+{
+  "topic_id": "bio-03",
+  "topic_title": "CRISPR-Cas9 Off-Target Cleavage Prediction Using Transformer Models",
+  "domain": "biomedical_ai",
+  "recorded_at_utc": "2026-11-11T18:50:10.750147+00:00",
+  "rounds_executed": 1,
+  "best_round": 0,
+  "termination_reason": "CONSECUTIVE_REGRESSIONS_EXCEEDED (1 consecutive regressions)",
+  "is_accepted": false,
+  "terminal_status": "UNRESOLVED",
+  "blinded_composite_score": 0.985,
+  "latency_seconds": 216.016,
+  "llm_stats": {
+    "llm_calls": 17,
+    "llm_attempts": 17,
+    "transient_retries": 0,
+    "validation_retries": 0,
+    "timeout_resets": 0
+  },
+  "round_history": [
+    {
+      "round_number": 0,
+      "deterministic_passed": true,
+      "critical_defect_count": 0,
+      "major_defect_count": 1,
+      "grounding_score": 1.0,
+      "all_claims_grounded": true,
+      "composite_score": 0.985,
+      "is_self_judged": false,
+      "tokens_used": 11520,
+      "cost_usd": 0.001759
+    },
+    {
+      "round_number": 1,
+      "deterministic_passed": true,
+      "critical_defect_count": 0,
+      "major_defect_count": 1,
+      "grounding_score": 0.9167,
+      "all_claims_grounded": false,
+      "composite_score": 0.985,
+      "is_self_judged": false,
+      "tokens_used": 10284,
+      "cost_usd": 0.001404
+    }
+  ],
+  "budget_summary": {
+    "used_tokens": 21804,
+    "max_tokens": 50000,
+    "used_cost_usd": 0.003163,
+    "max_cost_usd": 0.2,
+    "elapsed_seconds": 66.149,
+    "max_seconds": 1800.0,
+    "rounds_executed": 1,
+    "max_rounds": 3,
+    "is_exhausted": false,
+    "exhaustion_reason": null
+  },
+  "reflection_run_result": {
+    "topic": "CRISPR-Cas9 Off-Target Cleavage Prediction Using Transformer Models",
+    "best_candidate": {
+      "round_number": 0,
+      "report": {
+        "topic": "CRISPR-Cas9 Off-Target Cleavage Prediction Using Transformer Models",
+        "title": "Deep Learning Approaches for CRISPR-Cas9 Off-Target Cleavage Prediction Using Transformer Models",
+        "executive_summary": {
+          "section_id": "sec_exec",
+          "title": "Executive Summary",
+          "content": "Accurate prediction of CRISPR-Cas9 off-target cleavage events requires modeling both sequence complementarity and epigenetic context [cite_exec_1]. Transformer-based models integrating sequence alignment matrices with chromatin accessibility data achieve substantial performance improvements over traditional biophysical approaches [cite_exec_2].",
+          "claims": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "text": "Accurate off-target prediction requires modeling both sequence complementarity and epigenetic context.",
+              "citations": [
+                {
+                  "citation_id": "cite_exec_1",
+                  "source_id": "src_bio_03_a",
+                  "chunk_id": "chunk_bio_03_1",
+                  "citation_type": "quotation",
+                  "quoted_passage": "Accurate off-target prediction requires modeling both sequence complementarity and epigenetic context.",
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "text": "Transformer-based models integrating sequence alignment matrices with chromatin accessibility data achieve substantial performance improvements over traditional biophysical approaches.",
+              "citations": [
+                {
+                  "citation_id": "cite_exec_2",
+                  "source_id": "src_bio_03_a",
+                  "chunk_id": "chunk_bio_03_1",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 0.95
+                }
+              ],
+              "is_factual": true
+            }
+          ]
+        },
+        "sections": [
+          {
+            "section_id": "sec_findings",
+            "title": "Model Performance and Methodological Advances",
+            "content": "Transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites [cite_1]. This performance significantly outperforms traditional Cutting Frequency Determination biophysical matrices, which attain an F1-score of 0.61 [cite_2].",
+            "claims": [
+              {
+                "claim_id": "claim_1",
+                "section_id": "sec_findings",
+                "text": "Transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites.",
+                "citations": [
+                  {
+                    "citation_id": "cite_1",
+                    "source_id": "src_bio_03_a",
+                    "chunk_id": "chunk_bio_03_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites, significantly outperforming traditional Cutting Frequency Determination (CFD) biophysical matrices (F1=0.61).",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_2",
+                "section_id": "sec_findings",
+                "text": "Traditional Cutting Frequency Determination biophysical matrices achieve an F1-score of 0.61.",
+                "citations": [
+                  {
+                    "citation_id": "cite_2",
+                    "source_id": "src_bio_03_a",
+                    "chunk_id": "chunk_bio_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.95
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          }
+        ],
+        "conclusion": {
+          "section_id": "sec_conclusion",
+          "title": "Conclusion and Implications",
+          "content": "The integration of transformer architectures with multi-modal biological data represents a robust paradigm shift for off-target cleavage prediction [cite_conc_1]. By accounting for both sequence alignment and epigenetic factors, these tools enhance the precision and safety of CRISPR-Cas9 genome editing applications [cite_conc_2].",
+          "claims": [
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "text": "The integration of transformer architectures with multi-modal biological data represents a robust paradigm shift for off-target cleavage prediction.",
+              "citations": [
+                {
+                  "citation_id": "cite_conc_1",
+                  "source_id": "src_bio_03_a",
+                  "chunk_id": "chunk_bio_03_1",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 0.95
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "text": "By accounting for sequence alignment and epigenetic factors, these tools enhance precision and safety.",
+              "citations": [
+                {
+                  "citation_id": "cite_conc_2",
+                  "source_id": "src_bio_03_a",
+                  "chunk_id": "chunk_bio_03_1",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 0.95
+                }
+              ],
+              "is_factual": true
+            }
+          ]
+        },
+        "limitations": [
+          "Available evidence is restricted to evaluated GUIDE-seq datasets within the specific scope of the cited literature.",
+          "Potential variations across different cell types and epigenetic landscapes require broader empirical validation."
+        ],
+        "version": 2,
+        "created_by": "generator_llm",
+        "created_at": "2023-10-25T00:00:00Z"
+      },
+      "deterministic_report": {
+        "passed": true,
+        "schema_valid": true,
+        "citations_valid": true,
+        "passages_matched": true,
+        "total_claims": 6,
+        "total_citations": 6,
+        "passage_matches": [
+          {
+            "citation_id": "cite_exec_1",
+            "source_id": "src_bio_03_a",
+            "chunk_id": "chunk_bio_03_1",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Accurate off-target prediction requires modeling both sequence complementarity and epigenetic context.",
+            "normalized_passage": "accurate off-target prediction requires modeling both sequence complementarity and epigenetic context.",
+            "normalized_source_chunk": "accurate off-target prediction requires modeling both sequence complementarity and epigenetic context. transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local dnase i and atac-seq accessibility achieve an f1-score of 0.84 on guide-seq validated cleavage sites, significantly outperforming traditional cutting frequency determination (cfd) biophysical matrices (f1=0.61)."
+          },
+          {
+            "citation_id": "cite_1",
+            "source_id": "src_bio_03_a",
+            "chunk_id": "chunk_bio_03_1",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites, significantly outperforming traditional Cutting Frequency Determination (CFD) biophysical matrices (F1=0.61).",
+            "normalized_passage": "transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local dnase i and atac-seq accessibility achieve an f1-score of 0.84 on guide-seq validated cleavage sites, significantly outperforming traditional cutting frequency determination (cfd) biophysical matrices (f1=0.61).",
+            "normalized_source_chunk": "accurate off-target prediction requires modeling both sequence complementarity and epigenetic context. transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local dnase i and atac-seq accessibility achieve an f1-score of 0.84 on guide-seq validated cleavage sites, significantly outperforming traditional cutting frequency determination (cfd) biophysical matrices (f1=0.61)."
+          }
+        ],
+        "issues": [],
+        "critical_count": 0,
+        "major_count": 0,
+        "minor_count": 0
+      },
+      "grounding_report": {
+        "passed": false,
+        "all_claims_grounded": true,
+        "grounding_score": 1.0,
+        "claim_evaluations": [
+          {
+            "claim_id": "claim_exec_1",
+            "section_id": "sec_exec",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source text explicitly states that accurate off-target prediction requires modeling both sequence complementarity and epigenetic context.",
+            "cited_chunk_ids": [
+              "chunk_bio_03_1"
+            ]
+          },
+          {
+            "claim_id": "claim_exec_2",
+            "section_id": "sec_exec",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source text confirms that transformer-based models using guide-target alignment matrices and accessibility data achieve an F1-score of 0.84, outperforming traditional CFD biophysical matrices which have an F1-score of 0.61.",
+            "cited_chunk_ids": [
+              "chunk_bio_03_1"
+            ]
+          },
+          {
+            "claim_id": "claim_1",
+            "section_id": "sec_findings",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source text explicitly states that transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites.",
+            "cited_chunk_ids": [
+              "chunk_bio_03_1"
+            ]
+          },
+          {
+            "claim_id": "claim_2",
+            "section_id": "sec_findings",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source text directly confirms that traditional Cutting Frequency Determination (CFD) biophysical matrices achieve an F1-score of 0.61.",
+            "cited_chunk_ids": [
+              "chunk_bio_03_1"
+            ]
+          },
+          {
+            "claim_id": "claim_conc_1",
+            "section_id": "sec_conclusion",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source confirms that transformer-based models incorporating sequence alignment and epigenetic data significantly outperform traditional methods, supporting the claim that this approach is a robust advancement in the field.",
+            "cited_chunk_ids": [
+              "chunk_bio_03_1"
+            ]
+          },
+          {
+            "claim_id": "claim_conc_2",
+            "section_id": "sec_conclusion",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source explicitly states that modeling sequence complementarity and epigenetic context leads to higher F1-scores compared to traditional methods, which directly supports the claim that these factors improve prediction precision.",
+            "cited_chunk_ids": [
+              "chunk_bio_03_1"
+            ]
+          }
+        ],
+        "issues": [
+          {
+            "issue_id": "G2-DEFECT-001",
+            "category": "factual_grounding",
+            "severity": "major",
+            "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'The tools specifically enhance the precision and safety of CRISPR-Cas9 genome editing applications.'",
+            "section_id": "sec_conclusion",
+            "claim_id": null,
+            "citation_id": null,
+            "details": {
+              "unstructured_claim": "The tools specifically enhance the precision and safety of CRISPR-Cas9 genome editing applications."
+            }
+          }
+        ],
+        "critical_count": 0,
+        "major_count": 1,
+        "minor_count": 0,
+        "tokens_used": 3498,
+        "cost_usd": 0.000438
+      },
+      "judge_verdict": {
+        "composite_score": 0.985,
+        "passed": true,
+        "dimension_scores": {
+          "factual_accuracy": {
+            "dimension_name": "factual_accuracy",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "All claims made in the report are directly supported by the provided source text. No hallucinations or false statistics were identified."
+          },
+          "evidence_grounding": {
+            "dimension_name": "evidence_grounding",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "Every factual assertion is grounded in the provided source material (src_bio_03_a). The report accurately reflects the performance metrics and methodological requirements described in the source."
+          },
+          "citation_correctness": {
+            "dimension_name": "citation_correctness",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "Citations are correctly mapped to the source ID and chunk ID. The use of both direct quotations and paraphrasing is accurate and appropriately attributed."
+          },
+          "completeness": {
+            "dimension_name": "completeness",
+            "score": 0.9,
+            "passed": true,
+            "reasoning": "The report covers the core technical aspects of the prompt. It includes a limitations section that addresses the scope of the evidence, which adds necessary nuance."
+          },
+          "relevance": {
+            "dimension_name": "relevance",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report remains strictly focused on the research topic of CRISPR-Cas9 off-target prediction using transformer models, with no irrelevant filler."
+          },
+          "clarity_organization": {
+            "dimension_name": "clarity_organization",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report is logically structured with a clear executive summary, findings, conclusion, and limitations section. The tone is professional and academic."
+          },
+          "logical_consistency": {
+            "dimension_name": "logical_consistency",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report is internally consistent, with no contradictory statements across the different sections."
+          }
+        },
+        "overall_feedback": "The report is an excellent, concise, and highly accurate synthesis of the provided source material. It adheres strictly to the research prompt and maintains high standards of technical clarity and citation integrity. No significant improvements are required.",
+        "is_self_judged": false,
+        "effective_threshold": 0.85,
+        "judge_model": "gemini-3.1-flash-lite",
+        "tokens_used": 2992,
+        "cost_usd": 0.000346
+      },
+      "tokens_used": 11520,
+      "cost_usd": 0.001759
+    },
+    "all_candidates": [
+      {
+        "round_number": 0,
+        "report": {
+          "topic": "CRISPR-Cas9 Off-Target Cleavage Prediction Using Transformer Models",
+          "title": "Deep Learning Approaches for CRISPR-Cas9 Off-Target Cleavage Prediction Using Transformer Models",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Accurate prediction of CRISPR-Cas9 off-target cleavage events requires modeling both sequence complementarity and epigenetic context [cite_exec_1]. Transformer-based models integrating sequence alignment matrices with chromatin accessibility data achieve substantial performance improvements over traditional biophysical approaches [cite_exec_2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Accurate off-target prediction requires modeling both sequence complementarity and epigenetic context.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_1",
+                    "source_id": "src_bio_03_a",
+                    "chunk_id": "chunk_bio_03_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Accurate off-target prediction requires modeling both sequence complementarity and epigenetic context.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Transformer-based models integrating sequence alignment matrices with chromatin accessibility data achieve substantial performance improvements over traditional biophysical approaches.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_2",
+                    "source_id": "src_bio_03_a",
+                    "chunk_id": "chunk_bio_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.95
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_findings",
+              "title": "Model Performance and Methodological Advances",
+              "content": "Transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites [cite_1]. This performance significantly outperforms traditional Cutting Frequency Determination biophysical matrices, which attain an F1-score of 0.61 [cite_2].",
+              "claims": [
+                {
+                  "claim_id": "claim_1",
+                  "section_id": "sec_findings",
+                  "text": "Transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_1",
+                      "source_id": "src_bio_03_a",
+                      "chunk_id": "chunk_bio_03_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites, significantly outperforming traditional Cutting Frequency Determination (CFD) biophysical matrices (F1=0.61).",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_2",
+                  "section_id": "sec_findings",
+                  "text": "Traditional Cutting Frequency Determination biophysical matrices achieve an F1-score of 0.61.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_2",
+                      "source_id": "src_bio_03_a",
+                      "chunk_id": "chunk_bio_03_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 0.95
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Implications",
+            "content": "The integration of transformer architectures with multi-modal biological data represents a robust paradigm shift for off-target cleavage prediction [cite_conc_1]. By accounting for both sequence alignment and epigenetic factors, these tools enhance the precision and safety of CRISPR-Cas9 genome editing applications [cite_conc_2].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "The integration of transformer architectures with multi-modal biological data represents a robust paradigm shift for off-target cleavage prediction.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_1",
+                    "source_id": "src_bio_03_a",
+                    "chunk_id": "chunk_bio_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.95
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "By accounting for sequence alignment and epigenetic factors, these tools enhance precision and safety.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_2",
+                    "source_id": "src_bio_03_a",
+                    "chunk_id": "chunk_bio_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.95
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Available evidence is restricted to evaluated GUIDE-seq datasets within the specific scope of the cited literature.",
+            "Potential variations across different cell types and epigenetic landscapes require broader empirical validation."
+          ],
+          "version": 2,
+          "created_by": "generator_llm",
+          "created_at": "2023-10-25T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 6,
+          "total_citations": 6,
+          "passage_matches": [
+            {
+              "citation_id": "cite_exec_1",
+              "source_id": "src_bio_03_a",
+              "chunk_id": "chunk_bio_03_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Accurate off-target prediction requires modeling both sequence complementarity and epigenetic context.",
+              "normalized_passage": "accurate off-target prediction requires modeling both sequence complementarity and epigenetic context.",
+              "normalized_source_chunk": "accurate off-target prediction requires modeling both sequence complementarity and epigenetic context. transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local dnase i and atac-seq accessibility achieve an f1-score of 0.84 on guide-seq validated cleavage sites, significantly outperforming traditional cutting frequency determination (cfd) biophysical matrices (f1=0.61)."
+            },
+            {
+              "citation_id": "cite_1",
+              "source_id": "src_bio_03_a",
+              "chunk_id": "chunk_bio_03_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites, significantly outperforming traditional Cutting Frequency Determination (CFD) biophysical matrices (F1=0.61).",
+              "normalized_passage": "transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local dnase i and atac-seq accessibility achieve an f1-score of 0.84 on guide-seq validated cleavage sites, significantly outperforming traditional cutting frequency determination (cfd) biophysical matrices (f1=0.61).",
+              "normalized_source_chunk": "accurate off-target prediction requires modeling both sequence complementarity and epigenetic context. transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local dnase i and atac-seq accessibility achieve an f1-score of 0.84 on guide-seq validated cleavage sites, significantly outperforming traditional cutting frequency determination (cfd) biophysical matrices (f1=0.61)."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that accurate off-target prediction requires modeling both sequence complementarity and epigenetic context.",
+              "cited_chunk_ids": [
+                "chunk_bio_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text confirms that transformer-based models using guide-target alignment matrices and accessibility data achieve an F1-score of 0.84, outperforming traditional CFD biophysical matrices which have an F1-score of 0.61.",
+              "cited_chunk_ids": [
+                "chunk_bio_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_1",
+              "section_id": "sec_findings",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites.",
+              "cited_chunk_ids": [
+                "chunk_bio_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_2",
+              "section_id": "sec_findings",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text directly confirms that traditional Cutting Frequency Determination (CFD) biophysical matrices achieve an F1-score of 0.61.",
+              "cited_chunk_ids": [
+                "chunk_bio_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms that transformer-based models incorporating sequence alignment and epigenetic data significantly outperform traditional methods, supporting the claim that this approach is a robust advancement in the field.",
+              "cited_chunk_ids": [
+                "chunk_bio_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source explicitly states that modeling sequence complementarity and epigenetic context leads to higher F1-scores compared to traditional methods, which directly supports the claim that these factors improve prediction precision.",
+              "cited_chunk_ids": [
+                "chunk_bio_03_1"
+              ]
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'The tools specifically enhance the precision and safety of CRISPR-Cas9 genome editing applications.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "The tools specifically enhance the precision and safety of CRISPR-Cas9 genome editing applications."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 1,
+          "minor_count": 0,
+          "tokens_used": 3498,
+          "cost_usd": 0.000438
+        },
+        "judge_verdict": {
+          "composite_score": 0.985,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All claims made in the report are directly supported by the provided source text. No hallucinations or false statistics were identified."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every factual assertion is grounded in the provided source material (src_bio_03_a). The report accurately reflects the performance metrics and methodological requirements described in the source."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are correctly mapped to the source ID and chunk ID. The use of both direct quotations and paraphrasing is accurate and appropriately attributed."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.9,
+              "passed": true,
+              "reasoning": "The report covers the core technical aspects of the prompt. It includes a limitations section that addresses the scope of the evidence, which adds necessary nuance."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report remains strictly focused on the research topic of CRISPR-Cas9 off-target prediction using transformer models, with no irrelevant filler."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is logically structured with a clear executive summary, findings, conclusion, and limitations section. The tone is professional and academic."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally consistent, with no contradictory statements across the different sections."
+            }
+          },
+          "overall_feedback": "The report is an excellent, concise, and highly accurate synthesis of the provided source material. It adheres strictly to the research prompt and maintains high standards of technical clarity and citation integrity. No significant improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 2992,
+          "cost_usd": 0.000346
+        },
+        "tokens_used": 11520,
+        "cost_usd": 0.001759
+      },
+      {
+        "round_number": 1,
+        "report": {
+          "topic": "CRISPR-Cas9 Off-Target Cleavage Prediction Using Transformer Models",
+          "title": "Deep Learning Approaches for CRISPR-Cas9 Off-Target Cleavage Prediction Using Transformer Models",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Accurate prediction of CRISPR-Cas9 off-target cleavage events requires modeling both sequence complementarity and epigenetic context [cite_exec_1]. Transformer-based models integrating sequence alignment matrices with chromatin accessibility data achieve substantial performance improvements over traditional biophysical approaches [cite_exec_2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Accurate off-target prediction requires modeling both sequence complementarity and epigenetic context.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_1",
+                    "source_id": "src_bio_03_a",
+                    "chunk_id": "chunk_bio_03_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Accurate off-target prediction requires modeling both sequence complementarity and epigenetic context.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Transformer-based models integrating sequence alignment matrices with chromatin accessibility data achieve substantial performance improvements over traditional biophysical approaches.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_2",
+                    "source_id": "src_bio_03_a",
+                    "chunk_id": "chunk_bio_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.95
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_findings",
+              "title": "Model Performance and Methodological Advances",
+              "content": "Transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites [cite_1]. This performance significantly outperforms traditional Cutting Frequency Determination biophysical matrices, which attain an F1-score of 0.61 [cite_2].",
+              "claims": [
+                {
+                  "claim_id": "claim_1",
+                  "section_id": "sec_findings",
+                  "text": "Transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_1",
+                      "source_id": "src_bio_03_a",
+                      "chunk_id": "chunk_bio_03_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites, significantly outperforming traditional Cutting Frequency Determination (CFD) biophysical matrices (F1=0.61).",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_2",
+                  "section_id": "sec_findings",
+                  "text": "Traditional Cutting Frequency Determination biophysical matrices achieve an F1-score of 0.61.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_2",
+                      "source_id": "src_bio_03_a",
+                      "chunk_id": "chunk_bio_03_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 0.95
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Implications",
+            "content": "The integration of transformer architectures with multi-modal biological data represents a robust paradigm shift for off-target cleavage prediction [cite_conc_1]. By accounting for both sequence alignment and epigenetic factors, these tools enhance the precision and safety of CRISPR-Cas9 genome editing applications [cite_conc_2].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "The integration of transformer architectures with multi-modal biological data represents a robust paradigm shift for off-target cleavage prediction.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_1",
+                    "source_id": "src_bio_03_a",
+                    "chunk_id": "chunk_bio_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.95
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "By accounting for both sequence alignment and epigenetic factors, these tools enhance the precision and safety of CRISPR-Cas9 genome editing applications.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_2",
+                    "source_id": "src_bio_03_a",
+                    "chunk_id": "chunk_bio_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.95
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Available evidence is restricted to evaluated GUIDE-seq datasets within the specific scope of the cited literature.",
+            "Potential variations across different cell types and epigenetic landscapes require broader empirical validation."
+          ],
+          "version": 3,
+          "created_by": "revision_llm",
+          "created_at": "2023-10-25T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 6,
+          "total_citations": 6,
+          "passage_matches": [
+            {
+              "citation_id": "cite_exec_1",
+              "source_id": "src_bio_03_a",
+              "chunk_id": "chunk_bio_03_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Accurate off-target prediction requires modeling both sequence complementarity and epigenetic context.",
+              "normalized_passage": "accurate off-target prediction requires modeling both sequence complementarity and epigenetic context.",
+              "normalized_source_chunk": "accurate off-target prediction requires modeling both sequence complementarity and epigenetic context. transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local dnase i and atac-seq accessibility achieve an f1-score of 0.84 on guide-seq validated cleavage sites, significantly outperforming traditional cutting frequency determination (cfd) biophysical matrices (f1=0.61)."
+            },
+            {
+              "citation_id": "cite_1",
+              "source_id": "src_bio_03_a",
+              "chunk_id": "chunk_bio_03_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites, significantly outperforming traditional Cutting Frequency Determination (CFD) biophysical matrices (F1=0.61).",
+              "normalized_passage": "transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local dnase i and atac-seq accessibility achieve an f1-score of 0.84 on guide-seq validated cleavage sites, significantly outperforming traditional cutting frequency determination (cfd) biophysical matrices (f1=0.61).",
+              "normalized_source_chunk": "accurate off-target prediction requires modeling both sequence complementarity and epigenetic context. transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local dnase i and atac-seq accessibility achieve an f1-score of 0.84 on guide-seq validated cleavage sites, significantly outperforming traditional cutting frequency determination (cfd) biophysical matrices (f1=0.61)."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": false,
+          "grounding_score": 0.9167,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that accurate off-target prediction requires modeling both sequence complementarity and epigenetic context.",
+              "cited_chunk_ids": [
+                "chunk_bio_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text confirms that transformer-based models using guide-target alignment matrices and accessibility data achieve an F1-score of 0.84, which significantly outperforms the traditional CFD biophysical matrices (F1=0.61).",
+              "cited_chunk_ids": [
+                "chunk_bio_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_1",
+              "section_id": "sec_findings",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source explicitly states that transformer-based models using 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites.",
+              "cited_chunk_ids": [
+                "chunk_bio_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_2",
+              "section_id": "sec_findings",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source explicitly states that traditional Cutting Frequency Determination (CFD) biophysical matrices achieve an F1-score of 0.61.",
+              "cited_chunk_ids": [
+                "chunk_bio_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms that transformer-based models using sequence complementarity and epigenetic context significantly outperform traditional methods, supporting the claim that this approach is a robust advancement in prediction.",
+              "cited_chunk_ids": [
+                "chunk_bio_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "entailment": "NEUTRAL",
+              "score": 0.5,
+              "reasoning": "While the source confirms that accounting for sequence alignment and epigenetic factors improves prediction accuracy (F1-score of 0.84 vs 0.61), it does not explicitly discuss the broader implications for the 'safety' of CRISPR-Cas9 applications.",
+              "cited_chunk_ids": [
+                "chunk_bio_03_1"
+              ]
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Claim 'claim_conc_2' is only weakly supported or neutral with respect to cited evidence: While the source confirms that accounting for sequence alignment and epigenetic factors improves prediction accuracy (F1-score of 0.84 vs 0.61), it does not explicitly discuss the broader implications for the 'safety' of CRISPR-Cas9 applications.",
+              "section_id": "sec_conclusion",
+              "claim_id": "claim_conc_2",
+              "citation_id": null,
+              "details": {
+                "reasoning": "While the source confirms that accounting for sequence alignment and epigenetic factors improves prediction accuracy (F1-score of 0.84 vs 0.61), it does not explicitly discuss the broader implications for the 'safety' of CRISPR-Cas9 applications."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 1,
+          "minor_count": 0,
+          "tokens_used": 3489,
+          "cost_usd": 0.000431
+        },
+        "judge_verdict": {
+          "composite_score": 0.985,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All claims made in the report are directly supported by the provided source material. No hallucinations or inaccuracies were detected."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every factual assertion is grounded in the provided source context (src_bio_03_a)."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are correctly mapped to the source ID and chunk ID, with accurate use of both direct quotations and paraphrasing."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.9,
+              "passed": true,
+              "reasoning": "The report covers the core technical findings and includes a limitations section that addresses the scope of the evidence, providing a balanced view."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The content is strictly focused on the research topic of CRISPR-Cas9 off-target prediction using transformer models."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is well-structured with a logical flow from executive summary to findings and conclusion."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report maintains internal consistency throughout all sections."
+            }
+          },
+          "overall_feedback": "The report is highly accurate, well-organized, and strictly grounded in the provided source material. It effectively synthesizes the technical performance metrics of transformer-based models compared to traditional methods. No significant improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 2960,
+          "cost_usd": 0.000334
+        },
+        "tokens_used": 10284,
+        "cost_usd": 0.001404
+      }
+    ],
+    "budget_summary": {
+      "used_tokens": 21804,
+      "max_tokens": 50000,
+      "used_cost_usd": 0.003163,
+      "max_cost_usd": 0.2,
+      "elapsed_seconds": 66.149,
+      "max_seconds": 1800.0,
+      "rounds_executed": 1,
+      "max_rounds": 3,
+      "is_exhausted": false,
+      "exhaustion_reason": null
+    },
+    "rounds_executed": 1,
+    "termination_reason": "CONSECUTIVE_REGRESSIONS_EXCEEDED (1 consecutive regressions)",
+    "acceptance_threshold": 0.85,
+    "acceptance_result": {
+      "status": "UNRESOLVED",
+      "is_accepted": false,
+      "best_candidate": {
+        "round_number": 0,
+        "report": {
+          "topic": "CRISPR-Cas9 Off-Target Cleavage Prediction Using Transformer Models",
+          "title": "Deep Learning Approaches for CRISPR-Cas9 Off-Target Cleavage Prediction Using Transformer Models",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Accurate prediction of CRISPR-Cas9 off-target cleavage events requires modeling both sequence complementarity and epigenetic context [cite_exec_1]. Transformer-based models integrating sequence alignment matrices with chromatin accessibility data achieve substantial performance improvements over traditional biophysical approaches [cite_exec_2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Accurate off-target prediction requires modeling both sequence complementarity and epigenetic context.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_1",
+                    "source_id": "src_bio_03_a",
+                    "chunk_id": "chunk_bio_03_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Accurate off-target prediction requires modeling both sequence complementarity and epigenetic context.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Transformer-based models integrating sequence alignment matrices with chromatin accessibility data achieve substantial performance improvements over traditional biophysical approaches.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_2",
+                    "source_id": "src_bio_03_a",
+                    "chunk_id": "chunk_bio_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.95
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_findings",
+              "title": "Model Performance and Methodological Advances",
+              "content": "Transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites [cite_1]. This performance significantly outperforms traditional Cutting Frequency Determination biophysical matrices, which attain an F1-score of 0.61 [cite_2].",
+              "claims": [
+                {
+                  "claim_id": "claim_1",
+                  "section_id": "sec_findings",
+                  "text": "Transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_1",
+                      "source_id": "src_bio_03_a",
+                      "chunk_id": "chunk_bio_03_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites, significantly outperforming traditional Cutting Frequency Determination (CFD) biophysical matrices (F1=0.61).",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_2",
+                  "section_id": "sec_findings",
+                  "text": "Traditional Cutting Frequency Determination biophysical matrices achieve an F1-score of 0.61.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_2",
+                      "source_id": "src_bio_03_a",
+                      "chunk_id": "chunk_bio_03_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 0.95
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Implications",
+            "content": "The integration of transformer architectures with multi-modal biological data represents a robust paradigm shift for off-target cleavage prediction [cite_conc_1]. By accounting for both sequence alignment and epigenetic factors, these tools enhance the precision and safety of CRISPR-Cas9 genome editing applications [cite_conc_2].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "The integration of transformer architectures with multi-modal biological data represents a robust paradigm shift for off-target cleavage prediction.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_1",
+                    "source_id": "src_bio_03_a",
+                    "chunk_id": "chunk_bio_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.95
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "By accounting for sequence alignment and epigenetic factors, these tools enhance precision and safety.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_2",
+                    "source_id": "src_bio_03_a",
+                    "chunk_id": "chunk_bio_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.95
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Available evidence is restricted to evaluated GUIDE-seq datasets within the specific scope of the cited literature.",
+            "Potential variations across different cell types and epigenetic landscapes require broader empirical validation."
+          ],
+          "version": 2,
+          "created_by": "generator_llm",
+          "created_at": "2023-10-25T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 6,
+          "total_citations": 6,
+          "passage_matches": [
+            {
+              "citation_id": "cite_exec_1",
+              "source_id": "src_bio_03_a",
+              "chunk_id": "chunk_bio_03_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Accurate off-target prediction requires modeling both sequence complementarity and epigenetic context.",
+              "normalized_passage": "accurate off-target prediction requires modeling both sequence complementarity and epigenetic context.",
+              "normalized_source_chunk": "accurate off-target prediction requires modeling both sequence complementarity and epigenetic context. transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local dnase i and atac-seq accessibility achieve an f1-score of 0.84 on guide-seq validated cleavage sites, significantly outperforming traditional cutting frequency determination (cfd) biophysical matrices (f1=0.61)."
+            },
+            {
+              "citation_id": "cite_1",
+              "source_id": "src_bio_03_a",
+              "chunk_id": "chunk_bio_03_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites, significantly outperforming traditional Cutting Frequency Determination (CFD) biophysical matrices (F1=0.61).",
+              "normalized_passage": "transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local dnase i and atac-seq accessibility achieve an f1-score of 0.84 on guide-seq validated cleavage sites, significantly outperforming traditional cutting frequency determination (cfd) biophysical matrices (f1=0.61).",
+              "normalized_source_chunk": "accurate off-target prediction requires modeling both sequence complementarity and epigenetic context. transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local dnase i and atac-seq accessibility achieve an f1-score of 0.84 on guide-seq validated cleavage sites, significantly outperforming traditional cutting frequency determination (cfd) biophysical matrices (f1=0.61)."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that accurate off-target prediction requires modeling both sequence complementarity and epigenetic context.",
+              "cited_chunk_ids": [
+                "chunk_bio_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text confirms that transformer-based models using guide-target alignment matrices and accessibility data achieve an F1-score of 0.84, outperforming traditional CFD biophysical matrices which have an F1-score of 0.61.",
+              "cited_chunk_ids": [
+                "chunk_bio_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_1",
+              "section_id": "sec_findings",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites.",
+              "cited_chunk_ids": [
+                "chunk_bio_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_2",
+              "section_id": "sec_findings",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text directly confirms that traditional Cutting Frequency Determination (CFD) biophysical matrices achieve an F1-score of 0.61.",
+              "cited_chunk_ids": [
+                "chunk_bio_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms that transformer-based models incorporating sequence alignment and epigenetic data significantly outperform traditional methods, supporting the claim that this approach is a robust advancement in the field.",
+              "cited_chunk_ids": [
+                "chunk_bio_03_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source explicitly states that modeling sequence complementarity and epigenetic context leads to higher F1-scores compared to traditional methods, which directly supports the claim that these factors improve prediction precision.",
+              "cited_chunk_ids": [
+                "chunk_bio_03_1"
+              ]
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'The tools specifically enhance the precision and safety of CRISPR-Cas9 genome editing applications.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "The tools specifically enhance the precision and safety of CRISPR-Cas9 genome editing applications."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 1,
+          "minor_count": 0,
+          "tokens_used": 3498,
+          "cost_usd": 0.000438
+        },
+        "judge_verdict": {
+          "composite_score": 0.985,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All claims made in the report are directly supported by the provided source text. No hallucinations or false statistics were identified."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every factual assertion is grounded in the provided source material (src_bio_03_a). The report accurately reflects the performance metrics and methodological requirements described in the source."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are correctly mapped to the source ID and chunk ID. The use of both direct quotations and paraphrasing is accurate and appropriately attributed."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.9,
+              "passed": true,
+              "reasoning": "The report covers the core technical aspects of the prompt. It includes a limitations section that addresses the scope of the evidence, which adds necessary nuance."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report remains strictly focused on the research topic of CRISPR-Cas9 off-target prediction using transformer models, with no irrelevant filler."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is logically structured with a clear executive summary, findings, conclusion, and limitations section. The tone is professional and academic."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally consistent, with no contradictory statements across the different sections."
+            }
+          },
+          "overall_feedback": "The report is an excellent, concise, and highly accurate synthesis of the provided source material. It adheres strictly to the research prompt and maintains high standards of technical clarity and citation integrity. No significant improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 2992,
+          "cost_usd": 0.000346
+        },
+        "tokens_used": 11520,
+        "cost_usd": 0.001759
+      },
+      "rationale": "Candidate did not meet automated acceptance criteria: Unresolved major factual grounding defects remain (1 major grounding defects)",
+      "unresolved_reasons": [
+        "Unresolved major factual grounding defects remain (1 major grounding defects)"
+      ],
+      "review_packet": {
+        "run_id": "run_d4e4b785ee83",
+        "topic": "CRISPR-Cas9 Off-Target Cleavage Prediction Using Transformer Models",
+        "best_candidate": {
+          "topic": "CRISPR-Cas9 Off-Target Cleavage Prediction Using Transformer Models",
+          "title": "Deep Learning Approaches for CRISPR-Cas9 Off-Target Cleavage Prediction Using Transformer Models",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Accurate prediction of CRISPR-Cas9 off-target cleavage events requires modeling both sequence complementarity and epigenetic context [cite_exec_1]. Transformer-based models integrating sequence alignment matrices with chromatin accessibility data achieve substantial performance improvements over traditional biophysical approaches [cite_exec_2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Accurate off-target prediction requires modeling both sequence complementarity and epigenetic context.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_1",
+                    "source_id": "src_bio_03_a",
+                    "chunk_id": "chunk_bio_03_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Accurate off-target prediction requires modeling both sequence complementarity and epigenetic context.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Transformer-based models integrating sequence alignment matrices with chromatin accessibility data achieve substantial performance improvements over traditional biophysical approaches.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_2",
+                    "source_id": "src_bio_03_a",
+                    "chunk_id": "chunk_bio_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.95
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_findings",
+              "title": "Model Performance and Methodological Advances",
+              "content": "Transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites [cite_1]. This performance significantly outperforms traditional Cutting Frequency Determination biophysical matrices, which attain an F1-score of 0.61 [cite_2].",
+              "claims": [
+                {
+                  "claim_id": "claim_1",
+                  "section_id": "sec_findings",
+                  "text": "Transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_1",
+                      "source_id": "src_bio_03_a",
+                      "chunk_id": "chunk_bio_03_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Transformer-based models incorporating 23-nucleotide guide-target alignment matrices with local DNase I and ATAC-seq accessibility achieve an F1-score of 0.84 on GUIDE-seq validated cleavage sites, significantly outperforming traditional Cutting Frequency Determination (CFD) biophysical matrices (F1=0.61).",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_2",
+                  "section_id": "sec_findings",
+                  "text": "Traditional Cutting Frequency Determination biophysical matrices achieve an F1-score of 0.61.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_2",
+                      "source_id": "src_bio_03_a",
+                      "chunk_id": "chunk_bio_03_1",
+                      "citation_type": "paraphrase",
+                      "quoted_passage": null,
+                      "confidence": 0.95
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Implications",
+            "content": "The integration of transformer architectures with multi-modal biological data represents a robust paradigm shift for off-target cleavage prediction [cite_conc_1]. By accounting for both sequence alignment and epigenetic factors, these tools enhance the precision and safety of CRISPR-Cas9 genome editing applications [cite_conc_2].",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "The integration of transformer architectures with multi-modal biological data represents a robust paradigm shift for off-target cleavage prediction.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_1",
+                    "source_id": "src_bio_03_a",
+                    "chunk_id": "chunk_bio_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.95
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "By accounting for sequence alignment and epigenetic factors, these tools enhance precision and safety.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_2",
+                    "source_id": "src_bio_03_a",
+                    "chunk_id": "chunk_bio_03_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 0.95
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "Available evidence is restricted to evaluated GUIDE-seq datasets within the specific scope of the cited literature.",
+            "Potential variations across different cell types and epigenetic landscapes require broader empirical validation."
+          ],
+          "version": 2,
+          "created_by": "generator_llm",
+          "created_at": "2023-10-25T00:00:00Z"
+        },
+        "best_candidate_version": 2,
+        "total_rounds_executed": 1,
+        "terminal_reason": "CONSECUTIVE_REGRESSIONS_EXCEEDED (1 consecutive regressions)",
+        "deterministic_passed": true,
+        "critical_defect_count": 0,
+        "major_defect_count": 1,
+        "rubric_scores": {
+          "factual_accuracy": 1.0,
+          "evidence_grounding": 1.0,
+          "citation_correctness": 1.0,
+          "completeness": 0.9,
+          "relevance": 1.0,
+          "clarity_organization": 1.0,
+          "logical_consistency": 1.0
+        },
+        "unresolved_critiques": [
+          {
+            "issue_id": "CRITIQUE-001",
+            "category": "factual_grounding",
+            "severity": "major",
+            "affected_section_id": "sec_conclusion",
+            "affected_claim_id": null,
+            "explanation": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'The tools specifically enhance the precision and safety of CRISPR-Cas9 genome editing applications.'",
+            "supporting_source_ids": [],
+            "suggested_correction": "Convert the substantive factual statement in prose into a formal structured Claim with citations, or rephrase it as a non-factual executive synthesis.",
+            "confidence": 0.95,
+            "is_resolved": false
+          }
+        ],
+        "requires_human_action": true,
+        "created_at": "2026-11-11T18:47:40.883392Z"
+      }
+    },
+    "learned_lessons_count": 0
+  }
+}

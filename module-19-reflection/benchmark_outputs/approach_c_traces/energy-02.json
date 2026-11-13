@@ -1,0 +1,2557 @@
+{
+  "topic_id": "energy-02",
+  "topic_title": "Degradation Mechanisms in Perovskite-Silicon Tandem Photovoltaic Cells",
+  "domain": "renewable_energy",
+  "recorded_at_utc": "2026-11-11T18:37:13.168475+00:00",
+  "rounds_executed": 3,
+  "best_round": 3,
+  "termination_reason": "ALL_ACCEPTANCE_CRITERIA_MET",
+  "is_accepted": true,
+  "terminal_status": "ACCEPTED",
+  "blinded_composite_score": 0.985,
+  "latency_seconds": 662.176,
+  "llm_stats": {
+    "llm_calls": 31,
+    "llm_attempts": 37,
+    "transient_retries": 6,
+    "validation_retries": 0,
+    "timeout_resets": 0
+  },
+  "round_history": [
+    {
+      "round_number": 0,
+      "deterministic_passed": false,
+      "critical_defect_count": 0,
+      "major_defect_count": 9,
+      "grounding_score": 0.5,
+      "all_claims_grounded": false,
+      "composite_score": 0.8375,
+      "is_self_judged": false,
+      "tokens_used": 8421,
+      "cost_usd": 0.001255
+    },
+    {
+      "round_number": 1,
+      "deterministic_passed": true,
+      "critical_defect_count": 0,
+      "major_defect_count": 4,
+      "grounding_score": 0.9286,
+      "all_claims_grounded": false,
+      "composite_score": 0.985,
+      "is_self_judged": false,
+      "tokens_used": 13946,
+      "cost_usd": 0.00187
+    },
+    {
+      "round_number": 2,
+      "deterministic_passed": true,
+      "critical_defect_count": 0,
+      "major_defect_count": 1,
+      "grounding_score": 1.0,
+      "all_claims_grounded": true,
+      "composite_score": 0.985,
+      "is_self_judged": false,
+      "tokens_used": 14361,
+      "cost_usd": 0.001948
+    },
+    {
+      "round_number": 3,
+      "deterministic_passed": true,
+      "critical_defect_count": 0,
+      "major_defect_count": 0,
+      "grounding_score": 1.0,
+      "all_claims_grounded": true,
+      "composite_score": 0.985,
+      "is_self_judged": false,
+      "tokens_used": 14154,
+      "cost_usd": 0.00192
+    }
+  ],
+  "budget_summary": {
+    "used_tokens": 50882,
+    "max_tokens": 50000,
+    "used_cost_usd": 0.006993,
+    "max_cost_usd": 0.2,
+    "elapsed_seconds": 658.979,
+    "max_seconds": 1800.0,
+    "rounds_executed": 3,
+    "max_rounds": 3,
+    "is_exhausted": true,
+    "exhaustion_reason": "TOKENS_EXHAUSTED (used 50882 >= max 50000)"
+  },
+  "reflection_run_result": {
+    "topic": "Degradation Mechanisms in Perovskite-Silicon Tandem Photovoltaic Cells",
+    "best_candidate": {
+      "round_number": 3,
+      "report": {
+        "topic": "Degradation Mechanisms in Perovskite-Silicon Tandem Photovoltaic Cells",
+        "title": "Degradation Mechanisms and Mitigation Strategies in Perovskite-Silicon Tandem Photovoltaic Cells",
+        "executive_summary": {
+          "section_id": "sec_exec",
+          "title": "Executive Summary",
+          "content": "Monolithic two-terminal perovskite-silicon tandem solar cells have achieved significant milestones with certified power conversion efficiencies reaching 33.9% [cite_exec_1]. However, their performance can be constrained by operational degradation mechanisms, notably light-induced halide segregation in mixed iodide-bromide perovskites [cite_exec_3]. Advanced encapsulation architectures utilizing double-barrier layers have shown considerable promise in mitigating moisture ingress during accelerated damp-heat testing [cite_exec_2].",
+          "claims": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "text": "Monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+              "citations": [
+                {
+                  "citation_id": "cite_exec_1",
+                  "source_id": "src_energy_02_a",
+                  "chunk_id": "chunk_energy_02_1",
+                  "citation_type": "quotation",
+                  "quoted_passage": "Monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "text": "Advanced encapsulation using double-barrier layers mitigates moisture ingress during damp-heat testing.",
+              "citations": [
+                {
+                  "citation_id": "cite_exec_2",
+                  "source_id": "src_energy_02_b",
+                  "chunk_id": "chunk_energy_02_2",
+                  "citation_type": "quotation",
+                  "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_exec_3",
+              "section_id": "sec_exec",
+              "text": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation.",
+              "citations": [
+                {
+                  "citation_id": "cite_exec_3",
+                  "source_id": "src_energy_02_a",
+                  "chunk_id": "chunk_energy_02_1",
+                  "citation_type": "quotation",
+                  "quoted_passage": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation",
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            }
+          ]
+        },
+        "sections": [
+          {
+            "section_id": "sec_mechanisms",
+            "title": "Degradation Mechanisms and Environmental Stress Testing",
+            "content": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation [cite_cite_1]. This segregation leads to the formation of low-bandgap iodide-rich clusters that function as non-radiative recombination centers, ultimately reducing the open-circuit voltage by up to 140 mV [cite_cite_1]. In addition to illumination stressors, environmental moisture poses a severe risk to device stability. Encapsulating tandems with double-barrier layers consisting of 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress [cite_cite_2]. Consequently, devices subjected to IEC 61215 damp-heat testing at 85 degrees Celsius and 85% relative humidity successfully retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress [cite_cite_3].",
+            "claims": [
+              {
+                "claim_id": "claim_mech_1",
+                "section_id": "sec_mechanisms",
+                "text": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_1",
+                    "source_id": "src_energy_02_a",
+                    "chunk_id": "chunk_energy_02_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_mech_2",
+                "section_id": "sec_mechanisms",
+                "text": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_2",
+                    "source_id": "src_energy_02_b",
+                    "chunk_id": "chunk_energy_02_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_mech_3",
+                "section_id": "sec_mechanisms",
+                "text": "Devices subjected to IEC 61215 damp-heat testing (85 degrees Celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_3",
+                    "source_id": "src_energy_02_b",
+                    "chunk_id": "chunk_energy_02_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Devices subjected to IEC 61215 damp-heat testing (85 degrees Celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          }
+        ],
+        "conclusion": {
+          "section_id": "sec_conclusion",
+          "title": "Conclusion and Future Outlook",
+          "content": "Addressing degradation mechanisms in perovskite-silicon tandem solar cells requires focusing on intrinsic material stability and robust external encapsulation. Light-induced halide segregation forms low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage [cite_conc_1], while advanced barrier technologies such as ALD SnO2 combined with PIB edge seals offer an effective defense against environmental moisture [cite_conc_2]. Overcoming these stressors is critical for scaling tandem photovoltaics toward commercial viability.",
+          "claims": [
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "text": "Light-induced halide segregation forms low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage.",
+              "citations": [
+                {
+                  "citation_id": "cite_conc_1",
+                  "source_id": "src_energy_02_a",
+                  "chunk_id": "chunk_energy_02_1",
+                  "citation_type": "quotation",
+                  "quoted_passage": "forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "text": "Advanced barrier technologies such as ALD SnO2 combined with PIB edge seals offer an effective defense against environmental moisture.",
+              "citations": [
+                {
+                  "citation_id": "cite_conc_2",
+                  "source_id": "src_energy_02_b",
+                  "chunk_id": "chunk_energy_02_2",
+                  "citation_type": "quotation",
+                  "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            }
+          ]
+        },
+        "limitations": [
+          "The scope is limited to data concerning mixed iodide-bromide perovskites and specific double-barrier encapsulation methods.",
+          "Long-term field data beyond 1,500 hours of accelerated damp-heat testing are not yet captured in the current source context."
+        ],
+        "version": 4,
+        "created_by": "revision_llm",
+        "created_at": "2024-05-16T01:00:00Z"
+      },
+      "deterministic_report": {
+        "passed": true,
+        "schema_valid": true,
+        "citations_valid": true,
+        "passages_matched": true,
+        "total_claims": 8,
+        "total_citations": 8,
+        "passage_matches": [
+          {
+            "citation_id": "cite_exec_1",
+            "source_id": "src_energy_02_a",
+            "chunk_id": "chunk_energy_02_1",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+            "normalized_passage": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+            "normalized_source_chunk": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%. under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv."
+          },
+          {
+            "citation_id": "cite_exec_2",
+            "source_id": "src_energy_02_b",
+            "chunk_id": "chunk_energy_02_2",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+            "normalized_passage": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress.",
+            "normalized_source_chunk": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress. devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress."
+          },
+          {
+            "citation_id": "cite_exec_3",
+            "source_id": "src_energy_02_a",
+            "chunk_id": "chunk_energy_02_1",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation",
+            "normalized_passage": "under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation",
+            "normalized_source_chunk": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%. under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv."
+          },
+          {
+            "citation_id": "cite_cite_1",
+            "source_id": "src_energy_02_a",
+            "chunk_id": "chunk_energy_02_1",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+            "normalized_passage": "under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv.",
+            "normalized_source_chunk": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%. under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv."
+          },
+          {
+            "citation_id": "cite_cite_2",
+            "source_id": "src_energy_02_b",
+            "chunk_id": "chunk_energy_02_2",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+            "normalized_passage": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress.",
+            "normalized_source_chunk": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress. devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress."
+          },
+          {
+            "citation_id": "cite_cite_3",
+            "source_id": "src_energy_02_b",
+            "chunk_id": "chunk_energy_02_2",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Devices subjected to IEC 61215 damp-heat testing (85 degrees Celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+            "normalized_passage": "devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+            "normalized_source_chunk": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress. devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress."
+          },
+          {
+            "citation_id": "cite_conc_1",
+            "source_id": "src_energy_02_a",
+            "chunk_id": "chunk_energy_02_1",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+            "normalized_passage": "forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv.",
+            "normalized_source_chunk": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%. under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv."
+          },
+          {
+            "citation_id": "cite_conc_2",
+            "source_id": "src_energy_02_b",
+            "chunk_id": "chunk_energy_02_2",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+            "normalized_passage": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress.",
+            "normalized_source_chunk": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress. devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress."
+          }
+        ],
+        "issues": [],
+        "critical_count": 0,
+        "major_count": 0,
+        "minor_count": 0
+      },
+      "grounding_report": {
+        "passed": true,
+        "all_claims_grounded": true,
+        "grounding_score": 1.0,
+        "claim_evaluations": [
+          {
+            "claim_id": "claim_exec_1",
+            "section_id": "sec_exec",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk explicitly states that monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+            "cited_chunk_ids": [
+              "chunk_energy_02_1"
+            ]
+          },
+          {
+            "claim_id": "claim_exec_2",
+            "section_id": "sec_exec",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk confirms that encapsulating tandems with double-barrier layers (SnO2 and PIB) completely blocks moisture ingress during IEC 61215 damp-heat testing.",
+            "cited_chunk_ids": [
+              "chunk_energy_02_2"
+            ]
+          },
+          {
+            "claim_id": "claim_exec_3",
+            "section_id": "sec_exec",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk directly states that under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation.",
+            "cited_chunk_ids": [
+              "chunk_energy_02_1"
+            ]
+          },
+          {
+            "claim_id": "claim_mech_1",
+            "section_id": "sec_mechanisms",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The claim is a verbatim restatement of the information provided in chunk_energy_02_1 regarding the effects of light-induced halide segregation in perovskites.",
+            "cited_chunk_ids": [
+              "chunk_energy_02_1"
+            ]
+          },
+          {
+            "claim_id": "claim_mech_2",
+            "section_id": "sec_mechanisms",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The claim accurately reflects the description of the encapsulation method and its effect on moisture ingress as stated in chunk_energy_02_2.",
+            "cited_chunk_ids": [
+              "chunk_energy_02_2"
+            ]
+          },
+          {
+            "claim_id": "claim_mech_3",
+            "section_id": "sec_mechanisms",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The claim directly matches the performance data reported in chunk_energy_02_2 regarding IEC 61215 damp-heat testing results.",
+            "cited_chunk_ids": [
+              "chunk_energy_02_2"
+            ]
+          },
+          {
+            "claim_id": "claim_conc_1",
+            "section_id": "sec_conclusion",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk explicitly states that light-induced halide segregation forms low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage.",
+            "cited_chunk_ids": [
+              "chunk_energy_02_1"
+            ]
+          },
+          {
+            "claim_id": "claim_conc_2",
+            "section_id": "sec_conclusion",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunk confirms that encapsulating tandems with ALD SnO2 and PIB edge seals completely blocks moisture ingress and maintains high efficiency under damp-heat stress.",
+            "cited_chunk_ids": [
+              "chunk_energy_02_2"
+            ]
+          }
+        ],
+        "issues": [],
+        "critical_count": 0,
+        "major_count": 0,
+        "minor_count": 0,
+        "tokens_used": 4490,
+        "cost_usd": 0.000537
+      },
+      "judge_verdict": {
+        "composite_score": 0.985,
+        "passed": true,
+        "dimension_scores": {
+          "factual_accuracy": {
+            "dimension_name": "factual_accuracy",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "All factual claims are directly supported by the provided source material. No hallucinations or inaccuracies were identified."
+          },
+          "evidence_grounding": {
+            "dimension_name": "evidence_grounding",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "Every claim made in the report is explicitly grounded in the provided source chunks, with clear mapping between the text and the source content."
+          },
+          "citation_correctness": {
+            "dimension_name": "citation_correctness",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "Citations are precise, correctly formatted, and point to the exact source chunks containing the relevant information."
+          },
+          "completeness": {
+            "dimension_name": "completeness",
+            "score": 0.9,
+            "passed": true,
+            "reasoning": "The report covers the primary degradation mechanisms and mitigation strategies identified in the sources. It also includes a helpful limitations section that contextualizes the scope."
+          },
+          "relevance": {
+            "dimension_name": "relevance",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The content is strictly focused on the research topic of degradation mechanisms in perovskite-silicon tandem cells, with no irrelevant filler."
+          },
+          "clarity_organization": {
+            "dimension_name": "clarity_organization",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report is logically structured with a clear executive summary, technical section, and conclusion, maintaining a professional and readable tone."
+          },
+          "logical_consistency": {
+            "dimension_name": "logical_consistency",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report is internally consistent, with no contradictory statements across the different sections."
+          }
+        },
+        "overall_feedback": "This is an excellent, highly accurate, and well-structured report. It effectively synthesizes the provided source material to address the research topic. The inclusion of a limitations section adds significant value by clarifying the boundaries of the current evidence. No major improvements are required.",
+        "is_self_judged": false,
+        "effective_threshold": 0.85,
+        "judge_model": "gemini-3.1-flash-lite",
+        "tokens_used": 3981,
+        "cost_usd": 0.000417
+      },
+      "tokens_used": 14154,
+      "cost_usd": 0.00192
+    },
+    "all_candidates": [
+      {
+        "round_number": 0,
+        "report": {
+          "topic": "Degradation Mechanisms in Perovskite-Silicon Tandem Photovoltaic Cells",
+          "title": "Degradation Mechanisms and Mitigation Strategies in Perovskite-Silicon Tandem Photovoltaic Cells",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Monolithic two-terminal perovskite-silicon tandem solar cells have achieved significant milestones with certified power conversion efficiencies reaching 33.9% [cite_1]. However, their long-term commercialization remains constrained by operational degradation mechanisms, notably light-induced halide segregation in wide-bandgap perovskite top cells and moisture-induced instability under environmental stress [cite_1, cite_2]. Advanced encapsulation architectures utilizing double-barrier layers have shown considerable promise in mitigating moisture ingress during accelerated damp-heat testing [cite_2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+                "citations": [],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Advanced encapsulation using double-barrier layers mitigates moisture ingress during damp-heat testing.",
+                "citations": [],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_mechanisms",
+              "title": "Degradation Mechanisms and Environmental Stress Testing",
+              "content": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation [cite_cite_1]. This segregation leads to the formation of low-bandgap iodide-rich clusters that function as non-radiative recombination centers, ultimately reducing the open-circuit voltage by up to 140 mV [cite_cite_1]. In addition to illumination stressors, environmental moisture poses a severe risk to device stability. Encapsulating tandems with double-barrier layers consisting of 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress [cite_cite_2]. Consequently, devices subjected to IEC 61215 damp-heat testing at 85 degrees Celsius and 85% relative humidity successfully retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress [cite_cite_2].",
+              "claims": [
+                {
+                  "claim_id": "claim_mech_1",
+                  "section_id": "sec_mechanisms",
+                  "text": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_1",
+                      "source_id": "src_energy_02_a",
+                      "chunk_id": "chunk_energy_02_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_mech_2",
+                  "section_id": "sec_mechanisms",
+                  "text": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_2",
+                      "source_id": "src_energy_02_b",
+                      "chunk_id": "chunk_energy_02_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_mech_3",
+                  "section_id": "sec_mechanisms",
+                  "text": "Devices subjected to IEC 61215 damp-heat testing (85 degrees Celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_3",
+                      "source_id": "src_energy_02_b",
+                      "chunk_id": "chunk_energy_02_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Devices subjected to IEC 61215 damp-heat testing (85 degrees Celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Future Outlook",
+            "content": "Addressing degradation mechanisms in perovskite-silicon tandem solar cells requires a dual approach focusing on intrinsic material stability and robust external encapsulation. While light-induced halide segregation remains a persistent challenge lowering open-circuit voltage, advanced barrier technologies such as ALD SnO2 combined with PIB edge seals offer an effective defense against environmental moisture. Overcoming these combined stressors is critical for scaling tandem photovoltaics toward commercial viability.",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Light-induced halide segregation and moisture ingress represent primary dual challenges for perovskite-silicon tandem commercialization.",
+                "citations": [],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "The scope is limited to data concerning mixed iodide-bromide perovskites and specific double-barrier encapsulation methods.",
+            "Long-term field data beyond 1,500 hours of accelerated damp-heat testing are not yet captured in the current source context."
+          ],
+          "version": 1,
+          "created_by": "generator_llm",
+          "created_at": "2024-05-15T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": false,
+          "schema_valid": true,
+          "citations_valid": false,
+          "passages_matched": true,
+          "total_claims": 6,
+          "total_citations": 3,
+          "passage_matches": [
+            {
+              "citation_id": "cite_cite_1",
+              "source_id": "src_energy_02_a",
+              "chunk_id": "chunk_energy_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+              "normalized_passage": "under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv.",
+              "normalized_source_chunk": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%. under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv."
+            },
+            {
+              "citation_id": "cite_cite_2",
+              "source_id": "src_energy_02_b",
+              "chunk_id": "chunk_energy_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+              "normalized_passage": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress.",
+              "normalized_source_chunk": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress. devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress."
+            },
+            {
+              "citation_id": "cite_cite_3",
+              "source_id": "src_energy_02_b",
+              "chunk_id": "chunk_energy_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Devices subjected to IEC 61215 damp-heat testing (85 degrees Celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+              "normalized_passage": "devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+              "normalized_source_chunk": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress. devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress."
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "DEFECT-001",
+              "category": "citation_integrity",
+              "severity": "major",
+              "message": "Factual claim 'claim_exec_1' lacks supporting citations.",
+              "section_id": "sec_exec",
+              "claim_id": "claim_exec_1",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "DEFECT-002",
+              "category": "citation_integrity",
+              "severity": "major",
+              "message": "Factual claim 'claim_exec_2' lacks supporting citations.",
+              "section_id": "sec_exec",
+              "claim_id": "claim_exec_2",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "DEFECT-003",
+              "category": "organization_clarity",
+              "severity": "minor",
+              "message": "Citation 'cite_cite_3' is defined on claim in section 'sec_mechanisms' but its identifier does not appear in section prose.",
+              "section_id": "sec_mechanisms",
+              "claim_id": null,
+              "citation_id": "cite_cite_3",
+              "details": {}
+            },
+            {
+              "issue_id": "DEFECT-004",
+              "category": "citation_integrity",
+              "severity": "major",
+              "message": "Factual claim 'claim_conc_1' lacks supporting citations.",
+              "section_id": "sec_conclusion",
+              "claim_id": "claim_conc_1",
+              "citation_id": null,
+              "details": {}
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 3,
+          "minor_count": 1
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": false,
+          "grounding_score": 0.5,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "NEUTRAL",
+              "score": 0.0,
+              "reasoning": "Claim has no citations attached to substantiate the factual proposition.",
+              "cited_chunk_ids": []
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "NEUTRAL",
+              "score": 0.0,
+              "reasoning": "Claim has no citations attached to substantiate the factual proposition.",
+              "cited_chunk_ids": []
+            },
+            {
+              "claim_id": "claim_mech_1",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim is a verbatim restatement of the information provided in chunk_energy_02_1 regarding the effects of light-induced halide segregation in perovskites.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_2",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim accurately reflects the description of the encapsulation method and its effect on moisture ingress as stated in chunk_energy_02_2.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_3",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim matches the performance data reported for devices under IEC 61215 damp-heat testing conditions as described in chunk_energy_02_2.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "NEUTRAL",
+              "score": 0.0,
+              "reasoning": "Claim has no citations attached to substantiate the factual proposition.",
+              "cited_chunk_ids": []
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Factual claim 'claim_exec_1' lacks supporting citations.",
+              "section_id": "sec_exec",
+              "claim_id": "claim_exec_1",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "G2-DEFECT-002",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Factual claim 'claim_exec_2' lacks supporting citations.",
+              "section_id": "sec_exec",
+              "claim_id": "claim_exec_2",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "G2-DEFECT-003",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec' contains ungrounded factual assertion in prose not captured as a claim: 'Operational degradation is constrained by light-induced halide segregation in wide-bandgap perovskite top cells.'",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Operational degradation is constrained by light-induced halide segregation in wide-bandgap perovskite top cells."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-004",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec' contains ungrounded factual assertion in prose not captured as a claim: 'Operational degradation is constrained by moisture-induced instability under environmental stress.'",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Operational degradation is constrained by moisture-induced instability under environmental stress."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-005",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Factual claim 'claim_conc_1' lacks supporting citations.",
+              "section_id": "sec_conclusion",
+              "claim_id": "claim_conc_1",
+              "citation_id": null,
+              "details": {}
+            },
+            {
+              "issue_id": "G2-DEFECT-006",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'Advanced barrier technologies such as ALD SnO2 combined with PIB edge seals offer an effective defense against environmental moisture.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Advanced barrier technologies such as ALD SnO2 combined with PIB edge seals offer an effective defense against environmental moisture."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 6,
+          "minor_count": 0,
+          "tokens_used": 2629,
+          "cost_usd": 0.000313
+        },
+        "judge_verdict": {
+          "composite_score": 0.8375,
+          "passed": false,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 0.95,
+              "passed": true,
+              "reasoning": "The report accurately reflects the technical data provided in the source contexts regarding efficiency, halide segregation, and damp-heat testing results. No hallucinations were detected."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 0.7,
+              "passed": false,
+              "reasoning": "While the content is factually accurate, several key claims in the Executive Summary and Conclusion lack direct citations, failing to ground the assertions in the provided source material."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 0.6,
+              "passed": false,
+              "reasoning": "The report fails to provide citations for multiple claims (claim_exec_1, claim_exec_2, claim_conc_1). Additionally, there is a mismatch where a citation identifier (cite_cite_3) is defined in the metadata but not properly integrated into the prose of the section."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.9,
+              "passed": true,
+              "reasoning": "The report covers the primary degradation mechanisms and mitigation strategies identified in the sources and includes a helpful limitations section."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report remains strictly focused on the degradation mechanisms and mitigation strategies for perovskite-silicon tandem cells as requested."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 0.85,
+              "passed": true,
+              "reasoning": "The report is well-structured with a logical flow from executive summary to mechanisms and conclusion. The tone is professional and appropriate for a research report."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally consistent; there are no contradictions between the executive summary, the body, and the conclusion."
+            }
+          },
+          "overall_feedback": "The report is technically sound and well-organized, accurately synthesizing the provided source material. However, it suffers from significant citation deficiencies. Several major claims in the Executive Summary and Conclusion are unsupported by citations, and there is a technical error regarding the inclusion of a citation identifier in the metadata that is not utilized in the text. To improve, the author must ensure that every factual claim is explicitly linked to a source and that all defined citation identifiers are correctly referenced in the prose.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 3448,
+          "cost_usd": 0.000401
+        },
+        "tokens_used": 8421,
+        "cost_usd": 0.001255
+      },
+      {
+        "round_number": 1,
+        "report": {
+          "topic": "Degradation Mechanisms in Perovskite-Silicon Tandem Photovoltaic Cells",
+          "title": "Degradation Mechanisms and Mitigation Strategies in Perovskite-Silicon Tandem Photovoltaic Cells",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Monolithic two-terminal perovskite-silicon tandem solar cells have achieved significant milestones with certified power conversion efficiencies reaching 33.9% [cite_exec_1]. However, their long-term commercialization remains constrained by operational degradation mechanisms, notably light-induced halide segregation in wide-bandgap perovskite top cells and moisture-induced instability under environmental stress [cite_exec_1, cite_exec_2]. Advanced encapsulation architectures utilizing double-barrier layers have shown considerable promise in mitigating moisture ingress during accelerated damp-heat testing [cite_exec_2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_1",
+                    "source_id": "src_energy_02_a",
+                    "chunk_id": "chunk_energy_02_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Advanced encapsulation using double-barrier layers mitigates moisture ingress during damp-heat testing.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_2",
+                    "source_id": "src_energy_02_b",
+                    "chunk_id": "chunk_energy_02_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_mechanisms",
+              "title": "Degradation Mechanisms and Environmental Stress Testing",
+              "content": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation [cite_cite_1]. This segregation leads to the formation of low-bandgap iodide-rich clusters that function as non-radiative recombination centers, ultimately reducing the open-circuit voltage by up to 140 mV [cite_cite_1]. In addition to illumination stressors, environmental moisture poses a severe risk to device stability. Encapsulating tandems with double-barrier layers consisting of 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress [cite_cite_2]. Consequently, devices subjected to IEC 61215 damp-heat testing at 85 degrees Celsius and 85% relative humidity successfully retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress [cite_cite_3].",
+              "claims": [
+                {
+                  "claim_id": "claim_mech_1",
+                  "section_id": "sec_mechanisms",
+                  "text": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_1",
+                      "source_id": "src_energy_02_a",
+                      "chunk_id": "chunk_energy_02_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_mech_2",
+                  "section_id": "sec_mechanisms",
+                  "text": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_2",
+                      "source_id": "src_energy_02_b",
+                      "chunk_id": "chunk_energy_02_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_mech_3",
+                  "section_id": "sec_mechanisms",
+                  "text": "Devices subjected to IEC 61215 damp-heat testing (85 degrees Celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_3",
+                      "source_id": "src_energy_02_b",
+                      "chunk_id": "chunk_energy_02_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Devices subjected to IEC 61215 damp-heat testing (85 degrees Celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Future Outlook",
+            "content": "Addressing degradation mechanisms in perovskite-silicon tandem solar cells requires a dual approach focusing on intrinsic material stability and robust external encapsulation. While light-induced halide segregation remains a persistent challenge lowering open-circuit voltage [cite_conc_1], advanced barrier technologies such as ALD SnO2 combined with PIB edge seals offer an effective defense against environmental moisture [cite_conc_2]. Overcoming these combined stressors is critical for scaling tandem photovoltaics toward commercial viability.",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Light-induced halide segregation and moisture ingress represent primary dual challenges for perovskite-silicon tandem commercialization.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_1",
+                    "source_id": "src_energy_02_a",
+                    "chunk_id": "chunk_energy_02_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "Advanced barrier technologies such as ALD SnO2 combined with PIB edge seals offer an effective defense against environmental moisture.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_2",
+                    "source_id": "src_energy_02_b",
+                    "chunk_id": "chunk_energy_02_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "The scope is limited to data concerning mixed iodide-bromide perovskites and specific double-barrier encapsulation methods.",
+            "Long-term field data beyond 1,500 hours of accelerated damp-heat testing are not yet captured in the current source context."
+          ],
+          "version": 2,
+          "created_by": "revision_llm",
+          "created_at": "2024-05-16T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 7,
+          "total_citations": 7,
+          "passage_matches": [
+            {
+              "citation_id": "cite_exec_1",
+              "source_id": "src_energy_02_a",
+              "chunk_id": "chunk_energy_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+              "normalized_passage": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+              "normalized_source_chunk": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%. under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv."
+            },
+            {
+              "citation_id": "cite_exec_2",
+              "source_id": "src_energy_02_b",
+              "chunk_id": "chunk_energy_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+              "normalized_passage": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress.",
+              "normalized_source_chunk": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress. devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress."
+            },
+            {
+              "citation_id": "cite_cite_1",
+              "source_id": "src_energy_02_a",
+              "chunk_id": "chunk_energy_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+              "normalized_passage": "under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv.",
+              "normalized_source_chunk": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%. under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv."
+            },
+            {
+              "citation_id": "cite_cite_2",
+              "source_id": "src_energy_02_b",
+              "chunk_id": "chunk_energy_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+              "normalized_passage": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress.",
+              "normalized_source_chunk": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress. devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress."
+            },
+            {
+              "citation_id": "cite_cite_3",
+              "source_id": "src_energy_02_b",
+              "chunk_id": "chunk_energy_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Devices subjected to IEC 61215 damp-heat testing (85 degrees Celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+              "normalized_passage": "devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+              "normalized_source_chunk": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress. devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress."
+            },
+            {
+              "citation_id": "cite_conc_1",
+              "source_id": "src_energy_02_a",
+              "chunk_id": "chunk_energy_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+              "normalized_passage": "under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv.",
+              "normalized_source_chunk": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%. under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv."
+            },
+            {
+              "citation_id": "cite_conc_2",
+              "source_id": "src_energy_02_b",
+              "chunk_id": "chunk_energy_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+              "normalized_passage": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress.",
+              "normalized_source_chunk": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress. devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": false,
+          "grounding_score": 0.9286,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that monolithic two-terminal perovskite-silicon tandem solar cells have achieved certified power conversion efficiencies of 33.9%.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that encapsulating tandems with double-barrier layers (SnO2 and PIB) completely blocks moisture ingress and maintains high efficiency during IEC 61215 damp-heat testing.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_1",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim is a verbatim restatement of the information provided in chunk_energy_02_1 regarding the effects of light-induced halide segregation in perovskites.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_2",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim accurately reflects the description of the encapsulation method and its effect on moisture ingress as stated in chunk_energy_02_2.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_3",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim matches the performance data reported in chunk_energy_02_2 for devices subjected to IEC 61215 damp-heat testing.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "NEUTRAL",
+              "score": 0.5,
+              "reasoning": "The source confirms that light-induced halide segregation is a challenge, but it does not explicitly state that moisture ingress is a primary challenge for commercialization, nor does it frame these as the 'dual' primary challenges.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source explicitly states that encapsulating tandems with ALD SnO2 capped with PIB edge seals completely blocks moisture ingress and maintains high efficiency under damp-heat testing.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_2"
+              ]
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec' contains ungrounded factual assertion in prose not captured as a claim: 'Operational degradation is constrained by light-induced halide segregation in wide-bandgap perovskite top cells.'",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Operational degradation is constrained by light-induced halide segregation in wide-bandgap perovskite top cells."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-002",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec' contains ungrounded factual assertion in prose not captured as a claim: 'Operational degradation is constrained by moisture-induced instability under environmental stress.'",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Operational degradation is constrained by moisture-induced instability under environmental stress."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-003",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Claim 'claim_conc_1' is only weakly supported or neutral with respect to cited evidence: The source confirms that light-induced halide segregation is a challenge, but it does not explicitly state that moisture ingress is a primary challenge for commercialization, nor does it frame these as the 'dual' primary challenges.",
+              "section_id": "sec_conclusion",
+              "claim_id": "claim_conc_1",
+              "citation_id": null,
+              "details": {
+                "reasoning": "The source confirms that light-induced halide segregation is a challenge, but it does not explicitly state that moisture ingress is a primary challenge for commercialization, nor does it frame these as the 'dual' primary challenges."
+              }
+            },
+            {
+              "issue_id": "G2-DEFECT-004",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_conclusion' contains ungrounded factual assertion in prose not captured as a claim: 'Light-induced halide segregation lowers open-circuit voltage.'",
+              "section_id": "sec_conclusion",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Light-induced halide segregation lowers open-circuit voltage."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 4,
+          "minor_count": 0,
+          "tokens_used": 4403,
+          "cost_usd": 0.000529
+        },
+        "judge_verdict": {
+          "composite_score": 0.985,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All claims made in the report are directly supported by the provided source material. No hallucinations or factual inaccuracies were identified."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every factual assertion is explicitly grounded in the provided source chunks, with clear and accurate mapping between the text and the source content."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are precise, correctly formatted, and accurately reflect the source content. The use of direct quotations in the metadata ensures high reliability."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.9,
+              "passed": true,
+              "reasoning": "The report covers the key degradation mechanisms and mitigation strategies described in the sources. It also appropriately includes a limitations section to address the scope of the provided data."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report remains strictly focused on the research topic of degradation mechanisms in perovskite-silicon tandem cells, with no extraneous or off-topic information."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is exceptionally well-organized, using a logical flow from executive summary to specific mechanisms and concluding with future outlook and limitations."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally coherent, with no contradictions between the executive summary, main body, and conclusion."
+            }
+          },
+          "overall_feedback": "This is an excellent, highly accurate, and well-structured report. It synthesizes the provided technical information effectively and maintains strict adherence to the source material. No significant improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 3833,
+          "cost_usd": 0.000408
+        },
+        "tokens_used": 13946,
+        "cost_usd": 0.00187
+      },
+      {
+        "round_number": 2,
+        "report": {
+          "topic": "Degradation Mechanisms in Perovskite-Silicon Tandem Photovoltaic Cells",
+          "title": "Degradation Mechanisms and Mitigation Strategies in Perovskite-Silicon Tandem Photovoltaic Cells",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Monolithic two-terminal perovskite-silicon tandem solar cells have achieved significant milestones with certified power conversion efficiencies reaching 33.9% [cite_exec_1]. However, their performance can be constrained by operational degradation mechanisms, notably light-induced halide segregation in wide-bandgap perovskite top cells [cite_exec_3]. Advanced encapsulation architectures utilizing double-barrier layers have shown considerable promise in mitigating moisture ingress during accelerated damp-heat testing [cite_exec_2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_1",
+                    "source_id": "src_energy_02_a",
+                    "chunk_id": "chunk_energy_02_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Advanced encapsulation using double-barrier layers mitigates moisture ingress during damp-heat testing.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_2",
+                    "source_id": "src_energy_02_b",
+                    "chunk_id": "chunk_energy_02_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_3",
+                "section_id": "sec_exec",
+                "text": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_3",
+                    "source_id": "src_energy_02_a",
+                    "chunk_id": "chunk_energy_02_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_mechanisms",
+              "title": "Degradation Mechanisms and Environmental Stress Testing",
+              "content": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation [cite_cite_1]. This segregation leads to the formation of low-bandgap iodide-rich clusters that function as non-radiative recombination centers, ultimately reducing the open-circuit voltage by up to 140 mV [cite_cite_1]. In addition to illumination stressors, environmental moisture poses a severe risk to device stability. Encapsulating tandems with double-barrier layers consisting of 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress [cite_cite_2]. Consequently, devices subjected to IEC 61215 damp-heat testing at 85 degrees Celsius and 85% relative humidity successfully retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress [cite_cite_3].",
+              "claims": [
+                {
+                  "claim_id": "claim_mech_1",
+                  "section_id": "sec_mechanisms",
+                  "text": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_1",
+                      "source_id": "src_energy_02_a",
+                      "chunk_id": "chunk_energy_02_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_mech_2",
+                  "section_id": "sec_mechanisms",
+                  "text": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_2",
+                      "source_id": "src_energy_02_b",
+                      "chunk_id": "chunk_energy_02_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_mech_3",
+                  "section_id": "sec_mechanisms",
+                  "text": "Devices subjected to IEC 61215 damp-heat testing (85 degrees Celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_3",
+                      "source_id": "src_energy_02_b",
+                      "chunk_id": "chunk_energy_02_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Devices subjected to IEC 61215 damp-heat testing (85 degrees Celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Future Outlook",
+            "content": "Addressing degradation mechanisms in perovskite-silicon tandem solar cells requires focusing on intrinsic material stability and robust external encapsulation. Light-induced halide segregation forms low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage [cite_conc_1], while advanced barrier technologies such as ALD SnO2 combined with PIB edge seals offer an effective defense against environmental moisture [cite_conc_2]. Overcoming these stressors is critical for scaling tandem photovoltaics toward commercial viability.",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Light-induced halide segregation forms low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_1",
+                    "source_id": "src_energy_02_a",
+                    "chunk_id": "chunk_energy_02_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "Advanced barrier technologies such as ALD SnO2 combined with PIB edge seals offer an effective defense against environmental moisture.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_2",
+                    "source_id": "src_energy_02_b",
+                    "chunk_id": "chunk_energy_02_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "The scope is limited to data concerning mixed iodide-bromide perovskites and specific double-barrier encapsulation methods.",
+            "Long-term field data beyond 1,500 hours of accelerated damp-heat testing are not yet captured in the current source context."
+          ],
+          "version": 3,
+          "created_by": "revision_llm",
+          "created_at": "2024-05-16T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 8,
+          "total_citations": 8,
+          "passage_matches": [
+            {
+              "citation_id": "cite_exec_1",
+              "source_id": "src_energy_02_a",
+              "chunk_id": "chunk_energy_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+              "normalized_passage": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+              "normalized_source_chunk": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%. under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv."
+            },
+            {
+              "citation_id": "cite_exec_2",
+              "source_id": "src_energy_02_b",
+              "chunk_id": "chunk_energy_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+              "normalized_passage": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress.",
+              "normalized_source_chunk": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress. devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress."
+            },
+            {
+              "citation_id": "cite_exec_3",
+              "source_id": "src_energy_02_a",
+              "chunk_id": "chunk_energy_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation",
+              "normalized_passage": "under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation",
+              "normalized_source_chunk": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%. under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv."
+            },
+            {
+              "citation_id": "cite_cite_1",
+              "source_id": "src_energy_02_a",
+              "chunk_id": "chunk_energy_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+              "normalized_passage": "under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv.",
+              "normalized_source_chunk": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%. under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv."
+            },
+            {
+              "citation_id": "cite_cite_2",
+              "source_id": "src_energy_02_b",
+              "chunk_id": "chunk_energy_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+              "normalized_passage": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress.",
+              "normalized_source_chunk": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress. devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress."
+            },
+            {
+              "citation_id": "cite_cite_3",
+              "source_id": "src_energy_02_b",
+              "chunk_id": "chunk_energy_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Devices subjected to IEC 61215 damp-heat testing (85 degrees Celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+              "normalized_passage": "devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+              "normalized_source_chunk": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress. devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress."
+            },
+            {
+              "citation_id": "cite_conc_1",
+              "source_id": "src_energy_02_a",
+              "chunk_id": "chunk_energy_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+              "normalized_passage": "forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv.",
+              "normalized_source_chunk": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%. under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv."
+            },
+            {
+              "citation_id": "cite_conc_2",
+              "source_id": "src_energy_02_b",
+              "chunk_id": "chunk_energy_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+              "normalized_passage": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress.",
+              "normalized_source_chunk": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress. devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that encapsulating tandems with double-barrier layers (SnO2 and PIB) completely blocks moisture ingress during IEC 61215 damp-heat testing.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_3",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk directly states that under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_1",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim is a verbatim restatement of the information provided in chunk_energy_02_1 regarding the effects of light-induced halide segregation in mixed iodide-bromide perovskites.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_2",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim accurately reflects the information in chunk_energy_02_2, which states that the specified double-barrier layers completely block moisture ingress.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_3",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim directly matches the performance data provided in chunk_energy_02_2 regarding IEC 61215 damp-heat testing results.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that light-induced halide segregation forms low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that encapsulating tandems with ALD SnO2 and PIB edge seals completely blocks moisture ingress and maintains high efficiency under damp-heat testing.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_2"
+              ]
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Section 'sec_exec' contains ungrounded factual assertion in prose not captured as a claim: 'Wide-bandgap perovskite top cells are the specific location where light-induced halide segregation occurs.'",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": null,
+              "details": {
+                "unstructured_claim": "Wide-bandgap perovskite top cells are the specific location where light-induced halide segregation occurs."
+              }
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 1,
+          "minor_count": 0,
+          "tokens_used": 4550,
+          "cost_usd": 0.000555
+        },
+        "judge_verdict": {
+          "composite_score": 0.985,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All claims made in the report are directly supported by the provided source material. No hallucinations or factual errors were identified."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every factual assertion is explicitly linked to the provided source contexts, and the content accurately reflects the data provided."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are precise, correctly mapped to the source IDs and chunk IDs, and utilize accurate quoted passages."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.9,
+              "passed": true,
+              "reasoning": "The report covers the key degradation mechanisms and mitigation strategies mentioned in the sources. It also appropriately includes a limitations section to address the scope of the provided data."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report remains strictly focused on the research topic of degradation mechanisms in perovskite-silicon tandem cells."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is well-structured with a logical flow from executive summary to mechanisms, conclusion, and limitations."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report maintains internal coherence throughout, with no contradictory statements across sections."
+            }
+          },
+          "overall_feedback": "This is an excellent, highly accurate, and well-grounded report. It effectively synthesizes the provided technical information regarding halide segregation and encapsulation strategies. The structure is professional and the use of citations is exemplary. No significant improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 3973,
+          "cost_usd": 0.000414
+        },
+        "tokens_used": 14361,
+        "cost_usd": 0.001948
+      },
+      {
+        "round_number": 3,
+        "report": {
+          "topic": "Degradation Mechanisms in Perovskite-Silicon Tandem Photovoltaic Cells",
+          "title": "Degradation Mechanisms and Mitigation Strategies in Perovskite-Silicon Tandem Photovoltaic Cells",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Monolithic two-terminal perovskite-silicon tandem solar cells have achieved significant milestones with certified power conversion efficiencies reaching 33.9% [cite_exec_1]. However, their performance can be constrained by operational degradation mechanisms, notably light-induced halide segregation in mixed iodide-bromide perovskites [cite_exec_3]. Advanced encapsulation architectures utilizing double-barrier layers have shown considerable promise in mitigating moisture ingress during accelerated damp-heat testing [cite_exec_2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_1",
+                    "source_id": "src_energy_02_a",
+                    "chunk_id": "chunk_energy_02_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Advanced encapsulation using double-barrier layers mitigates moisture ingress during damp-heat testing.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_2",
+                    "source_id": "src_energy_02_b",
+                    "chunk_id": "chunk_energy_02_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_3",
+                "section_id": "sec_exec",
+                "text": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_3",
+                    "source_id": "src_energy_02_a",
+                    "chunk_id": "chunk_energy_02_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_mechanisms",
+              "title": "Degradation Mechanisms and Environmental Stress Testing",
+              "content": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation [cite_cite_1]. This segregation leads to the formation of low-bandgap iodide-rich clusters that function as non-radiative recombination centers, ultimately reducing the open-circuit voltage by up to 140 mV [cite_cite_1]. In addition to illumination stressors, environmental moisture poses a severe risk to device stability. Encapsulating tandems with double-barrier layers consisting of 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress [cite_cite_2]. Consequently, devices subjected to IEC 61215 damp-heat testing at 85 degrees Celsius and 85% relative humidity successfully retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress [cite_cite_3].",
+              "claims": [
+                {
+                  "claim_id": "claim_mech_1",
+                  "section_id": "sec_mechanisms",
+                  "text": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_1",
+                      "source_id": "src_energy_02_a",
+                      "chunk_id": "chunk_energy_02_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_mech_2",
+                  "section_id": "sec_mechanisms",
+                  "text": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_2",
+                      "source_id": "src_energy_02_b",
+                      "chunk_id": "chunk_energy_02_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_mech_3",
+                  "section_id": "sec_mechanisms",
+                  "text": "Devices subjected to IEC 61215 damp-heat testing (85 degrees Celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_3",
+                      "source_id": "src_energy_02_b",
+                      "chunk_id": "chunk_energy_02_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Devices subjected to IEC 61215 damp-heat testing (85 degrees Celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Future Outlook",
+            "content": "Addressing degradation mechanisms in perovskite-silicon tandem solar cells requires focusing on intrinsic material stability and robust external encapsulation. Light-induced halide segregation forms low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage [cite_conc_1], while advanced barrier technologies such as ALD SnO2 combined with PIB edge seals offer an effective defense against environmental moisture [cite_conc_2]. Overcoming these stressors is critical for scaling tandem photovoltaics toward commercial viability.",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Light-induced halide segregation forms low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_1",
+                    "source_id": "src_energy_02_a",
+                    "chunk_id": "chunk_energy_02_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "Advanced barrier technologies such as ALD SnO2 combined with PIB edge seals offer an effective defense against environmental moisture.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_2",
+                    "source_id": "src_energy_02_b",
+                    "chunk_id": "chunk_energy_02_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "The scope is limited to data concerning mixed iodide-bromide perovskites and specific double-barrier encapsulation methods.",
+            "Long-term field data beyond 1,500 hours of accelerated damp-heat testing are not yet captured in the current source context."
+          ],
+          "version": 4,
+          "created_by": "revision_llm",
+          "created_at": "2024-05-16T01:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 8,
+          "total_citations": 8,
+          "passage_matches": [
+            {
+              "citation_id": "cite_exec_1",
+              "source_id": "src_energy_02_a",
+              "chunk_id": "chunk_energy_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+              "normalized_passage": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+              "normalized_source_chunk": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%. under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv."
+            },
+            {
+              "citation_id": "cite_exec_2",
+              "source_id": "src_energy_02_b",
+              "chunk_id": "chunk_energy_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+              "normalized_passage": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress.",
+              "normalized_source_chunk": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress. devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress."
+            },
+            {
+              "citation_id": "cite_exec_3",
+              "source_id": "src_energy_02_a",
+              "chunk_id": "chunk_energy_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation",
+              "normalized_passage": "under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation",
+              "normalized_source_chunk": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%. under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv."
+            },
+            {
+              "citation_id": "cite_cite_1",
+              "source_id": "src_energy_02_a",
+              "chunk_id": "chunk_energy_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+              "normalized_passage": "under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv.",
+              "normalized_source_chunk": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%. under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv."
+            },
+            {
+              "citation_id": "cite_cite_2",
+              "source_id": "src_energy_02_b",
+              "chunk_id": "chunk_energy_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+              "normalized_passage": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress.",
+              "normalized_source_chunk": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress. devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress."
+            },
+            {
+              "citation_id": "cite_cite_3",
+              "source_id": "src_energy_02_b",
+              "chunk_id": "chunk_energy_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Devices subjected to IEC 61215 damp-heat testing (85 degrees Celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+              "normalized_passage": "devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+              "normalized_source_chunk": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress. devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress."
+            },
+            {
+              "citation_id": "cite_conc_1",
+              "source_id": "src_energy_02_a",
+              "chunk_id": "chunk_energy_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+              "normalized_passage": "forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv.",
+              "normalized_source_chunk": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%. under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv."
+            },
+            {
+              "citation_id": "cite_conc_2",
+              "source_id": "src_energy_02_b",
+              "chunk_id": "chunk_energy_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+              "normalized_passage": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress.",
+              "normalized_source_chunk": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress. devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": true,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that encapsulating tandems with double-barrier layers (SnO2 and PIB) completely blocks moisture ingress during IEC 61215 damp-heat testing.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_3",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk directly states that under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_1",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim is a verbatim restatement of the information provided in chunk_energy_02_1 regarding the effects of light-induced halide segregation in perovskites.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_2",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim accurately reflects the description of the encapsulation method and its effect on moisture ingress as stated in chunk_energy_02_2.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_3",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim directly matches the performance data reported in chunk_energy_02_2 regarding IEC 61215 damp-heat testing results.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that light-induced halide segregation forms low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that encapsulating tandems with ALD SnO2 and PIB edge seals completely blocks moisture ingress and maintains high efficiency under damp-heat stress.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_2"
+              ]
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0,
+          "tokens_used": 4490,
+          "cost_usd": 0.000537
+        },
+        "judge_verdict": {
+          "composite_score": 0.985,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All factual claims are directly supported by the provided source material. No hallucinations or inaccuracies were identified."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every claim made in the report is explicitly grounded in the provided source chunks, with clear mapping between the text and the source content."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are precise, correctly formatted, and point to the exact source chunks containing the relevant information."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.9,
+              "passed": true,
+              "reasoning": "The report covers the primary degradation mechanisms and mitigation strategies identified in the sources. It also includes a helpful limitations section that contextualizes the scope."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The content is strictly focused on the research topic of degradation mechanisms in perovskite-silicon tandem cells, with no irrelevant filler."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is logically structured with a clear executive summary, technical section, and conclusion, maintaining a professional and readable tone."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally consistent, with no contradictory statements across the different sections."
+            }
+          },
+          "overall_feedback": "This is an excellent, highly accurate, and well-structured report. It effectively synthesizes the provided source material to address the research topic. The inclusion of a limitations section adds significant value by clarifying the boundaries of the current evidence. No major improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 3981,
+          "cost_usd": 0.000417
+        },
+        "tokens_used": 14154,
+        "cost_usd": 0.00192
+      }
+    ],
+    "budget_summary": {
+      "used_tokens": 50882,
+      "max_tokens": 50000,
+      "used_cost_usd": 0.006993,
+      "max_cost_usd": 0.2,
+      "elapsed_seconds": 658.979,
+      "max_seconds": 1800.0,
+      "rounds_executed": 3,
+      "max_rounds": 3,
+      "is_exhausted": true,
+      "exhaustion_reason": "TOKENS_EXHAUSTED (used 50882 >= max 50000)"
+    },
+    "rounds_executed": 3,
+    "termination_reason": "ALL_ACCEPTANCE_CRITERIA_MET",
+    "acceptance_threshold": 0.85,
+    "acceptance_result": {
+      "status": "ACCEPTED",
+      "is_accepted": true,
+      "best_candidate": {
+        "round_number": 3,
+        "report": {
+          "topic": "Degradation Mechanisms in Perovskite-Silicon Tandem Photovoltaic Cells",
+          "title": "Degradation Mechanisms and Mitigation Strategies in Perovskite-Silicon Tandem Photovoltaic Cells",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Monolithic two-terminal perovskite-silicon tandem solar cells have achieved significant milestones with certified power conversion efficiencies reaching 33.9% [cite_exec_1]. However, their performance can be constrained by operational degradation mechanisms, notably light-induced halide segregation in mixed iodide-bromide perovskites [cite_exec_3]. Advanced encapsulation architectures utilizing double-barrier layers have shown considerable promise in mitigating moisture ingress during accelerated damp-heat testing [cite_exec_2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_1",
+                    "source_id": "src_energy_02_a",
+                    "chunk_id": "chunk_energy_02_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Advanced encapsulation using double-barrier layers mitigates moisture ingress during damp-heat testing.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_2",
+                    "source_id": "src_energy_02_b",
+                    "chunk_id": "chunk_energy_02_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_3",
+                "section_id": "sec_exec",
+                "text": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation.",
+                "citations": [
+                  {
+                    "citation_id": "cite_exec_3",
+                    "source_id": "src_energy_02_a",
+                    "chunk_id": "chunk_energy_02_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_mechanisms",
+              "title": "Degradation Mechanisms and Environmental Stress Testing",
+              "content": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation [cite_cite_1]. This segregation leads to the formation of low-bandgap iodide-rich clusters that function as non-radiative recombination centers, ultimately reducing the open-circuit voltage by up to 140 mV [cite_cite_1]. In addition to illumination stressors, environmental moisture poses a severe risk to device stability. Encapsulating tandems with double-barrier layers consisting of 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress [cite_cite_2]. Consequently, devices subjected to IEC 61215 damp-heat testing at 85 degrees Celsius and 85% relative humidity successfully retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress [cite_cite_3].",
+              "claims": [
+                {
+                  "claim_id": "claim_mech_1",
+                  "section_id": "sec_mechanisms",
+                  "text": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_1",
+                      "source_id": "src_energy_02_a",
+                      "chunk_id": "chunk_energy_02_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_mech_2",
+                  "section_id": "sec_mechanisms",
+                  "text": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_2",
+                      "source_id": "src_energy_02_b",
+                      "chunk_id": "chunk_energy_02_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_mech_3",
+                  "section_id": "sec_mechanisms",
+                  "text": "Devices subjected to IEC 61215 damp-heat testing (85 degrees Celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_3",
+                      "source_id": "src_energy_02_b",
+                      "chunk_id": "chunk_energy_02_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Devices subjected to IEC 61215 damp-heat testing (85 degrees Celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Future Outlook",
+            "content": "Addressing degradation mechanisms in perovskite-silicon tandem solar cells requires focusing on intrinsic material stability and robust external encapsulation. Light-induced halide segregation forms low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage [cite_conc_1], while advanced barrier technologies such as ALD SnO2 combined with PIB edge seals offer an effective defense against environmental moisture [cite_conc_2]. Overcoming these stressors is critical for scaling tandem photovoltaics toward commercial viability.",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Light-induced halide segregation forms low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_1",
+                    "source_id": "src_energy_02_a",
+                    "chunk_id": "chunk_energy_02_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "Advanced barrier technologies such as ALD SnO2 combined with PIB edge seals offer an effective defense against environmental moisture.",
+                "citations": [
+                  {
+                    "citation_id": "cite_conc_2",
+                    "source_id": "src_energy_02_b",
+                    "chunk_id": "chunk_energy_02_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "The scope is limited to data concerning mixed iodide-bromide perovskites and specific double-barrier encapsulation methods.",
+            "Long-term field data beyond 1,500 hours of accelerated damp-heat testing are not yet captured in the current source context."
+          ],
+          "version": 4,
+          "created_by": "revision_llm",
+          "created_at": "2024-05-16T01:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 8,
+          "total_citations": 8,
+          "passage_matches": [
+            {
+              "citation_id": "cite_exec_1",
+              "source_id": "src_energy_02_a",
+              "chunk_id": "chunk_energy_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+              "normalized_passage": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+              "normalized_source_chunk": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%. under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv."
+            },
+            {
+              "citation_id": "cite_exec_2",
+              "source_id": "src_energy_02_b",
+              "chunk_id": "chunk_energy_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+              "normalized_passage": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress.",
+              "normalized_source_chunk": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress. devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress."
+            },
+            {
+              "citation_id": "cite_exec_3",
+              "source_id": "src_energy_02_a",
+              "chunk_id": "chunk_energy_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation",
+              "normalized_passage": "under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation",
+              "normalized_source_chunk": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%. under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv."
+            },
+            {
+              "citation_id": "cite_cite_1",
+              "source_id": "src_energy_02_a",
+              "chunk_id": "chunk_energy_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+              "normalized_passage": "under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv.",
+              "normalized_source_chunk": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%. under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv."
+            },
+            {
+              "citation_id": "cite_cite_2",
+              "source_id": "src_energy_02_b",
+              "chunk_id": "chunk_energy_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+              "normalized_passage": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress.",
+              "normalized_source_chunk": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress. devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress."
+            },
+            {
+              "citation_id": "cite_cite_3",
+              "source_id": "src_energy_02_b",
+              "chunk_id": "chunk_energy_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Devices subjected to IEC 61215 damp-heat testing (85 degrees Celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+              "normalized_passage": "devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress.",
+              "normalized_source_chunk": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress. devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress."
+            },
+            {
+              "citation_id": "cite_conc_1",
+              "source_id": "src_energy_02_a",
+              "chunk_id": "chunk_energy_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mV.",
+              "normalized_passage": "forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv.",
+              "normalized_source_chunk": "monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%. under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation, forming low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage by up to 140 mv."
+            },
+            {
+              "citation_id": "cite_conc_2",
+              "source_id": "src_energy_02_b",
+              "chunk_id": "chunk_energy_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (SnO2) capped with polyisobutylene (PIB) edge seals completely blocks moisture ingress.",
+              "normalized_passage": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress.",
+              "normalized_source_chunk": "encapsulating tandems with double-barrier layers comprising 20 nm atomic-layer-deposited tin oxide (sno2) capped with polyisobutylene (pib) edge seals completely blocks moisture ingress. devices subjected to iec 61215 damp-heat testing (85 degrees celsius and 85% relative humidity) retained 95% of their initial efficiency after 1,500 hours of continuous accelerated stress."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": true,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that monolithic two-terminal perovskite-silicon tandem solar cells have demonstrated certified power conversion efficiencies of 33.9%.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that encapsulating tandems with double-barrier layers (SnO2 and PIB) completely blocks moisture ingress during IEC 61215 damp-heat testing.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_3",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk directly states that under continuous 1-sun illumination, mixed iodide-bromide perovskites suffer from light-induced halide segregation.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_1",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim is a verbatim restatement of the information provided in chunk_energy_02_1 regarding the effects of light-induced halide segregation in perovskites.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_2",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim accurately reflects the description of the encapsulation method and its effect on moisture ingress as stated in chunk_energy_02_2.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_mech_3",
+              "section_id": "sec_mechanisms",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The claim directly matches the performance data reported in chunk_energy_02_2 regarding IEC 61215 damp-heat testing results.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that light-induced halide segregation forms low-bandgap iodide-rich clusters that act as non-radiative recombination centers and reduce open-circuit voltage.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that encapsulating tandems with ALD SnO2 and PIB edge seals completely blocks moisture ingress and maintains high efficiency under damp-heat stress.",
+              "cited_chunk_ids": [
+                "chunk_energy_02_2"
+              ]
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0,
+          "tokens_used": 4490,
+          "cost_usd": 0.000537
+        },
+        "judge_verdict": {
+          "composite_score": 0.985,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All factual claims are directly supported by the provided source material. No hallucinations or inaccuracies were identified."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every claim made in the report is explicitly grounded in the provided source chunks, with clear mapping between the text and the source content."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are precise, correctly formatted, and point to the exact source chunks containing the relevant information."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.9,
+              "passed": true,
+              "reasoning": "The report covers the primary degradation mechanisms and mitigation strategies identified in the sources. It also includes a helpful limitations section that contextualizes the scope."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The content is strictly focused on the research topic of degradation mechanisms in perovskite-silicon tandem cells, with no irrelevant filler."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is logically structured with a clear executive summary, technical section, and conclusion, maintaining a professional and readable tone."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally consistent, with no contradictory statements across the different sections."
+            }
+          },
+          "overall_feedback": "This is an excellent, highly accurate, and well-structured report. It effectively synthesizes the provided source material to address the research topic. The inclusion of a limitations section adds significant value by clarifying the boundaries of the current evidence. No major improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 3981,
+          "cost_usd": 0.000417
+        },
+        "tokens_used": 14154,
+        "cost_usd": 0.00192
+      },
+      "rationale": "Candidate meets all deterministic and semantic acceptance standards (composite_score=0.9850 >= 0.85, critical=0, major_grounding=0).",
+      "unresolved_reasons": [],
+      "review_packet": null
+    },
+    "learned_lessons_count": 0
+  }
+}

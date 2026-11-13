@@ -1,0 +1,2176 @@
+{
+  "topic_id": "ai-02",
+  "topic_title": "Routing and Load Balancing in Sparse Mixture-of-Experts (MoE) Transformers",
+  "domain": "ai_systems",
+  "recorded_at_utc": "2026-11-11T18:21:49.782044+00:00",
+  "rounds_executed": 2,
+  "best_round": 2,
+  "termination_reason": "ALL_ACCEPTANCE_CRITERIA_MET",
+  "is_accepted": true,
+  "terminal_status": "ACCEPTED",
+  "blinded_composite_score": 0.985,
+  "latency_seconds": 339.789,
+  "llm_stats": {
+    "llm_calls": 31,
+    "llm_attempts": 37,
+    "transient_retries": 6,
+    "validation_retries": 0,
+    "timeout_resets": 0
+  },
+  "round_history": [
+    {
+      "round_number": 0,
+      "deterministic_passed": false,
+      "critical_defect_count": 0,
+      "major_defect_count": 2,
+      "grounding_score": 0.8889,
+      "all_claims_grounded": false,
+      "composite_score": 0.91,
+      "is_self_judged": false,
+      "tokens_used": 12037,
+      "cost_usd": 0.001783
+    },
+    {
+      "round_number": 1,
+      "deterministic_passed": true,
+      "critical_defect_count": 0,
+      "major_defect_count": 0,
+      "grounding_score": 1.0,
+      "all_claims_grounded": true,
+      "composite_score": 0.94,
+      "is_self_judged": false,
+      "tokens_used": 15137,
+      "cost_usd": 0.002062
+    },
+    {
+      "round_number": 2,
+      "deterministic_passed": true,
+      "critical_defect_count": 0,
+      "major_defect_count": 0,
+      "grounding_score": 1.0,
+      "all_claims_grounded": true,
+      "composite_score": 0.9925,
+      "is_self_judged": false,
+      "tokens_used": 15265,
+      "cost_usd": 0.002086
+    }
+  ],
+  "budget_summary": {
+    "used_tokens": 42439,
+    "max_tokens": 50000,
+    "used_cost_usd": 0.005931,
+    "max_cost_usd": 0.2,
+    "elapsed_seconds": 336.931,
+    "max_seconds": 1800.0,
+    "rounds_executed": 2,
+    "max_rounds": 3,
+    "is_exhausted": false,
+    "exhaustion_reason": null
+  },
+  "reflection_run_result": {
+    "topic": "Routing and Load Balancing in Sparse Mixture-of-Experts (MoE) Transformers",
+    "best_candidate": {
+      "round_number": 2,
+      "report": {
+        "topic": "Routing and Load Balancing in Sparse Mixture-of-Experts (MoE) Transformers",
+        "title": "Routing Paradigms and Communication Optimization in Sparse Mixture-of-Experts Transformers",
+        "executive_summary": {
+          "section_id": "sec_exec",
+          "title": "Executive Summary",
+          "content": "Sparse Mixture-of-Experts (MoE) architectures face critical bottlenecks in token routing load balancing and distributed communication overhead [cite_1, cite_2]. Standard routing strategies frequently cause severe load imbalances, whereas alternative routing designs like Expert Choice guarantee balanced workloads and accelerate training throughput [cite_1, cite_3]. Furthermore, distributed inference at scale is heavily constrained by all-to-all communication collectives, which can be mitigated through hierarchical parallelism and pipelined dispatch mechanisms [cite_2, cite_4].",
+          "claims": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "text": "Sparse Mixture-of-Experts architectures face critical bottlenecks in token routing load balancing and distributed communication overhead.",
+              "citations": [
+                {
+                  "citation_id": "cite_1",
+                  "source_id": "src_ai_02_a",
+                  "chunk_id": "chunk_ai_02_1",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 1.0
+                },
+                {
+                  "citation_id": "cite_2",
+                  "source_id": "src_ai_02_b",
+                  "chunk_id": "chunk_ai_02_2",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "text": "Standard routing strategies frequently cause severe load imbalances, whereas Expert Choice routing guarantees balanced workloads and accelerates training throughput.",
+              "citations": [
+                {
+                  "citation_id": "cite_3",
+                  "source_id": "src_ai_02_a",
+                  "chunk_id": "chunk_ai_02_1",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_exec_3",
+              "section_id": "sec_exec",
+              "text": "Distributed inference at scale is heavily constrained by all-to-all communication collectives, which can be mitigated through hierarchical parallelism and pipelined dispatch mechanisms.",
+              "citations": [
+                {
+                  "citation_id": "cite_4",
+                  "source_id": "src_ai_02_b",
+                  "chunk_id": "chunk_ai_02_2",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            }
+          ]
+        },
+        "sections": [
+          {
+            "section_id": "sec_routing",
+            "title": "Token Routing and Load Balancing Strategies",
+            "content": "Standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor [cite_5]. In contrast, Expert Choice routing enables experts to independently select their top-C tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540B MoE models [cite_6].",
+            "claims": [
+              {
+                "claim_id": "claim_route_1",
+                "section_id": "sec_routing",
+                "text": "Standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor.",
+                "citations": [
+                  {
+                    "citation_id": "cite_5",
+                    "source_id": "src_ai_02_a",
+                    "chunk_id": "chunk_ai_02_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_route_2",
+                "section_id": "sec_routing",
+                "text": "Expert Choice routing enables experts to independently select their top-C tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540B MoE models.",
+                "citations": [
+                  {
+                    "citation_id": "cite_6",
+                    "source_id": "src_ai_02_a",
+                    "chunk_id": "chunk_ai_02_1",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Expert Choice routing enables experts to independently select their top-C tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540B MoE models.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          {
+            "section_id": "sec_inference",
+            "title": "Distributed Inference and Communication Efficiency",
+            "content": "In distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time [cite_7]. Implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, reducing communication stalls by 35% and sustaining 82% arithmetic intensity [cite_8].",
+            "claims": [
+              {
+                "claim_id": "claim_inf_1",
+                "section_id": "sec_inference",
+                "text": "In distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+                "citations": [
+                  {
+                    "citation_id": "cite_7",
+                    "source_id": "src_ai_02_b",
+                    "chunk_id": "chunk_ai_02_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "In distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_inf_2",
+                "section_id": "sec_inference",
+                "text": "Implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, reducing communication stalls by 35% and sustaining 82% arithmetic intensity.",
+                "citations": [
+                  {
+                    "citation_id": "cite_8",
+                    "source_id": "src_ai_02_b",
+                    "chunk_id": "chunk_ai_02_2",
+                    "citation_type": "quotation",
+                    "quoted_passage": "Implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, reducing communication stalls by 35% and sustaining 82% arithmetic intensity.",
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          }
+        ],
+        "conclusion": {
+          "section_id": "sec_conclusion",
+          "title": "Conclusion and Future Outlook",
+          "content": "Addressing routing imbalances through mechanisms like Expert Choice routing is vital for maximizing training efficiency in large-scale MoE models [cite_9]. Simultaneously, overcoming communication bottlenecks via hierarchical parallelism ensures that massive distributed clusters can sustain high arithmetic intensity during inference [cite_10]. Combining these algorithmic and systems-level innovations provides a comprehensive roadmap for scaling sparse Mixture-of-Experts architectures.",
+          "claims": [
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "text": "Addressing routing imbalances through mechanisms like Expert Choice routing is vital for maximizing training efficiency in large-scale MoE models.",
+              "citations": [
+                {
+                  "citation_id": "cite_9",
+                  "source_id": "src_ai_02_a",
+                  "chunk_id": "chunk_ai_02_1",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "text": "Overcoming communication bottlenecks via hierarchical parallelism ensures that massive distributed clusters can sustain high arithmetic intensity during inference.",
+              "citations": [
+                {
+                  "citation_id": "cite_10",
+                  "source_id": "src_ai_02_b",
+                  "chunk_id": "chunk_ai_02_2",
+                  "citation_type": "paraphrase",
+                  "quoted_passage": null,
+                  "confidence": 1.0
+                }
+              ],
+              "is_factual": true
+            }
+          ]
+        },
+        "limitations": [
+          "The analysis is constrained to specific cluster scales (e.g., 64 nodes) and model parameter sizes (e.g., 540B parameters) as reported in the source data.",
+          "Potential memory overhead trade-offs introduced by Expert Choice routing tokens across variable sequence lengths are not fully detailed in the current evidence.",
+          "Inter-node networking assumptions are restricted to InfiniBand RDMA and NVLink infrastructures."
+        ],
+        "version": 3,
+        "created_by": "revision_llm",
+        "created_at": "2023-10-25T00:00:00Z"
+      },
+      "deterministic_report": {
+        "passed": true,
+        "schema_valid": true,
+        "citations_valid": true,
+        "passages_matched": true,
+        "total_claims": 9,
+        "total_citations": 10,
+        "passage_matches": [
+          {
+            "citation_id": "cite_5",
+            "source_id": "src_ai_02_a",
+            "chunk_id": "chunk_ai_02_1",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor.",
+            "normalized_passage": "standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor.",
+            "normalized_source_chunk": "standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor. in contrast, expert choice routing enables experts to independently select their top-c tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540b moe models."
+          },
+          {
+            "citation_id": "cite_6",
+            "source_id": "src_ai_02_a",
+            "chunk_id": "chunk_ai_02_1",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Expert Choice routing enables experts to independently select their top-C tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540B MoE models.",
+            "normalized_passage": "expert choice routing enables experts to independently select their top-c tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540b moe models.",
+            "normalized_source_chunk": "standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor. in contrast, expert choice routing enables experts to independently select their top-c tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540b moe models."
+          },
+          {
+            "citation_id": "cite_7",
+            "source_id": "src_ai_02_b",
+            "chunk_id": "chunk_ai_02_2",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "In distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+            "normalized_passage": "in distributed moe clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+            "normalized_source_chunk": "in distributed moe clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time. implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket nvlink transfers with inter-node infiniband rdma, reducing communication stalls by 35% and sustaining 82% arithmetic intensity."
+          },
+          {
+            "citation_id": "cite_8",
+            "source_id": "src_ai_02_b",
+            "chunk_id": "chunk_ai_02_2",
+            "is_match": true,
+            "match_type": "exact",
+            "quoted_passage": "Implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, reducing communication stalls by 35% and sustaining 82% arithmetic intensity.",
+            "normalized_passage": "implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket nvlink transfers with inter-node infiniband rdma, reducing communication stalls by 35% and sustaining 82% arithmetic intensity.",
+            "normalized_source_chunk": "in distributed moe clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time. implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket nvlink transfers with inter-node infiniband rdma, reducing communication stalls by 35% and sustaining 82% arithmetic intensity."
+          }
+        ],
+        "issues": [],
+        "critical_count": 0,
+        "major_count": 0,
+        "minor_count": 0
+      },
+      "grounding_report": {
+        "passed": true,
+        "all_claims_grounded": true,
+        "grounding_score": 1.0,
+        "claim_evaluations": [
+          {
+            "claim_id": "claim_exec_1",
+            "section_id": "sec_exec",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source chunks explicitly identify load imbalance in token routing (chunk_ai_02_1) and high communication overhead (up to 48% of inference time) as critical issues in MoE architectures (chunk_ai_02_2).",
+            "cited_chunk_ids": [
+              "chunk_ai_02_1",
+              "chunk_ai_02_2"
+            ]
+          },
+          {
+            "claim_id": "claim_exec_2",
+            "section_id": "sec_exec",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "Chunk_ai_02_1 states that standard top-2 routing leads to severe load imbalance and that Expert Choice routing guarantees perfect load balance while improving training throughput.",
+            "cited_chunk_ids": [
+              "chunk_ai_02_1"
+            ]
+          },
+          {
+            "claim_id": "claim_exec_3",
+            "section_id": "sec_exec",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "Chunk_ai_02_2 confirms that all-to-all communication accounts for up to 48% of inference time and that hierarchical parallelism and pipelined dispatch reduce these communication stalls.",
+            "cited_chunk_ids": [
+              "chunk_ai_02_2"
+            ]
+          },
+          {
+            "claim_id": "claim_route_1",
+            "section_id": "sec_routing",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source text explicitly states that standard top-2 token routing assigns each token to its top two preferred experts and causes severe load imbalance due to popular experts dropping tokens when capacity is exceeded.",
+            "cited_chunk_ids": [
+              "chunk_ai_02_1"
+            ]
+          },
+          {
+            "claim_id": "claim_route_2",
+            "section_id": "sec_routing",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source text confirms that Expert Choice routing allows experts to select their top-C tokens, guarantees perfect load balance, and improves training throughput by 2.1x on 540B MoE models.",
+            "cited_chunk_ids": [
+              "chunk_ai_02_1"
+            ]
+          },
+          {
+            "claim_id": "claim_inf_1",
+            "section_id": "sec_inference",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source text explicitly states that in distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+            "cited_chunk_ids": [
+              "chunk_ai_02_2"
+            ]
+          },
+          {
+            "claim_id": "claim_inf_2",
+            "section_id": "sec_inference",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source text confirms that implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, resulting in a 35% reduction in communication stalls and sustaining 82% arithmetic intensity.",
+            "cited_chunk_ids": [
+              "chunk_ai_02_2"
+            ]
+          },
+          {
+            "claim_id": "claim_conc_1",
+            "section_id": "sec_conclusion",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source explicitly states that Expert Choice routing addresses load imbalance issues found in standard routing and improves training throughput by 2.1x on 540B MoE models, supporting the claim that such mechanisms are vital for efficiency.",
+            "cited_chunk_ids": [
+              "chunk_ai_02_1"
+            ]
+          },
+          {
+            "claim_id": "claim_conc_2",
+            "section_id": "sec_conclusion",
+            "entailment": "ENTAILS",
+            "score": 1.0,
+            "reasoning": "The source confirms that implementing hierarchical tensor-expert parallelism reduces communication stalls and sustains 82% arithmetic intensity in distributed MoE clusters, supporting the claim.",
+            "cited_chunk_ids": [
+              "chunk_ai_02_2"
+            ]
+          }
+        ],
+        "issues": [],
+        "critical_count": 0,
+        "major_count": 0,
+        "minor_count": 0,
+        "tokens_used": 5207,
+        "cost_usd": 0.000643
+      },
+      "judge_verdict": {
+        "composite_score": 0.9925,
+        "passed": true,
+        "dimension_scores": {
+          "factual_accuracy": {
+            "dimension_name": "factual_accuracy",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report accurately reflects the technical details provided in the source documents, including specific performance metrics (2.1x throughput, 48% communication time, 35% reduction in stalls, 82% arithmetic intensity) without any hallucinations."
+          },
+          "evidence_grounding": {
+            "dimension_name": "evidence_grounding",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "Every claim made in the report is directly supported by the provided source contexts. The synthesis of information is consistent with the source material."
+          },
+          "citation_correctness": {
+            "dimension_name": "citation_correctness",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "Citations are correctly mapped to the source IDs and chunk IDs. The use of direct quotations in the body sections is precise and matches the source text exactly."
+          },
+          "completeness": {
+            "dimension_name": "completeness",
+            "score": 0.95,
+            "passed": true,
+            "reasoning": "The report covers both major aspects of the prompt (routing/load balancing and communication efficiency) and includes a helpful limitations section that contextualizes the scope of the findings."
+          },
+          "relevance": {
+            "dimension_name": "relevance",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report remains strictly focused on the research topic of routing and load balancing in MoE transformers, with no irrelevant filler or off-topic content."
+          },
+          "clarity_organization": {
+            "dimension_name": "clarity_organization",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report is exceptionally well-organized, utilizing a clear executive summary, distinct thematic sections, and a logical conclusion, all written in a professional, academic tone."
+          },
+          "logical_consistency": {
+            "dimension_name": "logical_consistency",
+            "score": 1.0,
+            "passed": true,
+            "reasoning": "The report is internally coherent, with no contradictions between the executive summary, body sections, and conclusion."
+          }
+        },
+        "overall_feedback": "This is an exemplary research report. It demonstrates high precision in technical reporting, excellent grounding in the provided source material, and a clear, logical structure. The inclusion of a limitations section adds significant value by acknowledging the specific constraints of the source data. No improvements are required.",
+        "is_self_judged": false,
+        "effective_threshold": 0.85,
+        "judge_model": "gemini-3.1-flash-lite",
+        "tokens_used": 4088,
+        "cost_usd": 0.00044
+      },
+      "tokens_used": 15265,
+      "cost_usd": 0.002086
+    },
+    "all_candidates": [
+      {
+        "round_number": 0,
+        "report": {
+          "topic": "Routing and Load Balancing in Sparse Mixture-of-Experts (MoE) Transformers",
+          "title": "Routing Paradigms and Communication Optimization in Sparse Mixture-of-Experts Transformers",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Sparse Mixture-of-Experts (MoE) architectures face critical bottlenecks in token routing load balancing and distributed communication overhead [cite_cite_1, cite_cite_2]. Standard routing strategies frequently cause severe load imbalances, whereas alternative routing designs like Expert Choice guarantee balanced workloads and accelerate training throughput [cite_cite_1]. Furthermore, distributed inference at scale is heavily constrained by all-to-all communication collectives, which can be mitigated through hierarchical parallelism and pipelined dispatch mechanisms [cite_cite_2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Sparse Mixture-of-Experts architectures face critical bottlenecks in token routing load balancing and distributed communication overhead.",
+                "citations": [],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Standard routing strategies frequently cause severe load imbalances, whereas Expert Choice routing guarantees balanced workloads and accelerates training throughput.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_1",
+                    "source_id": "src_ai_02_a",
+                    "chunk_id": "chunk_ai_02_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_3",
+                "section_id": "sec_exec",
+                "text": "Distributed inference at scale is heavily constrained by all-to-all communication collectives, which can be mitigated through hierarchical parallelism and pipelined dispatch mechanisms.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_2",
+                    "source_id": "src_ai_02_b",
+                    "chunk_id": "chunk_ai_02_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_routing",
+              "title": "Token Routing and Load Balancing Strategies",
+              "content": "Standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor [cite_cite_3]. In contrast, Expert Choice routing enables experts to independently select their top-C tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540B MoE models [cite_cite_4].",
+              "claims": [
+                {
+                  "claim_id": "claim_route_1",
+                  "section_id": "sec_routing",
+                  "text": "Standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_3",
+                      "source_id": "src_ai_02_a",
+                      "chunk_id": "chunk_ai_02_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_route_2",
+                  "section_id": "sec_routing",
+                  "text": "Expert Choice routing enables experts to independently select their top-C tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540B MoE models.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_4",
+                      "source_id": "src_ai_02_a",
+                      "chunk_id": "chunk_ai_02_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "In contrast, Expert Choice routing enables experts to independently select their top-C tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540B MoE models.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            },
+            {
+              "section_id": "sec_inference",
+              "title": "Distributed Inference and Communication Efficiency",
+              "content": "In distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time [cite_cite_5]. Implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, reducing communication stalls by 35% and sustaining 82% arithmetic intensity [cite_cite_6].",
+              "claims": [
+                {
+                  "claim_id": "claim_inf_1",
+                  "section_id": "sec_inference",
+                  "text": "In distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_5",
+                      "source_id": "src_ai_02_b",
+                      "chunk_id": "chunk_ai_02_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "In distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_inf_2",
+                  "section_id": "sec_inference",
+                  "text": "Implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, reducing communication stalls by 35% and sustaining 82% arithmetic intensity.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_cite_6",
+                      "source_id": "src_ai_02_b",
+                      "chunk_id": "chunk_ai_02_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, reducing communication stalls by 35% and sustaining 82% arithmetic intensity.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Future Outlook",
+            "content": "Addressing routing imbalances through mechanisms like Expert Choice routing is vital for maximizing training efficiency in large-scale MoE models [cite_cite_7]. Simultaneously, overcoming communication bottlenecks via hierarchical parallelism ensures that massive distributed clusters can sustain high arithmetic intensity during inference [cite_cite_8]. Combining these algorithmic and systems-level innovations provides a comprehensive roadmap for scaling sparse Mixture-of-Experts architectures.",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Addressing routing imbalances through mechanisms like Expert Choice routing is vital for maximizing training efficiency in large-scale MoE models.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_7",
+                    "source_id": "src_ai_02_a",
+                    "chunk_id": "chunk_ai_02_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "Overcoming communication bottlenecks via hierarchical parallelism ensures that massive distributed clusters can sustain high arithmetic intensity during inference.",
+                "citations": [
+                  {
+                    "citation_id": "cite_cite_8",
+                    "source_id": "src_ai_02_b",
+                    "chunk_id": "chunk_ai_02_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "The analysis is constrained to specific cluster scales (e.g., 64 nodes) and model parameter sizes (e.g., 540B parameters) as reported in the source data.",
+            "Potential memory overhead trade-offs introduced by Expert Choice routing tokens across variable sequence lengths are not fully detailed in the current evidence.",
+            "Inter-node networking assumptions are restricted to InfiniBand RDMA and NVLink infrastructures."
+          ],
+          "version": 1,
+          "created_by": "generator_llm",
+          "created_at": "2023-10-25T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": false,
+          "schema_valid": true,
+          "citations_valid": false,
+          "passages_matched": true,
+          "total_claims": 9,
+          "total_citations": 8,
+          "passage_matches": [
+            {
+              "citation_id": "cite_cite_3",
+              "source_id": "src_ai_02_a",
+              "chunk_id": "chunk_ai_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor.",
+              "normalized_passage": "standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor.",
+              "normalized_source_chunk": "standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor. in contrast, expert choice routing enables experts to independently select their top-c tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540b moe models."
+            },
+            {
+              "citation_id": "cite_cite_4",
+              "source_id": "src_ai_02_a",
+              "chunk_id": "chunk_ai_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "In contrast, Expert Choice routing enables experts to independently select their top-C tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540B MoE models.",
+              "normalized_passage": "in contrast, expert choice routing enables experts to independently select their top-c tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540b moe models.",
+              "normalized_source_chunk": "standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor. in contrast, expert choice routing enables experts to independently select their top-c tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540b moe models."
+            },
+            {
+              "citation_id": "cite_cite_5",
+              "source_id": "src_ai_02_b",
+              "chunk_id": "chunk_ai_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "In distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+              "normalized_passage": "in distributed moe clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+              "normalized_source_chunk": "in distributed moe clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time. implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket nvlink transfers with inter-node infiniband rdma, reducing communication stalls by 35% and sustaining 82% arithmetic intensity."
+            },
+            {
+              "citation_id": "cite_cite_6",
+              "source_id": "src_ai_02_b",
+              "chunk_id": "chunk_ai_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, reducing communication stalls by 35% and sustaining 82% arithmetic intensity.",
+              "normalized_passage": "implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket nvlink transfers with inter-node infiniband rdma, reducing communication stalls by 35% and sustaining 82% arithmetic intensity.",
+              "normalized_source_chunk": "in distributed moe clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time. implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket nvlink transfers with inter-node infiniband rdma, reducing communication stalls by 35% and sustaining 82% arithmetic intensity."
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "DEFECT-001",
+              "category": "citation_integrity",
+              "severity": "major",
+              "message": "Factual claim 'claim_exec_1' lacks supporting citations.",
+              "section_id": "sec_exec",
+              "claim_id": "claim_exec_1",
+              "citation_id": null,
+              "details": {}
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 1,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": false,
+          "all_claims_grounded": false,
+          "grounding_score": 0.8889,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "NEUTRAL",
+              "score": 0.0,
+              "reasoning": "Claim has no citations attached to substantiate the factual proposition.",
+              "cited_chunk_ids": []
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that standard top-2 token routing leads to severe load imbalance and that Expert Choice routing guarantees perfect load balance and improves training throughput.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_3",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that all-to-all collective communication accounts for up to 48% of inference time and that hierarchical tensor-expert parallelism and pipelined dispatch reduce communication stalls.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_route_1",
+              "section_id": "sec_routing",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that standard top-2 token routing assigns each token to its top two preferred experts and causes severe load imbalance due to popular experts dropping tokens when capacity is exceeded.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_route_2",
+              "section_id": "sec_routing",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text confirms that Expert Choice routing allows experts to select their top-C tokens, guarantees perfect load balance, and improves training throughput by 2.1x on 540B MoE models.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_inf_1",
+              "section_id": "sec_inference",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that in distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_inf_2",
+              "section_id": "sec_inference",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text confirms that implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, resulting in a 35% reduction in communication stalls and sustaining 82% arithmetic intensity.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk explicitly states that Expert Choice routing addresses load imbalance issues found in standard routing and improves training throughput by 2.1x on 540B MoE models, supporting the claim that such mechanisms are vital for efficiency.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunk confirms that hierarchical tensor-expert parallelism reduces communication stalls and sustains 82% arithmetic intensity in distributed MoE clusters, directly supporting the claim.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_2"
+              ]
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "G2-DEFECT-001",
+              "category": "factual_grounding",
+              "severity": "major",
+              "message": "Factual claim 'claim_exec_1' lacks supporting citations.",
+              "section_id": "sec_exec",
+              "claim_id": "claim_exec_1",
+              "citation_id": null,
+              "details": {}
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 1,
+          "minor_count": 0,
+          "tokens_used": 5055,
+          "cost_usd": 0.000608
+        },
+        "judge_verdict": {
+          "composite_score": 0.91,
+          "passed": false,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All factual claims made in the report are consistent with the provided source material. No hallucinations or false statistics were detected."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 0.85,
+              "passed": true,
+              "reasoning": "The report is well-grounded in the provided sources. However, the executive summary contains a claim (claim_exec_1) that lacks an explicit citation, which is a minor grounding oversight."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 0.7,
+              "passed": false,
+              "reasoning": "The report fails to cite the first claim in the executive summary. Additionally, the citation format uses placeholders like [cite_cite_1] which are not standard, and the lack of a citation for the opening claim violates the requirement for precise attribution."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.9,
+              "passed": true,
+              "reasoning": "The report covers the core topics of routing and load balancing effectively. It includes a helpful limitations section that adds depth and context."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report stays strictly on topic, addressing the routing and load balancing challenges in MoE transformers as requested."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is logically structured with clear section headings and a professional executive tone."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally consistent, with no contradictory statements across sections."
+            }
+          },
+          "overall_feedback": "The report is technically sound and well-written, accurately synthesizing the provided research sources. The primary deficit is in citation management: the executive summary contains an uncited claim, and the citation identifiers used are non-standard. Ensuring every claim is explicitly linked to a source and using a consistent citation format will improve the report's professional quality.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 3962,
+          "cost_usd": 0.000426
+        },
+        "tokens_used": 12037,
+        "cost_usd": 0.001783
+      },
+      {
+        "round_number": 1,
+        "report": {
+          "topic": "Routing and Load Balancing in Sparse Mixture-of-Experts (MoE) Transformers",
+          "title": "Routing Paradigms and Communication Optimization in Sparse Mixture-of-Experts Transformers",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Sparse Mixture-of-Experts (MoE) architectures face critical bottlenecks in token routing load balancing and distributed communication overhead [cite_1, cite_2]. Standard routing strategies frequently cause severe load imbalances, whereas alternative routing designs like Expert Choice guarantee balanced workloads and accelerate training throughput [cite_1]. Furthermore, distributed inference at scale is heavily constrained by all-to-all communication collectives, which can be mitigated through hierarchical parallelism and pipelined dispatch mechanisms [cite_2].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Sparse Mixture-of-Experts architectures face critical bottlenecks in token routing load balancing and distributed communication overhead.",
+                "citations": [
+                  {
+                    "citation_id": "cite_1",
+                    "source_id": "src_ai_02_a",
+                    "chunk_id": "chunk_ai_02_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  },
+                  {
+                    "citation_id": "cite_2",
+                    "source_id": "src_ai_02_b",
+                    "chunk_id": "chunk_ai_02_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Standard routing strategies frequently cause severe load imbalances, whereas Expert Choice routing guarantees balanced workloads and accelerates training throughput.",
+                "citations": [
+                  {
+                    "citation_id": "cite_3",
+                    "source_id": "src_ai_02_a",
+                    "chunk_id": "chunk_ai_02_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_3",
+                "section_id": "sec_exec",
+                "text": "Distributed inference at scale is heavily constrained by all-to-all communication collectives, which can be mitigated through hierarchical parallelism and pipelined dispatch mechanisms.",
+                "citations": [
+                  {
+                    "citation_id": "cite_4",
+                    "source_id": "src_ai_02_b",
+                    "chunk_id": "chunk_ai_02_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_routing",
+              "title": "Token Routing and Load Balancing Strategies",
+              "content": "Standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor [cite_5]. In contrast, Expert Choice routing enables experts to independently select their top-C tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540B MoE models [cite_6].",
+              "claims": [
+                {
+                  "claim_id": "claim_route_1",
+                  "section_id": "sec_routing",
+                  "text": "Standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_5",
+                      "source_id": "src_ai_02_a",
+                      "chunk_id": "chunk_ai_02_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_route_2",
+                  "section_id": "sec_routing",
+                  "text": "Expert Choice routing enables experts to independently select their top-C tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540B MoE models.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_6",
+                      "source_id": "src_ai_02_a",
+                      "chunk_id": "chunk_ai_02_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Expert Choice routing enables experts to independently select their top-C tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540B MoE models.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            },
+            {
+              "section_id": "sec_inference",
+              "title": "Distributed Inference and Communication Efficiency",
+              "content": "In distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time [cite_7]. Implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, reducing communication stalls by 35% and sustaining 82% arithmetic intensity [cite_8].",
+              "claims": [
+                {
+                  "claim_id": "claim_inf_1",
+                  "section_id": "sec_inference",
+                  "text": "In distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_7",
+                      "source_id": "src_ai_02_b",
+                      "chunk_id": "chunk_ai_02_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "In distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_inf_2",
+                  "section_id": "sec_inference",
+                  "text": "Implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, reducing communication stalls by 35% and sustaining 82% arithmetic intensity.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_8",
+                      "source_id": "src_ai_02_b",
+                      "chunk_id": "chunk_ai_02_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, reducing communication stalls by 35% and sustaining 82% arithmetic intensity.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Future Outlook",
+            "content": "Addressing routing imbalances through mechanisms like Expert Choice routing is vital for maximizing training efficiency in large-scale MoE models [cite_9]. Simultaneously, overcoming communication bottlenecks via hierarchical parallelism ensures that massive distributed clusters can sustain high arithmetic intensity during inference [cite_10]. Combining these algorithmic and systems-level innovations provides a comprehensive roadmap for scaling sparse Mixture-of-Experts architectures.",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Addressing routing imbalances through mechanisms like Expert Choice routing is vital for maximizing training efficiency in large-scale MoE models.",
+                "citations": [
+                  {
+                    "citation_id": "cite_9",
+                    "source_id": "src_ai_02_a",
+                    "chunk_id": "chunk_ai_02_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "Overcoming communication bottlenecks via hierarchical parallelism ensures that massive distributed clusters can sustain high arithmetic intensity during inference.",
+                "citations": [
+                  {
+                    "citation_id": "cite_10",
+                    "source_id": "src_ai_02_b",
+                    "chunk_id": "chunk_ai_02_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "The analysis is constrained to specific cluster scales (e.g., 64 nodes) and model parameter sizes (e.g., 540B parameters) as reported in the source data.",
+            "Potential memory overhead trade-offs introduced by Expert Choice routing tokens across variable sequence lengths are not fully detailed in the current evidence.",
+            "Inter-node networking assumptions are restricted to InfiniBand RDMA and NVLink infrastructures."
+          ],
+          "version": 2,
+          "created_by": "revision_llm",
+          "created_at": "2023-10-25T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 9,
+          "total_citations": 10,
+          "passage_matches": [
+            {
+              "citation_id": "cite_5",
+              "source_id": "src_ai_02_a",
+              "chunk_id": "chunk_ai_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor.",
+              "normalized_passage": "standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor.",
+              "normalized_source_chunk": "standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor. in contrast, expert choice routing enables experts to independently select their top-c tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540b moe models."
+            },
+            {
+              "citation_id": "cite_6",
+              "source_id": "src_ai_02_a",
+              "chunk_id": "chunk_ai_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Expert Choice routing enables experts to independently select their top-C tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540B MoE models.",
+              "normalized_passage": "expert choice routing enables experts to independently select their top-c tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540b moe models.",
+              "normalized_source_chunk": "standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor. in contrast, expert choice routing enables experts to independently select their top-c tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540b moe models."
+            },
+            {
+              "citation_id": "cite_7",
+              "source_id": "src_ai_02_b",
+              "chunk_id": "chunk_ai_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "In distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+              "normalized_passage": "in distributed moe clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+              "normalized_source_chunk": "in distributed moe clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time. implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket nvlink transfers with inter-node infiniband rdma, reducing communication stalls by 35% and sustaining 82% arithmetic intensity."
+            },
+            {
+              "citation_id": "cite_8",
+              "source_id": "src_ai_02_b",
+              "chunk_id": "chunk_ai_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, reducing communication stalls by 35% and sustaining 82% arithmetic intensity.",
+              "normalized_passage": "implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket nvlink transfers with inter-node infiniband rdma, reducing communication stalls by 35% and sustaining 82% arithmetic intensity.",
+              "normalized_source_chunk": "in distributed moe clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time. implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket nvlink transfers with inter-node infiniband rdma, reducing communication stalls by 35% and sustaining 82% arithmetic intensity."
+            }
+          ],
+          "issues": [
+            {
+              "issue_id": "DEFECT-001",
+              "category": "organization_clarity",
+              "severity": "minor",
+              "message": "Citation 'cite_3' is defined on claim in section 'sec_exec' but its identifier does not appear in section prose.",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": "cite_3",
+              "details": {}
+            },
+            {
+              "issue_id": "DEFECT-002",
+              "category": "organization_clarity",
+              "severity": "minor",
+              "message": "Citation 'cite_4' is defined on claim in section 'sec_exec' but its identifier does not appear in section prose.",
+              "section_id": "sec_exec",
+              "claim_id": null,
+              "citation_id": "cite_4",
+              "details": {}
+            }
+          ],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 2
+        },
+        "grounding_report": {
+          "passed": true,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The provided chunks explicitly identify load imbalance in token routing as a problem for standard MoE architectures and highlight all-to-all communication as a significant bottleneck in distributed inference.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_1",
+                "chunk_ai_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "Chunk chunk_ai_02_1 confirms that standard top-2 routing leads to severe load imbalance and that Expert Choice routing guarantees perfect load balance while improving training throughput.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_3",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "Chunk chunk_ai_02_2 states that all-to-all communication accounts for up to 48% of inference time and that hierarchical parallelism and pipelined dispatch reduce these communication stalls.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_route_1",
+              "section_id": "sec_routing",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that standard top-2 token routing assigns each token to its top two preferred experts and causes severe load imbalance due to popular experts dropping tokens when capacity is exceeded.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_route_2",
+              "section_id": "sec_routing",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text confirms that Expert Choice routing allows experts to select their top-C tokens, guarantees perfect load balance, and improves training throughput by 2.1x on 540B MoE models.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_inf_1",
+              "section_id": "sec_inference",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that in distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_inf_2",
+              "section_id": "sec_inference",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text confirms that implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, resulting in a 35% reduction in communication stalls and sustaining 82% arithmetic intensity.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms that Expert Choice routing solves load imbalance issues found in standard routing and improves training throughput by 2.1x on large MoE models, supporting the claim that such mechanisms are vital for efficiency.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source states that implementing hierarchical tensor-expert parallelism reduces communication stalls and sustains 82% arithmetic intensity in distributed MoE clusters, directly supporting the claim.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_2"
+              ]
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0,
+          "tokens_used": 5168,
+          "cost_usd": 0.000633
+        },
+        "judge_verdict": {
+          "composite_score": 0.94,
+          "passed": false,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "All claims made in the report are directly supported by the provided source contexts. No hallucinations or factual inaccuracies were detected."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every factual assertion is grounded in the provided source chunks (src_ai_02_a and src_ai_02_b). The report accurately reflects the technical details regarding MoE routing and communication overhead."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 0.8,
+              "passed": false,
+              "reasoning": "While the citations point to the correct sources, the executive summary contains citation markers (cite_3, cite_4) that are not present in the prose of that section, as noted in the deterministic verification report."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.9,
+              "passed": true,
+              "reasoning": "The report covers the core topics of routing and communication efficiency well, including limitations regarding cluster scale and hardware assumptions."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report remains strictly focused on the research topic of routing and load balancing in sparse MoE Transformers."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 0.85,
+              "passed": true,
+              "reasoning": "The report is logically structured with clear headings. The minor issue with unused citation identifiers in the executive summary slightly impacts the professional polish."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally consistent, with no contradictory statements across sections."
+            }
+          },
+          "overall_feedback": "The report is highly accurate and well-grounded in the provided source material. It effectively synthesizes complex technical information regarding MoE routing and communication bottlenecks. The primary area for improvement is the cleanup of the executive summary, where citation markers were included without corresponding prose references, leading to a minor citation correctness penalty.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 4143,
+          "cost_usd": 0.000439
+        },
+        "tokens_used": 15137,
+        "cost_usd": 0.002062
+      },
+      {
+        "round_number": 2,
+        "report": {
+          "topic": "Routing and Load Balancing in Sparse Mixture-of-Experts (MoE) Transformers",
+          "title": "Routing Paradigms and Communication Optimization in Sparse Mixture-of-Experts Transformers",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Sparse Mixture-of-Experts (MoE) architectures face critical bottlenecks in token routing load balancing and distributed communication overhead [cite_1, cite_2]. Standard routing strategies frequently cause severe load imbalances, whereas alternative routing designs like Expert Choice guarantee balanced workloads and accelerate training throughput [cite_1, cite_3]. Furthermore, distributed inference at scale is heavily constrained by all-to-all communication collectives, which can be mitigated through hierarchical parallelism and pipelined dispatch mechanisms [cite_2, cite_4].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Sparse Mixture-of-Experts architectures face critical bottlenecks in token routing load balancing and distributed communication overhead.",
+                "citations": [
+                  {
+                    "citation_id": "cite_1",
+                    "source_id": "src_ai_02_a",
+                    "chunk_id": "chunk_ai_02_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  },
+                  {
+                    "citation_id": "cite_2",
+                    "source_id": "src_ai_02_b",
+                    "chunk_id": "chunk_ai_02_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Standard routing strategies frequently cause severe load imbalances, whereas Expert Choice routing guarantees balanced workloads and accelerates training throughput.",
+                "citations": [
+                  {
+                    "citation_id": "cite_3",
+                    "source_id": "src_ai_02_a",
+                    "chunk_id": "chunk_ai_02_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_3",
+                "section_id": "sec_exec",
+                "text": "Distributed inference at scale is heavily constrained by all-to-all communication collectives, which can be mitigated through hierarchical parallelism and pipelined dispatch mechanisms.",
+                "citations": [
+                  {
+                    "citation_id": "cite_4",
+                    "source_id": "src_ai_02_b",
+                    "chunk_id": "chunk_ai_02_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_routing",
+              "title": "Token Routing and Load Balancing Strategies",
+              "content": "Standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor [cite_5]. In contrast, Expert Choice routing enables experts to independently select their top-C tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540B MoE models [cite_6].",
+              "claims": [
+                {
+                  "claim_id": "claim_route_1",
+                  "section_id": "sec_routing",
+                  "text": "Standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_5",
+                      "source_id": "src_ai_02_a",
+                      "chunk_id": "chunk_ai_02_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_route_2",
+                  "section_id": "sec_routing",
+                  "text": "Expert Choice routing enables experts to independently select their top-C tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540B MoE models.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_6",
+                      "source_id": "src_ai_02_a",
+                      "chunk_id": "chunk_ai_02_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Expert Choice routing enables experts to independently select their top-C tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540B MoE models.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            },
+            {
+              "section_id": "sec_inference",
+              "title": "Distributed Inference and Communication Efficiency",
+              "content": "In distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time [cite_7]. Implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, reducing communication stalls by 35% and sustaining 82% arithmetic intensity [cite_8].",
+              "claims": [
+                {
+                  "claim_id": "claim_inf_1",
+                  "section_id": "sec_inference",
+                  "text": "In distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_7",
+                      "source_id": "src_ai_02_b",
+                      "chunk_id": "chunk_ai_02_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "In distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_inf_2",
+                  "section_id": "sec_inference",
+                  "text": "Implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, reducing communication stalls by 35% and sustaining 82% arithmetic intensity.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_8",
+                      "source_id": "src_ai_02_b",
+                      "chunk_id": "chunk_ai_02_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, reducing communication stalls by 35% and sustaining 82% arithmetic intensity.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Future Outlook",
+            "content": "Addressing routing imbalances through mechanisms like Expert Choice routing is vital for maximizing training efficiency in large-scale MoE models [cite_9]. Simultaneously, overcoming communication bottlenecks via hierarchical parallelism ensures that massive distributed clusters can sustain high arithmetic intensity during inference [cite_10]. Combining these algorithmic and systems-level innovations provides a comprehensive roadmap for scaling sparse Mixture-of-Experts architectures.",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Addressing routing imbalances through mechanisms like Expert Choice routing is vital for maximizing training efficiency in large-scale MoE models.",
+                "citations": [
+                  {
+                    "citation_id": "cite_9",
+                    "source_id": "src_ai_02_a",
+                    "chunk_id": "chunk_ai_02_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "Overcoming communication bottlenecks via hierarchical parallelism ensures that massive distributed clusters can sustain high arithmetic intensity during inference.",
+                "citations": [
+                  {
+                    "citation_id": "cite_10",
+                    "source_id": "src_ai_02_b",
+                    "chunk_id": "chunk_ai_02_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "The analysis is constrained to specific cluster scales (e.g., 64 nodes) and model parameter sizes (e.g., 540B parameters) as reported in the source data.",
+            "Potential memory overhead trade-offs introduced by Expert Choice routing tokens across variable sequence lengths are not fully detailed in the current evidence.",
+            "Inter-node networking assumptions are restricted to InfiniBand RDMA and NVLink infrastructures."
+          ],
+          "version": 3,
+          "created_by": "revision_llm",
+          "created_at": "2023-10-25T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 9,
+          "total_citations": 10,
+          "passage_matches": [
+            {
+              "citation_id": "cite_5",
+              "source_id": "src_ai_02_a",
+              "chunk_id": "chunk_ai_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor.",
+              "normalized_passage": "standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor.",
+              "normalized_source_chunk": "standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor. in contrast, expert choice routing enables experts to independently select their top-c tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540b moe models."
+            },
+            {
+              "citation_id": "cite_6",
+              "source_id": "src_ai_02_a",
+              "chunk_id": "chunk_ai_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Expert Choice routing enables experts to independently select their top-C tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540B MoE models.",
+              "normalized_passage": "expert choice routing enables experts to independently select their top-c tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540b moe models.",
+              "normalized_source_chunk": "standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor. in contrast, expert choice routing enables experts to independently select their top-c tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540b moe models."
+            },
+            {
+              "citation_id": "cite_7",
+              "source_id": "src_ai_02_b",
+              "chunk_id": "chunk_ai_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "In distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+              "normalized_passage": "in distributed moe clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+              "normalized_source_chunk": "in distributed moe clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time. implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket nvlink transfers with inter-node infiniband rdma, reducing communication stalls by 35% and sustaining 82% arithmetic intensity."
+            },
+            {
+              "citation_id": "cite_8",
+              "source_id": "src_ai_02_b",
+              "chunk_id": "chunk_ai_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, reducing communication stalls by 35% and sustaining 82% arithmetic intensity.",
+              "normalized_passage": "implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket nvlink transfers with inter-node infiniband rdma, reducing communication stalls by 35% and sustaining 82% arithmetic intensity.",
+              "normalized_source_chunk": "in distributed moe clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time. implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket nvlink transfers with inter-node infiniband rdma, reducing communication stalls by 35% and sustaining 82% arithmetic intensity."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": true,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunks explicitly identify load imbalance in token routing (chunk_ai_02_1) and high communication overhead (up to 48% of inference time) as critical issues in MoE architectures (chunk_ai_02_2).",
+              "cited_chunk_ids": [
+                "chunk_ai_02_1",
+                "chunk_ai_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "Chunk_ai_02_1 states that standard top-2 routing leads to severe load imbalance and that Expert Choice routing guarantees perfect load balance while improving training throughput.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_3",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "Chunk_ai_02_2 confirms that all-to-all communication accounts for up to 48% of inference time and that hierarchical parallelism and pipelined dispatch reduce these communication stalls.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_route_1",
+              "section_id": "sec_routing",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that standard top-2 token routing assigns each token to its top two preferred experts and causes severe load imbalance due to popular experts dropping tokens when capacity is exceeded.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_route_2",
+              "section_id": "sec_routing",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text confirms that Expert Choice routing allows experts to select their top-C tokens, guarantees perfect load balance, and improves training throughput by 2.1x on 540B MoE models.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_inf_1",
+              "section_id": "sec_inference",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that in distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_inf_2",
+              "section_id": "sec_inference",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text confirms that implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, resulting in a 35% reduction in communication stalls and sustaining 82% arithmetic intensity.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source explicitly states that Expert Choice routing addresses load imbalance issues found in standard routing and improves training throughput by 2.1x on 540B MoE models, supporting the claim that such mechanisms are vital for efficiency.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms that implementing hierarchical tensor-expert parallelism reduces communication stalls and sustains 82% arithmetic intensity in distributed MoE clusters, supporting the claim.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_2"
+              ]
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0,
+          "tokens_used": 5207,
+          "cost_usd": 0.000643
+        },
+        "judge_verdict": {
+          "composite_score": 0.9925,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report accurately reflects the technical details provided in the source documents, including specific performance metrics (2.1x throughput, 48% communication time, 35% reduction in stalls, 82% arithmetic intensity) without any hallucinations."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every claim made in the report is directly supported by the provided source contexts. The synthesis of information is consistent with the source material."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are correctly mapped to the source IDs and chunk IDs. The use of direct quotations in the body sections is precise and matches the source text exactly."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.95,
+              "passed": true,
+              "reasoning": "The report covers both major aspects of the prompt (routing/load balancing and communication efficiency) and includes a helpful limitations section that contextualizes the scope of the findings."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report remains strictly focused on the research topic of routing and load balancing in MoE transformers, with no irrelevant filler or off-topic content."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is exceptionally well-organized, utilizing a clear executive summary, distinct thematic sections, and a logical conclusion, all written in a professional, academic tone."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally coherent, with no contradictions between the executive summary, body sections, and conclusion."
+            }
+          },
+          "overall_feedback": "This is an exemplary research report. It demonstrates high precision in technical reporting, excellent grounding in the provided source material, and a clear, logical structure. The inclusion of a limitations section adds significant value by acknowledging the specific constraints of the source data. No improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 4088,
+          "cost_usd": 0.00044
+        },
+        "tokens_used": 15265,
+        "cost_usd": 0.002086
+      }
+    ],
+    "budget_summary": {
+      "used_tokens": 42439,
+      "max_tokens": 50000,
+      "used_cost_usd": 0.005931,
+      "max_cost_usd": 0.2,
+      "elapsed_seconds": 336.931,
+      "max_seconds": 1800.0,
+      "rounds_executed": 2,
+      "max_rounds": 3,
+      "is_exhausted": false,
+      "exhaustion_reason": null
+    },
+    "rounds_executed": 2,
+    "termination_reason": "ALL_ACCEPTANCE_CRITERIA_MET",
+    "acceptance_threshold": 0.85,
+    "acceptance_result": {
+      "status": "ACCEPTED",
+      "is_accepted": true,
+      "best_candidate": {
+        "round_number": 2,
+        "report": {
+          "topic": "Routing and Load Balancing in Sparse Mixture-of-Experts (MoE) Transformers",
+          "title": "Routing Paradigms and Communication Optimization in Sparse Mixture-of-Experts Transformers",
+          "executive_summary": {
+            "section_id": "sec_exec",
+            "title": "Executive Summary",
+            "content": "Sparse Mixture-of-Experts (MoE) architectures face critical bottlenecks in token routing load balancing and distributed communication overhead [cite_1, cite_2]. Standard routing strategies frequently cause severe load imbalances, whereas alternative routing designs like Expert Choice guarantee balanced workloads and accelerate training throughput [cite_1, cite_3]. Furthermore, distributed inference at scale is heavily constrained by all-to-all communication collectives, which can be mitigated through hierarchical parallelism and pipelined dispatch mechanisms [cite_2, cite_4].",
+            "claims": [
+              {
+                "claim_id": "claim_exec_1",
+                "section_id": "sec_exec",
+                "text": "Sparse Mixture-of-Experts architectures face critical bottlenecks in token routing load balancing and distributed communication overhead.",
+                "citations": [
+                  {
+                    "citation_id": "cite_1",
+                    "source_id": "src_ai_02_a",
+                    "chunk_id": "chunk_ai_02_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  },
+                  {
+                    "citation_id": "cite_2",
+                    "source_id": "src_ai_02_b",
+                    "chunk_id": "chunk_ai_02_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_2",
+                "section_id": "sec_exec",
+                "text": "Standard routing strategies frequently cause severe load imbalances, whereas Expert Choice routing guarantees balanced workloads and accelerates training throughput.",
+                "citations": [
+                  {
+                    "citation_id": "cite_3",
+                    "source_id": "src_ai_02_a",
+                    "chunk_id": "chunk_ai_02_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_exec_3",
+                "section_id": "sec_exec",
+                "text": "Distributed inference at scale is heavily constrained by all-to-all communication collectives, which can be mitigated through hierarchical parallelism and pipelined dispatch mechanisms.",
+                "citations": [
+                  {
+                    "citation_id": "cite_4",
+                    "source_id": "src_ai_02_b",
+                    "chunk_id": "chunk_ai_02_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "sections": [
+            {
+              "section_id": "sec_routing",
+              "title": "Token Routing and Load Balancing Strategies",
+              "content": "Standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor [cite_5]. In contrast, Expert Choice routing enables experts to independently select their top-C tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540B MoE models [cite_6].",
+              "claims": [
+                {
+                  "claim_id": "claim_route_1",
+                  "section_id": "sec_routing",
+                  "text": "Standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_5",
+                      "source_id": "src_ai_02_a",
+                      "chunk_id": "chunk_ai_02_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_route_2",
+                  "section_id": "sec_routing",
+                  "text": "Expert Choice routing enables experts to independently select their top-C tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540B MoE models.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_6",
+                      "source_id": "src_ai_02_a",
+                      "chunk_id": "chunk_ai_02_1",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Expert Choice routing enables experts to independently select their top-C tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540B MoE models.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            },
+            {
+              "section_id": "sec_inference",
+              "title": "Distributed Inference and Communication Efficiency",
+              "content": "In distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time [cite_7]. Implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, reducing communication stalls by 35% and sustaining 82% arithmetic intensity [cite_8].",
+              "claims": [
+                {
+                  "claim_id": "claim_inf_1",
+                  "section_id": "sec_inference",
+                  "text": "In distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_7",
+                      "source_id": "src_ai_02_b",
+                      "chunk_id": "chunk_ai_02_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "In distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                },
+                {
+                  "claim_id": "claim_inf_2",
+                  "section_id": "sec_inference",
+                  "text": "Implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, reducing communication stalls by 35% and sustaining 82% arithmetic intensity.",
+                  "citations": [
+                    {
+                      "citation_id": "cite_8",
+                      "source_id": "src_ai_02_b",
+                      "chunk_id": "chunk_ai_02_2",
+                      "citation_type": "quotation",
+                      "quoted_passage": "Implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, reducing communication stalls by 35% and sustaining 82% arithmetic intensity.",
+                      "confidence": 1.0
+                    }
+                  ],
+                  "is_factual": true
+                }
+              ]
+            }
+          ],
+          "conclusion": {
+            "section_id": "sec_conclusion",
+            "title": "Conclusion and Future Outlook",
+            "content": "Addressing routing imbalances through mechanisms like Expert Choice routing is vital for maximizing training efficiency in large-scale MoE models [cite_9]. Simultaneously, overcoming communication bottlenecks via hierarchical parallelism ensures that massive distributed clusters can sustain high arithmetic intensity during inference [cite_10]. Combining these algorithmic and systems-level innovations provides a comprehensive roadmap for scaling sparse Mixture-of-Experts architectures.",
+            "claims": [
+              {
+                "claim_id": "claim_conc_1",
+                "section_id": "sec_conclusion",
+                "text": "Addressing routing imbalances through mechanisms like Expert Choice routing is vital for maximizing training efficiency in large-scale MoE models.",
+                "citations": [
+                  {
+                    "citation_id": "cite_9",
+                    "source_id": "src_ai_02_a",
+                    "chunk_id": "chunk_ai_02_1",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              },
+              {
+                "claim_id": "claim_conc_2",
+                "section_id": "sec_conclusion",
+                "text": "Overcoming communication bottlenecks via hierarchical parallelism ensures that massive distributed clusters can sustain high arithmetic intensity during inference.",
+                "citations": [
+                  {
+                    "citation_id": "cite_10",
+                    "source_id": "src_ai_02_b",
+                    "chunk_id": "chunk_ai_02_2",
+                    "citation_type": "paraphrase",
+                    "quoted_passage": null,
+                    "confidence": 1.0
+                  }
+                ],
+                "is_factual": true
+              }
+            ]
+          },
+          "limitations": [
+            "The analysis is constrained to specific cluster scales (e.g., 64 nodes) and model parameter sizes (e.g., 540B parameters) as reported in the source data.",
+            "Potential memory overhead trade-offs introduced by Expert Choice routing tokens across variable sequence lengths are not fully detailed in the current evidence.",
+            "Inter-node networking assumptions are restricted to InfiniBand RDMA and NVLink infrastructures."
+          ],
+          "version": 3,
+          "created_by": "revision_llm",
+          "created_at": "2023-10-25T00:00:00Z"
+        },
+        "deterministic_report": {
+          "passed": true,
+          "schema_valid": true,
+          "citations_valid": true,
+          "passages_matched": true,
+          "total_claims": 9,
+          "total_citations": 10,
+          "passage_matches": [
+            {
+              "citation_id": "cite_5",
+              "source_id": "src_ai_02_a",
+              "chunk_id": "chunk_ai_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor.",
+              "normalized_passage": "standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor.",
+              "normalized_source_chunk": "standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor. in contrast, expert choice routing enables experts to independently select their top-c tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540b moe models."
+            },
+            {
+              "citation_id": "cite_6",
+              "source_id": "src_ai_02_a",
+              "chunk_id": "chunk_ai_02_1",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Expert Choice routing enables experts to independently select their top-C tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540B MoE models.",
+              "normalized_passage": "expert choice routing enables experts to independently select their top-c tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540b moe models.",
+              "normalized_source_chunk": "standard top-2 token routing assigns each token to its top two preferred experts, often leading to severe load imbalance where popular experts drop tokens when exceeding their capacity factor. in contrast, expert choice routing enables experts to independently select their top-c tokens, guaranteeing perfect load balance across experts and improving training throughput by 2.1x on 540b moe models."
+            },
+            {
+              "citation_id": "cite_7",
+              "source_id": "src_ai_02_b",
+              "chunk_id": "chunk_ai_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "In distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+              "normalized_passage": "in distributed moe clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+              "normalized_source_chunk": "in distributed moe clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time. implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket nvlink transfers with inter-node infiniband rdma, reducing communication stalls by 35% and sustaining 82% arithmetic intensity."
+            },
+            {
+              "citation_id": "cite_8",
+              "source_id": "src_ai_02_b",
+              "chunk_id": "chunk_ai_02_2",
+              "is_match": true,
+              "match_type": "exact",
+              "quoted_passage": "Implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, reducing communication stalls by 35% and sustaining 82% arithmetic intensity.",
+              "normalized_passage": "implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket nvlink transfers with inter-node infiniband rdma, reducing communication stalls by 35% and sustaining 82% arithmetic intensity.",
+              "normalized_source_chunk": "in distributed moe clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time. implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket nvlink transfers with inter-node infiniband rdma, reducing communication stalls by 35% and sustaining 82% arithmetic intensity."
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0
+        },
+        "grounding_report": {
+          "passed": true,
+          "all_claims_grounded": true,
+          "grounding_score": 1.0,
+          "claim_evaluations": [
+            {
+              "claim_id": "claim_exec_1",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source chunks explicitly identify load imbalance in token routing (chunk_ai_02_1) and high communication overhead (up to 48% of inference time) as critical issues in MoE architectures (chunk_ai_02_2).",
+              "cited_chunk_ids": [
+                "chunk_ai_02_1",
+                "chunk_ai_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_2",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "Chunk_ai_02_1 states that standard top-2 routing leads to severe load imbalance and that Expert Choice routing guarantees perfect load balance while improving training throughput.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_exec_3",
+              "section_id": "sec_exec",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "Chunk_ai_02_2 confirms that all-to-all communication accounts for up to 48% of inference time and that hierarchical parallelism and pipelined dispatch reduce these communication stalls.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_route_1",
+              "section_id": "sec_routing",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that standard top-2 token routing assigns each token to its top two preferred experts and causes severe load imbalance due to popular experts dropping tokens when capacity is exceeded.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_route_2",
+              "section_id": "sec_routing",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text confirms that Expert Choice routing allows experts to select their top-C tokens, guarantees perfect load balance, and improves training throughput by 2.1x on 540B MoE models.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_inf_1",
+              "section_id": "sec_inference",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text explicitly states that in distributed MoE clusters spanning 64 nodes, all-to-all collective communication accounts for up to 48% of total inference step time.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_inf_2",
+              "section_id": "sec_inference",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source text confirms that implementing hierarchical tensor-expert parallelism and pipelined dispatch overlaps inter-socket NVLink transfers with inter-node InfiniBand RDMA, resulting in a 35% reduction in communication stalls and sustaining 82% arithmetic intensity.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_2"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_1",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source explicitly states that Expert Choice routing addresses load imbalance issues found in standard routing and improves training throughput by 2.1x on 540B MoE models, supporting the claim that such mechanisms are vital for efficiency.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_1"
+              ]
+            },
+            {
+              "claim_id": "claim_conc_2",
+              "section_id": "sec_conclusion",
+              "entailment": "ENTAILS",
+              "score": 1.0,
+              "reasoning": "The source confirms that implementing hierarchical tensor-expert parallelism reduces communication stalls and sustains 82% arithmetic intensity in distributed MoE clusters, supporting the claim.",
+              "cited_chunk_ids": [
+                "chunk_ai_02_2"
+              ]
+            }
+          ],
+          "issues": [],
+          "critical_count": 0,
+          "major_count": 0,
+          "minor_count": 0,
+          "tokens_used": 5207,
+          "cost_usd": 0.000643
+        },
+        "judge_verdict": {
+          "composite_score": 0.9925,
+          "passed": true,
+          "dimension_scores": {
+            "factual_accuracy": {
+              "dimension_name": "factual_accuracy",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report accurately reflects the technical details provided in the source documents, including specific performance metrics (2.1x throughput, 48% communication time, 35% reduction in stalls, 82% arithmetic intensity) without any hallucinations."
+            },
+            "evidence_grounding": {
+              "dimension_name": "evidence_grounding",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Every claim made in the report is directly supported by the provided source contexts. The synthesis of information is consistent with the source material."
+            },
+            "citation_correctness": {
+              "dimension_name": "citation_correctness",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "Citations are correctly mapped to the source IDs and chunk IDs. The use of direct quotations in the body sections is precise and matches the source text exactly."
+            },
+            "completeness": {
+              "dimension_name": "completeness",
+              "score": 0.95,
+              "passed": true,
+              "reasoning": "The report covers both major aspects of the prompt (routing/load balancing and communication efficiency) and includes a helpful limitations section that contextualizes the scope of the findings."
+            },
+            "relevance": {
+              "dimension_name": "relevance",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report remains strictly focused on the research topic of routing and load balancing in MoE transformers, with no irrelevant filler or off-topic content."
+            },
+            "clarity_organization": {
+              "dimension_name": "clarity_organization",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is exceptionally well-organized, utilizing a clear executive summary, distinct thematic sections, and a logical conclusion, all written in a professional, academic tone."
+            },
+            "logical_consistency": {
+              "dimension_name": "logical_consistency",
+              "score": 1.0,
+              "passed": true,
+              "reasoning": "The report is internally coherent, with no contradictions between the executive summary, body sections, and conclusion."
+            }
+          },
+          "overall_feedback": "This is an exemplary research report. It demonstrates high precision in technical reporting, excellent grounding in the provided source material, and a clear, logical structure. The inclusion of a limitations section adds significant value by acknowledging the specific constraints of the source data. No improvements are required.",
+          "is_self_judged": false,
+          "effective_threshold": 0.85,
+          "judge_model": "gemini-3.1-flash-lite",
+          "tokens_used": 4088,
+          "cost_usd": 0.00044
+        },
+        "tokens_used": 15265,
+        "cost_usd": 0.002086
+      },
+      "rationale": "Candidate meets all deterministic and semantic acceptance standards (composite_score=0.9925 >= 0.85, critical=0, major_grounding=0).",
+      "unresolved_reasons": [],
+      "review_packet": null
+    },
+    "learned_lessons_count": 0
+  }
+}
