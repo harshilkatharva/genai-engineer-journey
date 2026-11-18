@@ -4,7 +4,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MODULE_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-echo "=== Running pre-push checks for module-20-multi_agent_systems ==="
+echo "=== Running pre-push checks for module-20-multi_agent_system ==="
 
 # 1. Ruff linting
 echo "--> Checking ruff rules..."
@@ -22,4 +22,4 @@ uv run --directory "$MODULE_DIR" mypy .
 echo "--> Running test suite..."
 uv run --directory "$MODULE_DIR" pytest -v tests/
 
-echo "=== All module-20-multi_agent_systems checks passed successfully! ==="
+echo "=== All module-20-multi_agent_system checks passed successfully! ==="

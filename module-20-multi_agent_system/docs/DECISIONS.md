@@ -64,3 +64,21 @@ This document records all significant architectural, technical, and structural d
 - **Context:** Module 20 needs precise USD cost tracking across model generations without depending on Module 17's internal customer support pricing modules.
 - **Decision:** Implemented Module 20's own `PricingCalculator` (`src/parallel_research_team/telemetry/pricing.py`) with updated rate cards for Gemini (`gemini-3.5-flash-lite`, `gemini-3.1-flash-lite`, `gemini-3.8-flash`, `gemini-3.1-pro-preview`), OpenAI (`gpt-6` series), and Anthropic (`claude-5` series), with case-insensitive and family fallback matching.
 - **Consequences:** Independent, up-to-date financial accounting across all research LLM operations.
+
+---
+
+## [2026-11-18] DEC-20-008: Versioned Prompts and Centralized `PromptTemplateManager`
+
+- **Status:** Accepted
+- **Context:** Hardcoding prompts in python files leads to tight coupling, difficulty updating templates across versions, and lack of prompt auditability.
+- **Decision:** Implemented Jinja2 prompt management (`src/parallel_research_team/prompts/manager.py`) backed by directory-structured templates (`src/parallel_research_team/prompts/v1/` with `metadata.json`, `decomposition/`, `worker/`, and `synthesis/`). The manager provides lifecycle rendering methods (`render_decomposition_prompts`, `render_worker_prompts`, and `render_synthesis_prompts`).
+- **Consequences:** Prompt revisions are cleanly decoupled, versioned, and easily swapped via `config.prompt_version`.
+
+---
+
+## [2026-11-18] DEC-20-009: Decomposition Engine with Memory Integration and Fallback Services
+
+- **Status:** Accepted
+- **Context:** The lead agent must classify effort scaling (`DIRECT` vs `PARALLEL_DECOMPOSED`), produce typed worker briefs, recall user preferences from memory, and pin research goals into short-term memory. Core service dependencies must accept explicit module configuration values.
+- **Decision:** Implemented `DecompositionEngine` (`src/parallel_research_team/decomposition/engine.py`) using `LLMService.complete_structure` for typed structured output. Service constructors explicitly receive `default_provider=config.default_provider` and `default_model=config.default_model`. Long-term memory (`genai_core.LongTermMemory`) recalls domain preferences and short-term memory (`genai_core.ShortTermMemory`) pins the decomposition goal.
+- **Consequences:** Safe, typed decomposition with non-blocking graceful fallback if memory services are omitted or unavailable.

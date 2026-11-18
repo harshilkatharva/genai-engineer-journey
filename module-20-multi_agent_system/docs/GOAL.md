@@ -79,19 +79,19 @@ Module 20 builds upon established foundation libraries in the repository with cl
   - Unit tests covering domain models, budget race conditions under concurrency, and checkpoint serialization/deserialization.
 
 ### Milestone 2: Effort Scaling, Prompt Templates & Lead Agent Decomposition
-- [ ] Implement `PromptTemplateManager` in `prompts/manager.py` and create `prompts/v1/`:
-  - `metadata.json`, `decomposition/system.jinja2`, `decomposition/user.jinja2`.
-- [ ] Implement `DecompositionEngine` in `decomposition/engine.py`:
+- [x] Implement `PromptTemplateManager` in `prompts/manager.py` and create `prompts/v1/`:
+  - `metadata.json`, `decomposition/system.jinja2`, `decomposition/user.jinja2`, `worker/system.jinja2`, `worker/user.jinja2`, `synthesis/system.jinja2`, `synthesis/user.jinja2`.
+- [x] Implement `DecompositionEngine` in `decomposition/engine.py`:
   - Structured prompt using `LLMService.complete_structure` with Pydantic `ResearchDecomposition` schema.
   - Effort classification: `DIRECT` (simple, narrow, or factual queries requiring 1 worker) vs `PARALLEL_DECOMPOSED` (multi-faceted, comparative queries requiring 2–5 workers).
   - Explicit boundary definition: generating orthogonal sub-topics with mutually exclusive scopes, search guidelines, and typed `OutputFormatSpec`.
-- [ ] Implement `DecompositionValidator` in `decomposition/validator.py`:
+- [x] Implement `DecompositionValidator` in `decomposition/validator.py`:
   - Verify worker count bounds ($1 \le N \le \text{max\_workers}$).
   - Verify non-empty objectives and disjoint boundary specifications.
-- [ ] Memory integration:
+- [x] Memory integration:
   - Store research goal and decomposition plan as `PinnedGoal` in `genai_core.ShortTermMemory`.
   - Retrieve long-term user preferences from `genai_core.LongTermMemory`.
-- [ ] Unit and integration tests covering decomposition of simple vs broad research questions, boundary enforcement, and memory saving.
+- [x] Unit and integration tests covering decomposition of simple vs broad research questions, boundary enforcement, and memory saving.
 
 ### Milestone 3: Bounded Research Worker, Extensible Registry & Tool Suite
 - [ ] Implement extensible `ResearchWorkerProtocol` and `WorkerRegistry` in `workers/registry.py`:

@@ -1,0 +1,10 @@
+ASSIGNED BRIEF:
+Title: {{ brief.title }}
+Objective: {{ brief.objective }}
+
+TASK BOUNDARIES:
+{% for boundary in brief.task_boundaries %}
+- {{ boundary }}
+{% endfor %}
+
+Execute your research using the available tools and return your findings conforming to {{ brief.expected_output_format.schema_name }}.

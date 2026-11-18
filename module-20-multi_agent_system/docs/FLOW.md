@@ -154,3 +154,46 @@ sequenceDiagram
     Store-->>Caller: None (Success)
     deactivate Store
 ```
+
+---
+
+## 4. Lead Agent Decomposition Flow
+
+The `DecompositionEngine` orchestrates memory recall, prompt rendering, structured LLM generation, validation, and goal pinning:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Client as Orchestrator / Caller
+    participant Decomp as DecompositionEngine
+    participant LTM as LongTermMemory
+    participant Prompts as PromptTemplateManager
+    participant LLM as LLMService
+    participant Validator as DecompositionValidator
+    participant STM as ShortTermMemory
+
+    Client->>Decomp: decompose(topic, user_id, session_id, effort_override)
+    activate Decomp
+
+    opt Memory Integration Enabled
+        Decomp->>LTM: search(user_id=user_id, query=topic, top_k=3)
+        LTM-->>Decomp: Recalled preferences / constraints
+    end
+
+    Decomp->>Prompts: render_decomposition_prompts(topic, max_workers, default_effort, recalled_context)
+    Prompts-->>Decomp: (system_prompt, user_prompt)
+
+    Decomp->>LLM: complete_structure(messages, response_schema=ResearchDecomposition)
+    LLM-->>Decomp: Structured ResearchDecomposition plan
+
+    Decomp->>Validator: validate(plan, max_workers, effort_override)
+    Validator-->>Decomp: Validation passed
+
+    opt Short-Term Memory Enabled
+        Decomp->>STM: pin_goal(user_id, session_id, goal_text, metadata)
+        STM-->>Decomp: Goal pinned
+    end
+
+    Decomp-->>Client: Validated ResearchDecomposition
+    deactivate Decomp
+```
