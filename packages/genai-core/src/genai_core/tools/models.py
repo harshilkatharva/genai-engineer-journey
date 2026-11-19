@@ -101,6 +101,8 @@ class ToolBudget(BaseModel):
 
     current_steps: int = 0
     current_tokens: int = 0
+    current_input_tokens: int = 0
+    current_output_tokens: int = 0
     current_cost_usd: float = 0.0
 
     def is_deadline_exceeded(self) -> bool:
@@ -135,10 +137,19 @@ class ToolBudget(BaseModel):
             return False
         return not self.is_cost_budget_exhausted()
 
-    def record_step(self, tokens: int = 0, cost_usd: float = 0.0) -> None:
+    def record_step(
+        self,
+        tokens: int = 0,
+        cost_usd: float = 0.0,
+        input_tokens: int = 0,
+        output_tokens: int = 0,
+    ) -> None:
         """Record resource consumption for a completed loop iteration."""
         self.current_steps += 1
-        self.current_tokens += max(0, tokens)
+        self.current_input_tokens += max(0, input_tokens)
+        self.current_output_tokens += max(0, output_tokens)
+        step_total = (input_tokens + output_tokens) if (input_tokens or output_tokens) else tokens
+        self.current_tokens += max(0, step_total)
         self.current_cost_usd += max(0.0, cost_usd)
 
 
@@ -163,6 +174,9 @@ class ToolLoopResult(BaseModel):
     messages: list[ChatMessage] = Field(default_factory=list)
     iterations: int = 0
     total_tool_calls: int = 0
+    input_tokens: int = 0
+    output_tokens: int = 0
+    total_tokens: int = 0
     pending_approval: ApprovalRequest | None = None
     remaining_tool_calls: list[ToolCall] = Field(default_factory=list)
     error_message: str | None = None

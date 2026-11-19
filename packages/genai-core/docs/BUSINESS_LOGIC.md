@@ -471,10 +471,15 @@ The Tool subsystem provides framework-independent tool definitions, schema extra
 - Enforces strict execution bounds:
   - `max_iterations`: Step limit (default 10 iterations) terminating with `ToolLoopStatus.MAX_ITERATIONS_REACHED`.
   - `deadline_monotonic`: Absolute timeout terminating with `ToolLoopStatus.DEADLINE_EXCEEDED`.
-  - `ToolBudget`: Token and cost ceilings terminating with `ToolLoopStatus.BUDGET_EXCEEDED`.
+  - `ToolBudget`: Total token ceiling (`max_tokens`) terminating with `ToolLoopStatus.BUDGET_EXCEEDED`. Total token boundary check evaluates `current_tokens >= max_tokens`.
+- Token Accounting & Isolation:
+  - `ToolBudget` maintains separate accumulators for `current_input_tokens` and `current_output_tokens` alongside `current_tokens` (total).
+  - `ToolLoopRunner` records separate input and output tokens per turn from `LLMService.complete_tool()`.
+  - No monetary cost calculations are performed within `ToolLoopRunner` or `ToolBudget`; pricing calculations remain the responsibility of caller application modules.
+  - Cumulative input, output, and total token usage are preserved across human-in-the-loop pause/resume lifecycles.
 - LLM Provider Failure Handling: When `LLMService.complete_tool()` returns an error (e.g. HTTP 401 unauthorized, HTTP 429 rate limits, server errors), the loop immediately halts with `ToolLoopStatus.FAILED` and sets `error_message` rather than treating it as a successful completion.
 - Terminal statuses: `COMPLETED`, `MAX_ITERATIONS_REACHED`, `DEADLINE_EXCEEDED`, `BUDGET_EXCEEDED`, `APPROVAL_REQUIRED`, `FAILED`.
-- Full auditability: `ToolLoopResult` returns complete message history, total iterations, total tool calls, remaining unexecuted tool calls (if paused), and final text output.
+- Full auditability: `ToolLoopResult` returns complete message history, total iterations, total tool calls, remaining unexecuted tool calls (if paused), final text output, `input_tokens`, `output_tokens`, `total_tokens`, and populated `metadata["usage"]`.
 
 ## 10. Framework and orchestration interoperability
 

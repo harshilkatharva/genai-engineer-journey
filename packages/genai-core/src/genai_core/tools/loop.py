@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import time
+from typing import Any
 
 from pydantic import BaseModel
 
@@ -57,6 +58,8 @@ class ToolLoopRunner:
         initial_iterations: int = 0,
         initial_tool_calls: int = 0,
         model: str | None = None,
+        initial_input_tokens: int = 0,
+        initial_output_tokens: int = 0,
     ) -> ToolLoopResult:
         """Run the bounded tool loop until completion, budget exhaustion, or approval pause."""
         effective_timeout = timeout_s if timeout_s is not None else self.default_timeout_s
@@ -65,6 +68,9 @@ class ToolLoopRunner:
             deadline_monotonic=(
                 time.monotonic() + effective_timeout if effective_timeout is not None else None
             ),
+            current_input_tokens=initial_input_tokens,
+            current_output_tokens=initial_output_tokens,
+            current_tokens=(initial_input_tokens + initial_output_tokens),
         )
         if (
             budget is not None
@@ -89,6 +95,35 @@ class ToolLoopRunner:
         iteration = initial_iterations
         total_tool_calls = initial_tool_calls
 
+        def _build_result(
+            status: ToolLoopStatus,
+            final_text: str | None = None,
+            pending_approval: ApprovalRequest | None = None,
+            remaining_tool_calls: list[ToolCall] | None = None,
+            error_message: str | None = None,
+            metadata: dict[str, Any] | None = None,
+        ) -> ToolLoopResult:
+            meta = dict(metadata or {})
+            meta["usage"] = {
+                "input_tokens": active_budget.current_input_tokens,
+                "output_tokens": active_budget.current_output_tokens,
+                "total_tokens": active_budget.current_tokens,
+            }
+            return ToolLoopResult(
+                status=status,
+                final_text=final_text,
+                messages=current_messages,
+                iterations=iteration,
+                total_tool_calls=total_tool_calls,
+                input_tokens=active_budget.current_input_tokens,
+                output_tokens=active_budget.current_output_tokens,
+                total_tokens=active_budget.current_tokens,
+                pending_approval=pending_approval,
+                remaining_tool_calls=remaining_tool_calls or [],
+                error_message=error_message,
+                metadata=meta,
+            )
+
         while active_budget.can_step():
             iteration += 1
             safe_log(
@@ -100,11 +135,8 @@ class ToolLoopRunner:
             )
 
             if active_budget.is_deadline_exceeded():
-                return ToolLoopResult(
+                return _build_result(
                     status=ToolLoopStatus.DEADLINE_EXCEEDED,
-                    messages=current_messages,
-                    iterations=iteration,
-                    total_tool_calls=total_tool_calls,
                     error_message="Execution deadline exceeded before model response",
                 )
 
@@ -126,11 +158,8 @@ class ToolLoopRunner:
                     status=ToolLoopStatus.FAILED,
                     iteration=iteration,
                 )
-                return ToolLoopResult(
+                return _build_result(
                     status=ToolLoopStatus.FAILED,
-                    messages=current_messages,
-                    iterations=iteration,
-                    total_tool_calls=total_tool_calls,
                     error_message=msg,
                 )
 
@@ -144,17 +173,14 @@ class ToolLoopRunner:
                     status=ToolLoopStatus.FAILED,
                     iteration=iteration,
                 )
-                return ToolLoopResult(
+                return _build_result(
                     status=ToolLoopStatus.FAILED,
-                    messages=current_messages,
-                    iterations=iteration,
-                    total_tool_calls=total_tool_calls,
                     error_message=err_msg,
                 )
 
             input_tokens = response.usage.get("input_tokens", 0) if response.usage else 0
             output_tokens = response.usage.get("output_tokens", 0) if response.usage else 0
-            active_budget.record_step(tokens=(input_tokens + output_tokens))
+            active_budget.record_step(input_tokens=input_tokens, output_tokens=output_tokens)
 
             # Case 1: Model finished without calling any tools
             if not response.tool_calls:
@@ -170,12 +196,9 @@ class ToolLoopRunner:
                     iterations=iteration,
                     total_tool_calls=total_tool_calls,
                 )
-                return ToolLoopResult(
+                return _build_result(
                     status=ToolLoopStatus.COMPLETED,
                     final_text=response.text,
-                    messages=current_messages,
-                    iterations=iteration,
-                    total_tool_calls=total_tool_calls,
                 )
 
             # Case 2: Model emitted tool calls
@@ -229,11 +252,8 @@ class ToolLoopRunner:
                     )
                     if not approved and approval_req is not None:
                         # Pause loop for external / human authorization, preserving remaining sibling calls
-                        return ToolLoopResult(
+                        return _build_result(
                             status=ToolLoopStatus.APPROVAL_REQUIRED,
-                            messages=current_messages,
-                            iterations=iteration,
-                            total_tool_calls=total_tool_calls,
                             pending_approval=approval_req,
                             remaining_tool_calls=response.tool_calls[idx + 1 :],
                         )
@@ -244,29 +264,20 @@ class ToolLoopRunner:
 
             # Budget checks after step completion
             if active_budget.is_deadline_exceeded():
-                return ToolLoopResult(
+                return _build_result(
                     status=ToolLoopStatus.DEADLINE_EXCEEDED,
-                    messages=current_messages,
-                    iterations=iteration,
-                    total_tool_calls=total_tool_calls,
                     error_message="Execution deadline exceeded after tool execution",
                 )
 
             if active_budget.is_token_budget_exhausted():
-                return ToolLoopResult(
+                return _build_result(
                     status=ToolLoopStatus.BUDGET_EXCEEDED,
-                    messages=current_messages,
-                    iterations=iteration,
-                    total_tool_calls=total_tool_calls,
                     error_message="Token budget exhausted",
                 )
 
             if active_budget.is_cost_budget_exhausted():
-                return ToolLoopResult(
+                return _build_result(
                     status=ToolLoopStatus.BUDGET_EXCEEDED,
-                    messages=current_messages,
-                    iterations=iteration,
-                    total_tool_calls=total_tool_calls,
                     error_message="Cost budget exhausted",
                 )
 
@@ -284,11 +295,8 @@ class ToolLoopRunner:
             )
         )
 
-        return ToolLoopResult(
+        return _build_result(
             status=terminal_status,
-            messages=current_messages,
-            iterations=iteration,
-            total_tool_calls=total_tool_calls,
             error_message=f"Terminated due to {terminal_status.value}",
         )
 
@@ -306,10 +314,29 @@ class ToolLoopRunner:
         initial_tool_calls: int = 0,
         remaining_tool_calls: list[ToolCall] | None = None,
         model: str | None = None,
+        initial_input_tokens: int = 0,
+        initial_output_tokens: int = 0,
     ) -> ToolLoopResult:
         """Resume execution of a paused tool loop after human or caller authorization decision."""
         if self.executor.approval_store is not None:
             await self.executor.approval_store.record_decision(request.request_id, decision)
+
+        effective_timeout = timeout_s if timeout_s is not None else self.default_timeout_s
+        active_budget = budget or ToolBudget(
+            max_steps=self.max_iterations,
+            deadline_monotonic=(
+                time.monotonic() + effective_timeout if effective_timeout is not None else None
+            ),
+            current_input_tokens=initial_input_tokens,
+            current_output_tokens=initial_output_tokens,
+            current_tokens=(initial_input_tokens + initial_output_tokens),
+        )
+        if (
+            budget is not None
+            and effective_timeout is not None
+            and active_budget.deadline_monotonic is None
+        ):
+            active_budget.deadline_monotonic = time.monotonic() + effective_timeout
 
         current_messages = list(messages)
 
@@ -372,8 +399,18 @@ class ToolLoopRunner:
                         messages=current_messages,
                         iterations=initial_iterations,
                         total_tool_calls=initial_tool_calls,
+                        input_tokens=active_budget.current_input_tokens,
+                        output_tokens=active_budget.current_output_tokens,
+                        total_tokens=active_budget.current_tokens,
                         pending_approval=approval_req,
                         remaining_tool_calls=calls_queue,
+                        metadata={
+                            "usage": {
+                                "input_tokens": active_budget.current_input_tokens,
+                                "output_tokens": active_budget.current_output_tokens,
+                                "total_tokens": active_budget.current_tokens,
+                            }
+                        },
                     )
 
             result = await self.executor.execute(call, bypass_approval=True)
@@ -385,7 +422,7 @@ class ToolLoopRunner:
             tools=tools,
             tool_choice=tool_choice,
             provider=provider,
-            budget=budget,
+            budget=active_budget,
             timeout_s=timeout_s,
             initial_iterations=initial_iterations,
             initial_tool_calls=initial_tool_calls,

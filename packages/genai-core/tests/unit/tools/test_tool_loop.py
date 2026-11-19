@@ -379,3 +379,146 @@ async def test_tool_loop_parallel_tool_calls_preserved_across_approval(
     assert len(tool_msgs) == 2
     assert "Database staging dropped" in tool_msgs[0].content
     assert "parallel executed" in tool_msgs[1].content
+
+
+@pytest.mark.asyncio
+async def test_tool_loop_separate_input_output_token_tracking(sample_executor: ToolExecutor):
+    mock_llm = AsyncMock(spec=LLMService)
+    # Turn 1: tool call
+    turn1 = LLMManagerResponse(
+        tool_calls=[ToolCall(id="c1", name="echo", arguments={"message": "hi"})],
+        usage={"input_tokens": 120, "output_tokens": 30},
+    )
+    # Turn 2: completion
+    turn2 = LLMManagerResponse(
+        text="Final answer",
+        tool_calls=[],
+        usage={"input_tokens": 180, "output_tokens": 45},
+    )
+    mock_llm.complete_tool.side_effect = [turn1, turn2]
+
+    runner = ToolLoopRunner(llm_service=mock_llm, executor=sample_executor)
+    result = await runner.run([ChatMessage(role="user", content="Hello")])
+
+    assert result.status == ToolLoopStatus.COMPLETED
+    assert result.input_tokens == 300
+    assert result.output_tokens == 75
+    assert result.total_tokens == 375
+    assert result.metadata["usage"] == {
+        "input_tokens": 300,
+        "output_tokens": 75,
+        "total_tokens": 375,
+    }
+
+
+@pytest.mark.asyncio
+async def test_tool_loop_budget_separate_tokens_with_total_boundary(sample_executor: ToolExecutor):
+    mock_llm = AsyncMock(spec=LLMService)
+    # Turn 1: 150 total tokens
+    turn1 = LLMManagerResponse(
+        tool_calls=[ToolCall(id="c1", name="echo", arguments={"message": "step 1"})],
+        usage={"input_tokens": 100, "output_tokens": 50},
+    )
+    # Turn 2: 120 total tokens -> cumulative total 270 (exceeds max_tokens=250)
+    turn2 = LLMManagerResponse(
+        tool_calls=[ToolCall(id="c2", name="echo", arguments={"message": "step 2"})],
+        usage={"input_tokens": 80, "output_tokens": 40},
+    )
+    mock_llm.complete_tool.side_effect = [turn1, turn2]
+
+    budget = ToolBudget(max_steps=10, max_tokens=250)
+    runner = ToolLoopRunner(llm_service=mock_llm, executor=sample_executor)
+    result = await runner.run([ChatMessage(role="user", content="Test boundary")], budget=budget)
+
+    assert result.status == ToolLoopStatus.BUDGET_EXCEEDED
+    assert result.input_tokens == 180
+    assert result.output_tokens == 90
+    assert result.total_tokens == 270
+    assert budget.current_input_tokens == 180
+    assert budget.current_output_tokens == 90
+    assert budget.current_tokens == 270
+
+
+@pytest.mark.asyncio
+async def test_tool_loop_resume_preserves_token_accounting(sample_executor: ToolExecutor):
+    mock_llm = AsyncMock(spec=LLMService)
+    # Turn 1: risky tool requiring approval
+    turn1 = LLMManagerResponse(
+        tool_calls=[ToolCall(id="call_drop", name="drop_db", arguments={"db_name": "prod"})],
+        usage={"input_tokens": 150, "output_tokens": 35},
+    )
+    # Turn 2 (resumed): final answer
+    turn2 = LLMManagerResponse(
+        text="Prod dropped safely.",
+        tool_calls=[],
+        usage={"input_tokens": 200, "output_tokens": 50},
+    )
+    mock_llm.complete_tool.side_effect = [turn1, turn2]
+
+    runner = ToolLoopRunner(llm_service=mock_llm, executor=sample_executor)
+    pause_result = await runner.run([ChatMessage(role="user", content="Delete prod")])
+
+    assert pause_result.status == ToolLoopStatus.APPROVAL_REQUIRED
+    assert pause_result.pending_approval is not None
+    assert pause_result.input_tokens == 150
+    assert pause_result.output_tokens == 35
+    assert pause_result.total_tokens == 185
+
+    decision = ApprovalDecision(approved=True, reason="Authorized")
+    resume_result = await runner.resume(
+        decision=decision,
+        request=pause_result.pending_approval,
+        messages=pause_result.messages,
+        initial_input_tokens=pause_result.input_tokens,
+        initial_output_tokens=pause_result.output_tokens,
+    )
+
+    assert resume_result.status == ToolLoopStatus.COMPLETED
+    assert resume_result.input_tokens == 350
+    assert resume_result.output_tokens == 85
+    assert resume_result.total_tokens == 435
+
+
+@pytest.mark.asyncio
+async def test_tool_loop_resume_with_budget_preserves_tokens(sample_executor: ToolExecutor):
+    mock_llm = AsyncMock(spec=LLMService)
+    turn1 = LLMManagerResponse(
+        tool_calls=[ToolCall(id="call_drop", name="drop_db", arguments={"db_name": "prod"})],
+        usage={"input_tokens": 100, "output_tokens": 25},
+    )
+    turn2 = LLMManagerResponse(
+        text="Prod dropped safely.",
+        tool_calls=[],
+        usage={"input_tokens": 150, "output_tokens": 40},
+    )
+    mock_llm.complete_tool.side_effect = [turn1, turn2]
+
+    budget = ToolBudget(max_steps=5, max_tokens=1000)
+    runner = ToolLoopRunner(llm_service=mock_llm, executor=sample_executor)
+    pause_result = await runner.run(
+        [ChatMessage(role="user", content="Delete prod")],
+        budget=budget,
+    )
+
+    assert pause_result.status == ToolLoopStatus.APPROVAL_REQUIRED
+    assert pause_result.pending_approval is not None
+    assert pause_result.input_tokens == 100
+    assert pause_result.output_tokens == 25
+    assert budget.current_input_tokens == 100
+    assert budget.current_output_tokens == 25
+
+    decision = ApprovalDecision(approved=True, reason="Authorized")
+    resume_result = await runner.resume(
+        decision=decision,
+        request=pause_result.pending_approval,
+        messages=pause_result.messages,
+        budget=budget,
+    )
+
+    assert resume_result.status == ToolLoopStatus.COMPLETED
+    assert resume_result.input_tokens == 250
+    assert resume_result.output_tokens == 65
+    assert resume_result.total_tokens == 315
+    assert budget.current_input_tokens == 250
+    assert budget.current_output_tokens == 65
+    assert budget.current_tokens == 315
