@@ -459,6 +459,7 @@ async def test_tool_loop_resume_preserves_token_accounting(sample_executor: Tool
     pause_result = await runner.run([ChatMessage(role="user", content="Delete prod")])
 
     assert pause_result.status == ToolLoopStatus.APPROVAL_REQUIRED
+    assert pause_result.pending_approval is not None
     assert pause_result.input_tokens == 150
     assert pause_result.output_tokens == 35
     assert pause_result.total_tokens == 185
@@ -500,6 +501,7 @@ async def test_tool_loop_resume_with_budget_preserves_tokens(sample_executor: To
     )
 
     assert pause_result.status == ToolLoopStatus.APPROVAL_REQUIRED
+    assert pause_result.pending_approval is not None
     assert pause_result.input_tokens == 100
     assert pause_result.output_tokens == 25
     assert budget.current_input_tokens == 100
