@@ -55,6 +55,9 @@ async def test_worker_successful_execution(
         ],
         iterations=2,
         total_tool_calls=1,
+        input_tokens=150,
+        output_tokens=50,
+        total_tokens=200,
     )
 
     with patch(
@@ -68,6 +71,8 @@ async def test_worker_successful_execution(
     assert result.status == WorkerStatus.COMPLETED
     assert result.output is not None
     assert "Concurrency control requires" in result.output.findings_summary
+    assert result.tokens_used == 200
+    assert result.cost_usd > 0.0
     assert result.error_message is None
 
 

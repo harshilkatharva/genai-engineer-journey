@@ -109,3 +109,12 @@ This document records all significant architectural, technical, and structural d
 - **Context:** Individual worker crashes, tool timeouts, or budget exhaustion must not abort sibling workers, and any evidence gathered before failure must not be discarded.
 - **Decision:** In `DefaultResearchWorker.execute` (`src/parallel_research_team/workers/worker.py`), the execution loop is protected by `asyncio.wait_for`. Timeouts map to `WorkerStatus.TIMEOUT` and unexpected exceptions map to `WorkerStatus.FAILED`. In both failure cases, any accumulated evidence in `EvidenceCollector` is extracted into `WorkerResearchOutput` and returned inside `WorkerExecutionResult`.
 - **Consequences:** Complete fault tolerance; individual worker failures are captured as typed execution records with partial evidence salvage rather than crashing the orchestrator.
+
+---
+
+## [2026-11-19] DEC-20-013: Exact Token Accounting via `genai-core` Native Usage
+
+- **Status:** Accepted
+- **Context:** Previous worker implementations approximated input vs output token splits (75% / 25%) because `ToolBudget` only tracked total tokens.
+- **Decision:** Enhanced `DefaultResearchWorker.execute` (`src/parallel_research_team/workers/worker.py`) to read exact `input_tokens`, `output_tokens`, and `total_tokens` directly from `loop_result` (with fallback to `worker_budget.current_input_tokens` / `current_output_tokens`), and compute exact dollar costs using `PricingCalculator`.
+- **Consequences:** 100% precise financial cost tracking without heuristic approximations.

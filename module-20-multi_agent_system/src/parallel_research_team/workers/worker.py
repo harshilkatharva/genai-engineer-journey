@@ -154,24 +154,17 @@ class DefaultResearchWorker(ResearchWorkerProtocol):
         duration_ms = round((time.monotonic() - start_mono) * 1000.0, 2)
         completed_at = datetime.now(UTC)
 
-        # 5. Calculate token usage and cost
-        total_tokens = worker_budget.current_tokens
-        if loop_result and loop_result.messages:
-            # Reconcile token counts from message metadata if available
-            tokens_from_msgs = 0
-            for msg in loop_result.messages:
-                if msg.role == "assistant" and getattr(msg, "usage", None):
-                    usage = msg.usage  # type: ignore[attr-defined]
-                    if isinstance(usage, dict):
-                        tokens_from_msgs += usage.get("input_tokens", 0) + usage.get(
-                            "output_tokens", 0
-                        )
-            total_tokens = max(total_tokens, tokens_from_msgs)
+        # 5. Calculate token usage and cost using exact counts
+        input_tokens = (
+            loop_result.input_tokens if loop_result else worker_budget.current_input_tokens
+        )
+        output_tokens = (
+            loop_result.output_tokens if loop_result else worker_budget.current_output_tokens
+        )
+        total_tokens = loop_result.total_tokens if loop_result else worker_budget.current_tokens
 
-        approx_in = int(total_tokens * 0.75)
-        approx_out = int(total_tokens * 0.25)
         cost_usd = self.pricing_calculator.calculate_cost(
-            self.config.default_model, approx_in, approx_out
+            self.config.default_model, input_tokens, output_tokens
         )
 
         # 6. Deduct from shared budget atomically
