@@ -109,3 +109,59 @@ This document records all significant architectural, technical, and structural d
 - **Context:** Individual worker crashes, tool timeouts, or budget exhaustion must not abort sibling workers, and any evidence gathered before failure must not be discarded.
 - **Decision:** In `DefaultResearchWorker.execute` (`src/parallel_research_team/workers/worker.py`), the execution loop is protected by `asyncio.wait_for`. Timeouts map to `WorkerStatus.TIMEOUT` and unexpected exceptions map to `WorkerStatus.FAILED`. In both failure cases, any accumulated evidence in `EvidenceCollector` is extracted into `WorkerResearchOutput` and returned inside `WorkerExecutionResult`.
 - **Consequences:** Complete fault tolerance; individual worker failures are captured as typed execution records with partial evidence salvage rather than crashing the orchestrator.
+
+---
+
+## [2026-11-19] DEC-20-013: Exact Token Accounting via `genai-core` Native Usage
+
+- **Status:** Accepted
+- **Context:** Previous worker implementations approximated input vs output token splits (75% / 25%) because `ToolBudget` only tracked total tokens.
+- **Decision:** Enhanced `DefaultResearchWorker.execute` (`src/parallel_research_team/workers/worker.py`) to read exact `input_tokens`, `output_tokens`, and `total_tokens` directly from `loop_result` (with fallback to `worker_budget.current_input_tokens` / `current_output_tokens`), and compute exact dollar costs using `PricingCalculator`.
+- **Consequences:** 100% precise financial cost tracking without heuristic approximations.
+
+---
+
+## [2026-11-19] DEC-20-014: Concurrency Throttling and Sibling Failure Isolation in Scheduler
+
+- **Status:** Accepted
+- **Context:** Parallel workers must execute within bounded concurrency limits (`max_concurrency`), support potential dependency ordering, and ensure that the failure or crash of one worker does not abort running sibling workers.
+- **Decision:** Implemented `ParallelResearchScheduler` (`src/parallel_research_team/scheduling/scheduler.py`) using `asyncio.Semaphore(max_concurrency)` and `asyncio.gather(..., return_exceptions=True)`. Upstream dependencies are coordinated asynchronously using `asyncio.Event` maps with cycle detection.
+- **Consequences:** Safe, predictable worker concurrency; failures in one brief are isolated and recorded without disrupting sibling research tasks.
+
+---
+
+## [2026-11-19] DEC-20-015: Real-Time Incremental Checkpointing and Source Pooling in Scheduler
+
+- **Status:** Accepted
+- **Context:** Long-running multi-agent runs can be interrupted at any moment. Waiting until all workers complete before persisting state risks losing all gathered evidence.
+- **Decision:** The scheduler persists `CheckpointState` incrementally after each individual worker finishes (guarded by an `asyncio.Lock`), immediately pooling authoritative source chunks into `checkpoint.authoritative_sources` and updating token/cost metrics.
+- **Consequences:** Durable execution recovery; interrupted runs retain all evidence gathered up to the point of interruption.
+
+---
+
+## [2026-11-19] DEC-20-016: Worker Deliverable and Citation Grounding Validation
+
+- **Status:** Accepted
+- **Context:** Workers may occasionally return empty summaries, miss requested format elements, or hallucinate citations referencing non-existent sources. Blindly passing unvalidated worker results into the synthesis stage corrupts the final report.
+- **Decision:** Implemented `WorkerOutputValidator` (`src/parallel_research_team/scheduling/validator.py`) to verify deliverable non-emptiness, check that cited sources exist in the worker's evidence list, and flag formatting defects in `limitations`.
+- **Consequences:** Protects downstream synthesis and Gate 1 deterministic verification from phantom citations and corrupt worker deliverables.
+
+---
+
+## [2026-11-19] DEC-20-017: Authoritative Source Pool and Source Deduplication
+
+- **Status:** Accepted
+- **Context:** Multiple concurrent workers may retrieve overlapping web sources, articles, or knowledge base chunks. Lead Agent synthesis requires a consolidated, immutable source repository to provide reliable citations without duplications or chunk collisions.
+- **Decision:** Implemented `AuthoritativeSourcePool` (`src/parallel_research_team/synthesis/source_pool.py`) providing thread-safe deduplication indexed by composite `(source_id, chunk_id)` keys. The pool supports serialization to and from checkpoint state dictionaries.
+- **Consequences:** Unified evidence pool for LLM synthesis and citation validation; seamless resumption from checkpoint with complete source preservation.
+
+---
+
+## [2026-11-19] DEC-20-018: Two-Stage Verification Pipeline with Module 19 Verification Gates
+
+- **Status:** Accepted
+- **Context:** Synthesized reports must not contain hallucinated sources, invalid quotes, or unsupported claims. Module 19 provides production-tested `DeterministicVerifier` and `SemanticGroundingVerifier`.
+- **Decision:** Created `ResearchVerifier` (`src/parallel_research_team/synthesis/verifier.py`) executing a strict two-stage gate:
+  - **Gate 1 (Deterministic):** Structural validation, citation integrity (every citation resolves to an authoritative source chunk), and quoted passage verbatim substring matching.
+  - **Gate 2 (Semantic Grounding):** LLM judge entailment scoring using `SemanticGroundingVerifier` calibrated to threshold **0.70**, using dedicated judge configuration (`judge_provider` and `judge_model`). Gate 2 only runs if Gate 1 passes. If Gate 2 encounters an unexpected LLM judge error, the exception is caught, logged, and shielded gracefully.
+- **Consequences:** Production-grade report reliability with guaranteed citation accuracy and grounded factual claims.

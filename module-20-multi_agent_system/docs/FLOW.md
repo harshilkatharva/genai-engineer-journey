@@ -246,3 +246,105 @@ sequenceDiagram
     Worker-->>Scheduler: WorkerExecutionResult(status=COMPLETED/PARTIAL, output=...)
     deactivate Worker
 ```
+
+---
+
+## 6. Parallel Scheduling, Concurrency Control & Real-Time Checkpointing Flow
+
+`ParallelResearchScheduler` orchestrates concurrent worker execution through `asyncio.Semaphore`, isolates sibling failures with `asyncio.gather(..., return_exceptions=True)`, validates deliverables, and persists state incrementally:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Orchestrator as Orchestrator / Lead Agent
+    participant Scheduler as ParallelResearchScheduler
+    participant Semaphore as asyncio.Semaphore(max_concurrency)
+    participant Worker as ResearchWorker
+    participant Validator as WorkerOutputValidator
+    participant Store as CheckpointStore
+
+    Orchestrator->>Scheduler: schedule_and_execute(briefs, budget, checkpoint)
+    activate Scheduler
+
+    Scheduler->>Scheduler: Check dependency cycles
+
+    par Concurrent Execution (throttled by Semaphore)
+        Scheduler->>Semaphore: acquire()
+        Semaphore-->>Scheduler: slot granted
+        Scheduler->>Worker: execute(brief_1, budget)
+        activate Worker
+        Worker-->>Scheduler: WorkerExecutionResult (COMPLETED)
+        deactivate Worker
+        Scheduler->>Semaphore: release()
+        Scheduler->>Validator: validate(result_1, brief_1)
+        Validator-->>Scheduler: Validated result
+        Scheduler->>Store: save_checkpoint(checkpoint with result_1 & sources)
+    and
+        Scheduler->>Semaphore: acquire()
+        Semaphore-->>Scheduler: slot granted
+        Scheduler->>Worker: execute(brief_2, budget)
+        activate Worker
+        Worker-->>Scheduler: WorkerExecutionResult (FAILED / TIMEOUT)
+        deactivate Worker
+        Scheduler->>Semaphore: release()
+        Scheduler->>Validator: validate(result_2, brief_2)
+        Validator-->>Scheduler: Validated result (partial sources salvaged)
+        Scheduler->>Store: save_checkpoint(checkpoint with result_2 & salvaged sources)
+    end
+
+    Scheduler-->>Orchestrator: dict[brief_id, WorkerExecutionResult]
+    deactivate Scheduler
+```
+
+---
+
+## 7. Lead Agent Synthesis & Two-Stage Verification Gate Flow
+
+`SynthesisEngine` aggregates evidence across successful and partial worker briefs into an authoritative pool, generates a structured `Report`, documents limitations, and passes the result through `ResearchVerifier` (Gate 1 Deterministic & Gate 2 Semantic Grounding):
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Orch as Orchestrator
+    participant Pool as AuthoritativeSourcePool
+    participant Synth as SynthesisEngine
+    participant LLM as LLMService
+    participant Verifier as ResearchVerifier
+    participant G1 as DeterministicVerifier (Gate 1)
+    participant G2 as SemanticGroundingVerifier (Gate 2)
+
+    Orch->>Pool: Populate from validated worker results
+    Pool-->>Orch: Consolidated deduplicated source pool
+
+    Orch->>Synth: synthesize(topic, worker_results, source_pool, budget)
+    activate Synth
+
+    Synth->>Synth: Extract findings & document failed/partial briefs in limitations
+    Synth->>LLM: complete_structure(messages, response_schema=Report)
+    LLM-->>Synth: Structured Report
+
+    Synth->>Synth: Enrich report with unresolved_limitations & brief_coverages
+    Synth-->>Orch: Draft Report
+    deactivate Synth
+
+    Orch->>Verifier: verify(report, source_pool)
+    activate Verifier
+
+    Verifier->>G1: verify_citations(report, sources)
+    activate G1
+    G1-->>Verifier: DeterministicVerificationReport (Gate 1)
+    deactivate G1
+
+    alt Gate 1 Failed
+        Verifier-->>Orch: SynthesisVerificationResult(passed=False, gate1_passed=False)
+    else Gate 1 Passed
+        opt Gate 2 Enabled
+            Verifier->>G2: verify_grounding(report, sources)
+            activate G2
+            G2-->>Verifier: SemanticGroundingReport (grounding_score)
+            deactivate G2
+        end
+        Verifier-->>Orch: SynthesisVerificationResult(passed, gate1_passed=True, gate2_passed, issues, summary)
+    end
+    deactivate Verifier
+```
