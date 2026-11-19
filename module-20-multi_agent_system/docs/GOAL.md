@@ -94,19 +94,19 @@ Module 20 builds upon established foundation libraries in the repository with cl
 - [x] Unit and integration tests covering decomposition of simple vs broad research questions, boundary enforcement, and memory saving.
 
 ### Milestone 3: Bounded Research Worker, Extensible Registry & Tool Suite
-- [ ] Implement extensible `ResearchWorkerProtocol` and `WorkerRegistry` in `workers/registry.py`:
+- [x] Implement extensible `ResearchWorkerProtocol` and `WorkerRegistry` in `workers/registry.py`:
   - Interface-based factory pattern allowing registration of new worker types without modifying scheduler code.
-- [ ] Implement `ResearchWorker` in `workers/worker.py`:
+- [x] Implement `ResearchWorker` in `workers/worker.py`:
   - Specialized research agent wrapping `genai_core.tools.loop.ToolLoopRunner`.
   - Bound to research tool registry (`search_web`, `search_knowledge_base`).
   - Strict per-worker execution envelope: `max_steps` (default: 5), `timeout_seconds` (default: 45s).
   - Pre-step and post-step integration with `SharedRunBudget`.
-- [ ] Implement `RetrievalService` factory with dual-storage support:
+- [x] Implement `RetrievalService` factory with dual-storage support:
   - Configurable between PostgreSQL (`PGVectorStoreAdapter`) and in-memory store (`InMemoryVectorStore`).
-- [ ] Implement evidence ingestion & extraction in `workers/extractor.py`:
+- [x] Implement evidence ingestion & extraction in `workers/extractor.py`:
   - Transform `search_web` outputs (and KB chunks) into immutable `SourceReference` records with deterministic IDs (`url` hash + index/content hash).
   - Extract structured `WorkerResearchOutput` containing findings, claims, and cited source IDs.
-- [ ] Unit and integration tests for worker execution, tool calling, per-worker timeout enforcement, and source extraction.
+- [x] Unit and integration tests for worker execution, tool calling, per-worker timeout enforcement, and source extraction.
 
 ### Milestone 4: Parallel Scheduling, Concurrency Control & Failure Isolation
 - [ ] Implement `ParallelResearchScheduler` in `scheduling/scheduler.py`:

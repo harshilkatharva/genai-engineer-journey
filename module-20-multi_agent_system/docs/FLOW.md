@@ -197,3 +197,52 @@ sequenceDiagram
     Decomp-->>Client: Validated ResearchDecomposition
     deactivate Decomp
 ```
+
+---
+
+## 5. Bounded Research Worker Execution & Evidence Collection Flow
+
+`DefaultResearchWorker` wraps `ToolLoopRunner`, collects evidence deterministically, deducts shared budget atomically, and isolates all failures:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Scheduler as Scheduler / Orchestrator
+    participant Worker as DefaultResearchWorker
+    participant Budget as SharedRunBudget
+    participant Collector as EvidenceCollector
+    participant Runner as ToolLoopRunner
+    participant Tool as search_web / search_kb
+    participant Extractor as EvidenceExtractor
+
+    Scheduler->>Worker: execute(brief, shared_budget)
+    activate Worker
+
+    Worker->>Budget: can_proceed()
+    Budget-->>Worker: True
+
+    Worker->>Collector: Create fresh EvidenceCollector()
+    Worker->>Runner: run(messages, budget=ToolBudget(max_steps, timeout))
+    activate Runner
+
+    loop Tool Iterations (max_steps <= 5)
+        Runner->>Tool: execute(query)
+        activate Tool
+        Tool->>Collector: add_source(source_id, chunk_id, content, ...)
+        Collector-->>Tool: SourceReference recorded
+        Tool-->>Runner: Formatted text with Source ID and Chunk ID
+        deactivate Tool
+    end
+
+    Runner-->>Worker: ToolLoopResult(status, final_text, messages)
+    deactivate Runner
+
+    Worker->>Budget: record_usage(tokens=total_tokens, cost_usd=cost)
+    Budget-->>Worker: None (Atomic update)
+
+    Worker->>Extractor: extract(brief, final_text, collector)
+    Extractor-->>Worker: WorkerResearchOutput(sources, claims, findings)
+
+    Worker-->>Scheduler: WorkerExecutionResult(status=COMPLETED/PARTIAL, output=...)
+    deactivate Worker
+```

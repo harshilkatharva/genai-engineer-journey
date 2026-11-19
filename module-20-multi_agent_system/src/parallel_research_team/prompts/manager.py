@@ -150,3 +150,14 @@ class PromptTemplateManager:
                 versions.append(p.name)
         versions.sort()
         return versions
+
+
+_default_prompt_manager: PromptTemplateManager | None = None
+
+
+def get_prompt_manager(config: ResearchTeamConfig | None = None) -> PromptTemplateManager:
+    """Return the default PromptTemplateManager singleton."""
+    global _default_prompt_manager
+    if _default_prompt_manager is None:
+        _default_prompt_manager = PromptTemplateManager(config=config)
+    return _default_prompt_manager
