@@ -98,6 +98,43 @@ def test_report_structural_integrity() -> None:
     assert len(report.sections) == 1
 
 
+def test_report_version_reads_from_config() -> None:
+    from parallel_research_team.core.config import get_research_team_config
+
+    cfg = get_research_team_config()
+    orig_ver = cfg.system_version
+    try:
+        cfg.system_version = "2.1.0-beta"
+        sec_exec = ReportSection(
+            section_id="sec_exec",
+            title="Overview",
+            content="Content",
+            claims=[],
+        )
+        sec_body = ReportSection(
+            section_id="sec_body",
+            title="Findings",
+            content="Content",
+            claims=[],
+        )
+        sec_concl = ReportSection(
+            section_id="sec_concl",
+            title="Conclusion",
+            content="Content",
+            claims=[],
+        )
+        rep = Report(
+            topic="Test",
+            title="Title",
+            executive_summary=sec_exec,
+            sections=[sec_body],
+            conclusion=sec_concl,
+        )
+        assert rep.research_team_version == "2.1.0-beta"
+    finally:
+        cfg.system_version = orig_ver
+
+
 def test_report_duplicate_section_id_fails() -> None:
     sec_exec = ReportSection(
         section_id="sec_dup",

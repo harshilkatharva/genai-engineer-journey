@@ -1,0 +1,15 @@
+RESEARCH TOPIC:
+{{ topic }}
+
+MAX WORKERS ALLOWED:
+{{ max_workers }}
+
+REQUESTED EFFORT MODE:
+{{ effort_mode | default("auto") }}
+{% if user_preferences %}
+
+USER DOMAIN CONSTRAINTS & PREFERENCES:
+{{ user_preferences }}
+{% endif %}
+
+Analyze the topic, determine the appropriate effort scaling, formulate orthogonal worker briefs with strict scope boundaries, and return a complete ResearchDecomposition plan.

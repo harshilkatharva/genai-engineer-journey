@@ -64,3 +64,48 @@ This document records all significant architectural, technical, and structural d
 - **Context:** Module 20 needs precise USD cost tracking across model generations without depending on Module 17's internal customer support pricing modules.
 - **Decision:** Implemented Module 20's own `PricingCalculator` (`src/parallel_research_team/telemetry/pricing.py`) with updated rate cards for Gemini (`gemini-3.5-flash-lite`, `gemini-3.1-flash-lite`, `gemini-3.8-flash`, `gemini-3.1-pro-preview`), OpenAI (`gpt-6` series), and Anthropic (`claude-5` series), with case-insensitive and family fallback matching.
 - **Consequences:** Independent, up-to-date financial accounting across all research LLM operations.
+
+---
+
+## [2026-11-18] DEC-20-008: Versioned Prompts and Centralized `PromptTemplateManager`
+
+- **Status:** Accepted
+- **Context:** Hardcoding prompts in python files leads to tight coupling, difficulty updating templates across versions, and lack of prompt auditability.
+- **Decision:** Implemented Jinja2 prompt management (`src/parallel_research_team/prompts/manager.py`) backed by directory-structured templates (`src/parallel_research_team/prompts/v1/` with `metadata.json`, `decomposition/`, `worker/`, and `synthesis/`). The manager provides lifecycle rendering methods (`render_decomposition_prompts`, `render_worker_prompts`, and `render_synthesis_prompts`).
+- **Consequences:** Prompt revisions are cleanly decoupled, versioned, and easily swapped via `config.prompt_version`.
+
+---
+
+## [2026-11-18] DEC-20-009: Decomposition Engine with Memory Integration and Fallback Services
+
+- **Status:** Accepted
+- **Context:** The lead agent must classify effort scaling (`DIRECT` vs `PARALLEL_DECOMPOSED`), produce typed worker briefs, recall user preferences from memory, and pin research goals into short-term memory. Core service dependencies must accept explicit module configuration values.
+- **Decision:** Implemented `DecompositionEngine` (`src/parallel_research_team/decomposition/engine.py`) using `LLMService.complete_structure` for typed structured output. Service constructors explicitly receive `default_provider=config.default_provider` and `default_model=config.default_model`. Long-term memory (`genai_core.LongTermMemory`) recalls domain preferences and short-term memory (`genai_core.ShortTermMemory`) pins the decomposition goal.
+- **Consequences:** Safe, typed decomposition with non-blocking graceful fallback if memory services are omitted or unavailable.
+
+---
+
+## [2026-11-19] DEC-20-010: Extensible Worker Registry and Protocol Pattern
+
+- **Status:** Accepted
+- **Context:** The system needs to support specialized worker types (e.g., code analysis, deep web, financial data) in the future without modifying scheduler or orchestrator dispatch logic.
+- **Decision:** Defined `ResearchWorkerProtocol` (`src/parallel_research_team/workers/protocol.py`) and implemented `WorkerRegistry` (`src/parallel_research_team/workers/registry.py`) providing a thread-safe factory registry. Unknown worker types automatically fall back to `"default"` (`DefaultResearchWorker`) with a logged warning.
+- **Consequences:** Clean open-closed architecture; new worker agents can be registered at runtime without altering core execution workflows.
+
+---
+
+## [2026-11-19] DEC-20-011: Deterministic SHA-256 Hashing for Web Evidence and Source Chunks
+
+- **Status:** Accepted
+- **Context:** Web search outputs from DuckDuckGo or HTML scraping do not provide persistent `source_id` or `chunk_id` fields, causing verification failures in Module 19's `DeterministicVerifier`.
+- **Decision:** Implemented deterministic SHA-256 ID generation in `src/parallel_research_team/workers/extractor.py` (`create_deterministic_source_id` using URL digest and `create_deterministic_chunk_id` using snippet content digest). Tools format outputs with explicit `Source ID: ...` and `Chunk ID: ...` tags, and `EvidenceCollector` immutably captures raw `SourceReference` records during tool execution.
+- **Consequences:** Web evidence is 100% compatible with Module 19 verification requirements, preventing broken citation links.
+
+---
+
+## [2026-11-19] DEC-20-012: Worker Failure and Timeout Isolation with Evidence Salvage
+
+- **Status:** Accepted
+- **Context:** Individual worker crashes, tool timeouts, or budget exhaustion must not abort sibling workers, and any evidence gathered before failure must not be discarded.
+- **Decision:** In `DefaultResearchWorker.execute` (`src/parallel_research_team/workers/worker.py`), the execution loop is protected by `asyncio.wait_for`. Timeouts map to `WorkerStatus.TIMEOUT` and unexpected exceptions map to `WorkerStatus.FAILED`. In both failure cases, any accumulated evidence in `EvidenceCollector` is extracted into `WorkerResearchOutput` and returned inside `WorkerExecutionResult`.
+- **Consequences:** Complete fault tolerance; individual worker failures are captured as typed execution records with partial evidence salvage rather than crashing the orchestrator.

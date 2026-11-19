@@ -1,0 +1,195 @@
+"""Decomposition engine producing typed worker briefs with dynamic effort scaling."""
+
+from __future__ import annotations
+
+import logging
+from typing import TYPE_CHECKING, Any
+
+from ..core.config import ResearchTeamConfig, get_research_team_config
+from ..exceptions import DecompositionError
+from ..models import EffortLevel, ResearchDecomposition
+from ..prompts.manager import PromptTemplateManager
+from .validator import DecompositionValidator
+
+if TYPE_CHECKING:
+    from genai_core.services.llm_services import LLMService
+    from genai_core.services.memory_service import MemoryService
+
+_logger = logging.getLogger("parallel_research_team.decomposition.engine")
+
+
+class DecompositionEngine:
+    """Orchestrates research question analysis, effort scaling, prompt rendering, and validation."""
+
+    def __init__(
+        self,
+        llm_service: LLMService | None = None,
+        config: ResearchTeamConfig | None = None,
+        prompt_manager: PromptTemplateManager | None = None,
+        validator: DecompositionValidator | None = None,
+        memory_service: MemoryService | None = None,
+    ) -> None:
+        self.config = config or get_research_team_config()
+        if llm_service is not None:
+            self.llm_service = llm_service
+        else:
+            from genai_core.services.llm_services import LLMService
+
+            self.llm_service = LLMService(
+                default_provider=self.config.default_provider,
+                default_model=self.config.default_model,
+            )
+        self.prompt_manager = prompt_manager or PromptTemplateManager(config=self.config)
+        self.validator = validator or DecompositionValidator()
+        self.memory_service = memory_service
+
+    async def _recall_user_preferences(self, user_id: str, topic: str) -> str:
+        """Recall relevant user domain facts and constraints from LongTermMemory."""
+        if not self.memory_service:
+            return ""
+
+        try:
+            results = await self.memory_service.recall(
+                user_id=user_id,
+                query=topic,
+                top_k=3,
+            )
+            if not results:
+                return ""
+
+            lines = ["Recalled user preferences and domain constraints:"]
+            for r in results:
+                # MemorySearchResult holds record with content
+                content = getattr(r, "content", None)
+                if not content and hasattr(r, "record"):
+                    content = getattr(r.record, "content", str(r.record))
+                if content:
+                    lines.append(f"- {content}")
+            return "\n".join(lines)
+        except Exception as exc:  # noqa: BLE001
+            _logger.warning("Failed to recall user preferences from memory: %s", exc)
+            return ""
+
+    async def _pin_decomposition_goal(
+        self,
+        user_id: str,
+        session_id: str,
+        topic: str,
+        plan: ResearchDecomposition,
+    ) -> None:
+        """Store the active research decomposition in ShortTermMemory as a pinned goal."""
+        if not self.memory_service:
+            return
+
+        try:
+            goal_text = (
+                f"Research Topic: {topic} | Effort: {plan.effort_level.value} | "
+                f"Workers: {plan.worker_count} | Briefs: {', '.join(b.brief_id for b in plan.worker_briefs)}"
+            )
+            await self.memory_service.pin_goal(
+                user_id=user_id,
+                session_id=session_id,
+                goal=goal_text,
+                metadata={
+                    "effort_level": plan.effort_level.value,
+                    "worker_count": plan.worker_count,
+                },
+            )
+        except Exception as exc:  # noqa: BLE001
+            _logger.warning("Failed to pin decomposition goal to short-term memory: %s", exc)
+
+    async def decompose(
+        self,
+        topic: str,
+        user_id: str | None = None,
+        session_id: str | None = None,
+        effort_override: EffortLevel | None = None,
+    ) -> ResearchDecomposition:
+        """Analyze a research topic, classify effort scaling, and generate typed worker briefs.
+
+        Args:
+            topic: The research question or topic to investigate.
+            user_id: Optional user identifier for memory personalization.
+            session_id: Optional session identifier for short-term working context.
+            effort_override: Optional forced effort level (DIRECT or PARALLEL_DECOMPOSED).
+
+        Returns:
+            Validated ResearchDecomposition containing typed worker briefs.
+
+        Raises:
+            DecompositionError: If decomposition generation or validation fails.
+        """
+        trimmed_topic = topic.strip()
+        if not trimmed_topic:
+            raise DecompositionError("Cannot decompose an empty research topic.")
+
+        # 1. Recall user preferences from LongTermMemory if user_id is provided
+        user_prefs = ""
+        if user_id:
+            user_prefs = await self._recall_user_preferences(user_id=user_id, topic=trimmed_topic)
+
+        # 2. Render versioned prompt templates
+        effort_mode_str = (
+            effort_override.value if effort_override else self.config.default_effort_level
+        )
+        system_prompt, user_prompt = self.prompt_manager.render_decomposition_prompts(
+            topic=trimmed_topic,
+            max_workers=self.config.max_workers,
+            effort_mode=effort_mode_str,
+            user_preferences=user_prefs,
+            per_worker_max_steps=self.config.per_worker_max_steps,
+            per_worker_timeout_seconds=self.config.per_worker_timeout_seconds,
+            version=self.config.prompt_version,
+        )
+
+        full_prompt = f"{system_prompt}\n\n{user_prompt}"
+
+        _logger.info(
+            "Calling LLM for research decomposition on topic '%s' (effort_mode=%s, max_workers=%d)",
+            trimmed_topic,
+            effort_mode_str,
+            self.config.max_workers,
+        )
+
+        # 3. Request structured completion via LLMService
+        try:
+            llm_response = await self.llm_service.complete_structure(
+                prompt=full_prompt,
+                response_schema=ResearchDecomposition,
+                provider=self.config.default_provider,
+                model=self.config.default_model,
+            )
+        except Exception as exc:
+            raise DecompositionError(f"LLM decomposition completion call failed: {exc}") from exc
+
+        plan: Any = getattr(llm_response, "structured_response", None)
+        if not isinstance(plan, ResearchDecomposition):
+            raise DecompositionError(
+                f"LLM failed to return a valid ResearchDecomposition instance; got {type(plan).__name__}"
+            )
+
+        # Ensure worker_count aligns with length of briefs
+        plan.worker_count = len(plan.worker_briefs)
+
+        # 4. Validate decomposition against structural and boundary rules
+        self.validator.validate(
+            decomposition=plan,
+            max_workers=self.config.max_workers,
+            effort_override=effort_override,
+        )
+
+        # 5. Persist decomposition plan as pinned goal in ShortTermMemory
+        if user_id and session_id:
+            await self._pin_decomposition_goal(
+                user_id=user_id,
+                session_id=session_id,
+                topic=trimmed_topic,
+                plan=plan,
+            )
+
+        _logger.info(
+            "Successfully decomposed research topic into %d briefs (%s effort)",
+            plan.worker_count,
+            plan.effort_level.value,
+        )
+        return plan
