@@ -295,3 +295,56 @@ sequenceDiagram
     Scheduler-->>Orchestrator: dict[brief_id, WorkerExecutionResult]
     deactivate Scheduler
 ```
+
+---
+
+## 7. Lead Agent Synthesis & Two-Stage Verification Gate Flow
+
+`SynthesisEngine` aggregates evidence across successful and partial worker briefs into an authoritative pool, generates a structured `Report`, documents limitations, and passes the result through `ResearchVerifier` (Gate 1 Deterministic & Gate 2 Semantic Grounding):
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Orch as Orchestrator
+    participant Pool as AuthoritativeSourcePool
+    participant Synth as SynthesisEngine
+    participant LLM as LLMService
+    participant Verifier as ResearchVerifier
+    participant G1 as DeterministicVerifier (Gate 1)
+    participant G2 as SemanticGroundingVerifier (Gate 2)
+
+    Orch->>Pool: Populate from validated worker results
+    Pool-->>Orch: Consolidated deduplicated source pool
+
+    Orch->>Synth: synthesize(topic, worker_results, source_pool, budget)
+    activate Synth
+
+    Synth->>Synth: Extract findings & document failed/partial briefs in limitations
+    Synth->>LLM: complete_structure(messages, response_schema=Report)
+    LLM-->>Synth: Structured Report
+
+    Synth->>Synth: Enrich report with unresolved_limitations & brief_coverages
+    Synth-->>Orch: Draft Report
+    deactivate Synth
+
+    Orch->>Verifier: verify(report, source_pool)
+    activate Verifier
+
+    Verifier->>G1: verify_citations(report, sources)
+    activate G1
+    G1-->>Verifier: DeterministicVerificationReport (Gate 1)
+    deactivate G1
+
+    alt Gate 1 Failed
+        Verifier-->>Orch: SynthesisVerificationResult(passed=False, gate1_passed=False)
+    else Gate 1 Passed
+        opt Gate 2 Enabled
+            Verifier->>G2: verify_grounding(report, sources)
+            activate G2
+            G2-->>Verifier: SemanticGroundingReport (grounding_score)
+            deactivate G2
+        end
+        Verifier-->>Orch: SynthesisVerificationResult(passed, gate1_passed=True, gate2_passed, issues, summary)
+    end
+    deactivate Verifier
+```

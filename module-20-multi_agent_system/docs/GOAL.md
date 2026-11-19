@@ -120,16 +120,16 @@ Module 20 builds upon established foundation libraries in the repository with cl
 - [x] Unit tests for worker isolation (one worker fails while others succeed), timeout handling, concurrency throttling, and checkpoint persistence during execution.
 
 ### Milestone 5: Lead Agent Synthesis & Citation Verification Gate
-- [ ] Implement `AuthoritativeSourcePool` in `synthesis/source_pool.py`:
+- [x] Implement `AuthoritativeSourcePool` in `synthesis/source_pool.py`:
   - Consolidate and deduplicate all validated `SourceReference` instances from successful and partial workers into a unified pool keyed by `(source_id, chunk_id)`.
-- [ ] Implement `SynthesisEngine` in `synthesis/engine.py`:
+- [x] Implement `SynthesisEngine` in `synthesis/engine.py`:
   - Synthesize collective research findings into Module 20's `Report` model.
-  - Explicit reporting of missing or failed research: Document incomplete briefs in `Report.limitations`.
+  - Explicit reporting of missing or failed research: Document incomplete briefs in `Report.limitations` and `Report.unresolved_limitations`.
   - Strict preservation of source citations (`Citation` objects pointing to `source_id` and `chunk_id`).
-- [ ] Verification Integration in `synthesis/verifier.py`:
+- [x] Verification Integration in `synthesis/verifier.py`:
   - Gate 1: Run Module 19 `DeterministicVerifier` to ensure zero broken citations, valid quoted passages, and structural compliance.
   - Gate 2: Run Module 19 `SemanticGroundingVerifier` with threshold **0.70** to confirm claim-passage entailment.
-- [ ] Unit and integration tests for multi-worker evidence synthesis, citation verification, and limitation reporting.
+- [x] Unit and integration tests for multi-worker evidence synthesis, citation verification, and limitation reporting.
 
 ### Milestone 6: Orchestrator Facade, Checkpointing & Resumption
 - [ ] Implement `ParallelResearchTeam` facade in `orchestrator.py`:

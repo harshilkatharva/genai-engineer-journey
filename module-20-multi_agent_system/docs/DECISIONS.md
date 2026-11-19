@@ -145,3 +145,23 @@ This document records all significant architectural, technical, and structural d
 - **Context:** Workers may occasionally return empty summaries, miss requested format elements, or hallucinate citations referencing non-existent sources. Blindly passing unvalidated worker results into the synthesis stage corrupts the final report.
 - **Decision:** Implemented `WorkerOutputValidator` (`src/parallel_research_team/scheduling/validator.py`) to verify deliverable non-emptiness, check that cited sources exist in the worker's evidence list, and flag formatting defects in `limitations`.
 - **Consequences:** Protects downstream synthesis and Gate 1 deterministic verification from phantom citations and corrupt worker deliverables.
+
+---
+
+## [2026-11-19] DEC-20-017: Authoritative Source Pool and Source Deduplication
+
+- **Status:** Accepted
+- **Context:** Multiple concurrent workers may retrieve overlapping web sources, articles, or knowledge base chunks. Lead Agent synthesis requires a consolidated, immutable source repository to provide reliable citations without duplications or chunk collisions.
+- **Decision:** Implemented `AuthoritativeSourcePool` (`src/parallel_research_team/synthesis/source_pool.py`) providing thread-safe deduplication indexed by composite `(source_id, chunk_id)` keys. The pool supports serialization to and from checkpoint state dictionaries.
+- **Consequences:** Unified evidence pool for LLM synthesis and citation validation; seamless resumption from checkpoint with complete source preservation.
+
+---
+
+## [2026-11-19] DEC-20-018: Two-Stage Verification Pipeline with Module 19 Verification Gates
+
+- **Status:** Accepted
+- **Context:** Synthesized reports must not contain hallucinated sources, invalid quotes, or unsupported claims. Module 19 provides production-tested `DeterministicVerifier` and `SemanticGroundingVerifier`.
+- **Decision:** Created `ResearchVerifier` (`src/parallel_research_team/synthesis/verifier.py`) executing a strict two-stage gate:
+  - **Gate 1 (Deterministic):** Structural validation, citation integrity (every citation resolves to an authoritative source chunk), and quoted passage verbatim substring matching.
+  - **Gate 2 (Semantic Grounding):** LLM judge entailment scoring using `SemanticGroundingVerifier` calibrated to threshold **0.70**, using dedicated judge configuration (`judge_provider` and `judge_model`). Gate 2 only runs if Gate 1 passes. If Gate 2 encounters an unexpected LLM judge error, the exception is caught, logged, and shielded gracefully.
+- **Consequences:** Production-grade report reliability with guaranteed citation accuracy and grounded factual claims.
