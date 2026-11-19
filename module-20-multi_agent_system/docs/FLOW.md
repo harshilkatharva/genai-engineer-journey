@@ -246,3 +246,52 @@ sequenceDiagram
     Worker-->>Scheduler: WorkerExecutionResult(status=COMPLETED/PARTIAL, output=...)
     deactivate Worker
 ```
+
+---
+
+## 6. Parallel Scheduling, Concurrency Control & Real-Time Checkpointing Flow
+
+`ParallelResearchScheduler` orchestrates concurrent worker execution through `asyncio.Semaphore`, isolates sibling failures with `asyncio.gather(..., return_exceptions=True)`, validates deliverables, and persists state incrementally:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Orchestrator as Orchestrator / Lead Agent
+    participant Scheduler as ParallelResearchScheduler
+    participant Semaphore as asyncio.Semaphore(max_concurrency)
+    participant Worker as ResearchWorker
+    participant Validator as WorkerOutputValidator
+    participant Store as CheckpointStore
+
+    Orchestrator->>Scheduler: schedule_and_execute(briefs, budget, checkpoint)
+    activate Scheduler
+
+    Scheduler->>Scheduler: Check dependency cycles
+
+    par Concurrent Execution (throttled by Semaphore)
+        Scheduler->>Semaphore: acquire()
+        Semaphore-->>Scheduler: slot granted
+        Scheduler->>Worker: execute(brief_1, budget)
+        activate Worker
+        Worker-->>Scheduler: WorkerExecutionResult (COMPLETED)
+        deactivate Worker
+        Scheduler->>Semaphore: release()
+        Scheduler->>Validator: validate(result_1, brief_1)
+        Validator-->>Scheduler: Validated result
+        Scheduler->>Store: save_checkpoint(checkpoint with result_1 & sources)
+    and
+        Scheduler->>Semaphore: acquire()
+        Semaphore-->>Scheduler: slot granted
+        Scheduler->>Worker: execute(brief_2, budget)
+        activate Worker
+        Worker-->>Scheduler: WorkerExecutionResult (FAILED / TIMEOUT)
+        deactivate Worker
+        Scheduler->>Semaphore: release()
+        Scheduler->>Validator: validate(result_2, brief_2)
+        Validator-->>Scheduler: Validated result (partial sources salvaged)
+        Scheduler->>Store: save_checkpoint(checkpoint with result_2 & salvaged sources)
+    end
+
+    Scheduler-->>Orchestrator: dict[brief_id, WorkerExecutionResult]
+    deactivate Scheduler
+```

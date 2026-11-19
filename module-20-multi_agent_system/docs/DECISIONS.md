@@ -118,3 +118,30 @@ This document records all significant architectural, technical, and structural d
 - **Context:** Previous worker implementations approximated input vs output token splits (75% / 25%) because `ToolBudget` only tracked total tokens.
 - **Decision:** Enhanced `DefaultResearchWorker.execute` (`src/parallel_research_team/workers/worker.py`) to read exact `input_tokens`, `output_tokens`, and `total_tokens` directly from `loop_result` (with fallback to `worker_budget.current_input_tokens` / `current_output_tokens`), and compute exact dollar costs using `PricingCalculator`.
 - **Consequences:** 100% precise financial cost tracking without heuristic approximations.
+
+---
+
+## [2026-11-19] DEC-20-014: Concurrency Throttling and Sibling Failure Isolation in Scheduler
+
+- **Status:** Accepted
+- **Context:** Parallel workers must execute within bounded concurrency limits (`max_concurrency`), support potential dependency ordering, and ensure that the failure or crash of one worker does not abort running sibling workers.
+- **Decision:** Implemented `ParallelResearchScheduler` (`src/parallel_research_team/scheduling/scheduler.py`) using `asyncio.Semaphore(max_concurrency)` and `asyncio.gather(..., return_exceptions=True)`. Upstream dependencies are coordinated asynchronously using `asyncio.Event` maps with cycle detection.
+- **Consequences:** Safe, predictable worker concurrency; failures in one brief are isolated and recorded without disrupting sibling research tasks.
+
+---
+
+## [2026-11-19] DEC-20-015: Real-Time Incremental Checkpointing and Source Pooling in Scheduler
+
+- **Status:** Accepted
+- **Context:** Long-running multi-agent runs can be interrupted at any moment. Waiting until all workers complete before persisting state risks losing all gathered evidence.
+- **Decision:** The scheduler persists `CheckpointState` incrementally after each individual worker finishes (guarded by an `asyncio.Lock`), immediately pooling authoritative source chunks into `checkpoint.authoritative_sources` and updating token/cost metrics.
+- **Consequences:** Durable execution recovery; interrupted runs retain all evidence gathered up to the point of interruption.
+
+---
+
+## [2026-11-19] DEC-20-016: Worker Deliverable and Citation Grounding Validation
+
+- **Status:** Accepted
+- **Context:** Workers may occasionally return empty summaries, miss requested format elements, or hallucinate citations referencing non-existent sources. Blindly passing unvalidated worker results into the synthesis stage corrupts the final report.
+- **Decision:** Implemented `WorkerOutputValidator` (`src/parallel_research_team/scheduling/validator.py`) to verify deliverable non-emptiness, check that cited sources exist in the worker's evidence list, and flag formatting defects in `limitations`.
+- **Consequences:** Protects downstream synthesis and Gate 1 deterministic verification from phantom citations and corrupt worker deliverables.

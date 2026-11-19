@@ -109,15 +109,15 @@ Module 20 builds upon established foundation libraries in the repository with cl
 - [x] Unit and integration tests for worker execution, tool calling, per-worker timeout enforcement, and source extraction.
 
 ### Milestone 4: Parallel Scheduling, Concurrency Control & Failure Isolation
-- [ ] Implement `ParallelResearchScheduler` in `scheduling/scheduler.py`:
+- [x] Implement `ParallelResearchScheduler` in `scheduling/scheduler.py`:
   - Bounded concurrency execution via `asyncio.Semaphore(max_concurrency)`.
   - Async task dispatch using `asyncio.gather(..., return_exceptions=True)`.
   - **Strict Failure Isolation:** Worker failures (exceptions, timeouts, budget stops) do NOT cancel sibling workers.
   - Real-time checkpoint updates as individual workers complete.
   - Partial result recovery: salvage completed tool findings and sources from failed or timed-out workers.
-- [ ] Implement `WorkerOutputValidator` in `scheduling/validator.py`:
+- [x] Implement `WorkerOutputValidator` in `scheduling/validator.py`:
   - Validate worker deliverable structure and verify that cited sources exist in the worker's retrieved evidence pool.
-- [ ] Unit tests for worker isolation (one worker fails while others succeed), timeout handling, concurrency throttling, and checkpoint persistence during execution.
+- [x] Unit tests for worker isolation (one worker fails while others succeed), timeout handling, concurrency throttling, and checkpoint persistence during execution.
 
 ### Milestone 5: Lead Agent Synthesis & Citation Verification Gate
 - [ ] Implement `AuthoritativeSourcePool` in `synthesis/source_pool.py`:
