@@ -122,6 +122,13 @@ class ReportSection(BaseModel):
         return trimmed
 
 
+def _default_research_team_version() -> str:
+    """Dynamically retrieve the research team version from active configuration."""
+    from ..core.config import get_research_team_config
+
+    return get_research_team_config().system_version
+
+
 class Report(BaseModel):
     """Complete structured research report synthesized from parallel worker findings.
 
@@ -146,7 +153,8 @@ class Report(BaseModel):
     )
     version: int = Field(default=1, ge=1, description="Monotonically increasing report version")
     research_team_version: str = Field(
-        default="1.0.0", description="Module 20 research team generator version"
+        default_factory=_default_research_team_version,
+        description="Module 20 research team generator version",
     )
     brief_coverages: dict[str, str] = Field(
         default_factory=dict,

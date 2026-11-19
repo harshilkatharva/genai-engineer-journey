@@ -226,9 +226,16 @@ class DefaultResearchWorker(ResearchWorkerProtocol):
 
 
 def default_worker_factory(
-    brief: WorkerBrief,
-    config: ResearchTeamConfig,
+    brief: WorkerBrief | None = None,
+    config: ResearchTeamConfig | None = None,
     **kwargs: Any,
 ) -> ResearchWorkerProtocol:
-    """Factory function for creating DefaultResearchWorker instances."""
+    """Factory function for creating DefaultResearchWorker instances.
+
+    Note:
+        DefaultResearchWorker is stateless with respect to the brief during initialization;
+        the brief is supplied dynamically to worker.execute(brief, budget).
+        The brief parameter is accepted to adhere to the extensible WorkerFactory protocol.
+    """
+    _ = brief  # Handled dynamically in worker.execute()
     return DefaultResearchWorker(config=config, **kwargs)

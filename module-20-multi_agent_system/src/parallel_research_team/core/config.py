@@ -108,6 +108,9 @@ class ResearchTeamConfig(BaseSettings):
         default=True, description="Automatically persist checkpoints at milestones"
     )
     prompt_version: str = Field(default="v1", description="Active prompt template version")
+    system_version: str = Field(
+        default="1.0.0", description="Module 20 research team system generator version"
+    )
 
 
 @functools.lru_cache(maxsize=1)
