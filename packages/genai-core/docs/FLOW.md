@@ -757,8 +757,9 @@ sequenceDiagram
     loop While budget.can_step()
         Runner->>LLM: complete_tool(messages, tools)
         LLM-->>Runner: LLMManagerResponse(tool_calls, usage)
+        Runner->>Runner: record_step(input_tokens, output_tokens) & check budget boundary
         alt No Tool Calls
-            Runner-->>Caller: ToolLoopResult(status=COMPLETED, final_text)
+            Runner-->>Caller: ToolLoopResult(status=COMPLETED, final_text, input_tokens, output_tokens, total_tokens)
         else Tool Calls Returned
             Runner->>Runner: append assistant message
             loop For Each ToolCall

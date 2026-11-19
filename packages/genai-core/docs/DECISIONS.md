@@ -790,6 +790,39 @@ Prior to this change, caller code could not specify or override the target LLM m
 - Verified with 254 unit tests across LLM, embedding, retrieval, memory, tools, and evaluation subsystems (100% pass rate).
 - Passed all `ruff` and `mypy` checks.
 
+---
+
+## 2026-11-19: Separate Input and Output Token Tracking in Tool Loop (`ToolLoopRunner`, `ToolBudget`, `ToolLoopResult`)
+
+### 1. Context and Problem Statement
+- In `ToolLoopRunner.run()`, multi-turn execution extracted `input_tokens` and `output_tokens` from `LLMService.complete_tool()`, but immediately merged them as `tokens=(input_tokens + output_tokens)`.
+- `ToolBudget` only tracked `current_tokens` (total) and lacked separate fields for input and output tokens.
+- `ToolLoopResult` returned no token telemetry to the caller (`input_tokens`, `output_tokens`, and `total_tokens` were absent, and `metadata["usage"]` was unpopulated). Downstream consumers (e.g. `module-17` and `module-20`) were forced to approximate token splits using heuristic multipliers (`0.75 * total` and `0.25 * total`).
+- Requirement: Provide separate accounting for input and output tokens returned directly to the caller on `ToolLoopResult`, keep the total token budget boundary (`max_tokens`) completely unchanged, and ensure no cost calculations are performed inside the tool loop.
+
+### 2. Changes Made
+1. **`ToolBudget` ([models.py](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/tools/models.py))**:
+   - Added `current_input_tokens: int = 0` and `current_output_tokens: int = 0`.
+   - Updated `record_step(tokens=0, cost_usd=0.0, input_tokens=0, output_tokens=0)` to accumulate input and output tokens separately while maintaining full backward compatibility.
+   - Kept `is_token_budget_exhausted()` checking `current_tokens >= max_tokens` (total token boundary unchanged).
+2. **`ToolLoopResult` ([models.py](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/tools/models.py))**:
+   - Added `input_tokens: int = 0`, `output_tokens: int = 0`, and `total_tokens: int = 0`.
+3. **`ToolLoopRunner` ([loop.py](file:///home/harshilk/genai-engineer-journey/packages/genai-core/src/genai_core/tools/loop.py))**:
+   - Passed `input_tokens` and `output_tokens` to `active_budget.record_step(input_tokens=..., output_tokens=...)`.
+   - Unified `ToolLoopResult` creation across all return paths via `_build_result()`, populating `input_tokens`, `output_tokens`, `total_tokens`, and `metadata["usage"]`.
+   - Supported `initial_input_tokens` and `initial_output_tokens` in `run()` and `resume()`, preserving cumulative token accounting across human-in-the-loop approval pauses.
+   - No cost calculations added inside the tool loop.
+
+### 3. Alternatives Considered
+- Populating usage only inside `ToolLoopResult.metadata["usage"]`: Rejected because exposing top-level fields provides static type safety and explicit autocompletion for callers. Both top-level fields and `metadata["usage"]` are populated.
+- Computing dollar costs inside the tool loop: Rejected per explicit architectural rule; token pricing models belong in dedicated telemetry/pricing modules with dynamic model rate cards.
+
+### 4. Impact and Verification
+- Zero breaking changes to existing callers.
+- 15 unit tests in `tests/unit/tools/test_tool_loop.py` passing.
+- 258 package unit tests in `genai-core` passing.
+- Downstream integration tests in `module-17` (58 tests) and `module-20` (69 tests) all pass.
+
 
 
 
