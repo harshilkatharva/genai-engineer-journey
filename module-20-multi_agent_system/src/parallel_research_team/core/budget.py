@@ -23,6 +23,8 @@ class SharedRunBudget:
         max_total_tokens: int | None = None,
         max_total_cost_usd: float | None = None,
         max_wall_clock_seconds: float | None = None,
+        initial_tokens: int = 0,
+        initial_cost_usd: float = 0.0,
     ) -> None:
         cfg = config or get_research_team_config()
         self.max_total_tokens = (
@@ -37,8 +39,8 @@ class SharedRunBudget:
             else cfg.max_wall_clock_seconds
         )
 
-        self.current_tokens: int = 0
-        self.current_cost_usd: float = 0.0
+        self.current_tokens: int = max(0, initial_tokens)
+        self.current_cost_usd: float = max(0.0, initial_cost_usd)
         self.start_monotonic: float | None = None
         self.deadline_monotonic: float | None = None
         self._lock = asyncio.Lock()

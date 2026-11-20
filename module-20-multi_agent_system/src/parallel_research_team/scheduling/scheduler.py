@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 from datetime import UTC, datetime
+from typing import Any
 
 from genai_core.observability import get_logger
 
@@ -31,11 +32,15 @@ class ParallelResearchScheduler:
         worker_registry: WorkerRegistry | None = None,
         validator: WorkerOutputValidator | None = None,
         checkpoint_store: CheckpointStore | None = None,
+        retrieval_service: Any | None = None,
+        llm_service: Any | None = None,
     ) -> None:
         self.config = config or get_research_team_config()
         self.worker_registry = worker_registry or get_default_worker_registry()
         self.validator = validator or WorkerOutputValidator()
         self.checkpoint_store = checkpoint_store
+        self.retrieval_service = retrieval_service
+        self.llm_service = llm_service
 
     def _detect_cycles(self, briefs: list[WorkerBrief]) -> bool:
         """Detect whether dependency graph between briefs contains a cycle."""
@@ -115,9 +120,16 @@ class ParallelResearchScheduler:
                     )
                 else:
                     try:
+                        worker_kwargs: dict[str, Any] = {}
+                        if self.retrieval_service is not None:
+                            worker_kwargs["retrieval_service"] = self.retrieval_service
+                        if self.llm_service is not None:
+                            worker_kwargs["llm_service"] = self.llm_service
+
                         worker = self.worker_registry.create_worker(
                             brief=brief,
                             config=self.config,
+                            **worker_kwargs,
                         )
                         raw_result = await worker.execute(
                             brief=brief,

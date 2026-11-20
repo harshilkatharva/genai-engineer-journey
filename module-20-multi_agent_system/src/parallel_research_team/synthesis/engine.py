@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from genai_core import ChatMessage, LLMService
+from genai_core import LLMService
 from genai_core.observability import get_logger
 
 from ..core.budget import SharedRunBudget
@@ -33,6 +33,10 @@ class SynthesisEngine:
         )
         self.prompt_manager = prompt_manager or get_prompt_manager(self.config)
         self.pricing_calculator = pricing_calculator or PricingCalculator()
+        self.last_input_tokens: int = 0
+        self.last_output_tokens: int = 0
+        self.last_total_tokens: int = 0
+        self.last_cost_usd: float = 0.0
 
     async def synthesize(
         self,
@@ -79,10 +83,7 @@ class SynthesisEngine:
             version=self.config.prompt_version,
         )
 
-        messages = [
-            ChatMessage(role="system", content=system_prompt),
-            ChatMessage(role="user", content=user_prompt),
-        ]
+        full_prompt = f"{system_prompt}\n\n{user_prompt}"
 
         _logger.info(
             "Invoking Lead Agent synthesis for topic '%s' using %s/%s with %d pooled sources",
@@ -95,7 +96,7 @@ class SynthesisEngine:
         # 3. Request structured completion conforming to Report schema
         try:
             response = await self.llm_service.complete_structure(
-                messages=messages,
+                prompt=full_prompt,
                 response_schema=Report,
                 provider=self.config.synthesis_provider,
                 model=self.config.synthesis_model,
@@ -120,8 +121,12 @@ class SynthesisEngine:
         cost_usd = self.pricing_calculator.calculate_cost(
             self.config.synthesis_model, in_tokens, out_tokens
         )
+        self.last_input_tokens = in_tokens
+        self.last_output_tokens = out_tokens
+        self.last_total_tokens = total_tokens
+        self.last_cost_usd = cost_usd
 
-        if shared_budget is not None:
+        if shared_budget is not None and total_tokens > 0:
             await shared_budget.record_usage(tokens=total_tokens, cost_usd=cost_usd)
 
         # 5. Populate and reconcile Module 20 metadata and unresolved worker limitations
@@ -133,10 +138,15 @@ class SynthesisEngine:
 
         # Populate brief coverages if missing
         if not report.brief_coverages:
-            report.brief_coverages = {
-                b_id: f"Synthesized coverage for brief {b_id} (status: {worker_results[b_id].status.value})"
+            from ..models.report import BriefCoverage
+
+            report.brief_coverages = [
+                BriefCoverage(
+                    brief_id=b_id,
+                    coverage_summary=f"Synthesized coverage for brief {b_id} (status: {worker_results[b_id].status.value})",
+                )
                 for b_id in worker_results
-            }
+            ]
 
         report.research_team_version = self.config.system_version
         return report

@@ -1,0 +1,708 @@
+{
+  "run_id": "run_b0ffd26a33c1",
+  "user_id": "default_user",
+  "topic": "Evolution of Polyphase Systems and Single-Circuit Self-Starting Motor Architectures",
+  "status": "partially_completed",
+  "effort_level": "parallel_decomposed",
+  "decomposition": {
+    "topic": "Evolution of Polyphase Systems and Single-Circuit Self-Starting Motor Architectures",
+    "effort_level": "parallel_decomposed",
+    "rationale": "The topic covers two distinct yet related domains: the historical and theoretical evolution of polyphase electrical systems, and the technical mechanisms of single-circuit self-starting motor architectures. Decomposing this into two parallel briefs avoids overlap and allows specialized deep dives into each domain.",
+    "worker_count": 2,
+    "worker_briefs": [
+      {
+        "brief_id": "brief_01",
+        "title": "Evolution of Polyphase Electrical Systems",
+        "topic": "Evolution of Polyphase Systems and Single-Circuit Self-Starting Motor Architectures",
+        "objective": "Trace the historical and technical development of polyphase electrical systems from early alternating current developments to modern power grids.",
+        "brief_type": "exploratory_deep_dive",
+        "worker_type": "deep_dive",
+        "depends_on": [],
+        "task_boundaries": [
+          "Focus strictly on polyphase power generation, transmission, and grid-level system evolution.",
+          "Do NOT cover single-circuit or fractional horsepower motor design details."
+        ],
+        "expected_output_format": {
+          "schema_name": "WorkerResearchOutput",
+          "required_fields": [
+            "findings_summary",
+            "claims",
+            "sources"
+          ],
+          "guidelines": "Structured findings with claims and source citations"
+        },
+        "suggested_tools": [
+          "search_web",
+          "search_knowledge_base"
+        ],
+        "max_steps": 5,
+        "timeout_seconds": 45.0
+      },
+      {
+        "brief_id": "brief_02",
+        "title": "Single-Circuit Self-Starting Motor Architectures",
+        "topic": "Evolution of Polyphase Systems and Single-Circuit Self-Starting Motor Architectures",
+        "objective": "Investigate the mechanics, winding configurations, and physical principles enabling single-circuit self-starting motor architectures.",
+        "brief_type": "exploratory_deep_dive",
+        "worker_type": "deep_dive",
+        "depends_on": [],
+        "task_boundaries": [
+          "Focus strictly on single-circuit motor designs, auxiliary starting windings, and self-starting mechanisms.",
+          "Do NOT cover macro-level polyphase transmission grid topologies or multi-phase generation stations."
+        ],
+        "expected_output_format": {
+          "schema_name": "WorkerResearchOutput",
+          "required_fields": [
+            "findings_summary",
+            "claims",
+            "sources"
+          ],
+          "guidelines": "Structured findings with claims and source citations"
+        },
+        "suggested_tools": [
+          "search_web",
+          "search_knowledge_base"
+        ],
+        "max_steps": 5,
+        "timeout_seconds": 45.0
+      }
+    ],
+    "input_tokens": 621,
+    "output_tokens": 701
+  },
+  "worker_results": {
+    "brief_01": {
+      "brief_id": "brief_01",
+      "status": "partial",
+      "output": {
+        "brief_id": "brief_01",
+        "findings_summary": "No textual synthesis produced for brief 'Evolution of Polyphase Electrical Systems'.",
+        "claims": [
+          {
+            "claim_id": "claim_brief_01_1",
+            "section_id": "sec_brief_01",
+            "text": "No textual synthesis produced for brief 'Evolution of Polyphase Electrical Systems'.",
+            "citations": [
+              {
+                "citation_id": "cite_brief_01_1",
+                "source_id": "THE PRODUCTION READY GENAI",
+                "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0035",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.9
+              }
+            ],
+            "is_factual": true
+          }
+        ],
+        "sources": [
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0035",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "What does Field(ge=0.0, le=1.0) do in a Pydantic model?\\nSets a default value ·  1.\\nConstrains the field's value to be between 0.0 and 1.0 inclusive ·  1.\\nMakes the field optional ·  1.\\nConverts the field to a string ·  1.\\nAnswer: b\\n16. What's the correct way to run CPU-bound Python work in true parallel?\\nasyncio.gather ·  1.\\nconcurrent.futures.ProcessPoolExecutor (multiprocessing) ·  1.\\ntime.sleep ·  1.\\nThreading always works fine for this ·  1.\\nAnswer: b\\n17. Why re-use a single httpx.AsyncClient instance across many requests instead of creating a new one per call?\\nIt's required by httpx ·  1.\\nConnection pooling avoids the overhead of re-establishing connections each time ·  1.\\nIt has no real effect ·  1.\\nIt reduces token usage ·  1.\\nAnswer: b\\n18. What does Literal[\"positive\", \"negative\", \"neutral\"] enforce in a Pydantic model?\\nA string of any value ·  1.\\nThat the field's value must be exactly one of the specified literal strings ·  1.\\nA default value ·  1.\\nNothing, it's just documentation ·  1.\\nAnswer: b\\n19. In an exponential backoff retry strategy, what typically happens between attempts?\\nThe wait time stays constant ·  1.\\nThe wait time increases (e.g., doubles) with each subsequent attempt ·  1.\\nThe wait time decreases ·  1.\\nThere is no wait time ·  1.\\nAnswer: b\\n20.",
+            "score": 0.085435,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0050",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "Why gate integration tests behind an environment variable rather than running them on every CI push?\\nThey're always broken ·  1.\\nThey cost real money/hit real APIs and shouldn't run on every trivial push ·  1.\\nThey're not real tests ·  1.\\nCI doesn't support integration tests ·  1.\\nAnswer: b\\n9. What does mypy check for?\\nCode style ·  1.\\nStatic type correctness ·  1.\\nTest coverage ·  1.\\nGit history ·  1.\\nAnswer: b\\n10. What's a good git commit message practice?\\n'fix stuff' ·  1.\\nA clear, specific description of what changed and why ·  1.\\nLeaving the message empty ·  1.\\nAlways writing in past tense only ·  1.\\nAnswer: b\\n11. Why might you use a pytest fixture with scope=\"session\" ?\\nTo make every test independent ·  1.\\nTo share an expensive setup operation across many tests without repeating it ·  1.\\nIt's required by pytest ·  1.\\nTo slow down the test suite intentionally ·  1.\\nAnswer: b\\n12. What is an Architecture Decision Record (ADR) used for?\\nTracking API keys ·  1.\\nDocumenting significant technical decisions and their rationale for future reference ·  1.\\nStoring test results ·  1.\\nManaging Docker images ·  1.\\nAnswer: b\\n13. What does property-based testing (e.g., hypothesis ) add over examplebased tests?\\nNothing, they're identical ·  1.\\nIt generates many varied inputs automatically to find edge cases you might not think to write by hand ·  1.\\nIt replaces the need for any other testing ·  1.\\nIt only works for async code ·  1.\\nAnswer: b\\n14. Why is squash-merging (or another consistent merge policy) valuable for a team?\\nIt's required by GitHub ·  1.\\nIt keeps the main branch history clean and readable rather than cluttered with WIP commits ·  1.\\nIt deletes old code automatically ·  1.\\nIt prevents all merge conflicts ·  1.\\nAnswer: b\\n15.",
+            "score": 0.063176,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0032",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "8.\\nWrite a function that converts a Pydantic model into the JSON-schema format required for structured LLM output requests (hint: model_json_schema() ). 9.\\nWrite a small async connection-pooling wrapper around httpx.AsyncClient that's reused across many calls instead of being re-created each time (explain why recreation per call is wasteful). 10.\\nMCQ Assessment\\n1. What does await do inside an async function?\\nBlocks the entire program ·  1.\\nSuspends the coroutine, yielding control to the event loop ·  1.\\nStarts a new thread ·  1.\\nDoes nothing without asyncio.run ·  1.\\nAnswer: b\\n2. Why does asyncio NOT speed up CPU-bound work?\\nIt's a bug ·  1.\\nPython's GIL prevents true parallel execution of Python bytecode in a single process ·  1.\\nasyncio is not real code ·  1.\\nCPU-bound work is always faster synchronously ·  1.\\nAnswer: b\\n3. What's the risk of calling time.sleep() inside an async def function?\\nNone ·  1.\\nIt blocks the entire event loop, preventing concurrency ·  1.\\nIt raises an exception ·  1.\\nIt automatically becomes non-blocking ·  1.\\nAnswer: b\\n4. What does asyncio.gather(*coros) do?\\nRuns coroutines one at a time ·  1.\\nRuns coroutines concurrently and collects results ·  1.\\nCancels all coroutines ·  1.\\nOnly works with two coroutines ·  1.\\nAnswer: b\\n5. Why use Pydantic models for LLM structured output?\\nIt's faster than JSON ·  1.\\nIt validates output shape and provides clear error messages when the LLM's output doesn't match expectations ·  1.\\nIt's required by all LLM APIs ·  1.\\nIt replaces the need for prompts ·  1.\\nAnswer: b\\n6.",
+            "score": 0.062873,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "web_4389fa5658b1",
+            "chunk_id": "web_4389fa5658b1_chunk_fa201a32",
+            "title": "Polyphase system - Wikipedia",
+            "content": "Apolyphasesystem(the term coined by Silvanus Thompson) is a means of distributingalternating-current(AC)electricalpowerthat utilizes more than one AC phase, which refers to the phase offset value (in degrees) between AC in multiple conducting wires; phases may also refer to the corresponding terminals and conductors, as in color codes.",
+            "score": 1.0,
+            "metadata": {
+              "url": "https://en.wikipedia.org/wiki/Polyphase_system",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_7ca379df7611",
+            "chunk_id": "web_7ca379df7611_chunk_cb51ada2",
+            "title": "Polyphase System: Tesla's Electrical Distribution",
+            "content": "Thepolyphasesystemstands among the most important innovations in thehistoryofelectricalengineering. While many people recognize Nikola Tesla for his work withalternatingcurrent, it was thepolyphasesystemthat truly enabled modernelectricalnetworks to operate efficiently on a massive scale. Today, every majorelectricalenergygridrelies on principles first developed by Tesla ...",
+            "score": 1.0,
+            "metadata": {
+              "url": "https://techhistorylab.com/polyphase-system-tesla-electrical-distribution/",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_31df4f9a4ed4",
+            "chunk_id": "web_31df4f9a4ed4_chunk_5c64071e",
+            "title": "Initial Tesla Polyphase / \"Three-Phase\" Alternating-Current Systems and ...",
+            "content": "By the mid-1880s, initial European development spawned interest in what is known asalternating-current(AC)electricalpower, where thepowerwas produced from initially, a \"two-phase\"systemofelectricalproduction and distribution - and eventually of what became known as a \"three-phase\" or \"polyphasesystem\"ofelectricalgeneration and ...",
+            "score": 1.0,
+            "metadata": {
+              "url": "https://ethw.org/Initial_Tesla_Polyphase_/_%22Three-Phase%22_Alternating-Current_Systems_and_Metering_Development",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_a4e12c5ebee8",
+            "chunk_id": "web_a4e12c5ebee8_chunk_a57451e2",
+            "title": "Three-phase electric power - Wikipedia",
+            "content": "Beyondtransmission,three-phasepoweris commonly used to run large induction motors, otherelectricmotors, and heavy industrial loads, while smaller devices and household equipment often rely on single-phasecircuits derived from the same network.",
+            "score": 1.0,
+            "metadata": {
+              "url": "https://en.wikipedia.org/wiki/Three-phase_electric_power",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_d6e2edf51221",
+            "chunk_id": "web_d6e2edf51221_chunk_4a56d151",
+            "title": "Early three-phase power [History] - IEEE Xplore",
+            "content": "The early decades of what became known as the \"ElectricAge\" were marked by the efforts of outstanding engineers, inventors, and entrepreneurs on both sides of the Atlantic Ocean to develop apowersupply system to best meet electricalgeneration,transmission, distribution, and customer utilization requirements. This article is a fascinating account of the development andevolutionof...",
+            "score": 1.0,
+            "metadata": {
+              "url": "https://ieeexplore.ieee.org/document/4295047",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_bf121ac540f2",
+            "chunk_id": "web_bf121ac540f2_chunk_1b2373eb",
+            "title": "History of electric power transmission - Wikipedia",
+            "content": "HistoryofelectricpowertransmissionElectricpowertransmission, the tools and means of moving electricity far from where it is generated, date back to the late 19th century. They include the movement of electricity in bulk (formally called \"transmission\") and the delivery of electricity to individual customers (\"distribution\").",
+            "score": 1.0,
+            "metadata": {
+              "url": "https://en.wikipedia.org/wiki/History_of_electric_power_transmission",
+              "source_type": "web"
+            }
+          }
+        ],
+        "search_queries_used": [
+          "history of polyphase electrical systems alternating current Nikola Tesla grid evolution",
+          "polyphase electrical systems history Nikola Tesla Westinghouse electricity",
+          "polyphase electrical systems alternating current history Nikola Tesla",
+          "evolution of polyphase electrical systems history alternating current power grids",
+          "history of three phase electric power generation transmission grid evolution"
+        ],
+        "limitations": [
+          "Web search service returned status 202.",
+          "Step limit (5) reached.",
+          "Output format missing expected elements: findings_summary, claims, sources"
+        ]
+      },
+      "tokens_used": 5831,
+      "cost_usd": 0.002031,
+      "duration_ms": 26938.75,
+      "error_message": "Step limit (5) reached.",
+      "started_at": "2026-11-20T11:51:10.792035Z",
+      "completed_at": "2026-11-20T11:51:37.730791Z"
+    },
+    "brief_02": {
+      "brief_id": "brief_02",
+      "status": "partial",
+      "output": {
+        "brief_id": "brief_02",
+        "findings_summary": "No textual synthesis produced for brief 'Single-Circuit Self-Starting Motor Architectures'.",
+        "claims": [
+          {
+            "claim_id": "claim_brief_02_1",
+            "section_id": "sec_brief_02",
+            "text": "No textual synthesis produced for brief 'Single-Circuit Self-Starting Motor Architectures'.",
+            "citations": [
+              {
+                "citation_id": "cite_brief_02_1",
+                "source_id": "THE PRODUCTION READY GENAI",
+                "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0035",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.9
+              }
+            ],
+            "is_factual": true
+          }
+        ],
+        "sources": [
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0035",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "What does Field(ge=0.0, le=1.0) do in a Pydantic model?\\nSets a default value ·  1.\\nConstrains the field's value to be between 0.0 and 1.0 inclusive ·  1.\\nMakes the field optional ·  1.\\nConverts the field to a string ·  1.\\nAnswer: b\\n16. What's the correct way to run CPU-bound Python work in true parallel?\\nasyncio.gather ·  1.\\nconcurrent.futures.ProcessPoolExecutor (multiprocessing) ·  1.\\ntime.sleep ·  1.\\nThreading always works fine for this ·  1.\\nAnswer: b\\n17. Why re-use a single httpx.AsyncClient instance across many requests instead of creating a new one per call?\\nIt's required by httpx ·  1.\\nConnection pooling avoids the overhead of re-establishing connections each time ·  1.\\nIt has no real effect ·  1.\\nIt reduces token usage ·  1.\\nAnswer: b\\n18. What does Literal[\"positive\", \"negative\", \"neutral\"] enforce in a Pydantic model?\\nA string of any value ·  1.\\nThat the field's value must be exactly one of the specified literal strings ·  1.\\nA default value ·  1.\\nNothing, it's just documentation ·  1.\\nAnswer: b\\n19. In an exponential backoff retry strategy, what typically happens between attempts?\\nThe wait time stays constant ·  1.\\nThe wait time increases (e.g., doubles) with each subsequent attempt ·  1.\\nThe wait time decreases ·  1.\\nThere is no wait time ·  1.\\nAnswer: b\\n20.",
+            "score": 0.166309,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0080",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "What's the main purpose of the Prompt Test Harness mini project?\\nTo make prompts run faster ·  1.\\nTo systematically and repeatably evaluate prompt reliability and compare versions, rather than relying on ad hoc testing ·  1.\\nTo replace the need for Pydantic ·  1.\\nTo generate prompts automatically without human input ·  1.\\nAnswer: b\\n20. Why is 'the model got it right once' insufficient evidence that a prompt is production-ready?\\nIt's actually sufficient evidence ·  1.\\nA single success doesn't demonstrate reliability across the range of real, varied production inputs ·  1.\\nModels never succeed more than once ·  1.\\nProduction inputs are always identical to test inputs ·  1.\\nAnswer: b\\nPractical Test\\nDesign Challenge: Design a prompt (all seven components as needed) for a task that extracts structured meeting action items (assignee, task, due date) from a raw transcript, including handling the case where a due date isn't mentioned.\\nDebugging Exercise: A structured-output prompt worked reliably in testing but started failing validation in production for a subset of inputs. List the most likely causes (hint: think about input length/truncation, edge cases not covered in your golden set, and prompt-injection-adjacent content in real user input) and how you'd diagnose which one is occurring.\\nScenario-Based Question: Your team wants to switch a production feature's underlying model from Provider A to Provider B to reduce cost. What's your process for validating the prompt still performs reliably on the new provider before shipping the switch?\\nInterview Questions\\nBeginner\\nWhat's the difference between a system prompt and a user prompt? 1.\\nWhat is few-shot prompting? 2.\\nWhat is chain-of-thought prompting, and when is it useful? 3.\\nWhat does it mean for a prompt to be 'constrained'? 4.\\nWhy might you ask a model to return JSON instead of free-form text? 5.\\nIntermediate\\nHow would you design a prompt to reliably produce schema-conformant JSON? 1.\\nWhat's your process for testing a prompt change before deploying it to production? 2.\\nWhat is prompt injection, and why is it a real security concern, not just a theoretical one? 3.\\nHow do you decide when a task needs few-shot examples versus zero-shot instructions alone?",
+            "score": 0.121107,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0001",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "THE PRODUCTION-READY GENAI & AGENTIC AI ENGINEER HANDBOOK\\nFrom Data Scientist to Production AI Engineer\\nVersion:\\n1.0 (2026 Edition)\\nAuthor:\\nAtharva System (Hardik Upadhay)\\nPrepared for:\\nJunior Developers, Data Scientists, Backend Engineers, and AI\\nEnthusiasts transitioning into Production GenAI & Agentic AI Engineering\\nHow This Handbook Is Being Delivered\\nBecause of its scope (50,000-80,000 words across 30 modules, three capstones, and a full career-readiness section), this handbook is built in phases and appended to this same file. This document currently contains:\\nTable of Contents (full, for the entire handbook) ·\\nIntroduction ·\\nLearning Roadmap ·\\nModule 0: Getting Started ·\\nModule 1: Python for AI Engineers ·\\nModule 2: Software Engineering Fundamentals ·\\nModule 3: How LLMs Actually Work ·\\nModule 4: Prompt Engineering ·\\nModule 5: FastAPI ·\\nModule 6: Building AI Applications ·\\nModule 7: Embeddings ·\\nModule 8: Vector Databases ·\\nModule 9: Retrieval-Augmented Generation ·\\nSubsequent phases will append Modules 10 onward, the capstones, and the career/ reference material, in the same structure.\\nTABLE OF CONTENTS\\nFront Matter\\nIntroduction ·\\nLearning Roadmap ·\\nFoundations\\nModule 0 - Getting Started ·\\nModule 1 - Python for AI Engineers ·\\nModule 2 - Software Engineering Fundamentals ·\\nModule 3 - How LLMs Actually Work ·\\nModule 4 - Prompt Engineering ·\\nBuilding Applications\\nModule 5 - FastAPI ·\\nModule 6 - Building AI Applications ·\\nModule 7 - Embeddings ·\\nModule 8 - Vector Databases ·\\nModule 9 - Retrieval-Augmented Generation ·\\nFrameworks\\nModule 10 - LangChain ·\\nModule 11 - LangGraph ·\\nModule 12 - LlamaIndex ·\\nModule 13 - Model Context Protocol ·\\nModule 14 - Tool Calling ·\\nModule 15 - Function Calling ·\\nModule 16 - Memory ·\\nAgentic AI\\nModule 17 - AI Agents ·\\nModule 18 - Planning ·\\nModule 19 - Reflection ·\\nModule 20 - Multi-Agent Systems ·\\nProduction Engineering\\nModule 21 - Production AI ·\\nModule 22 - Evaluation ·\\nModule 23 - Observability ·\\nModule 24 - Guardrails ·\\nModule 25 - AI Security ·\\nModule 26 - Deployment ·\\nModule 27 - Cloud ·\\nPortfolio & Career\\nModule 28 - Capstone Projects ·\\nModule 29 - Interview Preparation ·\\nModule 30 - Career Roadmap ·\\nReference Material\\nGitHub Portfolio Guide ·\\nResume Guide ·\\nLinkedIn Guide ·\\nOpen Source Contribution Guide ·\\nCertifications ·\\nBooks, Blogs, Podcasts, Research Papers, Newsletters ·\\nCommunities ·\\nCheat Sheets (Python, FastAPI, Git, Docker, Linux, Prompt Engineering, LLMs, RAG, Vector DBs, LangChain, LangGraph, MCP , Agents, Deployment, Cloud, AWS, Kubernetes, Redis, PostgreSQL) ·\\nAppendix: Glossary (300+ terms) ·\\nINTRODUCTION\\nWhy AI Is Changing Software Engineering\\nFor thirty years, software engineering meant writing deterministic instructions: given input X, produce output Y, exactly, every time.",
+            "score": 0.120058,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "web_ed51883579f2",
+            "chunk_id": "web_ed51883579f2_chunk_9dc24355",
+            "title": "How to know starting and running winding for single-phase induction ...",
+            "content": "In single-phase, theauxiliary windingcan be disconnected when the motor has gained speed as onlypulsating magnetic fieldof a single-phase can run motor, that's why it can be called astartingwinding which is not required for continuously running thesingle-phase motor.",
+            "score": 1.0,
+            "metadata": {
+              "url": "https://www.aarohies.com/how-to-know-starting-and-running-winding-for-single-phase-induction-motor/",
+              "source_type": "web"
+            }
+          }
+        ],
+        "search_queries_used": [
+          "single phase motor auxiliary winding self starting mechanism mechanics",
+          "split phase motor winding configuration self starting physical principles",
+          "single circuit self starting motor auxiliary winding",
+          "\"single-phase motor\" \"auxiliary winding\" \"pulsating magnetic field\" starting mechanism",
+          "\"split-phase\" \"capacitor-start\" motor winding configuration physical principles"
+        ],
+        "limitations": [
+          "Web search service returned status 202.",
+          "Step limit (5) reached.",
+          "Output format missing expected elements: findings_summary, claims, sources"
+        ]
+      },
+      "tokens_used": 6356,
+      "cost_usd": 0.002206,
+      "duration_ms": 29459.48,
+      "error_message": "Step limit (5) reached.",
+      "started_at": "2026-11-20T11:51:10.805964Z",
+      "completed_at": "2026-11-20T11:51:40.265447Z"
+    }
+  },
+  "authoritative_sources": {
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0035": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0035",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "What does Field(ge=0.0, le=1.0) do in a Pydantic model?\\nSets a default value ·  1.\\nConstrains the field's value to be between 0.0 and 1.0 inclusive ·  1.\\nMakes the field optional ·  1.\\nConverts the field to a string ·  1.\\nAnswer: b\\n16. What's the correct way to run CPU-bound Python work in true parallel?\\nasyncio.gather ·  1.\\nconcurrent.futures.ProcessPoolExecutor (multiprocessing) ·  1.\\ntime.sleep ·  1.\\nThreading always works fine for this ·  1.\\nAnswer: b\\n17. Why re-use a single httpx.AsyncClient instance across many requests instead of creating a new one per call?\\nIt's required by httpx ·  1.\\nConnection pooling avoids the overhead of re-establishing connections each time ·  1.\\nIt has no real effect ·  1.\\nIt reduces token usage ·  1.\\nAnswer: b\\n18. What does Literal[\"positive\", \"negative\", \"neutral\"] enforce in a Pydantic model?\\nA string of any value ·  1.\\nThat the field's value must be exactly one of the specified literal strings ·  1.\\nA default value ·  1.\\nNothing, it's just documentation ·  1.\\nAnswer: b\\n19. In an exponential backoff retry strategy, what typically happens between attempts?\\nThe wait time stays constant ·  1.\\nThe wait time increases (e.g., doubles) with each subsequent attempt ·  1.\\nThe wait time decreases ·  1.\\nThere is no wait time ·  1.\\nAnswer: b\\n20.",
+      "score": 0.166309,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0050": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0050",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "Why gate integration tests behind an environment variable rather than running them on every CI push?\\nThey're always broken ·  1.\\nThey cost real money/hit real APIs and shouldn't run on every trivial push ·  1.\\nThey're not real tests ·  1.\\nCI doesn't support integration tests ·  1.\\nAnswer: b\\n9. What does mypy check for?\\nCode style ·  1.\\nStatic type correctness ·  1.\\nTest coverage ·  1.\\nGit history ·  1.\\nAnswer: b\\n10. What's a good git commit message practice?\\n'fix stuff' ·  1.\\nA clear, specific description of what changed and why ·  1.\\nLeaving the message empty ·  1.\\nAlways writing in past tense only ·  1.\\nAnswer: b\\n11. Why might you use a pytest fixture with scope=\"session\" ?\\nTo make every test independent ·  1.\\nTo share an expensive setup operation across many tests without repeating it ·  1.\\nIt's required by pytest ·  1.\\nTo slow down the test suite intentionally ·  1.\\nAnswer: b\\n12. What is an Architecture Decision Record (ADR) used for?\\nTracking API keys ·  1.\\nDocumenting significant technical decisions and their rationale for future reference ·  1.\\nStoring test results ·  1.\\nManaging Docker images ·  1.\\nAnswer: b\\n13. What does property-based testing (e.g., hypothesis ) add over examplebased tests?\\nNothing, they're identical ·  1.\\nIt generates many varied inputs automatically to find edge cases you might not think to write by hand ·  1.\\nIt replaces the need for any other testing ·  1.\\nIt only works for async code ·  1.\\nAnswer: b\\n14. Why is squash-merging (or another consistent merge policy) valuable for a team?\\nIt's required by GitHub ·  1.\\nIt keeps the main branch history clean and readable rather than cluttered with WIP commits ·  1.\\nIt deletes old code automatically ·  1.\\nIt prevents all merge conflicts ·  1.\\nAnswer: b\\n15.",
+      "score": 0.063176,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0032": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0032",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "8.\\nWrite a function that converts a Pydantic model into the JSON-schema format required for structured LLM output requests (hint: model_json_schema() ). 9.\\nWrite a small async connection-pooling wrapper around httpx.AsyncClient that's reused across many calls instead of being re-created each time (explain why recreation per call is wasteful). 10.\\nMCQ Assessment\\n1. What does await do inside an async function?\\nBlocks the entire program ·  1.\\nSuspends the coroutine, yielding control to the event loop ·  1.\\nStarts a new thread ·  1.\\nDoes nothing without asyncio.run ·  1.\\nAnswer: b\\n2. Why does asyncio NOT speed up CPU-bound work?\\nIt's a bug ·  1.\\nPython's GIL prevents true parallel execution of Python bytecode in a single process ·  1.\\nasyncio is not real code ·  1.\\nCPU-bound work is always faster synchronously ·  1.\\nAnswer: b\\n3. What's the risk of calling time.sleep() inside an async def function?\\nNone ·  1.\\nIt blocks the entire event loop, preventing concurrency ·  1.\\nIt raises an exception ·  1.\\nIt automatically becomes non-blocking ·  1.\\nAnswer: b\\n4. What does asyncio.gather(*coros) do?\\nRuns coroutines one at a time ·  1.\\nRuns coroutines concurrently and collects results ·  1.\\nCancels all coroutines ·  1.\\nOnly works with two coroutines ·  1.\\nAnswer: b\\n5. Why use Pydantic models for LLM structured output?\\nIt's faster than JSON ·  1.\\nIt validates output shape and provides clear error messages when the LLM's output doesn't match expectations ·  1.\\nIt's required by all LLM APIs ·  1.\\nIt replaces the need for prompts ·  1.\\nAnswer: b\\n6.",
+      "score": 0.062873,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "web_4389fa5658b1_chunk_fa201a32": {
+      "source_id": "web_4389fa5658b1",
+      "chunk_id": "web_4389fa5658b1_chunk_fa201a32",
+      "title": "Polyphase system - Wikipedia",
+      "content": "Apolyphasesystem(the term coined by Silvanus Thompson) is a means of distributingalternating-current(AC)electricalpowerthat utilizes more than one AC phase, which refers to the phase offset value (in degrees) between AC in multiple conducting wires; phases may also refer to the corresponding terminals and conductors, as in color codes.",
+      "score": 1.0,
+      "metadata": {
+        "url": "https://en.wikipedia.org/wiki/Polyphase_system",
+        "source_type": "web"
+      }
+    },
+    "web_7ca379df7611_chunk_cb51ada2": {
+      "source_id": "web_7ca379df7611",
+      "chunk_id": "web_7ca379df7611_chunk_cb51ada2",
+      "title": "Polyphase System: Tesla's Electrical Distribution",
+      "content": "Thepolyphasesystemstands among the most important innovations in thehistoryofelectricalengineering. While many people recognize Nikola Tesla for his work withalternatingcurrent, it was thepolyphasesystemthat truly enabled modernelectricalnetworks to operate efficiently on a massive scale. Today, every majorelectricalenergygridrelies on principles first developed by Tesla ...",
+      "score": 1.0,
+      "metadata": {
+        "url": "https://techhistorylab.com/polyphase-system-tesla-electrical-distribution/",
+        "source_type": "web"
+      }
+    },
+    "web_31df4f9a4ed4_chunk_5c64071e": {
+      "source_id": "web_31df4f9a4ed4",
+      "chunk_id": "web_31df4f9a4ed4_chunk_5c64071e",
+      "title": "Initial Tesla Polyphase / \"Three-Phase\" Alternating-Current Systems and ...",
+      "content": "By the mid-1880s, initial European development spawned interest in what is known asalternating-current(AC)electricalpower, where thepowerwas produced from initially, a \"two-phase\"systemofelectricalproduction and distribution - and eventually of what became known as a \"three-phase\" or \"polyphasesystem\"ofelectricalgeneration and ...",
+      "score": 1.0,
+      "metadata": {
+        "url": "https://ethw.org/Initial_Tesla_Polyphase_/_%22Three-Phase%22_Alternating-Current_Systems_and_Metering_Development",
+        "source_type": "web"
+      }
+    },
+    "web_a4e12c5ebee8_chunk_a57451e2": {
+      "source_id": "web_a4e12c5ebee8",
+      "chunk_id": "web_a4e12c5ebee8_chunk_a57451e2",
+      "title": "Three-phase electric power - Wikipedia",
+      "content": "Beyondtransmission,three-phasepoweris commonly used to run large induction motors, otherelectricmotors, and heavy industrial loads, while smaller devices and household equipment often rely on single-phasecircuits derived from the same network.",
+      "score": 1.0,
+      "metadata": {
+        "url": "https://en.wikipedia.org/wiki/Three-phase_electric_power",
+        "source_type": "web"
+      }
+    },
+    "web_d6e2edf51221_chunk_4a56d151": {
+      "source_id": "web_d6e2edf51221",
+      "chunk_id": "web_d6e2edf51221_chunk_4a56d151",
+      "title": "Early three-phase power [History] - IEEE Xplore",
+      "content": "The early decades of what became known as the \"ElectricAge\" were marked by the efforts of outstanding engineers, inventors, and entrepreneurs on both sides of the Atlantic Ocean to develop apowersupply system to best meet electricalgeneration,transmission, distribution, and customer utilization requirements. This article is a fascinating account of the development andevolutionof...",
+      "score": 1.0,
+      "metadata": {
+        "url": "https://ieeexplore.ieee.org/document/4295047",
+        "source_type": "web"
+      }
+    },
+    "web_bf121ac540f2_chunk_1b2373eb": {
+      "source_id": "web_bf121ac540f2",
+      "chunk_id": "web_bf121ac540f2_chunk_1b2373eb",
+      "title": "History of electric power transmission - Wikipedia",
+      "content": "HistoryofelectricpowertransmissionElectricpowertransmission, the tools and means of moving electricity far from where it is generated, date back to the late 19th century. They include the movement of electricity in bulk (formally called \"transmission\") and the delivery of electricity to individual customers (\"distribution\").",
+      "score": 1.0,
+      "metadata": {
+        "url": "https://en.wikipedia.org/wiki/History_of_electric_power_transmission",
+        "source_type": "web"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0080": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0080",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "What's the main purpose of the Prompt Test Harness mini project?\\nTo make prompts run faster ·  1.\\nTo systematically and repeatably evaluate prompt reliability and compare versions, rather than relying on ad hoc testing ·  1.\\nTo replace the need for Pydantic ·  1.\\nTo generate prompts automatically without human input ·  1.\\nAnswer: b\\n20. Why is 'the model got it right once' insufficient evidence that a prompt is production-ready?\\nIt's actually sufficient evidence ·  1.\\nA single success doesn't demonstrate reliability across the range of real, varied production inputs ·  1.\\nModels never succeed more than once ·  1.\\nProduction inputs are always identical to test inputs ·  1.\\nAnswer: b\\nPractical Test\\nDesign Challenge: Design a prompt (all seven components as needed) for a task that extracts structured meeting action items (assignee, task, due date) from a raw transcript, including handling the case where a due date isn't mentioned.\\nDebugging Exercise: A structured-output prompt worked reliably in testing but started failing validation in production for a subset of inputs. List the most likely causes (hint: think about input length/truncation, edge cases not covered in your golden set, and prompt-injection-adjacent content in real user input) and how you'd diagnose which one is occurring.\\nScenario-Based Question: Your team wants to switch a production feature's underlying model from Provider A to Provider B to reduce cost. What's your process for validating the prompt still performs reliably on the new provider before shipping the switch?\\nInterview Questions\\nBeginner\\nWhat's the difference between a system prompt and a user prompt? 1.\\nWhat is few-shot prompting? 2.\\nWhat is chain-of-thought prompting, and when is it useful? 3.\\nWhat does it mean for a prompt to be 'constrained'? 4.\\nWhy might you ask a model to return JSON instead of free-form text? 5.\\nIntermediate\\nHow would you design a prompt to reliably produce schema-conformant JSON? 1.\\nWhat's your process for testing a prompt change before deploying it to production? 2.\\nWhat is prompt injection, and why is it a real security concern, not just a theoretical one? 3.\\nHow do you decide when a task needs few-shot examples versus zero-shot instructions alone?",
+      "score": 0.121107,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0001": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0001",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "THE PRODUCTION-READY GENAI & AGENTIC AI ENGINEER HANDBOOK\\nFrom Data Scientist to Production AI Engineer\\nVersion:\\n1.0 (2026 Edition)\\nAuthor:\\nAtharva System (Hardik Upadhay)\\nPrepared for:\\nJunior Developers, Data Scientists, Backend Engineers, and AI\\nEnthusiasts transitioning into Production GenAI & Agentic AI Engineering\\nHow This Handbook Is Being Delivered\\nBecause of its scope (50,000-80,000 words across 30 modules, three capstones, and a full career-readiness section), this handbook is built in phases and appended to this same file. This document currently contains:\\nTable of Contents (full, for the entire handbook) ·\\nIntroduction ·\\nLearning Roadmap ·\\nModule 0: Getting Started ·\\nModule 1: Python for AI Engineers ·\\nModule 2: Software Engineering Fundamentals ·\\nModule 3: How LLMs Actually Work ·\\nModule 4: Prompt Engineering ·\\nModule 5: FastAPI ·\\nModule 6: Building AI Applications ·\\nModule 7: Embeddings ·\\nModule 8: Vector Databases ·\\nModule 9: Retrieval-Augmented Generation ·\\nSubsequent phases will append Modules 10 onward, the capstones, and the career/ reference material, in the same structure.\\nTABLE OF CONTENTS\\nFront Matter\\nIntroduction ·\\nLearning Roadmap ·\\nFoundations\\nModule 0 - Getting Started ·\\nModule 1 - Python for AI Engineers ·\\nModule 2 - Software Engineering Fundamentals ·\\nModule 3 - How LLMs Actually Work ·\\nModule 4 - Prompt Engineering ·\\nBuilding Applications\\nModule 5 - FastAPI ·\\nModule 6 - Building AI Applications ·\\nModule 7 - Embeddings ·\\nModule 8 - Vector Databases ·\\nModule 9 - Retrieval-Augmented Generation ·\\nFrameworks\\nModule 10 - LangChain ·\\nModule 11 - LangGraph ·\\nModule 12 - LlamaIndex ·\\nModule 13 - Model Context Protocol ·\\nModule 14 - Tool Calling ·\\nModule 15 - Function Calling ·\\nModule 16 - Memory ·\\nAgentic AI\\nModule 17 - AI Agents ·\\nModule 18 - Planning ·\\nModule 19 - Reflection ·\\nModule 20 - Multi-Agent Systems ·\\nProduction Engineering\\nModule 21 - Production AI ·\\nModule 22 - Evaluation ·\\nModule 23 - Observability ·\\nModule 24 - Guardrails ·\\nModule 25 - AI Security ·\\nModule 26 - Deployment ·\\nModule 27 - Cloud ·\\nPortfolio & Career\\nModule 28 - Capstone Projects ·\\nModule 29 - Interview Preparation ·\\nModule 30 - Career Roadmap ·\\nReference Material\\nGitHub Portfolio Guide ·\\nResume Guide ·\\nLinkedIn Guide ·\\nOpen Source Contribution Guide ·\\nCertifications ·\\nBooks, Blogs, Podcasts, Research Papers, Newsletters ·\\nCommunities ·\\nCheat Sheets (Python, FastAPI, Git, Docker, Linux, Prompt Engineering, LLMs, RAG, Vector DBs, LangChain, LangGraph, MCP , Agents, Deployment, Cloud, AWS, Kubernetes, Redis, PostgreSQL) ·\\nAppendix: Glossary (300+ terms) ·\\nINTRODUCTION\\nWhy AI Is Changing Software Engineering\\nFor thirty years, software engineering meant writing deterministic instructions: given input X, produce output Y, exactly, every time.",
+      "score": 0.120058,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "web_ed51883579f2_chunk_9dc24355": {
+      "source_id": "web_ed51883579f2",
+      "chunk_id": "web_ed51883579f2_chunk_9dc24355",
+      "title": "How to know starting and running winding for single-phase induction ...",
+      "content": "In single-phase, theauxiliary windingcan be disconnected when the motor has gained speed as onlypulsating magnetic fieldof a single-phase can run motor, that's why it can be called astartingwinding which is not required for continuously running thesingle-phase motor.",
+      "score": 1.0,
+      "metadata": {
+        "url": "https://www.aarohies.com/how-to-know-starting-and-running-winding-for-single-phase-induction-motor/",
+        "source_type": "web"
+      }
+    }
+  },
+  "used_tokens": 20689,
+  "used_cost_usd": 0.014725,
+  "elapsed_seconds": 40.279,
+  "final_report": {
+    "topic": "Evolution of Polyphase Systems and Single-Circuit Self-Starting Motor Architectures",
+    "title": "Evolution of Polyphase Systems and Single-Circuit Self-Starting Motor Architectures",
+    "executive_summary": {
+      "section_id": "sec_executive_summary",
+      "title": "Executive Summary",
+      "content": "A polyphase system is a means of distributing alternating-current electrical power that utilizes more than one AC phase [cite_1]. These electrical distribution networks enable modern grids to operate efficiently on a massive scale [cite_2]. Initial European development spawned interest in alternating-current electrical power produced from two-phase systems and eventually three-phase or polyphase systems [cite_3]. Furthermore, three-phase power is commonly used to run large induction motors and heavy industrial loads [cite_4].",
+      "claims": [
+        {
+          "claim_id": "claim_ex_1",
+          "section_id": "sec_executive_summary",
+          "text": "A polyphase system is a means of distributing alternating-current electrical power that utilizes more than one AC phase.",
+          "citations": [
+            {
+              "citation_id": "cite_1",
+              "source_id": "web_4389fa5658b1",
+              "chunk_id": "web_4389fa5658b1_chunk_fa201a32",
+              "citation_type": "quotation",
+              "quoted_passage": "A polyphase system (the term coined by Silvanus Thompson) is a means of distributing alternating-current (AC) electrical power that utilizes more than one AC phase",
+              "confidence": 1.0
+            }
+          ],
+          "is_factual": true
+        },
+        {
+          "claim_id": "claim_ex_2",
+          "section_id": "sec_executive_summary",
+          "text": "Polyphase systems enable modern electrical networks to operate efficiently on a massive scale.",
+          "citations": [
+            {
+              "citation_id": "cite_2",
+              "source_id": "web_7ca379df7611",
+              "chunk_id": "web_7ca379df7611_chunk_cb51ada2",
+              "citation_type": "paraphrase",
+              "quoted_passage": null,
+              "confidence": 0.95
+            }
+          ],
+          "is_factual": true
+        },
+        {
+          "claim_id": "claim_ex_3",
+          "section_id": "sec_executive_summary",
+          "text": "Initial development spawned interest in alternating-current electrical power produced from two-phase and eventually three-phase or polyphase systems.",
+          "citations": [
+            {
+              "citation_id": "cite_3",
+              "source_id": "web_31df4f9a4ed4",
+              "chunk_id": "web_31df4f9a4ed4_chunk_5c64071e",
+              "citation_type": "paraphrase",
+              "quoted_passage": null,
+              "confidence": 0.95
+            }
+          ],
+          "is_factual": true
+        },
+        {
+          "claim_id": "claim_ex_4",
+          "section_id": "sec_executive_summary",
+          "text": "Three-phase power is commonly used to run large induction motors and heavy industrial loads.",
+          "citations": [
+            {
+              "citation_id": "cite_4",
+              "source_id": "web_a4e12c5ebee8",
+              "chunk_id": "web_a4e12c5ebee8_chunk_a57451e2",
+              "citation_type": "quotation",
+              "quoted_passage": "three-phase power is commonly used to run large induction motors, other electric motors, and heavy industrial loads",
+              "confidence": 1.0
+            }
+          ],
+          "is_factual": true
+        }
+      ]
+    },
+    "sections": [
+      {
+        "section_id": "sec_polyphase_evolution",
+        "title": "Evolution of Polyphase Systems",
+        "content": "The term polyphase system was coined by Silvanus Thompson to describe systems utilizing more than one AC phase offset in degrees [cite_5]. Historical developments in electric power transmission date back to the late 19th century [cite_6]. Nikola Tesla's contributions to alternating current and polyphase systems allowed electrical grids to scale efficiently [cite_7].",
+        "claims": [
+          {
+            "claim_id": "claim_poly_1",
+            "section_id": "sec_polyphase_evolution",
+            "text": "The term polyphase system was coined by Silvanus Thompson.",
+            "citations": [
+              {
+                "citation_id": "cite_5",
+                "source_id": "web_4389fa5658b1",
+                "chunk_id": "web_4389fa5658b1_chunk_fa201a32",
+                "citation_type": "quotation",
+                "quoted_passage": "A polyphase system (the term coined by Silvanus Thompson) is a means of distributing alternating-current (AC) electrical power that utilizes more than one AC phase",
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_poly_2",
+            "section_id": "sec_polyphase_evolution",
+            "text": "Electric power transmission and the tools for moving electricity far from generation sites date back to the late 19th century.",
+            "citations": [
+              {
+                "citation_id": "cite_6",
+                "source_id": "web_bf121ac540f2",
+                "chunk_id": "web_bf121ac540f2_chunk_1b2373eb",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.95
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_poly_3",
+            "section_id": "sec_polyphase_evolution",
+            "text": "Tesla's polyphase system enabled modern electrical networks to operate efficiently on a massive scale.",
+            "citations": [
+              {
+                "citation_id": "cite_7",
+                "source_id": "web_7ca379df7611",
+                "chunk_id": "web_7ca379df7611_chunk_cb51ada2",
+                "citation_type": "quotation",
+                "quoted_passage": "it was the polyphase system that truly enabled modern electrical networks to operate efficiently on a massive scale",
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          }
+        ]
+      },
+      {
+        "section_id": "sec_motor_architectures",
+        "title": "Single-Circuit and Single-Phase Motor Architectures",
+        "content": "In single-phase induction motors, an auxiliary winding can be disconnected once the motor gains speed, since a pulsating magnetic field of a single phase can sustain operation [cite_8]. Smaller devices and household equipment rely on single-phase circuits derived from larger power networks [cite_9].",
+        "claims": [
+          {
+            "claim_id": "claim_mot_1",
+            "section_id": "sec_motor_architectures",
+            "text": "In single-phase motors, the auxiliary winding can be disconnected after gaining speed because a single-phase pulsating magnetic field can run the motor.",
+            "citations": [
+              {
+                "citation_id": "cite_8",
+                "source_id": "web_ed51883579f2",
+                "chunk_id": "web_ed51883579f2_chunk_9dc24355",
+                "citation_type": "quotation",
+                "quoted_passage": "In single-phase, the auxiliary winding can be disconnected when the motor has gained speed as only pulsating magnetic field of a single-phase can run motor",
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_mot_2",
+            "section_id": "sec_motor_architectures",
+            "text": "Smaller devices and household equipment often rely on single-phase circuits derived from network distributions.",
+            "citations": [
+              {
+                "citation_id": "cite_9",
+                "source_id": "web_a4e12c5ebee8",
+                "chunk_id": "web_a4e12c5ebee8_chunk_a57451e2",
+                "citation_type": "quotation",
+                "quoted_passage": "smaller devices and household equipment often rely on single-phase circuits derived from the same network",
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          }
+        ]
+      }
+    ],
+    "conclusion": {
+      "section_id": "sec_conclusion",
+      "title": "Conclusion",
+      "content": "The transition from early alternating-current setups to comprehensive polyphase networks revolutionized electrical engineering [cite_10]. Understanding these foundational electrical topologies and motor configurations remains essential for efficient power transmission and industrial machine design [cite_11].",
+      "claims": [
+        {
+          "claim_id": "claim_conc_1",
+          "section_id": "sec_conclusion",
+          "text": "The polyphase system stands among the most important innovations in the history of electrical engineering.",
+          "citations": [
+            {
+              "citation_id": "cite_10",
+              "source_id": "web_7ca379df7611",
+              "chunk_id": "web_7ca379df7611_chunk_cb51ada2",
+              "citation_type": "quotation",
+              "quoted_passage": "The polyphase system stands among the most important innovations in the history of electrical engineering",
+              "confidence": 1.0
+            }
+          ],
+          "is_factual": true
+        },
+        {
+          "claim_id": "claim_conc_2",
+          "section_id": "sec_conclusion",
+          "text": "Electrical generation, transmission, distribution, and customer utilization requirements continue to benefit from these historical evolutions.",
+          "citations": [
+            {
+              "citation_id": "cite_11",
+              "source_id": "web_d6e2edf51221",
+              "chunk_id": "web_d6e2edf51221_chunk_4a56d151",
+              "citation_type": "paraphrase",
+              "quoted_passage": null,
+              "confidence": 0.9
+            }
+          ],
+          "is_factual": true
+        }
+      ]
+    },
+    "limitations": [
+      "Worker brief_01 produced partial evidence with no primary textual synthesis for polyphase electrical systems history.",
+      "Worker brief_02 produced partial evidence with no primary textual synthesis for single-circuit self-starting motor architectures.",
+      "Brief 'brief_01' partially completed: Step limit (5) reached.",
+      "Brief 'brief_02' partially completed: Step limit (5) reached.",
+      "Verification advisory: Gate 1 failed: 7 critical and 0 major citation/structural defects found."
+    ],
+    "version": 1,
+    "research_team_version": "1.0.0",
+    "brief_coverages": [
+      {
+        "brief_id": "brief_01",
+        "coverage_summary": "Integrated general background via fallback evidence regarding polyphase electrical systems."
+      },
+      {
+        "brief_id": "brief_02",
+        "coverage_summary": "Integrated general background via fallback evidence regarding motor architectures and single-phase induction winding."
+      }
+    ],
+    "unresolved_limitations": [
+      "Partial evidence gaps due to unprovided worker textual synthesis for brief_01 and brief_02.",
+      "Brief 'brief_01' partially completed: Step limit (5) reached.",
+      "Brief 'brief_02' partially completed: Step limit (5) reached."
+    ],
+    "created_by": "Lead Research Synthesizer",
+    "created_at": "2026-03-31T00:00:00Z"
+  },
+  "error_message": null,
+  "created_at": "2026-11-20T11:51:07.575047Z",
+  "updated_at": "2026-11-20T11:51:47.853850Z"
+}

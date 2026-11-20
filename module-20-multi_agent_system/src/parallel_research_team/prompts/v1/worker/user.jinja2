@@ -7,4 +7,7 @@ TASK BOUNDARIES:
 - {{ boundary }}
 {% endfor %}
 
-Execute your research using the available tools and return your findings conforming to {{ brief.expected_output_format.schema_name }}.
+EXECUTION INSTRUCTIONS:
+- If tools return real, productive evidence and more evidence is needed, continue your research loop as normal.
+- If you encounter 3 consecutive errors, unavailabilities (such as status 202), or empty results, STOP calling tools immediately and synthesize with the evidence gathered so far.
+- Conclude by providing your final research findings and summary conforming to {{ brief.expected_output_format.schema_name }}.

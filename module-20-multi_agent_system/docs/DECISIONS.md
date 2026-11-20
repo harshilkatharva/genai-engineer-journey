@@ -165,3 +165,63 @@ This document records all significant architectural, technical, and structural d
   - **Gate 1 (Deterministic):** Structural validation, citation integrity (every citation resolves to an authoritative source chunk), and quoted passage verbatim substring matching.
   - **Gate 2 (Semantic Grounding):** LLM judge entailment scoring using `SemanticGroundingVerifier` calibrated to threshold **0.70**, using dedicated judge configuration (`judge_provider` and `judge_model`). Gate 2 only runs if Gate 1 passes. If Gate 2 encounters an unexpected LLM judge error, the exception is caught, logged, and shielded gracefully.
 - **Consequences:** Production-grade report reliability with guaranteed citation accuracy and grounded factual claims.
+
+---
+
+## [2026-11-19] DEC-20-019: Orchestrator Facade and Durable Checkpoint Resumption Protocol
+
+- **Status:** Accepted
+- **Context:** An end-to-end multi-agent research run coordinates multiple complex phases: effort classification, decomposition, concurrent worker scheduling, evidence consolidation, report synthesis, and two-stage verification. Furthermore, runs may be paused or interrupted at any point and require seamless resumption without duplicate execution of completed briefs.
+- **Decision:** Implemented `ParallelResearchTeam` (`src/parallel_research_team/orchestrator.py`):
+  - Exposes an async `run(topic, user_id, session_id, effort_override)` method coordinating all pipeline stages with automatic checkpointing and telemetry tracking.
+  - Implemented `resume(run_id)` which re-inflates the `AuthoritativeSourcePool` from persisted checkpoint chunks, identifies only pending or uncompleted worker briefs, re-initializes `SharedRunBudget` with previous usage, schedules remaining work, and synthesizes the unified final report.
+- **Consequences:** Provides a single, clean public entrypoint for callers while ensuring crash-resilient, durable execution recovery.
+
+---
+
+## [2026-11-19] DEC-20-020: Graceful Budget Exhaustion Interception and Salvage
+
+- **Status:** Accepted
+- **Context:** If a run exceeds its token, cost, or time ceiling, throwing an uncaught `BudgetExceededError` crashes the application and discards valuable evidence gathered prior to exhaustion.
+- **Decision:** In `ParallelResearchTeam.run()`, `BudgetExceededError` is intercepted gracefully across both worker scheduling and synthesis stages. If usable evidence was collected before budget exhaustion, the run is transitioned to `RunStatus.PARTIALLY_COMPLETED`, partial findings are synthesized into a report if possible, and a user-friendly explanatory notice is recorded in `report.limitations` and `report.unresolved_limitations`.
+- **Consequences:** Prevents application crashes, maximizes ROI by salvaging completed research, and communicates clear resource status to end users.
+
+---
+
+## [2026-11-20] DEC-20-021: Dynamic Exact Token and Pricing Telemetry Extraction Across Pipeline Stages
+
+- **Status:** Accepted
+- **Context:** Previous orchestrator code contained temporary static placeholders (`decomp_tokens = 1200`, `synth_tokens = 2000`) and heuristic input/output ratio approximations (`0.75 / 0.25`), which bypassed the real usage data returned by `LLMService` and caused inaccurate cost tracking.
+- **Decision:** Updated `DecompositionEngine` and `SynthesisEngine` to extract real dynamic usage (`input_tokens`, `output_tokens`) from `LLMManagerResponse.usage`, record exact expenditure in `SharedRunBudget`, and expose `last_input_tokens`, `last_output_tokens`, `last_total_tokens`, and `last_cost_usd`. Updated `ParallelResearchTeam` to read these exact values directly into `ResearchTelemetryTracker`. Added `input_tokens` and `output_tokens` directly to `ResearchDecomposition` for durable checkpoint persistence.
+- **Consequences:** 100% exact token accounting and monetary billing across all pipeline stages with zero static constants or heuristics.
+
+---
+
+## [2026-11-20] DEC-20-022: Gemini Developer API Schema Compliance, Synthesis Engine Structured Call, and Type Alignment
+
+- **Status:** Accepted
+- **Context:** During live integration testing with Gemini Developer API (`gemini-3.5-flash-lite`, `gemini-3.1-flash-lite`):
+  1. Pydantic schema validation using `gt=0.0` emitted `exclusiveMinimum: 0.0`, strictly rejected by Google GenAI Developer API.
+  2. Free-form dictionary typing (`dict[str, str]` on `Report.brief_coverages`) generated `additionalProperties: true`, which is unsupported in Developer API mode.
+  3. `SynthesisEngine.synthesize()` invoked `LLMService.complete_structure(messages=...)`, whereas `LLMService.complete_structure` expects `prompt: str`.
+  4. Worker registry factory required archetype alias bindings (`"factual"`, `"comparative"`, `"exploratory"`, `"deep_dive"`) to dynamically route decomposed briefs to `DefaultResearchWorker`.
+  5. Integration testing required clean dependency injection of `llm_service` and `retrieval_service` in `ParallelResearchTeam` and `ParallelResearchScheduler`.
+- **Decision:**
+  - Updated `WorkerBrief.timeout_seconds` to use `ge=1.0` (`minimum: 1.0`).
+  - Created a dedicated `BriefCoverage` model (`brief_id`, `coverage_summary`) and migrated `Report.brief_coverages` to `list[BriefCoverage]`, adding backward-compatible dictionary coercion via `@field_validator(mode="before")`.
+  - Updated `SynthesisEngine` to invoke `LLMService.complete_structure(prompt=full_prompt)`.
+  - Registered brief archetype aliases in `workers/__init__.py`.
+  - Added optional `llm_service` and `retrieval_service` parameters to `ParallelResearchTeam.__init__` and `ParallelResearchScheduler.__init__`.
+- **Consequences:** Full live Google GenAI API schema compatibility without breaking existing report contracts or type safety.
+
+---
+
+## [2026-11-20] DEC-20-023: Worker Prompt Enforcement for Tool Iteration Ceiling and Textual Synthesis
+
+- **Status:** Accepted
+- **Context:** Checkpoint inspection across past runs revealed a recurring pattern where research workers consumed all 4–5 available tool loop steps consecutively querying knowledge base and web search without yielding control to generate their final textual response. Consequently, `ToolLoopRunner` hard-terminated workers with `ToolLoopStatus.MAX_ITERATIONS_REACHED` (`status=partial`), resulting in unpopulated findings summaries (`"No textual synthesis produced"`) and causing orchestrator runs to settle in `PARTIALLY_COMPLETED`.
+- **Decision:** Updated worker prompt templates (`src/parallel_research_team/prompts/v1/worker/system.jinja2` and `user.jinja2`) with refined dynamic stopping rules:
+  - Productive research: If tools return real, valid evidence and further investigation is needed to fulfill the brief, workers continue their loop as normal.
+  - Consecutive Failure Circuit Breaker: If tools return 3 consecutive errors, unavailabilities (such as web search returning status 202), or empty results, workers must immediately stop tool calling and synthesize with accumulated evidence.
+  - Mandatory Textual Synthesis: Workers must conclude tool loops by producing a structured textual synthesis conforming to the schema before their step limit is reached.
+- **Consequences:** Eliminates endless retry loops on unavailable tools (such as rate-limited web searches) while preserving thorough evidence collection when productive sources are active, allowing workers to complete with `WorkerStatus.COMPLETED`.

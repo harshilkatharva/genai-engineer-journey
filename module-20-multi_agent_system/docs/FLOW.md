@@ -348,3 +348,65 @@ sequenceDiagram
     end
     deactivate Verifier
 ```
+
+---
+
+## 8. End-to-End Orchestrator and Checkpoint Resumption Flow
+
+`ParallelResearchTeam` coordinates the full lifecycle and provides crash-resilient resumption:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Client
+    participant Orch as ParallelResearchTeam
+    participant Store as CheckpointStore
+    participant Decomp as DecompositionEngine
+    participant Sched as ParallelResearchScheduler
+    participant Synth as SynthesisEngine
+    participant Verif as ResearchVerifier
+    participant Memory as MemoryService
+
+    rect rgb(240, 248, 255)
+    note over Client, Orch: Normal End-to-End Run
+    Client->>Orch: run(topic, user_id, session_id)
+    activate Orch
+    Orch->>Store: save_checkpoint(status=INITIALIZING)
+    Orch->>Decomp: decompose(topic)
+    Decomp-->>Orch: ResearchDecomposition(effort, worker_briefs)
+    Orch->>Store: save_checkpoint(status=EXECUTING, decomposition)
+    Orch->>Sched: schedule_and_execute(briefs, budget, checkpoint)
+    Sched-->>Orch: worker_results (brief_id -> WorkerExecutionResult)
+    Orch->>Synth: synthesize(topic, worker_results, source_pool, budget)
+    Synth-->>Orch: Report
+    Orch->>Verif: verify(report, source_pool)
+    Verif-->>Orch: SynthesisVerificationResult
+    Orch->>Store: save_checkpoint(status=COMPLETED, final_report)
+    opt MemoryService available
+        Orch->>Memory: record(user_id, summary_text)
+    end
+    Orch-->>Client: ResearchTeamRunResult
+    deactivate Orch
+    end
+
+    rect rgb(255, 245, 238)
+    note over Client, Orch: Durable Resume Flow
+    Client->>Orch: resume(run_id)
+    activate Orch
+    Orch->>Store: get_checkpoint(run_id)
+    Store-->>Orch: CheckpointState(worker_results, sources, decomposition)
+    Orch->>Orch: Filter pending briefs (not in completed worker_results)
+    alt Has pending briefs
+        Orch->>Sched: schedule_and_execute(pending_briefs, budget, checkpoint)
+        Sched-->>Orch: new_results
+        Orch->>Orch: Merge new results & consolidate sources
+    end
+    Orch->>Synth: synthesize(topic, consolidated_results, source_pool, budget)
+    Synth-->>Orch: Report
+    Orch->>Verif: verify(report, source_pool)
+    Verif-->>Orch: SynthesisVerificationResult
+    Orch->>Store: save_checkpoint(status=COMPLETED, final_report)
+    Orch-->>Client: ResearchTeamRunResult
+    deactivate Orch
+    end
+```

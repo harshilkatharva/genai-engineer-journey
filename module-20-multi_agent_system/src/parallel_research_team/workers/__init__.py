@@ -21,12 +21,22 @@ from .worker import (
     default_worker_factory,
 )
 
-# Register default worker factory into the default registry
-get_default_worker_registry().register(
+# Register default worker factory and standard brief aliases into the default registry
+for alias in [
     "default",
-    default_worker_factory,
-    override=True,
-)
+    "factual",
+    "comparative",
+    "exploratory",
+    "deep_dive",
+    "factual_retrieval",
+    "comparative_analysis",
+    "exploratory_deep_dive",
+]:
+    get_default_worker_registry().register(
+        alias,
+        default_worker_factory,
+        override=True,
+    )
 
 __all__ = [
     "DefaultResearchWorker",

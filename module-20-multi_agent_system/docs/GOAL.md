@@ -132,13 +132,18 @@ Module 20 builds upon established foundation libraries in the repository with cl
 - [x] Unit and integration tests for multi-worker evidence synthesis, citation verification, and limitation reporting.
 
 ### Milestone 6: Orchestrator Facade, Checkpointing & Resumption
-- [ ] Implement `ParallelResearchTeam` facade in `orchestrator.py`:
+- [x] Implement `ParallelResearchTeam` facade in `orchestrator.py`:
   - End-to-end orchestration coordinating decomposition, scheduling, validation, synthesis, and memory persistence.
   - Resumption protocol: `resume(run_id)` loads checkpoint, identifies uncompleted briefs, preserves completed worker outputs, and resumes execution seamlessly.
-- [ ] Implement `ResearchTelemetryTracker` in `telemetry/tracker.py`:
+  - Budget error interception: catches `BudgetExceededError`, marks status `PARTIALLY_COMPLETED`, and appends friendly explanation to `limitations`.
+- [x] Implement `ResearchTelemetryTracker` in `telemetry/tracker.py`:
   - Track per-worker and lead-agent tokens, execution duration, tool invocations, and USD cost via Module 20's `PricingCalculator`.
-  - Produce comprehensive `ResearchTeamRunResult` with detailed execution summary.
-- [ ] End-to-end integration tests verifying full lifecycle, effort scaling (direct vs parallel), interruption/resume fidelity, and cost tracking.
+  - Produce comprehensive `ResearchTeamRunResult` with detailed execution summary and `ExecutionMetrics`.
+- [x] End-to-end integration and unit tests verifying full lifecycle, effort scaling (direct vs parallel), interruption/resume fidelity, and cost tracking:
+  - `tests/integration/test_integration_llm_service.py`: Live Gemini Developer API structured generation for `ResearchDecomposition` and `Report`.
+  - `tests/integration/test_integration_retrieval.py`: In-memory similarity retrieval over real handbook chunks and PostgreSQL pgvector connectivity over 7,852 document chunks.
+  - `tests/integration/test_integration_worker_and_verifier.py`: Live bounded worker execution and Gate 1 / Gate 2 reflection verification with `gemini-3.1-flash-lite` judge.
+  - `tests/integration/test_integration_orchestrator.py`: Live end-to-end execution comparing Single-Agent `DIRECT` vs Multi-Agent `PARALLEL_DECOMPOSED` modes, exact token/cost tracking, and file checkpoint persistence.
 
 ---
 

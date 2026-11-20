@@ -1,0 +1,217 @@
+{
+  "run_id": "run_bd3bd8da0ecc",
+  "user_id": "default_user",
+  "topic": "Evolution of Polyphase Systems and Single-Circuit Self-Starting Motor Architectures",
+  "status": "failed",
+  "effort_level": "parallel_decomposed",
+  "decomposition": {
+    "topic": "Evolution of Polyphase Systems and Single-Circuit Self-Starting Motor Architectures",
+    "effort_level": "parallel_decomposed",
+    "rationale": "The topic covers two distinct yet related domains: the historical and technical evolution of polyphase electrical systems, and the specific mechanics of single-circuit self-starting motor architectures. Decomposing this into separate parallel briefs allows specialized investigation into the macro-systemic electrical evolution and the micro-architectural motor designs without redundant overlap.",
+    "worker_count": 2,
+    "worker_briefs": [
+      {
+        "brief_id": "brief_01",
+        "title": "Evolution of Polyphase Electrical Systems",
+        "topic": "Evolution of Polyphase Systems and Single-Circuit Self-Starting Motor Architectures",
+        "objective": "Investigate the historical and technical development of polyphase electrical systems, focusing on power generation, transmission milestones, and the transition from single-phase to multi-phase grids.",
+        "brief_type": "exploratory_deep_dive",
+        "worker_type": "deep_dive",
+        "depends_on": [],
+        "task_boundaries": [
+          "Focus strictly on macroscopic polyphase electrical systems, grid topologies, and power transmission evolution.",
+          "Do NOT cover specific fractional horsepower motor internal schematics or single-circuit motor starting mechanisms."
+        ],
+        "expected_output_format": {
+          "schema_name": "WorkerResearchOutput",
+          "required_fields": [
+            "findings_summary",
+            "claims",
+            "sources"
+          ],
+          "guidelines": "Structured findings with claims and source citations"
+        },
+        "suggested_tools": [
+          "search_web",
+          "search_knowledge_base"
+        ],
+        "max_steps": 5,
+        "timeout_seconds": 45.0
+      },
+      {
+        "brief_id": "brief_02",
+        "title": "Single-Circuit Self-Starting Motor Architectures",
+        "topic": "Evolution of Polyphase Systems and Single-Circuit Self-Starting Motor Architectures",
+        "objective": "Examine the design, electrical principles, and engineering evolution of single-circuit self-starting motor architectures, including split-phase, shaded-pole, and capacitor-start methods.",
+        "brief_type": "comparative_analysis",
+        "worker_type": "comparative",
+        "depends_on": [],
+        "task_boundaries": [
+          "Focus strictly on internal motor architectures, winding configurations, and self-starting mechanisms.",
+          "Do NOT cover broad macro-level electrical grid transmission systems or multi-megawatt generation topologies."
+        ],
+        "expected_output_format": {
+          "schema_name": "WorkerResearchOutput",
+          "required_fields": [
+            "findings_summary",
+            "claims",
+            "sources"
+          ],
+          "guidelines": "Structured findings with claims and source citations"
+        },
+        "suggested_tools": [
+          "search_web",
+          "search_knowledge_base"
+        ],
+        "max_steps": 5,
+        "timeout_seconds": 45.0
+      }
+    ],
+    "input_tokens": 621,
+    "output_tokens": 704
+  },
+  "worker_results": {
+    "brief_01": {
+      "brief_id": "brief_01",
+      "status": "completed",
+      "output": {
+        "brief_id": "brief_01",
+        "findings_summary": "### Research Findings & Summary: Evolution of Polyphase Electrical Systems\n\nDue to consecutive search tool unavailabilities (status 202 responses), tool usage has been halted in compliance with the circuit breaker protocol. The following synthesis is based on established historical and technical knowledge regarding polyphase electrical systems, power generation, transmission milestones, and the transition to multi-phase grids.\n\n#### 1. Historical Context and Early Limitations\n* **Single-Phase Systems:** Early electrical distribution (such as Thomas Edison’s direct current systems and early alternating current single-phase systems) suffered from severe distance and efficiency limitations. Direct current (DC) could not easily be stepped up in voltage using transformers, resulting in high resistive losses and necessitating generating stations spaced closely together (within a mile of customers).\n* **Early Alternating Current:** Single-phase AC allowed the use of transformers for voltage step-up and step-down, greatly extending transmission distances. However, single-phase systems were inefficient for heavy industrial loads and mechanical power drives, as single-phase AC motors lacked self-starting torque without auxiliary starting mechanisms.\n\n#### 2. The Rise of Polyphase Systems\n* **Nikola Tesla and Galileo Ferraris:** In the late 1880s, independently and nearly simultaneously, Nikola Tesla and Galileo Ferraris developed the theoretical and practical foundations of polyphase alternating current systems (primarily two-phase and three-phase). Tesla secured fundamental patents for multi-phase generators, transformers, transmission lines, and induction motors.\n* **Advantages of Three-Phase Power:** \n  * **Constant Power Transfer:** Unlike single-phase power, which pulsates to zero twice per cycle, balanced three-phase systems deliver a constant rate of power transfer, reducing mechanical vibration in generators and motors.\n  * **Material Efficiency:** Three-phase transmission lines require significantly less conductor material (copper or aluminum) for the same amount of power transmitted compared to single-phase or two-phase systems under equivalent voltage stress.\n  * **Self-Starting Motors:** Polyphase currents naturally create a rotating magnetic field in the stator of an electric motor, enabling robust, self-starting induction motors without complex starting switches for large industrial applications.\n\n#### 3. Key Transmission Milestones\n* **Milford, PA / Telluride, CO / Niagara Falls:** \n  * The Telluride Power Company system (1891), engineered by Luigi Bodoni and utilizing Westinghouse equipment, successfully transmitted single-phase and later polyphase AC power over significant distances for mining operations.\n  * The historic Niagara Falls project (1896) marked a decisive turning point in macroscopic power grid evolution. The adoption of Tesla’s two-phase and three-phase alternating current system by the Niagara Falls Power Company demonstrated that massive amounts of hydroelectric power could be generated and transmitted over tens of miles to industrial hubs like Buffalo, New York.\n* **Standardization on Three-Phase:** While two-phase systems were deployed in certain early regional grids (such as parts of early New York City and Philadelphia grids), the industry rapidly standardized around **three-phase systems** due to their optimal balance of transmission economy, insulation requirements, and motor performance.\n\n#### 4. Transition to Modern Multi-Phase Grids\n* **Grid Topology Evolution:** The transition from isolated local generation plants to interconnected regional multi-phase grids required standardized frequencies (primarily 50 Hz and 60 Hz) and high-voltage transmission networks.\n* **Macro-Grid Integration:** Polyphase generation allowed the interconnection of diverse generation sources (hydroelectric, thermal, and later nuclear) into synchronized synchronous grids, enhancing system reliability, load balancing, and economic efficiency on a national scale.",
+        "claims": [
+          {
+            "claim_id": "claim_brief_01_1",
+            "section_id": "sec_brief_01",
+            "text": "### Research Findings & Summary: Evolution of Polyphase Electrical Systems\n\nDue to consecutive search tool unavailabilities (status 202 responses), tool usage has been halted in compliance with the circuit breaker protocol.",
+            "citations": [],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_brief_01_2",
+            "section_id": "sec_brief_01",
+            "text": "The following synthesis is based on established historical and technical knowledge regarding polyphase electrical systems, power generation, transmission milestones, and the transition to multi-phase grids.\n\n#### 1.",
+            "citations": [],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_brief_01_3",
+            "section_id": "sec_brief_01",
+            "text": "Historical Context and Early Limitations\n* **Single-Phase Systems:** Early electrical distribution (such as Thomas Edison’s direct current systems and early alternating current single-phase systems) suffered from severe distance and efficiency limitations.",
+            "citations": [],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_brief_01_4",
+            "section_id": "sec_brief_01",
+            "text": "Direct current (DC) could not easily be stepped up in voltage using transformers, resulting in high resistive losses and necessitating generating stations spaced closely together (within a mile of customers).\n* **Early Alternating Current:** Single-phase AC allowed the use of transformers for voltage step-up and step-down, greatly extending transmission distances.",
+            "citations": [],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_brief_01_5",
+            "section_id": "sec_brief_01",
+            "text": "However, single-phase systems were inefficient for heavy industrial loads and mechanical power drives, as single-phase AC motors lacked self-starting torque without auxiliary starting mechanisms.\n\n#### 2.",
+            "citations": [],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_brief_01_6",
+            "section_id": "sec_brief_01",
+            "text": "The Rise of Polyphase Systems\n* **Nikola Tesla and Galileo Ferraris:** In the late 1880s, independently and nearly simultaneously, Nikola Tesla and Galileo Ferraris developed the theoretical and practical foundations of polyphase alternating current systems (primarily two-phase and three-phase).",
+            "citations": [],
+            "is_factual": true
+          }
+        ],
+        "sources": [],
+        "search_queries_used": [
+          "history of polyphase electrical systems power generation transmission",
+          "evolution of polyphase electrical systems grid transmission"
+        ],
+        "limitations": [
+          "Web search service returned status 202.",
+          "Output format missing expected elements: findings_summary, claims"
+        ]
+      },
+      "tokens_used": 3291,
+      "cost_usd": 0.002805,
+      "duration_ms": 16567.68,
+      "error_message": null,
+      "started_at": "2026-11-20T12:42:11.548547Z",
+      "completed_at": "2026-11-20T12:42:28.116237Z"
+    },
+    "brief_02": {
+      "brief_id": "brief_02",
+      "status": "completed",
+      "output": {
+        "brief_id": "brief_02",
+        "findings_summary": "Based on the execution rules and consecutive failure circuit breaker (having encountered three consecutive search status 202 unavailabilities), I am halting further tool calls and providing the synthesized research findings based on established electrical engineering principles regarding single-circuit self-starting motor architectures.\n\n***\n\n### Research Findings: Single-Circuit Self-Starting Motor Architectures\n\n#### 1. Introduction and Core Problem\nA single-phase AC induction motor contains a single main stator winding connected to a single-phase alternating current supply. Unlike a three-phase system which inherently creates a rotating magnetic field (RMF), a single-phase pulsating magnetic field is stationary in space and alternates in polarity. Mathematically, this pulsating field can be resolved into two equal and opposite revolving fields (double-field revolving theory). \n* At standstill (zero rotor speed), the forward and backward rotating fields produce equal and opposite starting torques, resulting in a net starting torque of **zero**. \n* Consequently, a standard single-phase induction motor is not self-starting on its own main winding. \n\nTo achieve self-starting capability while utilizing a single-phase supply, various internal motor architectures are engineered to introduce a phase shift between two stator windings or magnetic paths, generating an elliptical or nearly circular rotating magnetic field at startup.\n\n---\n\n#### 2. Split-Phase Motor Architecture\n* **Winding Configuration:** The stator incorporates two distinct windings placed in spatial quadrature (90 electrical degrees apart): a **main winding** (low resistance, high inductive reactance, wound with thicker wire) and an **auxiliary/starting winding** (high resistance, lower inductance, wound with finer wire and fewer turns).\n* **Electrical Principles:** Because of the differing resistance-to-reactance ($R/X$) ratios of the two windings, the current flowing through the auxiliary winding leads the current in the main winding by a phase angle (typically $25^\\circ$ to $30^\\circ$). This temporal phase difference creates an asymmetrical rotating magnetic field sufficient to produce a modest starting torque.\n* **Self-Starting Mechanism & Evolution:** A centrifugal switch (or electronic relay) is connected in series with the auxiliary winding. Once the motor accelerates to approximately 75% to 80% of its synchronous speed, the centrifugal switch opens, disconnecting the auxiliary winding from the circuit. The motor then continues to run solely on the main winding.\n\n---\n\n#### 3. Capacitor-Start Motor Architecture\n* **Winding Configuration:** Similar to the split-phase motor, it features a main winding and an auxiliary winding displaced by 90 electrical degrees. However, a **starting capacitor** is connected in series with the auxiliary winding.\n* **Electrical Principles:** The inclusion of a high-value electrolytic capacitor in the auxiliary circuit dramatically increases the phase displacement between the main and auxiliary currents, approaching nearly $90^\\circ$ phase shift. This creates a much stronger, nearly circular rotating magnetic field compared to a standard split-phase motor.\n* **Self-Starting Mechanism & Evolution:** Because of the high starting torque produced (often 200% to 400% of full-load torque), capacitor-start motors evolved as the preferred solution for high-inertia loads (e.g., compressors, pumps). Like the split-phase motor, a centrifugal switch disconnects both the capacitor and the auxiliary winding once the motor reaches running speed. (Variations include **capacitor-start capacitor-run** architectures, which retain a smaller oil-filled run capacitor permanently in circuit for higher efficiency and smoother torque profiles).\n\n---\n\n#### 4. Shaded-Pole Motor Architecture\n* **Winding Configuration:** Unlike split-phase or capacitor designs that use separate auxiliary windings, the shaded-pole motor uses a salient-pole stator structure where a portion of each pole piece is encircled by a short-circuited copper loop known as a **shading coil** (or shading band).\n* **Electrical Principles:** When the main winding flux alternates, an induced current flows in the shading coil according to Lenz's law. This induced current creates a secondary magnetic flux that lags behind the main pole flux in time and phase. \n* **Self-Starting Mechanism & Evolution:** The spatial displacement between the unshaded portion of the pole and the shaded portion, combined with the temporal lag of the shaded flux, sweeps the magnetic field across the pole face toward the shaded side. This continuous sweeping action produces a weak rotating magnetic field, enabling self-starting. Due to its very low starting torque, low efficiency, and low power factor, shaded-pole architectures are restricted to low-power applications (e.g., small cooling fans, relays, and clock motors).\n\n---\n\n### Summary Table\n\n| Architecture | Phase Shift Method | Starting Torque | Efficiency/Performance | Typical Application |\n| :--- | :--- | :--- | :--- | :--- |\n| **Split-Phase** | Differential $R/X$ winding ratios | Moderate (1.5x to 2x full load) | Low-to-Moderate; switch required | Blowers, small fans, centrifugal pumps |\n| **Capacitor-Start** | Series electrolytic capacitor in auxiliary circuit | High (2x to 4x full load) | High starting torque; switch required | Compressors, heavy-duty pumps, refrigeration |\n| **Shaded-Pole** | Electromagnetic induction via short-circuited copper band | Very Low (0.5x full load) | Very low efficiency; rugged, no switches | Small instrumentation, cooling fans, appliances |",
+        "claims": [
+          {
+            "claim_id": "claim_brief_02_1",
+            "section_id": "sec_brief_02",
+            "text": "Based on the execution rules and consecutive failure circuit breaker (having encountered three consecutive search status 202 unavailabilities), I am halting further tool calls and providing the synthesized research findings based on established electrical engineering principles regarding single-circuit self-starting motor architectures.\n\n***\n\n### Research Findings: Single-Circuit Self-Starting Motor Architectures\n\n#### 1.",
+            "citations": [],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_brief_02_2",
+            "section_id": "sec_brief_02",
+            "text": "Introduction and Core Problem\nA single-phase AC induction motor contains a single main stator winding connected to a single-phase alternating current supply.",
+            "citations": [],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_brief_02_3",
+            "section_id": "sec_brief_02",
+            "text": "Unlike a three-phase system which inherently creates a rotating magnetic field (RMF), a single-phase pulsating magnetic field is stationary in space and alternates in polarity.",
+            "citations": [],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_brief_02_4",
+            "section_id": "sec_brief_02",
+            "text": "Mathematically, this pulsating field can be resolved into two equal and opposite revolving fields (double-field revolving theory).",
+            "citations": [],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_brief_02_5",
+            "section_id": "sec_brief_02",
+            "text": "* At standstill (zero rotor speed), the forward and backward rotating fields produce equal and opposite starting torques, resulting in a net starting torque of **zero**.",
+            "citations": [],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_brief_02_6",
+            "section_id": "sec_brief_02",
+            "text": "* Consequently, a standard single-phase induction motor is not self-starting on its own main winding.",
+            "citations": [],
+            "is_factual": true
+          }
+        ],
+        "sources": [],
+        "search_queries_used": [
+          "single phase induction motor self starting mechanisms split phase shaded pole capacitor start",
+          "single phase induction motor split phase shaded pole capacitor start"
+        ],
+        "limitations": [
+          "Web search service returned status 202.",
+          "Output format missing expected elements: findings_summary, claims, sources"
+        ]
+      },
+      "tokens_used": 3729,
+      "cost_usd": 0.003816,
+      "duration_ms": 16655.69,
+      "error_message": null,
+      "started_at": "2026-11-20T12:42:11.562696Z",
+      "completed_at": "2026-11-20T12:42:28.218399Z"
+    }
+  },
+  "authoritative_sources": {},
+  "used_tokens": 8345,
+  "used_cost_usd": 0.008567,
+  "elapsed_seconds": 20.367,
+  "final_report": null,
+  "error_message": "Synthesis failed: LLM synthesis error: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+  "created_at": "2026-11-20T12:42:07.854729Z",
+  "updated_at": "2026-11-20T12:42:28.218646Z"
+}

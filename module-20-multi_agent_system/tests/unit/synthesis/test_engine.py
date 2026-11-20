@@ -120,7 +120,7 @@ async def test_synthesis_engine_successful_synthesis(
 
     assert report.topic == "Multi-Agent Concurrency"
     assert report.research_team_version == test_config.system_version
-    assert "b1" in report.brief_coverages
+    assert any(b.brief_id == "b1" for b in report.brief_coverages)
     assert budget.current_tokens == 800
     assert budget.current_cost_usd > 0.0
 

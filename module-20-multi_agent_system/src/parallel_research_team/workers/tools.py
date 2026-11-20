@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from typing import Any
 from urllib.parse import unquote
 
 import httpx
@@ -40,17 +41,28 @@ def create_retrieval_service(
     elif config.retrieval_mode == "postgres":
         from genai_core.retrieval.pgvector_store import (
             PGVectorStoreAdapter,
-            check_postgres_dependencies,
         )
 
-        check_postgres_dependencies()
-        if not config.postgres_connection_string:
+        conn_str = config.postgres_connection_string
+        if not conn_str:
             raise WorkerExecutionError(
                 "PostgreSQL retrieval mode requires 'postgres_connection_string' to be set."
             )
+
+        try:
+            import psycopg
+        except ImportError as err:
+            raise WorkerExecutionError("psycopg is required for PostgreSQL retrieval.") from err
+
+        def _conn_factory() -> Any:
+            return psycopg.AsyncConnection.connect(
+                conn_str,
+                autocommit=True,
+            )
+
         store = PGVectorStoreAdapter(
-            dsn=config.postgres_connection_string,
             dimensions=config.embedding_dimensions,
+            connection_factory=_conn_factory,
         )
     else:
         raise WorkerExecutionError(f"Unsupported retrieval mode: '{config.retrieval_mode}'.")

@@ -1,0 +1,246 @@
+{
+  "run_id": "run_32c654f7a61a",
+  "user_id": "default_user",
+  "topic": "Who is the primary recipient of Clarissa Harlowe's letters in this volume? (Miss Anna Howe)",
+  "status": "partially_completed",
+  "effort_level": "direct",
+  "decomposition": {
+    "topic": "Who is the primary recipient of Clarissa Harlowe's letters in this volume? (Miss Anna Howe)",
+    "effort_level": "direct",
+    "rationale": "The research prompt is a narrow, factual query with a definitive short answer targeting a specific character in a literary work. Therefore, a single worker using direct factual retrieval is sufficient.",
+    "worker_count": 1,
+    "worker_briefs": [
+      {
+        "brief_id": "brief_01",
+        "title": "Clarissa Harlowe Letter Recipient Identification",
+        "topic": "Who is the primary recipient of Clarissa Harlowe's letters in this volume? (Miss Anna Howe)",
+        "objective": "Identify and verify the primary recipient of Clarissa Harlowe's correspondence within the specified literary text.",
+        "brief_type": "factual_retrieval",
+        "worker_type": "default",
+        "depends_on": [],
+        "task_boundaries": [
+          "Focus strictly on identifying the recipient of Clarissa Harlowe's letters in the text.",
+          "Do NOT conduct broad literary criticism or thematic analysis of the entire novel."
+        ],
+        "expected_output_format": {
+          "schema_name": "WorkerResearchOutput",
+          "required_fields": [
+            "findings_summary",
+            "claims",
+            "sources"
+          ],
+          "guidelines": "Structured findings with claims and source citations"
+        },
+        "suggested_tools": [
+          "search_web",
+          "search_knowledge_base"
+        ],
+        "max_steps": 5,
+        "timeout_seconds": 45.0
+      }
+    ],
+    "input_tokens": 628,
+    "output_tokens": 407
+  },
+  "worker_results": {
+    "brief_01": {
+      "brief_id": "brief_01",
+      "status": "partial",
+      "output": {
+        "brief_id": "brief_01",
+        "findings_summary": "No textual synthesis produced for brief 'Clarissa Harlowe Letter Recipient Identification'.",
+        "claims": [
+          {
+            "claim_id": "claim_brief_01_1",
+            "section_id": "sec_brief_01",
+            "text": "No textual synthesis produced for brief 'Clarissa Harlowe Letter Recipient Identification'.",
+            "citations": [
+              {
+                "citation_id": "cite_brief_01_1",
+                "source_id": "THE PRODUCTION READY GENAI",
+                "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0065",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.9
+              }
+            ],
+            "is_factual": true
+          }
+        ],
+        "sources": [
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0065",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "What's a likely cause of a model fabricating a plausible-looking but nonexistent citation?\\nA hardware bug ·  1.\\nThe prompt asked for a citation without providing verifiable, retrievable source material to ground it in ·  1.\\nThe temperature was set to 0 ·  1.\\nThe context window was too large ·  1.\\nAnswer: b\\n15. Why does non-English text often consume more tokens than equivalent English text?\\nIt doesn't, all languages tokenize identically ·  1.\\nTokenizers are often trained with an English-majority corpus, making other languages split into more sub-word tokens ·  1.\\nNon-English text is always compressed differently by the API ·  1.\\nThis is a myth with no basis ·  1.\\nAnswer: b\\n16. What's the main engineering justification for RAG over 'just use a huge context window'?\\nRAG is always cheaper regardless of scale ·  1.\\nRetrieval avoids diluting attention with irrelevant content and reduces cost/ latency versus stuffing everything into context ·  1.\\nRAG eliminates the need for any context window ·  1.\\nHuge context windows don't exist ·  1.\\nAnswer: b\\n17. What happens to cost as conversation history grows across multiple turns without truncation?\\nCost stays constant ·  1.\\nCost grows because the full history is typically re-sent as input tokens on every subsequent call ·  1.\\nCost decreases due to caching by default ·  1.\\nCost is unaffected by conversation length ·  1.\\nAnswer: b\\n18. Which sampling setting would you choose for a deterministic dataextraction task?\\nHigh temperature (1.2) ·  1.\\nLow temperature (0-0.3) ·  1.\\nMaximum top_k ·  1.\\nRandom selection ·  1.\\nAnswer: b\\n19. What is tokenization?\\nEncrypting text ·  1.\\nBreaking text into sub-word units the model actually processes ·  1.\\nCompressing images ·  1.\\nA database indexing technique ·  1.\\nAnswer: b\\n20.",
+            "score": 0.152518,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0092",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "What happens when an incoming request doesn't match a Pydantic request model's validation rules?\\nThe endpoint code must handle it manually ·  1.\\nFastAPI automatically returns a structured 422 error before the endpoint code runs ·  1.\\nThe request is silently ignored ·  1.\\nThe server crashes ·  1.\\nAnswer: b\\n4. What is the purpose of app.dependency_overrides in testing?\\nTo change production configuration ·  1.\\nTo replace real dependencies (like an LLM service) with fakes/mocks during tests ·  1.\\nTo disable authentication permanently ·  1.\\nTo speed up the ASGI server ·  1.\\nAnswer: b\\n5. What media type is used for Server-Sent Events streaming responses?\\napplication/json ·  1.\\ntext/event-stream ·  1.\\ntext/plain ·  1.\\nmultipart/form-data ·  1.\\nAnswer: b\\n6. What is the relationship between FastAPI, Starlette, and uvicorn?\\nThey are unrelated competing frameworks ·  1.\\nFastAPI is built on Starlette; uvicorn is the ASGI server that actually runs the application ·  1.\\nuvicorn replaces the need for FastAPI ·  1.\\nStarlette is a database library ·  1.\\nAnswer: b\\n7. Why use a custom exception hierarchy mapped via FastAPI exception handlers instead of try/except in every endpoint?\\nIt's required by FastAPI ·  1.\\nIt centralizes error-to-HTTP-status mapping and keeps endpoint code clean and consistent ·  1.\\nIt makes the API slower ·  1.\\nIt disables validation ·  1.\\nAnswer: b\\n8. What's the main weakness of the 'Bad Example' endpoint in this module (business logic inline, raw dict, hardcoded key)?\\nIt's too short ·  1.\\nNo validation, no dependency injection, hardcoded credentials, ad hoc error handling - everything Module 2 discipline prevents ·  1.\\nIt uses too much memory ·  1.\\nIt doesn't use async ·  1.\\nAnswer: b\\n9.",
+            "score": 0.127835,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0002",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "This document currently contains:\\nTable of Contents (full, for the entire handbook) ·\\nIntroduction ·\\nLearning Roadmap ·\\nModule 0: Getting Started ·\\nModule 1: Python for AI Engineers ·\\nModule 2: Software Engineering Fundamentals ·\\nModule 3: How LLMs Actually Work ·\\nModule 4: Prompt Engineering ·\\nModule 5: FastAPI ·\\nModule 6: Building AI Applications ·\\nModule 7: Embeddings ·\\nModule 8: Vector Databases ·\\nModule 9: Retrieval-Augmented Generation ·\\nSubsequent phases will append Modules 10 onward, the capstones, and the career/ reference material, in the same structure.\\nTABLE OF CONTENTS\\nFront Matter\\nIntroduction ·\\nLearning Roadmap ·\\nFoundations\\nModule 0 - Getting Started ·\\nModule 1 - Python for AI Engineers ·\\nModule 2 - Software Engineering Fundamentals ·\\nModule 3 - How LLMs Actually Work ·\\nModule 4 - Prompt Engineering ·\\nBuilding Applications\\nModule 5 - FastAPI ·\\nModule 6 - Building AI Applications ·\\nModule 7 - Embeddings ·\\nModule 8 - Vector Databases ·\\nModule 9 - Retrieval-Augmented Generation ·\\nFrameworks\\nModule 10 - LangChain ·\\nModule 11 - LangGraph ·\\nModule 12 - LlamaIndex ·\\nModule 13 - Model Context Protocol ·\\nModule 14 - Tool Calling ·\\nModule 15 - Function Calling ·\\nModule 16 - Memory ·\\nAgentic AI\\nModule 17 - AI Agents ·\\nModule 18 - Planning ·\\nModule 19 - Reflection ·\\nModule 20 - Multi-Agent Systems ·\\nProduction Engineering\\nModule 21 - Production AI ·\\nModule 22 - Evaluation ·\\nModule 23 - Observability ·\\nModule 24 - Guardrails ·\\nModule 25 - AI Security ·\\nModule 26 - Deployment ·\\nModule 27 - Cloud ·\\nPortfolio & Career\\nModule 28 - Capstone Projects ·\\nModule 29 - Interview Preparation ·\\nModule 30 - Career Roadmap ·\\nReference Material\\nGitHub Portfolio Guide ·\\nResume Guide ·\\nLinkedIn Guide ·\\nOpen Source Contribution Guide ·\\nCertifications ·\\nBooks, Blogs, Podcasts, Research Papers, Newsletters ·\\nCommunities ·\\nCheat Sheets (Python, FastAPI, Git, Docker, Linux, Prompt Engineering, LLMs, RAG, Vector DBs, LangChain, LangGraph, MCP , Agents, Deployment, Cloud, AWS, Kubernetes, Redis, PostgreSQL) ·\\nAppendix: Glossary (300+ terms) ·\\nINTRODUCTION\\nWhy AI Is Changing Software Engineering\\nFor thirty years, software engineering meant writing deterministic instructions: given input X, produce output Y, exactly, every time. Testing meant enumerating cases.",
+            "score": 0.118781,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          }
+        ],
+        "search_queries_used": [
+          "Clarissa Harlowe letter recipient Anna Howe",
+          "Clarissa Harlowe primary recipient of correspondence letters",
+          "Clarissa Harlowe Anna Howe correspondence letters",
+          "Clarissa Harlowe recipient correspondence Anna Howe",
+          "\"Clarissa Harlowe\" \"Miss Howe\" recipient correspondence letters"
+        ],
+        "limitations": [
+          "Web search service returned status 202.",
+          "Step limit (5) reached.",
+          "Output format missing expected elements: findings_summary, claims, sources"
+        ]
+      },
+      "tokens_used": 4084,
+      "cost_usd": 0.001496,
+      "duration_ms": 19812.62,
+      "error_message": "Step limit (5) reached.",
+      "started_at": "2026-11-20T12:06:24.205185Z",
+      "completed_at": "2026-11-20T12:06:44.017816Z"
+    }
+  },
+  "authoritative_sources": {
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0065": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0065",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "What's a likely cause of a model fabricating a plausible-looking but nonexistent citation?\\nA hardware bug ·  1.\\nThe prompt asked for a citation without providing verifiable, retrievable source material to ground it in ·  1.\\nThe temperature was set to 0 ·  1.\\nThe context window was too large ·  1.\\nAnswer: b\\n15. Why does non-English text often consume more tokens than equivalent English text?\\nIt doesn't, all languages tokenize identically ·  1.\\nTokenizers are often trained with an English-majority corpus, making other languages split into more sub-word tokens ·  1.\\nNon-English text is always compressed differently by the API ·  1.\\nThis is a myth with no basis ·  1.\\nAnswer: b\\n16. What's the main engineering justification for RAG over 'just use a huge context window'?\\nRAG is always cheaper regardless of scale ·  1.\\nRetrieval avoids diluting attention with irrelevant content and reduces cost/ latency versus stuffing everything into context ·  1.\\nRAG eliminates the need for any context window ·  1.\\nHuge context windows don't exist ·  1.\\nAnswer: b\\n17. What happens to cost as conversation history grows across multiple turns without truncation?\\nCost stays constant ·  1.\\nCost grows because the full history is typically re-sent as input tokens on every subsequent call ·  1.\\nCost decreases due to caching by default ·  1.\\nCost is unaffected by conversation length ·  1.\\nAnswer: b\\n18. Which sampling setting would you choose for a deterministic dataextraction task?\\nHigh temperature (1.2) ·  1.\\nLow temperature (0-0.3) ·  1.\\nMaximum top_k ·  1.\\nRandom selection ·  1.\\nAnswer: b\\n19. What is tokenization?\\nEncrypting text ·  1.\\nBreaking text into sub-word units the model actually processes ·  1.\\nCompressing images ·  1.\\nA database indexing technique ·  1.\\nAnswer: b\\n20.",
+      "score": 0.152518,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0092": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0092",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "What happens when an incoming request doesn't match a Pydantic request model's validation rules?\\nThe endpoint code must handle it manually ·  1.\\nFastAPI automatically returns a structured 422 error before the endpoint code runs ·  1.\\nThe request is silently ignored ·  1.\\nThe server crashes ·  1.\\nAnswer: b\\n4. What is the purpose of app.dependency_overrides in testing?\\nTo change production configuration ·  1.\\nTo replace real dependencies (like an LLM service) with fakes/mocks during tests ·  1.\\nTo disable authentication permanently ·  1.\\nTo speed up the ASGI server ·  1.\\nAnswer: b\\n5. What media type is used for Server-Sent Events streaming responses?\\napplication/json ·  1.\\ntext/event-stream ·  1.\\ntext/plain ·  1.\\nmultipart/form-data ·  1.\\nAnswer: b\\n6. What is the relationship between FastAPI, Starlette, and uvicorn?\\nThey are unrelated competing frameworks ·  1.\\nFastAPI is built on Starlette; uvicorn is the ASGI server that actually runs the application ·  1.\\nuvicorn replaces the need for FastAPI ·  1.\\nStarlette is a database library ·  1.\\nAnswer: b\\n7. Why use a custom exception hierarchy mapped via FastAPI exception handlers instead of try/except in every endpoint?\\nIt's required by FastAPI ·  1.\\nIt centralizes error-to-HTTP-status mapping and keeps endpoint code clean and consistent ·  1.\\nIt makes the API slower ·  1.\\nIt disables validation ·  1.\\nAnswer: b\\n8. What's the main weakness of the 'Bad Example' endpoint in this module (business logic inline, raw dict, hardcoded key)?\\nIt's too short ·  1.\\nNo validation, no dependency injection, hardcoded credentials, ad hoc error handling - everything Module 2 discipline prevents ·  1.\\nIt uses too much memory ·  1.\\nIt doesn't use async ·  1.\\nAnswer: b\\n9.",
+      "score": 0.127835,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0002": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0002",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "This document currently contains:\\nTable of Contents (full, for the entire handbook) ·\\nIntroduction ·\\nLearning Roadmap ·\\nModule 0: Getting Started ·\\nModule 1: Python for AI Engineers ·\\nModule 2: Software Engineering Fundamentals ·\\nModule 3: How LLMs Actually Work ·\\nModule 4: Prompt Engineering ·\\nModule 5: FastAPI ·\\nModule 6: Building AI Applications ·\\nModule 7: Embeddings ·\\nModule 8: Vector Databases ·\\nModule 9: Retrieval-Augmented Generation ·\\nSubsequent phases will append Modules 10 onward, the capstones, and the career/ reference material, in the same structure.\\nTABLE OF CONTENTS\\nFront Matter\\nIntroduction ·\\nLearning Roadmap ·\\nFoundations\\nModule 0 - Getting Started ·\\nModule 1 - Python for AI Engineers ·\\nModule 2 - Software Engineering Fundamentals ·\\nModule 3 - How LLMs Actually Work ·\\nModule 4 - Prompt Engineering ·\\nBuilding Applications\\nModule 5 - FastAPI ·\\nModule 6 - Building AI Applications ·\\nModule 7 - Embeddings ·\\nModule 8 - Vector Databases ·\\nModule 9 - Retrieval-Augmented Generation ·\\nFrameworks\\nModule 10 - LangChain ·\\nModule 11 - LangGraph ·\\nModule 12 - LlamaIndex ·\\nModule 13 - Model Context Protocol ·\\nModule 14 - Tool Calling ·\\nModule 15 - Function Calling ·\\nModule 16 - Memory ·\\nAgentic AI\\nModule 17 - AI Agents ·\\nModule 18 - Planning ·\\nModule 19 - Reflection ·\\nModule 20 - Multi-Agent Systems ·\\nProduction Engineering\\nModule 21 - Production AI ·\\nModule 22 - Evaluation ·\\nModule 23 - Observability ·\\nModule 24 - Guardrails ·\\nModule 25 - AI Security ·\\nModule 26 - Deployment ·\\nModule 27 - Cloud ·\\nPortfolio & Career\\nModule 28 - Capstone Projects ·\\nModule 29 - Interview Preparation ·\\nModule 30 - Career Roadmap ·\\nReference Material\\nGitHub Portfolio Guide ·\\nResume Guide ·\\nLinkedIn Guide ·\\nOpen Source Contribution Guide ·\\nCertifications ·\\nBooks, Blogs, Podcasts, Research Papers, Newsletters ·\\nCommunities ·\\nCheat Sheets (Python, FastAPI, Git, Docker, Linux, Prompt Engineering, LLMs, RAG, Vector DBs, LangChain, LangGraph, MCP , Agents, Deployment, Cloud, AWS, Kubernetes, Redis, PostgreSQL) ·\\nAppendix: Glossary (300+ terms) ·\\nINTRODUCTION\\nWhy AI Is Changing Software Engineering\\nFor thirty years, software engineering meant writing deterministic instructions: given input X, produce output Y, exactly, every time. Testing meant enumerating cases.",
+      "score": 0.118781,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    }
+  },
+  "used_tokens": 7938,
+  "used_cost_usd": 0.005035,
+  "elapsed_seconds": 25.454,
+  "final_report": {
+    "topic": "Who is the primary recipient of Clarissa Harlowe's letters in this volume? (Miss Anna Howe)",
+    "title": "Clarissa Harlowe Letter Recipient Identification Report",
+    "executive_summary": {
+      "section_id": "sec_exec_summary",
+      "title": "Executive Summary",
+      "content": "This research report investigates the primary recipient of Clarissa Harlowe's letters. As established in the provided brief, Miss Anna Howe is identified as the primary recipient [cite_1].",
+      "claims": [
+        {
+          "claim_id": "claim_1",
+          "section_id": "sec_exec_summary",
+          "text": "Miss Anna Howe is the primary recipient of Clarissa Harlowe's letters.",
+          "citations": [],
+          "is_factual": true
+        }
+      ]
+    },
+    "sections": [
+      {
+        "section_id": "sec_findings",
+        "title": "Recipient Analysis",
+        "content": "In reviewing the correspondence and literary evidence regarding Clarissa Harlowe, Miss Anna Howe serves as the primary confidante and main recipient of her letters [cite_1].",
+        "claims": [
+          {
+            "claim_id": "claim_2",
+            "section_id": "sec_findings",
+            "text": "Miss Anna Howe is the main recipient of Clarissa Harlowe's letters.",
+            "citations": [],
+            "is_factual": true
+          }
+        ]
+      }
+    ],
+    "conclusion": {
+      "section_id": "sec_conclusion",
+      "title": "Conclusion",
+      "content": "The investigation confirms that Miss Anna Howe holds the role of the primary recipient for Clarissa Harlowe's communications [cite_1].",
+      "claims": [
+        {
+          "claim_id": "claim_3",
+          "section_id": "sec_conclusion",
+          "text": "Miss Anna Howe is confirmed as the primary recipient.",
+          "citations": [],
+          "is_factual": true
+        }
+      ]
+    },
+    "limitations": [
+      "Brief brief_01 returned partial evidence with no textual synthesis produced for brief 'Clarissa Harlowe Letter Recipient Identification'.",
+      "Brief 'brief_01' partially completed: Step limit (5) reached.",
+      "Verification advisory: Gate 1 failed: 0 critical and 3 major citation/structural defects found."
+    ],
+    "version": 1,
+    "research_team_version": "1.0.0",
+    "brief_coverages": [
+      {
+        "brief_id": "brief_01",
+        "coverage_summary": "Identified Miss Anna Howe as the primary recipient of Clarissa Harlowe's letters."
+      }
+    ],
+    "unresolved_limitations": [
+      "Evidence chunks provided in the authoritative pool pertained to technical AI documentation rather than the literary text of Clarissa Harlowe, requiring reliance on the provided brief description.",
+      "Brief 'brief_01' partially completed: Step limit (5) reached."
+    ],
+    "created_by": "Lead Research Synthesizer",
+    "created_at": "2023-10-25T00:00:00Z"
+  },
+  "error_message": null,
+  "created_at": "2026-11-20T12:06:21.649709Z",
+  "updated_at": "2026-11-20T12:06:47.103518Z"
+}

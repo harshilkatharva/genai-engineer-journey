@@ -1,0 +1,272 @@
+{
+  "run_id": "run_dc41016c9139",
+  "user_id": "default_user",
+  "topic": "Which suitor is Clarissa's family trying to force her to marry, and why do they favor him?",
+  "status": "partially_completed",
+  "effort_level": "direct",
+  "decomposition": {
+    "topic": "Which suitor is Clarissa's family trying to force her to marry, and why do they favor him?",
+    "effort_level": "direct",
+    "rationale": "The research question focuses on a specific literary plot point involving a single character and suitor within Samuel Richardson's novel Clarissa. It requires factual retrieval from a single text and does not necessitate multi-faceted parallel decomposition.",
+    "worker_count": 1,
+    "worker_briefs": [
+      {
+        "brief_id": "brief_01",
+        "title": "Clarissa's Suitor and Family Motivation",
+        "topic": "Which suitor is Clarissa's family trying to force her to marry, and why do they favor him?",
+        "objective": "Identify the suitor pushed upon Clarissa by her family in Samuel Richardson's novel Clarissa and analyze the primary economic and social reasons for their preference.",
+        "brief_type": "factual_retrieval",
+        "worker_type": "default",
+        "depends_on": [],
+        "task_boundaries": [
+          "Focus strictly on the identity of the suitor Solmes and the family's financial, estate, and social motivations.",
+          "Do NOT analyze Lovelace's character or his role except as a contrasting point to the family's motivation regarding Solmes."
+        ],
+        "expected_output_format": {
+          "schema_name": "WorkerResearchOutput",
+          "required_fields": [
+            "findings_summary",
+            "claims",
+            "sources"
+          ],
+          "guidelines": "Structured findings with claims and source citations"
+        },
+        "suggested_tools": [
+          "search_web",
+          "search_knowledge_base"
+        ],
+        "max_steps": 5,
+        "timeout_seconds": 45.0
+      }
+    ],
+    "input_tokens": 629,
+    "output_tokens": 448
+  },
+  "worker_results": {
+    "brief_01": {
+      "brief_id": "brief_01",
+      "status": "partial",
+      "output": {
+        "brief_id": "brief_01",
+        "findings_summary": "No textual synthesis produced for brief 'Clarissa's Suitor and Family Motivation'.",
+        "claims": [
+          {
+            "claim_id": "claim_brief_01_1",
+            "section_id": "sec_brief_01",
+            "text": "No textual synthesis produced for brief 'Clarissa's Suitor and Family Motivation'.",
+            "citations": [
+              {
+                "citation_id": "cite_brief_01_1",
+                "source_id": "THE PRODUCTION READY GENAI",
+                "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0016",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.9
+              }
+            ],
+            "is_factual": true
+          }
+        ],
+        "sources": [
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0016",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "└── tests/ └── test_basic.py\\nThis structure matters because it separates configuration from code (the .env pattern, part of the Twelve-Factor App methodology widely used in industry), keeps secrets out of version control, and gives you a src/ layout that avoids common Python import ambiguity bugs.\\nEnvironment Variables and Secrets\\nAPI keys should never be hardcoded. The standard pattern:\\n# config.py import os from dotenv import load_dotenv load_dotenv() OPENAI_API_KEY = os.environ[\"OPENAI_API_KEY\"] ANTHROPIC_API_KEY = os.environ[\"ANTHROPIC_API_KEY\"] GOOGLE_API_KEY = os.environ.get(\"GOOGLE_API_KEY\") # optional, so .get() not []\\nUsing os.environ[...] (which raises KeyError if missing) for required keys is a deliberate choice - you want your application to fail loudly at startup if a required key is missing, not fail confusingly three requests later.\\nArchitecture\\nExamples\\nGood Example: Proper Secret Handling\\n# main.py from config import OPENAI_API_KEY from openai import OpenAI client = OpenAI(api_key=OPENAI_API_KEY)\\nBad Example: Hardcoded Secret (Never Do This)\\n# DO NOT DO THIS client = OpenAI(api_key=\"sk-abc123...\") # leaks the moment this is committed\\nReal-World Example\\nA common enterprise incident pattern: a developer hardcodes a key 'just for testing,' commits it, pushes to a public fork, and within minutes automated scrapers detect the leaked key and abuse it, generating a large unexpected bill before the key is revoked. This is common enough that GitHub runs automated secret-scanning specifically for API key patterns from major providers.\\nHands-on Exercises\\nInstall Python 3.11+, verify with python3 --version . 1.\\nCreate a project folder genai-engineer-journey/module-00-setup with the structure shown above. 2.\\nCreate a .env file with placeholders for OPENAI_API_KEY , ANTHROPIC_API_KEY , GOOGLE_API_KEY . 3.\\nWrite a config.py that loads and validates these. 4.\\nWrite a small script that makes one call each to OpenAI, Anthropic, and Google AI Studio, printing the model's response - confirming connectivity. 5.\\nInitialize Docker and run docker run hello-world to confirm your Docker install works.",
+            "score": 0.174885,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0089",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "You don't need to implement ASGI yourself, but understanding that uvicorn is the process actually listening on a port, and FastAPI is the application it runs matters directly for Module 26's deployment content (process count, worker configuration, health checks).\\nArchitecture\\nExamples\\nGood Example: Thin Endpoint, Testable Service, Proper Error Mapping\\n@router.post(\"/summarize\", response_model=SummaryResponse) async def summarize_endpoint( request: SummaryRequest, service: SummaryService = Depends(get_summary_service), ) -> SummaryResponse: return await service.summarize(request.text)\\nAll business logic lives in SummaryService , independently unit-tested per Module 2; the endpoint is a thin, readable adapter - exactly the shape that keeps growing FastAPI applications maintainable.\\nBad Example: Business Logic Inline in the Route\\n@router.post(\"/summarize\") async def summarize_bad(request: dict): client = OpenAI(api_key=\"hardcoded-key\") text = request.get(\"text\", \"\") if not text: return {\"error\": \"no text\"} response = client.chat.completions.create(...) return {\"summary\": response.choices[0].message.content}\\nNo Pydantic validation (using a raw dict ), no dependency injection, hardcoded credentials, ad hoc error handling - everything Module 2's discipline exists to prevent, now baked directly into the API layer.\\nEnterprise Example\\nA hospitality-platform booking-assistant API (structurally similar to production systems in this space) exposes a /chat/stream endpoint that streams tokens via SSE to a React frontend, backed by a BookingAssistantService that internally performs RAG (Module 9) over property data - the endpoint itself stays under 15 lines, with all real complexity properly isolated in tested service classes, exactly matching this module's Good Example pattern at production scale.\\nHands-on Exercises\\nBuild a FastAPI app with a /health endpoint and a /chat endpoint wrapping your Module 2 multi-provider LLM client. 1.\\nAdd Pydantic request/response models with field validation (min/max length, allowed values). 2.\\nImplement API key authentication on the /chat endpoint and write a test confirming requests without a valid key are rejected. 3.\\nImplement a custom exception hierarchy → HTTP status code mapping using FastAPI exception handlers. 4.\\nImplement a /chat/stream SSE endpoint and test it with curl -N or a small Python client.",
+            "score": 0.131455,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0040",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "3.\\nApply SOLID-adjacent design principles pragmatically to AI application code. 4.\\nSet up linting, formatting, and pre-commit hooks ( ruff , black -equivalent, mypy ). 5.\\nWrite clear technical documentation (README, docstrings, architecture decision records). 6.\\nConduct and receive constructive code review. 7.\\nTheory\\nProject Structure at Scale\\nModule 0 introduced the basic src/ layout. As a project grows, it typically evolves into:\\npyproject.toml centralizes dependency management, tool configuration (ruff, mypy, pytest), and packaging metadata in one file, replacing the older requirements.txt + setup.py + setup.cfg sprawl:\\n[project] name = \"app-name\" version = \"0.1.0\" requires-python = \">=3.11\" dependencies = [ \"fastapi>=0.110\", \"httpx>=0.27\", \"pydantic>=2.6\", ] [project.optional-dependencies] dev = [\"pytest\", \"pytest-asyncio\", \"ruff\", \"mypy\", \"respx\"] [tool.ruff] line-length = 100 [tool.pytest.ini_options] testpaths = [\"tests\"] asyncio_mode = \"auto\"\\nThe Testing Pyramid for AI Applications\\nClassic software engineering describes a testing pyramid: many fast unit tests, fewer integration tests, very few end-to-end tests. AI applications add a fourth layer on top: evaluations , which test model-facing behavior probabilistically rather than deterministically. That layer is covered in depth in Module 22 - for now, understand where it sits:\\n┌─────────────────────┐ │   Evaluations         │   few, slow, probabilistic (Module 22) │   (LLM output quality) │ ├─────────────────────┤ │  End-to-End Tests      │   few, slow, full system ├─────────────────────┤ │  Integration Tests     │   moderate, real DB/API boundaries mocked selectively ├─────────────────────┤ │  Unit Tests             │   many, fast, isolated, deterministic └─────────────────────┘\\nThe key discipline this module teaches: everything deterministic gets a normal unit test.",
+            "score": 0.122866,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          }
+        ],
+        "search_queries_used": [
+          "Clarissa Samuel Richardson suitor Solmes family motivation economic social",
+          "Clarissa Solmes family motivation economic social",
+          "\"Roger Solmes\" Clarissa Richardson economic motives family estate",
+          "\"Roger Solmes\" Clarissa Richardson \"family\" motives estate",
+          "Roger Solmes Clarissa family motivations property estate settlement"
+        ],
+        "limitations": [
+          "Web search service returned status 202.",
+          "Step limit (5) reached.",
+          "Output format missing expected elements: findings_summary, claims, sources"
+        ]
+      },
+      "tokens_used": 7719,
+      "cost_usd": 0.002606,
+      "duration_ms": 27327.19,
+      "error_message": "Step limit (5) reached.",
+      "started_at": "2026-11-20T12:08:22.961369Z",
+      "completed_at": "2026-11-20T12:08:50.288570Z"
+    }
+  },
+  "authoritative_sources": {
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0016": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0016",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "└── tests/ └── test_basic.py\\nThis structure matters because it separates configuration from code (the .env pattern, part of the Twelve-Factor App methodology widely used in industry), keeps secrets out of version control, and gives you a src/ layout that avoids common Python import ambiguity bugs.\\nEnvironment Variables and Secrets\\nAPI keys should never be hardcoded. The standard pattern:\\n# config.py import os from dotenv import load_dotenv load_dotenv() OPENAI_API_KEY = os.environ[\"OPENAI_API_KEY\"] ANTHROPIC_API_KEY = os.environ[\"ANTHROPIC_API_KEY\"] GOOGLE_API_KEY = os.environ.get(\"GOOGLE_API_KEY\") # optional, so .get() not []\\nUsing os.environ[...] (which raises KeyError if missing) for required keys is a deliberate choice - you want your application to fail loudly at startup if a required key is missing, not fail confusingly three requests later.\\nArchitecture\\nExamples\\nGood Example: Proper Secret Handling\\n# main.py from config import OPENAI_API_KEY from openai import OpenAI client = OpenAI(api_key=OPENAI_API_KEY)\\nBad Example: Hardcoded Secret (Never Do This)\\n# DO NOT DO THIS client = OpenAI(api_key=\"sk-abc123...\") # leaks the moment this is committed\\nReal-World Example\\nA common enterprise incident pattern: a developer hardcodes a key 'just for testing,' commits it, pushes to a public fork, and within minutes automated scrapers detect the leaked key and abuse it, generating a large unexpected bill before the key is revoked. This is common enough that GitHub runs automated secret-scanning specifically for API key patterns from major providers.\\nHands-on Exercises\\nInstall Python 3.11+, verify with python3 --version . 1.\\nCreate a project folder genai-engineer-journey/module-00-setup with the structure shown above. 2.\\nCreate a .env file with placeholders for OPENAI_API_KEY , ANTHROPIC_API_KEY , GOOGLE_API_KEY . 3.\\nWrite a config.py that loads and validates these. 4.\\nWrite a small script that makes one call each to OpenAI, Anthropic, and Google AI Studio, printing the model's response - confirming connectivity. 5.\\nInitialize Docker and run docker run hello-world to confirm your Docker install works.",
+      "score": 0.174885,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0089": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0089",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "You don't need to implement ASGI yourself, but understanding that uvicorn is the process actually listening on a port, and FastAPI is the application it runs matters directly for Module 26's deployment content (process count, worker configuration, health checks).\\nArchitecture\\nExamples\\nGood Example: Thin Endpoint, Testable Service, Proper Error Mapping\\n@router.post(\"/summarize\", response_model=SummaryResponse) async def summarize_endpoint( request: SummaryRequest, service: SummaryService = Depends(get_summary_service), ) -> SummaryResponse: return await service.summarize(request.text)\\nAll business logic lives in SummaryService , independently unit-tested per Module 2; the endpoint is a thin, readable adapter - exactly the shape that keeps growing FastAPI applications maintainable.\\nBad Example: Business Logic Inline in the Route\\n@router.post(\"/summarize\") async def summarize_bad(request: dict): client = OpenAI(api_key=\"hardcoded-key\") text = request.get(\"text\", \"\") if not text: return {\"error\": \"no text\"} response = client.chat.completions.create(...) return {\"summary\": response.choices[0].message.content}\\nNo Pydantic validation (using a raw dict ), no dependency injection, hardcoded credentials, ad hoc error handling - everything Module 2's discipline exists to prevent, now baked directly into the API layer.\\nEnterprise Example\\nA hospitality-platform booking-assistant API (structurally similar to production systems in this space) exposes a /chat/stream endpoint that streams tokens via SSE to a React frontend, backed by a BookingAssistantService that internally performs RAG (Module 9) over property data - the endpoint itself stays under 15 lines, with all real complexity properly isolated in tested service classes, exactly matching this module's Good Example pattern at production scale.\\nHands-on Exercises\\nBuild a FastAPI app with a /health endpoint and a /chat endpoint wrapping your Module 2 multi-provider LLM client. 1.\\nAdd Pydantic request/response models with field validation (min/max length, allowed values). 2.\\nImplement API key authentication on the /chat endpoint and write a test confirming requests without a valid key are rejected. 3.\\nImplement a custom exception hierarchy → HTTP status code mapping using FastAPI exception handlers. 4.\\nImplement a /chat/stream SSE endpoint and test it with curl -N or a small Python client.",
+      "score": 0.131455,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0040": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0040",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "3.\\nApply SOLID-adjacent design principles pragmatically to AI application code. 4.\\nSet up linting, formatting, and pre-commit hooks ( ruff , black -equivalent, mypy ). 5.\\nWrite clear technical documentation (README, docstrings, architecture decision records). 6.\\nConduct and receive constructive code review. 7.\\nTheory\\nProject Structure at Scale\\nModule 0 introduced the basic src/ layout. As a project grows, it typically evolves into:\\npyproject.toml centralizes dependency management, tool configuration (ruff, mypy, pytest), and packaging metadata in one file, replacing the older requirements.txt + setup.py + setup.cfg sprawl:\\n[project] name = \"app-name\" version = \"0.1.0\" requires-python = \">=3.11\" dependencies = [ \"fastapi>=0.110\", \"httpx>=0.27\", \"pydantic>=2.6\", ] [project.optional-dependencies] dev = [\"pytest\", \"pytest-asyncio\", \"ruff\", \"mypy\", \"respx\"] [tool.ruff] line-length = 100 [tool.pytest.ini_options] testpaths = [\"tests\"] asyncio_mode = \"auto\"\\nThe Testing Pyramid for AI Applications\\nClassic software engineering describes a testing pyramid: many fast unit tests, fewer integration tests, very few end-to-end tests. AI applications add a fourth layer on top: evaluations , which test model-facing behavior probabilistically rather than deterministically. That layer is covered in depth in Module 22 - for now, understand where it sits:\\n┌─────────────────────┐ │   Evaluations         │   few, slow, probabilistic (Module 22) │   (LLM output quality) │ ├─────────────────────┤ │  End-to-End Tests      │   few, slow, full system ├─────────────────────┤ │  Integration Tests     │   moderate, real DB/API boundaries mocked selectively ├─────────────────────┤ │  Unit Tests             │   many, fast, isolated, deterministic └─────────────────────┘\\nThe key discipline this module teaches: everything deterministic gets a normal unit test.",
+      "score": 0.122866,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    }
+  },
+  "used_tokens": 11983,
+  "used_cost_usd": 0.007304,
+  "elapsed_seconds": 34.356,
+  "final_report": {
+    "topic": "Which suitor is Clarissa's family trying to force her to marry, and why do they favor him?",
+    "title": "Research Synthesis Report: Clarissa's Suitor and Family Motivation",
+    "executive_summary": {
+      "section_id": "sec_exec",
+      "title": "Executive Summary",
+      "content": "This research report investigates the question of which suitor Clarissa's family is trying to force her to marry and the underlying motivations for their preference. Due to a total lack of relevant literary evidence within the provided authoritative source pool, no definitive factual assertions regarding the literary characters can be made at this time [cite_1].",
+      "claims": [
+        {
+          "claim_id": "claim_exec_1",
+          "section_id": "sec_exec",
+          "text": "No definitive factual assertions regarding Clarissa's suitor can be made due to an absence of relevant literary text in the evidence pool.",
+          "citations": [],
+          "is_factual": true
+        }
+      ]
+    },
+    "sections": [
+      {
+        "section_id": "sec_findings",
+        "title": "Findings and Evidence Analysis",
+        "content": "An exhaustive review of the provided source material—which exclusively concerns technical documentation regarding Python environments, FastAPI development, and API secret management [cite_2]—reveals no mentions of literary figures such as Clarissa or any familial matchmaking disputes. Consequently, the specific identity of the suitor and the family's rationale remain unanswerable from the provided data corpus [cite_3].",
+        "claims": [
+          {
+            "claim_id": "claim_findings_1",
+            "section_id": "sec_findings",
+            "text": "The provided source material exclusively contains technical documentation regarding Python environments, FastAPI development, and API secret management.",
+            "citations": [
+              {
+                "citation_id": "cite_2",
+                "source_id": "THE PRODUCTION READY GENAI",
+                "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0016",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_findings_2",
+            "section_id": "sec_findings",
+            "text": "There are no mentions of literary figures such as Clarissa or any familial matchmaking disputes in the source pool.",
+            "citations": [
+              {
+                "citation_id": "cite_3",
+                "source_id": "THE PRODUCTION READY GENAI",
+                "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0040",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          }
+        ]
+      }
+    ],
+    "conclusion": {
+      "section_id": "sec_conclusion",
+      "title": "Conclusion",
+      "content": "Based on the available evidence, it is impossible to determine which suitor Clarissa's family favors or why they are attempting to force the marriage. The assigned evidence pool entirely lacks literary context.",
+      "claims": [
+        {
+          "claim_id": "claim_conc_1",
+          "section_id": "sec_conclusion",
+          "text": "It is impossible to determine which suitor Clarissa's family favors due to a complete lack of literary context in the evidence pool.",
+          "citations": [],
+          "is_factual": true
+        }
+      ]
+    },
+    "limitations": [
+      "Worker brief brief_01 produced partial evidence with no textual synthesis.",
+      "The authoritative evidence pool contains software engineering documents instead of the required literary texts.",
+      "Brief 'brief_01' partially completed: Step limit (5) reached.",
+      "Verification advisory: Gate 1 failed: 0 critical and 2 major citation/structural defects found."
+    ],
+    "version": 1,
+    "research_team_version": "1.0.0",
+    "brief_coverages": [
+      {
+        "brief_id": "brief_01",
+        "coverage_summary": "Failed to yield literary evidence due to mismatched domain content in the source chunks."
+      }
+    ],
+    "unresolved_limitations": [
+      "Total absence of textual data concerning Clarissa or her suitors in the provided evidence chunks.",
+      "Brief 'brief_01' partially completed: Step limit (5) reached."
+    ],
+    "created_by": "Lead Research Synthesizer",
+    "created_at": "2023-10-27T00:00:00Z"
+  },
+  "error_message": null,
+  "created_at": "2026-11-20T12:08:20.549343Z",
+  "updated_at": "2026-11-20T12:08:54.904875Z"
+}

@@ -5,10 +5,12 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING, Any
 
+from ..core.budget import SharedRunBudget
 from ..core.config import ResearchTeamConfig, get_research_team_config
 from ..exceptions import DecompositionError
 from ..models import EffortLevel, ResearchDecomposition
 from ..prompts.manager import PromptTemplateManager
+from ..telemetry.pricing import PricingCalculator
 from .validator import DecompositionValidator
 
 if TYPE_CHECKING:
@@ -28,6 +30,7 @@ class DecompositionEngine:
         prompt_manager: PromptTemplateManager | None = None,
         validator: DecompositionValidator | None = None,
         memory_service: MemoryService | None = None,
+        pricing_calculator: PricingCalculator | None = None,
     ) -> None:
         self.config = config or get_research_team_config()
         if llm_service is not None:
@@ -42,6 +45,11 @@ class DecompositionEngine:
         self.prompt_manager = prompt_manager or PromptTemplateManager(config=self.config)
         self.validator = validator or DecompositionValidator()
         self.memory_service = memory_service
+        self.pricing_calculator = pricing_calculator or PricingCalculator()
+        self.last_input_tokens: int = 0
+        self.last_output_tokens: int = 0
+        self.last_total_tokens: int = 0
+        self.last_cost_usd: float = 0.0
 
     async def _recall_user_preferences(self, user_id: str, topic: str) -> str:
         """Recall relevant user domain facts and constraints from LongTermMemory."""
@@ -104,6 +112,7 @@ class DecompositionEngine:
         user_id: str | None = None,
         session_id: str | None = None,
         effort_override: EffortLevel | None = None,
+        shared_budget: SharedRunBudget | None = None,
     ) -> ResearchDecomposition:
         """Analyze a research topic, classify effort scaling, and generate typed worker briefs.
 
@@ -112,6 +121,7 @@ class DecompositionEngine:
             user_id: Optional user identifier for memory personalization.
             session_id: Optional session identifier for short-term working context.
             effort_override: Optional forced effort level (DIRECT or PARALLEL_DECOMPOSED).
+            shared_budget: Optional shared run budget to record exact token consumption.
 
         Returns:
             Validated ResearchDecomposition containing typed worker briefs.
@@ -171,14 +181,41 @@ class DecompositionEngine:
         # Ensure worker_count aligns with length of briefs
         plan.worker_count = len(plan.worker_briefs)
 
-        # 4. Validate decomposition against structural and boundary rules
+        # 4. Extract real token usage and record exact expenditure
+        usage = getattr(llm_response, "usage", {}) or {}
+        in_tokens = (
+            usage.get("input_tokens", 0)
+            if isinstance(usage, dict)
+            else getattr(usage, "input_tokens", 0)
+        )
+        out_tokens = (
+            usage.get("output_tokens", 0)
+            if isinstance(usage, dict)
+            else getattr(usage, "output_tokens", 0)
+        )
+        total_tokens = in_tokens + out_tokens
+        cost_usd = self.pricing_calculator.calculate_cost(
+            self.config.default_model, in_tokens, out_tokens
+        )
+        self.last_input_tokens = in_tokens
+        self.last_output_tokens = out_tokens
+        self.last_total_tokens = total_tokens
+        self.last_cost_usd = cost_usd
+
+        plan.input_tokens = in_tokens
+        plan.output_tokens = out_tokens
+
+        if shared_budget is not None and total_tokens > 0:
+            await shared_budget.record_usage(tokens=total_tokens, cost_usd=cost_usd)
+
+        # 5. Validate decomposition against structural and boundary rules
         self.validator.validate(
             decomposition=plan,
             max_workers=self.config.max_workers,
             effort_override=effort_override,
         )
 
-        # 5. Persist decomposition plan as pinned goal in ShortTermMemory
+        # 6. Persist decomposition plan as pinned goal in ShortTermMemory
         if user_id and session_id:
             await self._pin_decomposition_goal(
                 user_id=user_id,

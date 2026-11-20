@@ -122,6 +122,23 @@ class ReportSection(BaseModel):
         return trimmed
 
 
+class BriefCoverage(BaseModel):
+    """Mapping of worker brief coverage integrated into the synthesized report."""
+
+    brief_id: str = Field(description="Unique brief identifier")
+    coverage_summary: str = Field(
+        description="Summary of brief findings integrated into the report"
+    )
+
+    @field_validator("brief_id", "coverage_summary")
+    @classmethod
+    def validate_non_empty(cls, v: str) -> str:
+        trimmed = v.strip()
+        if not trimmed:
+            raise ValueError("Field cannot be empty or pure whitespace")
+        return trimmed
+
+
 def _default_research_team_version() -> str:
     """Dynamically retrieve the research team version from active configuration."""
     from ..core.config import get_research_team_config
@@ -156,9 +173,9 @@ class Report(BaseModel):
         default_factory=_default_research_team_version,
         description="Module 20 research team generator version",
     )
-    brief_coverages: dict[str, str] = Field(
-        default_factory=dict,
-        description="Mapping of brief_id to coverage summary in the synthesized report",
+    brief_coverages: list[BriefCoverage] = Field(
+        default_factory=list,
+        description="List of brief coverage summaries in the synthesized report",
     )
     unresolved_limitations: list[str] = Field(
         default_factory=list,
@@ -169,6 +186,20 @@ class Report(BaseModel):
         description="Author entity of this report",
     )
     created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+
+    @property
+    def brief_coverages_dict(self) -> dict[str, str]:
+        """Convenience dictionary representation of brief coverage mappings."""
+        return {bc.brief_id: bc.coverage_summary for bc in self.brief_coverages}
+
+    @field_validator("brief_coverages", mode="before")
+    @classmethod
+    def coerce_brief_coverages(cls, v: Any) -> Any:
+        if isinstance(v, dict):
+            return [
+                BriefCoverage(brief_id=str(k), coverage_summary=str(val)) for k, val in v.items()
+            ]
+        return v
 
     @field_validator("topic", "title")
     @classmethod
