@@ -5,11 +5,20 @@ from __future__ import annotations
 from .brief import BriefType, EffortLevel, OutputFormatSpec, WorkerBrief
 from .checkpoint import CheckpointState, RunStatus
 from .decomposition import ResearchDecomposition
-from .report import Citation, CitationType, Claim, Report, ReportSection, SourceReference
+from .report import (
+    BriefCoverage,
+    Citation,
+    CitationType,
+    Claim,
+    Report,
+    ReportSection,
+    SourceReference,
+)
 from .result import ExecutionMetrics, ResearchTeamRunResult
 from .worker import WorkerExecutionResult, WorkerResearchOutput, WorkerStatus
 
 __all__ = [
+    "BriefCoverage",
     "BriefType",
     "CheckpointState",
     "Citation",

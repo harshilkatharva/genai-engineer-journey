@@ -7,6 +7,7 @@ from unittest.mock import AsyncMock
 
 from parallel_research_team.core.config import ResearchTeamConfig
 from parallel_research_team.models import (
+    BriefCoverage,
     BriefType,
     CheckpointState,
     Citation,
@@ -54,7 +55,10 @@ def _create_mock_report(topic: str) -> Report:
         sections=[sec_body],
         conclusion=sec_conc,
         limitations=[],
-        brief_coverages={"brief_01": "Covered", "brief_02": "Covered"},
+        brief_coverages=[
+            BriefCoverage(brief_id="brief_01", coverage_summary="Covered"),
+            BriefCoverage(brief_id="brief_02", coverage_summary="Covered"),
+        ],
     )
 
 

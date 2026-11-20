@@ -49,6 +49,8 @@ class ParallelResearchTeam:
     def __init__(
         self,
         config: ResearchTeamConfig | None = None,
+        llm_service: Any | None = None,
+        retrieval_service: Any | None = None,
         decomposition_engine: DecompositionEngine | None = None,
         scheduler: ParallelResearchScheduler | None = None,
         synthesis_engine: SynthesisEngine | None = None,
@@ -63,17 +65,24 @@ class ParallelResearchTeam:
         self.memory_service = memory_service
         self.decomposition_engine = decomposition_engine or DecompositionEngine(
             config=self.config,
+            llm_service=llm_service,
             memory_service=memory_service,
         )
         self.scheduler = scheduler or ParallelResearchScheduler(
             config=self.config,
             checkpoint_store=self.checkpoint_store,
+            retrieval_service=retrieval_service,
+            llm_service=llm_service,
         )
         self.synthesis_engine = synthesis_engine or SynthesisEngine(
             config=self.config,
+            llm_service=llm_service,
             pricing_calculator=self.pricing_calculator,
         )
-        self.verifier = verifier or ResearchVerifier(config=self.config)
+        self.verifier = verifier or ResearchVerifier(
+            config=self.config,
+            judge_llm_service=llm_service,
+        )
 
     async def run(
         self,

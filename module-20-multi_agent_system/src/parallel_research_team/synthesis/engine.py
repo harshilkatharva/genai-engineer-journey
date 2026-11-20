@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from genai_core import ChatMessage, LLMService
+from genai_core import LLMService
 from genai_core.observability import get_logger
 
 from ..core.budget import SharedRunBudget
@@ -83,10 +83,7 @@ class SynthesisEngine:
             version=self.config.prompt_version,
         )
 
-        messages = [
-            ChatMessage(role="system", content=system_prompt),
-            ChatMessage(role="user", content=user_prompt),
-        ]
+        full_prompt = f"{system_prompt}\n\n{user_prompt}"
 
         _logger.info(
             "Invoking Lead Agent synthesis for topic '%s' using %s/%s with %d pooled sources",
@@ -99,7 +96,7 @@ class SynthesisEngine:
         # 3. Request structured completion conforming to Report schema
         try:
             response = await self.llm_service.complete_structure(
-                messages=messages,
+                prompt=full_prompt,
                 response_schema=Report,
                 provider=self.config.synthesis_provider,
                 model=self.config.synthesis_model,
@@ -141,10 +138,15 @@ class SynthesisEngine:
 
         # Populate brief coverages if missing
         if not report.brief_coverages:
-            report.brief_coverages = {
-                b_id: f"Synthesized coverage for brief {b_id} (status: {worker_results[b_id].status.value})"
+            from ..models.report import BriefCoverage
+
+            report.brief_coverages = [
+                BriefCoverage(
+                    brief_id=b_id,
+                    coverage_summary=f"Synthesized coverage for brief {b_id} (status: {worker_results[b_id].status.value})",
+                )
                 for b_id in worker_results
-            }
+            ]
 
         report.research_team_version = self.config.system_version
         return report

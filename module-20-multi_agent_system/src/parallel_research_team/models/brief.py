@@ -71,7 +71,7 @@ class WorkerBrief(BaseModel):
     )
     max_steps: int = Field(default=5, ge=1, le=10, description="Per-worker step ceiling")
     timeout_seconds: float = Field(
-        default=45.0, gt=0.0, le=180.0, description="Per-worker timeout in seconds"
+        default=45.0, ge=1.0, le=180.0, description="Per-worker timeout in seconds"
     )
 
     @field_validator("brief_id", "title", "topic", "objective")

@@ -6,6 +6,7 @@ import pytest
 from pydantic import ValidationError
 
 from parallel_research_team.models.report import (
+    BriefCoverage,
     Citation,
     CitationType,
     Claim,
@@ -91,7 +92,9 @@ def test_report_structural_integrity() -> None:
         sections=[sec_body],
         conclusion=sec_conclusion,
         limitations=["Small memory test set"],
-        brief_coverages={"brief_01": "Covered in sec_body"},
+        brief_coverages=[
+            BriefCoverage(brief_id="brief_01", coverage_summary="Covered in sec_body")
+        ],
     )
     assert report.title == "Comparative Vector Indexing Study"
     assert report.research_team_version == "1.0.0"

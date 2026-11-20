@@ -10,6 +10,7 @@ import pytest
 from parallel_research_team.core.config import ResearchTeamConfig
 from parallel_research_team.exceptions import BudgetExceededError
 from parallel_research_team.models import (
+    BriefCoverage,
     BriefType,
     Citation,
     CitationType,
@@ -56,7 +57,7 @@ def _create_mock_report(topic: str) -> Report:
         sections=[sec_body],
         conclusion=sec_conc,
         limitations=[],
-        brief_coverages={"brief_01": "Fully analyzed"},
+        brief_coverages=[BriefCoverage(brief_id="brief_01", coverage_summary="Fully analyzed")],
     )
 
 

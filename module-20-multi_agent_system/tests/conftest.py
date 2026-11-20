@@ -9,10 +9,13 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+from dotenv import load_dotenv
 
 from parallel_research_team.core.config import ResearchTeamConfig
 from parallel_research_team.models.brief import BriefType, OutputFormatSpec, WorkerBrief
 from parallel_research_team.models.report import SourceReference
+
+load_dotenv()
 
 # Ensure src is in python path
 src_dir = Path(__file__).resolve().parent.parent / "src"
