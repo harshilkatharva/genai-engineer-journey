@@ -367,3 +367,4 @@ class CheckpointState(BaseModel):
    - Total USD cost.
    - Wall-clock elapsed duration.
    - Worker breakdown: total, completed, partial, failed, and timed-out.
+5. **Rule 7.1.5 (Graceful Budget Exhaustion Interception):** When `BudgetExceededError` occurs, the orchestrator MUST NOT crash the process. It must transition the run to `RunStatus.PARTIALLY_COMPLETED`, preserve all gathered evidence and partial deliverables, synthesize a partial report if evidence exists, and record a user-friendly explanatory disclosure in `report.limitations` and `report.unresolved_limitations`.

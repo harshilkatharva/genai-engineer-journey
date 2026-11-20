@@ -165,3 +165,32 @@ This document records all significant architectural, technical, and structural d
   - **Gate 1 (Deterministic):** Structural validation, citation integrity (every citation resolves to an authoritative source chunk), and quoted passage verbatim substring matching.
   - **Gate 2 (Semantic Grounding):** LLM judge entailment scoring using `SemanticGroundingVerifier` calibrated to threshold **0.70**, using dedicated judge configuration (`judge_provider` and `judge_model`). Gate 2 only runs if Gate 1 passes. If Gate 2 encounters an unexpected LLM judge error, the exception is caught, logged, and shielded gracefully.
 - **Consequences:** Production-grade report reliability with guaranteed citation accuracy and grounded factual claims.
+
+---
+
+## [2026-11-19] DEC-20-019: Orchestrator Facade and Durable Checkpoint Resumption Protocol
+
+- **Status:** Accepted
+- **Context:** An end-to-end multi-agent research run coordinates multiple complex phases: effort classification, decomposition, concurrent worker scheduling, evidence consolidation, report synthesis, and two-stage verification. Furthermore, runs may be paused or interrupted at any point and require seamless resumption without duplicate execution of completed briefs.
+- **Decision:** Implemented `ParallelResearchTeam` (`src/parallel_research_team/orchestrator.py`):
+  - Exposes an async `run(topic, user_id, session_id, effort_override)` method coordinating all pipeline stages with automatic checkpointing and telemetry tracking.
+  - Implemented `resume(run_id)` which re-inflates the `AuthoritativeSourcePool` from persisted checkpoint chunks, identifies only pending or uncompleted worker briefs, re-initializes `SharedRunBudget` with previous usage, schedules remaining work, and synthesizes the unified final report.
+- **Consequences:** Provides a single, clean public entrypoint for callers while ensuring crash-resilient, durable execution recovery.
+
+---
+
+## [2026-11-19] DEC-20-020: Graceful Budget Exhaustion Interception and Salvage
+
+- **Status:** Accepted
+- **Context:** If a run exceeds its token, cost, or time ceiling, throwing an uncaught `BudgetExceededError` crashes the application and discards valuable evidence gathered prior to exhaustion.
+- **Decision:** In `ParallelResearchTeam.run()`, `BudgetExceededError` is intercepted gracefully across both worker scheduling and synthesis stages. If usable evidence was collected before budget exhaustion, the run is transitioned to `RunStatus.PARTIALLY_COMPLETED`, partial findings are synthesized into a report if possible, and a user-friendly explanatory notice is recorded in `report.limitations` and `report.unresolved_limitations`.
+- **Consequences:** Prevents application crashes, maximizes ROI by salvaging completed research, and communicates clear resource status to end users.
+
+---
+
+## [2026-11-20] DEC-20-021: Dynamic Exact Token and Pricing Telemetry Extraction Across Pipeline Stages
+
+- **Status:** Accepted
+- **Context:** Previous orchestrator code contained temporary static placeholders (`decomp_tokens = 1200`, `synth_tokens = 2000`) and heuristic input/output ratio approximations (`0.75 / 0.25`), which bypassed the real usage data returned by `LLMService` and caused inaccurate cost tracking.
+- **Decision:** Updated `DecompositionEngine` and `SynthesisEngine` to extract real dynamic usage (`input_tokens`, `output_tokens`) from `LLMManagerResponse.usage`, record exact expenditure in `SharedRunBudget`, and expose `last_input_tokens`, `last_output_tokens`, `last_total_tokens`, and `last_cost_usd`. Updated `ParallelResearchTeam` to read these exact values directly into `ResearchTelemetryTracker`. Added `input_tokens` and `output_tokens` directly to `ResearchDecomposition` for durable checkpoint persistence.
+- **Consequences:** 100% exact token accounting and monetary billing across all pipeline stages with zero static constants or heuristics.

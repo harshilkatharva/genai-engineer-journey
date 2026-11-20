@@ -33,6 +33,10 @@ class SynthesisEngine:
         )
         self.prompt_manager = prompt_manager or get_prompt_manager(self.config)
         self.pricing_calculator = pricing_calculator or PricingCalculator()
+        self.last_input_tokens: int = 0
+        self.last_output_tokens: int = 0
+        self.last_total_tokens: int = 0
+        self.last_cost_usd: float = 0.0
 
     async def synthesize(
         self,
@@ -120,8 +124,12 @@ class SynthesisEngine:
         cost_usd = self.pricing_calculator.calculate_cost(
             self.config.synthesis_model, in_tokens, out_tokens
         )
+        self.last_input_tokens = in_tokens
+        self.last_output_tokens = out_tokens
+        self.last_total_tokens = total_tokens
+        self.last_cost_usd = cost_usd
 
-        if shared_budget is not None:
+        if shared_budget is not None and total_tokens > 0:
             await shared_budget.record_usage(tokens=total_tokens, cost_usd=cost_usd)
 
         # 5. Populate and reconcile Module 20 metadata and unresolved worker limitations

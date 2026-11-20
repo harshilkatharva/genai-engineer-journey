@@ -39,9 +39,14 @@ class CheckpointError(ResearchTeamError):
     """Raised when saving, loading, or parsing a checkpoint fails."""
 
 
+class CheckpointNotFoundError(CheckpointError):
+    """Raised when a requested checkpoint run ID is not found on disk."""
+
+
 __all__ = [
     "BudgetExceededError",
     "CheckpointError",
+    "CheckpointNotFoundError",
     "DecompositionError",
     "ResearchTeamError",
     "SynthesisError",

@@ -23,6 +23,12 @@ class ResearchDecomposition(BaseModel):
     worker_briefs: list[WorkerBrief] = Field(
         min_length=1, description="List of typed worker briefs assigned to workers"
     )
+    input_tokens: int = Field(
+        default=0, ge=0, description="Input tokens consumed during decomposition"
+    )
+    output_tokens: int = Field(
+        default=0, ge=0, description="Output tokens consumed during decomposition"
+    )
 
     @field_validator("topic", "rationale")
     @classmethod

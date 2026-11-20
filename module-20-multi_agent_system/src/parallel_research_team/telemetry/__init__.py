@@ -3,5 +3,6 @@
 from __future__ import annotations
 
 from .pricing import ModelPrice, PricingCalculator
+from .tracker import ResearchTelemetryTracker
 
-__all__ = ["ModelPrice", "PricingCalculator"]
+__all__ = ["ModelPrice", "PricingCalculator", "ResearchTelemetryTracker"]
