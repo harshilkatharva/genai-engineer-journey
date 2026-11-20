@@ -1,0 +1,666 @@
+{
+  "run_id": "run_40de94651ffe",
+  "user_id": "default_user",
+  "topic": "Evolution of Polyphase Systems and Single-Circuit Self-Starting Motor Architectures FROM knowledge base only",
+  "status": "partially_completed",
+  "effort_level": "parallel_decomposed",
+  "decomposition": {
+    "topic": "Evolution of Polyphase Systems and Single-Circuit Self-Starting Motor Architectures FROM knowledge base only",
+    "effort_level": "parallel_decomposed",
+    "rationale": "The topic covers two distinct technical areas: the historical and theoretical evolution of polyphase systems, and the mechanical/electrical evolution of single-circuit self-starting motor architectures. These require separate deep dives to ensure thorough coverage without overlapping scopes.",
+    "worker_count": 2,
+    "worker_briefs": [
+      {
+        "brief_id": "brief_01",
+        "title": "Evolution of Polyphase Systems",
+        "topic": "Evolution of Polyphase Systems and Single-Circuit Self-Starting Motor Architectures FROM knowledge base only",
+        "objective": "Trace the historical and technical evolution of polyphase electrical power systems from early multi-phase developments to standard three-phase systems.",
+        "brief_type": "exploratory_deep_dive",
+        "worker_type": "deep_dive",
+        "depends_on": [],
+        "task_boundaries": [
+          "Focus strictly on polyphase systems, generation, transmission, and historical evolution.",
+          "Do NOT discuss motor architectures, single-phase motors, or self-starting mechanisms."
+        ],
+        "expected_output_format": {
+          "schema_name": "WorkerResearchOutput",
+          "required_fields": [
+            "findings_summary",
+            "claims",
+            "sources"
+          ],
+          "guidelines": "Structured findings with claims and source citations"
+        },
+        "suggested_tools": [
+          "search_knowledge_base"
+        ],
+        "max_steps": 5,
+        "timeout_seconds": 45.0
+      },
+      {
+        "brief_id": "brief_02",
+        "title": "Single-Circuit Self-Starting Motor Architectures",
+        "topic": "Evolution of Polyphase Systems and Single-Circuit Self-Starting Motor Architectures FROM knowledge base only",
+        "objective": "Investigate the design, evolution, and operating principles of single-circuit self-starting electric motor architectures.",
+        "brief_type": "exploratory_deep_dive",
+        "worker_type": "deep_dive",
+        "depends_on": [],
+        "task_boundaries": [
+          "Focus strictly on single-circuit self-starting motor architectures and their design principles.",
+          "Do NOT discuss general polyphase grid transmission or multi-phase power generation infrastructure."
+        ],
+        "expected_output_format": {
+          "schema_name": "WorkerResearchOutput",
+          "required_fields": [
+            "findings_summary",
+            "claims",
+            "sources"
+          ],
+          "guidelines": "Structured findings with claims and source citations"
+        },
+        "suggested_tools": [
+          "search_knowledge_base"
+        ],
+        "max_steps": 5,
+        "timeout_seconds": 45.0
+      }
+    ],
+    "input_tokens": 625,
+    "output_tokens": 709
+  },
+  "worker_results": {
+    "brief_01": {
+      "brief_id": "brief_01",
+      "status": "failed",
+      "output": {
+        "brief_id": "brief_01",
+        "findings_summary": "No textual synthesis produced for brief 'Evolution of Polyphase Systems'.",
+        "claims": [
+          {
+            "claim_id": "claim_brief_01_1",
+            "section_id": "sec_brief_01",
+            "text": "No textual synthesis produced for brief 'Evolution of Polyphase Systems'.",
+            "citations": [
+              {
+                "citation_id": "cite_brief_01_1",
+                "source_id": "web_1556782f964c",
+                "chunk_id": "web_1556782f964c_chunk_f4e1357f",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.9
+              }
+            ],
+            "is_factual": true
+          }
+        ],
+        "sources": [
+          {
+            "source_id": "web_1556782f964c",
+            "chunk_id": "web_1556782f964c_chunk_f4e1357f",
+            "title": "The Secret Life of Nikola Tesla - Business Insider",
+            "content": "However, his did admit to dozing off sometimes to \"recharge his batteries.\" According to one report, he once worked for 84 hours without sleeping.\n\nIn February 1882, Tesla discovered the rotating magnetic field, which he used to construct the AC induction motor and polyphase system for the generation, transmission, distribution and use of electric power.\n\nSource: Tesla Society [...] Tesla wrote a classic paper in which he introduced the concept of his motors and electrical systems called \"A New System of Alternating Current Motors and Transformers,\" in 1888. It caught the attention of industrialist and inventor George Westinghouse, and they ended up partnering up to work on bringing electricity to the rest of the country.\n\nSource: Tesla Society [...] In 1891, Tesla developed an induction coil that produced high-frequency alternating currents, now known as the Tesla coil. He used it in experiments to produce electric lighting, X-rays, and wireless power, and it became the basis of radio and TV Today, the coils are mostly used in educational displays and entertainment.\n\nSource: PBS.org",
+            "score": 0.52506447,
+            "metadata": {
+              "url": "https://www.businessinsider.com/the-secret-life-of-nikola-tesla-2015-10",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_e1bb1e3016b1",
+            "chunk_id": "web_e1bb1e3016b1_chunk_f4e1357f",
+            "title": "The Secret Life of Nikola Tesla - Business Insider",
+            "content": "However, his did admit to dozing off sometimes to \"recharge his batteries.\" According to one report, he once worked for 84 hours without sleeping.\n\nIn February 1882, Tesla discovered the rotating magnetic field, which he used to construct the AC induction motor and polyphase system for the generation, transmission, distribution and use of electric power.\n\nSource: Tesla Society [...] Tesla wrote a classic paper in which he introduced the concept of his motors and electrical systems called \"A New System of Alternating Current Motors and Transformers,\" in 1888. It caught the attention of industrialist and inventor George Westinghouse, and they ended up partnering up to work on bringing electricity to the rest of the country.\n\nSource: Tesla Society [...] In 1891, Tesla developed an induction coil that produced high-frequency alternating currents, now known as the Tesla coil. He used it in experiments to produce electric lighting, X-rays, and wireless power, and it became the basis of radio and TV Today, the coils are mostly used in educational displays and entertainment.\n\nSource: PBS.org",
+            "score": 0.52506447,
+            "metadata": {
+              "url": "http://www.businessinsider.com/the-secret-life-of-nikola-tesla-2015-10",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_9ee9c1037438",
+            "chunk_id": "web_9ee9c1037438_chunk_361de12e",
+            "title": "Who Was Nikola Tesla? a Short Biography of the Inventor - Business Insider",
+            "content": "He used this principle to construct the AC induction motor and polyphase system for the generation, transmission, distribution and use of electric power.\n\nSource: Tesla Society\n\n## While Tesla was working in Thomas Edison’s lab in New Jersey, the two fought a 'war' with over the best form of electrical current. [...] Tesla wrote a classic paper called \"A New System of Alternating Current Motors and Transformers,\" in 1888, in which he introduced the concept of his motors and electrical systems. The work caught Westinghouse's attention, and they ended up partnering to work on bringing electricity to the rest of the country.\n\nTesla's AC-driven system remains the world standard for delivering electricity today.\n\nSource: Tesla Society",
+            "score": 0.49896148,
+            "metadata": {
+              "url": "http://www.businessinsider.com/nikola-tesla-inventor-biography-2017-7",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_31df4f9a4ed4",
+            "chunk_id": "web_31df4f9a4ed4_chunk_814f5bb1",
+            "title": "Initial Tesla Polyphase / \"Three-Phase\" Alternating-Current Systems and Metering Development - Engineering and Technology History Wiki",
+            "content": "Philip Lange is also credited with developing much primary apparatus that led towards the perfection of the Tesla Polyphase System of electrical generation that was under the tutelage of chief electrician Oliver B. Shallenberger at Westinghouse in the late 1880's.\n\n### Applicable AC Patents by Lange, Byllesby, and Shallenberger used towards Polyphase Systems creation [...] The singular pivotal point for George Westinghouse in his development of a practical AC system occurred in July 1888, when George Westinghouse licensed Nikola Tesla's U.S. patents for a polyphase AC induction motor and related transformer designs. As well Tesla was hired for one year to be a consultant at the Westinghouse Electric & Manufacturing Company's Pittsburgh labs. Tesla's AC motor and transformer designs were integral to maintaining a secure position supporting George Westinghouse's [...] ### Introductory Development of Alternating-Current (AC) and Polyphase Electrical Systems\n\nBy the mid-1880s, initial European development spawned interest in what is known as alternating-current (AC) electrical power, where the power was produced from initially, a \"two-phase\" system of electrical production and distribution - and eventually of what became known as a \"three-phase\" or \"polyphase system\" of electrical generation and distribution.",
+            "score": 0.6302299,
+            "metadata": {
+              "url": "https://ethw.org/Initial_Tesla_Polyphase_/_%22Three-Phase%22_Alternating-Current_Systems_and_Metering_Development",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_a4e12c5ebee8",
+            "chunk_id": "web_a4e12c5ebee8_chunk_41a04246",
+            "title": "Three-phase electric power - Wikipedia",
+            "content": "These alternators operated by creating systems of alternating currents displaced from one another in phase by definite amounts, and depended on rotating magnetic fields for their operation. The resulting source of polyphase power soon found widespread acceptance. The invention of the polyphase alternator is key in the history of electrification, as is the power transformer. These inventions enabled power to be transmitted by wires economically over considerable distances. Polyphase power [...] Transformer windings consist of either delta (often symbolised as 'Δ') or star (often symbolised as 'Y') configurations, per IEC 60050 terminology. The star arrangement is more commonly known as wye in the US.\n\n## History\n\n[edit]\n\nPolyphase power systems were independently invented by Galileo Ferraris, Mikhail Dolivo-Dobrovolsky, Jonas Wenström, John Hopkinson, William Stanley Jr., and Nikola Tesla in the late 1880s.",
+            "score": 0.6138733,
+            "metadata": {
+              "url": "https://en.wikipedia.org/wiki/Three-phase_electric_power",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_72900334c06a",
+            "chunk_id": "web_72900334c06a_chunk_a5165b16",
+            "title": "Why Three Phases? A Historical and Engineering Reassessment of Phase Order in AC Power Transmission",
+            "content": "Two-phase systems were commercially important. Westinghouse equipment\nfor the 1893 World’s Columbian Exposition and the Niagara Falls project\nbelonged to this period of genuine competition among polyphase\narchitectures . At Niagara, the initial generating\nunits were two-phase machines. IEEE historical documentation describes\n2200-V, 25-Hz two-phase generation and local two-phase distribution\n. This architecture could run polyphase motors and",
+            "score": 0.60498255,
+            "metadata": {
+              "url": "https://arxiv.org/html/2608.27325v1",
+              "source_type": "web"
+            }
+          }
+        ],
+        "search_queries_used": [
+          "history of polyphase electrical systems Nikola Tesla Galileo Ferraris three phase",
+          "history of polyphase power system three phase transmission evolution"
+        ],
+        "limitations": [
+          "503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
+        ]
+      },
+      "tokens_used": 2056,
+      "cost_usd": 0.000733,
+      "duration_ms": 18620.56,
+      "error_message": "503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+      "started_at": "2026-11-20T14:40:02.998135Z",
+      "completed_at": "2026-11-20T14:40:21.618707Z"
+    },
+    "brief_02": {
+      "brief_id": "brief_02",
+      "status": "completed",
+      "output": {
+        "brief_id": "brief_02",
+        "findings_summary": "### Worker Research Findings & Summary\n\n#### 1. Introduction and Core Challenge\nSingle-phase electric motors operating from a single-circuit/single-phase supply present a unique fundamental challenge: **they are not inherently self-starting**. \n* **Pulsating Field Phenomenon:** When a single-phase alternating current flows through a primary stator winding, it produces a pulsating (alternating) magnetic field rather than a revolving magnetic field. According to the *double-revolving field theory*, this pulsating field can be resolved into two equal and opposite rotating components. At standstill (slip $s = 1$), these two oppositely rotating fields produce equal and opposite torques ($T_1 = T_2$), resulting in a net starting torque of zero.\n* **The Self-Starting Solution:** To make single-circuit motors self-starting, architecture designs must introduce a spatial and temporal phase displacement within the magnetic field system, creating an asymmetrical or rotating magnetic field component that develops a net unidirectional starting torque.\n\n---\n\n#### 2. Design Architectures and Operating Principles\n\nTo overcome the lack of inherent self-starting capability while remaining connected to a single-circuit supply, various motor architectures have evolved. They generally fall into categories utilizing auxiliary windings or passive electromagnetic shifting (e.g., shading coils).\n\n##### A. Auxiliary Winding Architectures (Split-Phase and Capacitor Types)\nAlthough supplied by a single external circuit (line and neutral), these architectures utilize split-circuit branches on the stator to synthesize a two-phase-like rotating field during startup:\n* **Stator Layout:** The stator incorporates two distinct windings spatially displaced by $90^\\text{o}$ electrical: a main (running) winding and an auxiliary (starting) winding.\n* **Resistance Split-Phase Motors:** The auxiliary winding is designed with a higher resistance-to-reactance ($R/X$) ratio compared to the main winding. This creates a phase angle difference between the currents in the two windings. \n  * *Verbatim Evidence:* *\"It is so arranged that the phase-difference between the currents in the two stator windings is very large (ideal value being 90º). Hence, the motor behaves like a two-phase motor. These two currents produce a revolving flux and hence make the motor self-starting.\"* (Source: *NIT-Edu, Single-Phase Motors*)\n* **Capacitor-Start / Capacitor-Run Motors:** A capacitor is placed in series with the auxiliary winding to artificially increase the phase displacement (approaching $90^\\text{o}$), providing high starting torque and improved efficiency. A centrifugal switch or electronic relay typically disconnects the starting capacitor branch once the motor reaches a predetermined speed (approx. 70–80% of synchronous speed).\n\n##### B. Shaded-Pole Architectures (True Single-Circuit Stators)\nFor ultra-low-power applications where auxiliary switches or external capacitors are economically or physically unfeasible, the **shaded-pole motor** provides a robust, single-circuit self-starting solution.\n* **Construction:** The stator features salient poles. A portion of each pole face is surrounded by a short-circuited heavy copper ring or strap known as a **shading coil** (or shading ring).\n* **Operating Principle via Electromagnetic Induction:** \n  * *Verbatim Evidence:* *\"When single-phase alternating current is supplied to the stator winding, shading provided to the poles elicits a phase shift in the motor’s magnetic field, causing it to rotate. This auxiliary single-turn winding is called a shading coil. Currents induced in this coil by the magnetic field... [oppose] changes in flux through transformer action.\"* (Source: *Wikipedia, Shaded-pole motor*)\n  * As the main alternating flux increases or decreases, currents induced in the shading ring delay the phase of the magnetic flux in the *shaded* portion relative to the *unshaded* portion of the pole face. \n  * This shifting of the magnetic axis from the unshaded zone to the shaded zone mimics a physical movement of the magnetic field vector, producing a weak revolving magnetic field component sufficient to start small, low-inertia loads.\n\n---\n\n#### 3. Evolution and Performance Trade-offs\n* **Simplicity vs. Torque:** While shaded-pole architectures offer ultimate simplicity, reliability, and low manufacturing cost (with no centrifugal switches or starting capacitors), they suffer from low starting torque, low efficiency, and low slip-tolerance.\n* **Performance Optimization:** Advanced single-phase architectures (such as permanent-split capacitor or two-value capacitor motors) mimic balanced two-phase operation to achieve quiet operation, higher power factors, and significant overload capacities suitable for demanding loads like compressors and pumps.",
+        "claims": [
+          {
+            "claim_id": "claim_brief_02_1",
+            "section_id": "sec_brief_02",
+            "text": "### Worker Research Findings & Summary\n\n#### 1.",
+            "citations": [
+              {
+                "citation_id": "cite_brief_02_1",
+                "source_id": "web_9bf05140438a",
+                "chunk_id": "web_9bf05140438a_chunk_455d422c",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.9
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_brief_02_2",
+            "section_id": "sec_brief_02",
+            "text": "Introduction and Core Challenge\nSingle-phase electric motors operating from a single-circuit/single-phase supply present a unique fundamental challenge: **they are not inherently self-starting**.",
+            "citations": [
+              {
+                "citation_id": "cite_brief_02_2",
+                "source_id": "web_e13151bad784",
+                "chunk_id": "web_e13151bad784_chunk_e265db0c",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.9
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_brief_02_3",
+            "section_id": "sec_brief_02",
+            "text": "* **Pulsating Field Phenomenon:** When a single-phase alternating current flows through a primary stator winding, it produces a pulsating (alternating) magnetic field rather than a revolving magnetic field.",
+            "citations": [
+              {
+                "citation_id": "cite_brief_02_3",
+                "source_id": "web_23ab4805c4d2",
+                "chunk_id": "web_23ab4805c4d2_chunk_c48a47c2",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.9
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_brief_02_4",
+            "section_id": "sec_brief_02",
+            "text": "According to the *double-revolving field theory*, this pulsating field can be resolved into two equal and opposite rotating components.",
+            "citations": [
+              {
+                "citation_id": "cite_brief_02_4",
+                "source_id": "web_db41d76d96d8",
+                "chunk_id": "web_db41d76d96d8_chunk_176233e3",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.9
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_brief_02_5",
+            "section_id": "sec_brief_02",
+            "text": "At standstill (slip $s = 1$), these two oppositely rotating fields produce equal and opposite torques ($T_1 = T_2$), resulting in a net starting torque of zero.\n* **The Self-Starting Solution:** To make single-circuit motors self-starting, architecture designs must introduce a spatial and temporal phase displacement within the magnetic field system, creating an asymmetrical or rotating magnetic field component that develops a net unidirectional starting torque.\n\n---\n\n#### 2.",
+            "citations": [
+              {
+                "citation_id": "cite_brief_02_5",
+                "source_id": "web_9bf05140438a",
+                "chunk_id": "web_9bf05140438a_chunk_1b64fbce",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.9
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_brief_02_6",
+            "section_id": "sec_brief_02",
+            "text": "Design Architectures and Operating Principles\n\nTo overcome the lack of inherent self-starting capability while remaining connected to a single-circuit supply, various motor architectures have evolved.",
+            "citations": [
+              {
+                "citation_id": "cite_brief_02_6",
+                "source_id": "web_f5fa995c9b66",
+                "chunk_id": "web_f5fa995c9b66_chunk_e0f6c951",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.9
+              }
+            ],
+            "is_factual": true
+          }
+        ],
+        "sources": [
+          {
+            "source_id": "web_9bf05140438a",
+            "chunk_id": "web_9bf05140438a_chunk_455d422c",
+            "title": "[PDF] SINGLE-PHASE MOTORS",
+            "content": "A remains in the starting winding circuit. In this way, both optimum starting and running performance is achieved in such motors. If properly designed, such motors have operating characteristics very closely resembling those displayed by two-phase motors. Their performance is characterised by 1. ability to start heavy loads 2. extremely quiet operation 3. higher efficiency and power factor 4. ability to develop 25 per cent overload capacity Hence, such motors are ideally suited where load [...] It is so arranged that the phase-difference between the currents in the two stator windings is very large (ideal value being 90º). Hence, the motor behaves like a two-phase motor. These two currents produce a revolving flux and hence make the motor self-starting.\nThere are many methods by which the necessary phase-difference between the two currents can be created. [...] Making Single-phase Induction Motor Self-starting As discussed above, a single-phase induction motor is not self-starting. To overcome this drawback and make the motor self-starting, it is temporarily converted into a two-phase motor during starting period. For this purpose, the stator of a single-phase motor is provided with an extra winding, known as starting (or auxiliary) winding, in addition to the main or running winding. The two windings are spaced 90º electrically apart and are",
+            "score": 0.47939703,
+            "metadata": {
+              "url": "https://nit-edu.org/wp-content/uploads/2021/09/Ch-36-Single-phase-motors.pdf",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_e13151bad784",
+            "chunk_id": "web_e13151bad784_chunk_e265db0c",
+            "title": "Single-Phase Induction Motor: Theory, Design, and Starters | Electronics | Wikiteka, Search and share notes, summaries, assignments, and exams from Secondary School, High School, University, and University Entrance Exams",
+            "content": "T1=T2  ⟹  Net Torque=0T\\_1 = T\\_2 \\implies Net\\ Torque = 0T1​=T2​⟹NetTorque=0\n\n No directional push → rotor doesn’t start on its own.\n\n### 3) Conclusion (0.5 Mark)\n\nStarter is essential to:\n\n1. Create initial phase difference\n2. Limit starting current\n3. Enable smooth starting of the motor\n\n## Q4. Resistance Split-Phase Starting Method (5 Marks)\n\n### 1) Introduction (1 Mark) [...] ## Q3. Need for Starting Mechanism in Single-Phase Induction Motor (5 Marks)\n\n### 1) Why Starter Is Needed (2 Marks)\n\n At start, slip = 1 → high induced EMF in rotor.\n Low rotor impedance → very high starting current (4 to 10 × full-load).\n Causes:\n\n  + Voltage drop\n  + Heating\n  + Poor power factor\n Starter limits current and ensures safe acceleration.\n\n### 2) Why It’s Not Self-Starting (2 Marks)\n\n Stator field is pulsating, not rotating.\n Produces two opposite torques (T₁ and T₂). [...] ### ⚙ 2) Direct-On-Line (DOL) Starter\n\nConstruction:\n\n Contactor\n Start (ON) and Stop (OFF) push buttons\n No-volt coil (NVC) or no-volt release\n Overload relay\n\nWorking Principle:\n\n When ON is pressed, NVC energizes → main contacts close → motor gets full line voltage.\n A holding contact keeps the circuit latched.\n If overload occurs → relay trips → NVC de-energizes → motor disconnects.\n OFF button breaks the circuit manually.\n\n### ⚡ 3) Rotor Resistance\n\nConstruction:",
+            "score": 0.46450678,
+            "metadata": {
+              "url": "https://en.wikiteka.com/document/single-phase-induction-motor-theory-design-starters",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_23ab4805c4d2",
+            "chunk_id": "web_23ab4805c4d2_chunk_c48a47c2",
+            "title": "Induction motor - Wikipedia",
+            "content": "In two-pole single-phase motors, the torque goes to zero at 100% slip (zero speed), so these require alterations to the stator such as shaded-poles to provide starting torque. A single phase induction motor requires separate starting circuitry to provide a rotating field to the motor. The normal running windings within such a single-phase motor can cause the rotor to turn in either direction, so the starting circuit determines the operating direction.\n\n.-47) [...] Although polyphase motors are inherently self-starting, their starting and pull-up torque design limits must be high enough to overcome actual load conditions.\n\nIn wound rotor motors, rotor circuit connection through slip rings to external resistances allows change of speed-torque characteristics for acceleration control and speed control purposes.\n\n#### Speed control\n\n[edit]\n\n##### Resistance\n\n[edit] [...] single-phase motors having two windings can be viewed as two-phase motors, since a capacitor is used to generate a second power phase 90° from the single-phase supply and feeds it to the second motor winding. Single-phase motors require some mechanism to produce a rotating field on startup. Induction motors using a squirrel-cage rotor winding may have the rotor bars skewed slightly to smooth out torque in each revolution.",
+            "score": 0.3339375,
+            "metadata": {
+              "url": "https://en.wikipedia.org/wiki/Induction_motor",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_db41d76d96d8",
+            "chunk_id": "web_db41d76d96d8_chunk_176233e3",
+            "title": "Shaded-pole motor - Wikipedia",
+            "content": "The power output of shaded pole motors is usually very low. Because there is often no explicit starting mechanism, the rotor of a motor operating from a constant frequency mains supply must be very light so that it is capable of reaching running speed within one cycle of the mains frequency. A further development dispenses with the shading rings altogether. The application of power gives the magnetised rotor enough of a 'flick' to move it fast enough to establish synchronism. A mechanical means [...] A shaded-pole motor is a motor in which the auxiliary winding is composed of a copper ring or bar surrounding a portion of each pole to produce a weakly rotating magnetic field. When single-phase alternating current is supplied to the stator winding, shading provided to the poles elicits a phase shift#Phase_shift \"Phase (waves)\") in the motor’s magnetic field, causing it to rotate. This auxiliary single-turn winding is called a shading coil. Currents induced in this coil by the magnetic field [...] Since the phase angle between the shaded and unshaded sections is small, shaded-pole motors produce only a small starting torque relative to torque at full speed. Shaded-pole motors of the asymmetrical type shown are reversible only by disassembly and flipping over of the stator, though some similar-looking motors have small, switch-shortable auxiliary windings of thin wire instead of thick copper bars and can reverse electrically. Another method of electrical reversing involves four coils (two",
+            "score": 0.6679062,
+            "metadata": {
+              "url": "https://en.wikipedia.org/wiki/Shaded-pole_motor",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_9bf05140438a",
+            "chunk_id": "web_9bf05140438a_chunk_1b64fbce",
+            "title": "[PDF] SINGLE-PHASE MOTORS",
+            "content": "Around the small part of the pole is placed a short-circuited Cu coil known as shading coil. This part of the pole is known as shaded part and the other as unshaded part. When an alternating current is passed through the exciting (or field) winding surrounding the whole pole, the axis of the pole shifts from the unshaded part a to the shaded part b.\nThis shifting of the magnetic axis is, in effect, equivalent to the actual physical movement of the pole. [...] Shaded pole single phase motor 1384 Electrical Technology Fig. 36.35 (c) represents the condition when the exciting current is rapidly decreasing from B to C. This again sets up induced current in the shading coil by transformer action. This current will flow in such a direction as to oppose this decrease in exciting current, with the result that the flux is strengthened in the shaded part of the pole. Consequently, the magnetic axis shifts to the middle part of the shaded pole i.e. along NE. [...] 36.21. Hysteresis Motor The operation of this motor depends on the presence of a continuously-revolving magnetic flux. Hence, for the split-phase operation, its stator has two wind-ings which remain connected to the single-phase sup-ply continuously both at starting as well as during the running of the motor. Usually, shaded-pole principle is employed for this purpose giving shaded-pole hys-teresis motor. Alternatively, stator winding of the type used in capacitor-type motor may be used giving",
+            "score": 0.5759458,
+            "metadata": {
+              "url": "https://nit-edu.org/wp-content/uploads/2021/09/Ch-36-Single-phase-motors.pdf",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_f5fa995c9b66",
+            "chunk_id": "web_f5fa995c9b66_chunk_e0f6c951",
+            "title": "Shaded Pole Induction Motor Overview | PDF | Electric Motor | Electromagnetic Induction",
+            "content": "The shaded pole induction motor is a simple and economical single-phase induction motor that uses a copper ring or shading coil to generate a rotating magnetic field. It works by inducing a phase difference between the shaded and unshaded parts of each pole, causing the magnetic flux to rotate. Due to its simple design with no starting or capacitor windings, it is reliable and low-cost, making it suitable to drive small fans and appliances. However, its starting torque and efficiency are low.",
+            "score": 0.566798,
+            "metadata": {
+              "url": "https://www.scribd.com/document/557607570/shaded-pole-induction-motor",
+              "source_type": "web"
+            }
+          }
+        ],
+        "search_queries_used": [
+          "single circuit self starting motor architectures design principles",
+          "shaded pole motor design principles self starting single phase"
+        ],
+        "limitations": [
+          "Output format missing expected elements: findings_summary, claims, sources"
+        ]
+      },
+      "tokens_used": 6140,
+      "cost_usd": 0.004099,
+      "duration_ms": 40437.81,
+      "error_message": null,
+      "started_at": "2026-11-20T14:40:03.013577Z",
+      "completed_at": "2026-11-20T14:40:43.451395Z"
+    }
+  },
+  "authoritative_sources": {
+    "web_1556782f964c_chunk_f4e1357f": {
+      "source_id": "web_1556782f964c",
+      "chunk_id": "web_1556782f964c_chunk_f4e1357f",
+      "title": "The Secret Life of Nikola Tesla - Business Insider",
+      "content": "However, his did admit to dozing off sometimes to \"recharge his batteries.\" According to one report, he once worked for 84 hours without sleeping.\n\nIn February 1882, Tesla discovered the rotating magnetic field, which he used to construct the AC induction motor and polyphase system for the generation, transmission, distribution and use of electric power.\n\nSource: Tesla Society [...] Tesla wrote a classic paper in which he introduced the concept of his motors and electrical systems called \"A New System of Alternating Current Motors and Transformers,\" in 1888. It caught the attention of industrialist and inventor George Westinghouse, and they ended up partnering up to work on bringing electricity to the rest of the country.\n\nSource: Tesla Society [...] In 1891, Tesla developed an induction coil that produced high-frequency alternating currents, now known as the Tesla coil. He used it in experiments to produce electric lighting, X-rays, and wireless power, and it became the basis of radio and TV Today, the coils are mostly used in educational displays and entertainment.\n\nSource: PBS.org",
+      "score": 0.52506447,
+      "metadata": {
+        "url": "https://www.businessinsider.com/the-secret-life-of-nikola-tesla-2015-10",
+        "source_type": "web"
+      }
+    },
+    "web_e1bb1e3016b1_chunk_f4e1357f": {
+      "source_id": "web_e1bb1e3016b1",
+      "chunk_id": "web_e1bb1e3016b1_chunk_f4e1357f",
+      "title": "The Secret Life of Nikola Tesla - Business Insider",
+      "content": "However, his did admit to dozing off sometimes to \"recharge his batteries.\" According to one report, he once worked for 84 hours without sleeping.\n\nIn February 1882, Tesla discovered the rotating magnetic field, which he used to construct the AC induction motor and polyphase system for the generation, transmission, distribution and use of electric power.\n\nSource: Tesla Society [...] Tesla wrote a classic paper in which he introduced the concept of his motors and electrical systems called \"A New System of Alternating Current Motors and Transformers,\" in 1888. It caught the attention of industrialist and inventor George Westinghouse, and they ended up partnering up to work on bringing electricity to the rest of the country.\n\nSource: Tesla Society [...] In 1891, Tesla developed an induction coil that produced high-frequency alternating currents, now known as the Tesla coil. He used it in experiments to produce electric lighting, X-rays, and wireless power, and it became the basis of radio and TV Today, the coils are mostly used in educational displays and entertainment.\n\nSource: PBS.org",
+      "score": 0.52506447,
+      "metadata": {
+        "url": "http://www.businessinsider.com/the-secret-life-of-nikola-tesla-2015-10",
+        "source_type": "web"
+      }
+    },
+    "web_9ee9c1037438_chunk_361de12e": {
+      "source_id": "web_9ee9c1037438",
+      "chunk_id": "web_9ee9c1037438_chunk_361de12e",
+      "title": "Who Was Nikola Tesla? a Short Biography of the Inventor - Business Insider",
+      "content": "He used this principle to construct the AC induction motor and polyphase system for the generation, transmission, distribution and use of electric power.\n\nSource: Tesla Society\n\n## While Tesla was working in Thomas Edison’s lab in New Jersey, the two fought a 'war' with over the best form of electrical current. [...] Tesla wrote a classic paper called \"A New System of Alternating Current Motors and Transformers,\" in 1888, in which he introduced the concept of his motors and electrical systems. The work caught Westinghouse's attention, and they ended up partnering to work on bringing electricity to the rest of the country.\n\nTesla's AC-driven system remains the world standard for delivering electricity today.\n\nSource: Tesla Society",
+      "score": 0.49896148,
+      "metadata": {
+        "url": "http://www.businessinsider.com/nikola-tesla-inventor-biography-2017-7",
+        "source_type": "web"
+      }
+    },
+    "web_31df4f9a4ed4_chunk_814f5bb1": {
+      "source_id": "web_31df4f9a4ed4",
+      "chunk_id": "web_31df4f9a4ed4_chunk_814f5bb1",
+      "title": "Initial Tesla Polyphase / \"Three-Phase\" Alternating-Current Systems and Metering Development - Engineering and Technology History Wiki",
+      "content": "Philip Lange is also credited with developing much primary apparatus that led towards the perfection of the Tesla Polyphase System of electrical generation that was under the tutelage of chief electrician Oliver B. Shallenberger at Westinghouse in the late 1880's.\n\n### Applicable AC Patents by Lange, Byllesby, and Shallenberger used towards Polyphase Systems creation [...] The singular pivotal point for George Westinghouse in his development of a practical AC system occurred in July 1888, when George Westinghouse licensed Nikola Tesla's U.S. patents for a polyphase AC induction motor and related transformer designs. As well Tesla was hired for one year to be a consultant at the Westinghouse Electric & Manufacturing Company's Pittsburgh labs. Tesla's AC motor and transformer designs were integral to maintaining a secure position supporting George Westinghouse's [...] ### Introductory Development of Alternating-Current (AC) and Polyphase Electrical Systems\n\nBy the mid-1880s, initial European development spawned interest in what is known as alternating-current (AC) electrical power, where the power was produced from initially, a \"two-phase\" system of electrical production and distribution - and eventually of what became known as a \"three-phase\" or \"polyphase system\" of electrical generation and distribution.",
+      "score": 0.6302299,
+      "metadata": {
+        "url": "https://ethw.org/Initial_Tesla_Polyphase_/_%22Three-Phase%22_Alternating-Current_Systems_and_Metering_Development",
+        "source_type": "web"
+      }
+    },
+    "web_a4e12c5ebee8_chunk_41a04246": {
+      "source_id": "web_a4e12c5ebee8",
+      "chunk_id": "web_a4e12c5ebee8_chunk_41a04246",
+      "title": "Three-phase electric power - Wikipedia",
+      "content": "These alternators operated by creating systems of alternating currents displaced from one another in phase by definite amounts, and depended on rotating magnetic fields for their operation. The resulting source of polyphase power soon found widespread acceptance. The invention of the polyphase alternator is key in the history of electrification, as is the power transformer. These inventions enabled power to be transmitted by wires economically over considerable distances. Polyphase power [...] Transformer windings consist of either delta (often symbolised as 'Δ') or star (often symbolised as 'Y') configurations, per IEC 60050 terminology. The star arrangement is more commonly known as wye in the US.\n\n## History\n\n[edit]\n\nPolyphase power systems were independently invented by Galileo Ferraris, Mikhail Dolivo-Dobrovolsky, Jonas Wenström, John Hopkinson, William Stanley Jr., and Nikola Tesla in the late 1880s.",
+      "score": 0.6138733,
+      "metadata": {
+        "url": "https://en.wikipedia.org/wiki/Three-phase_electric_power",
+        "source_type": "web"
+      }
+    },
+    "web_72900334c06a_chunk_a5165b16": {
+      "source_id": "web_72900334c06a",
+      "chunk_id": "web_72900334c06a_chunk_a5165b16",
+      "title": "Why Three Phases? A Historical and Engineering Reassessment of Phase Order in AC Power Transmission",
+      "content": "Two-phase systems were commercially important. Westinghouse equipment\nfor the 1893 World’s Columbian Exposition and the Niagara Falls project\nbelonged to this period of genuine competition among polyphase\narchitectures . At Niagara, the initial generating\nunits were two-phase machines. IEEE historical documentation describes\n2200-V, 25-Hz two-phase generation and local two-phase distribution\n. This architecture could run polyphase motors and",
+      "score": 0.60498255,
+      "metadata": {
+        "url": "https://arxiv.org/html/2608.27325v1",
+        "source_type": "web"
+      }
+    },
+    "web_9bf05140438a_chunk_455d422c": {
+      "source_id": "web_9bf05140438a",
+      "chunk_id": "web_9bf05140438a_chunk_455d422c",
+      "title": "[PDF] SINGLE-PHASE MOTORS",
+      "content": "A remains in the starting winding circuit. In this way, both optimum starting and running performance is achieved in such motors. If properly designed, such motors have operating characteristics very closely resembling those displayed by two-phase motors. Their performance is characterised by 1. ability to start heavy loads 2. extremely quiet operation 3. higher efficiency and power factor 4. ability to develop 25 per cent overload capacity Hence, such motors are ideally suited where load [...] It is so arranged that the phase-difference between the currents in the two stator windings is very large (ideal value being 90º). Hence, the motor behaves like a two-phase motor. These two currents produce a revolving flux and hence make the motor self-starting.\nThere are many methods by which the necessary phase-difference between the two currents can be created. [...] Making Single-phase Induction Motor Self-starting As discussed above, a single-phase induction motor is not self-starting. To overcome this drawback and make the motor self-starting, it is temporarily converted into a two-phase motor during starting period. For this purpose, the stator of a single-phase motor is provided with an extra winding, known as starting (or auxiliary) winding, in addition to the main or running winding. The two windings are spaced 90º electrically apart and are",
+      "score": 0.47939703,
+      "metadata": {
+        "url": "https://nit-edu.org/wp-content/uploads/2021/09/Ch-36-Single-phase-motors.pdf",
+        "source_type": "web"
+      }
+    },
+    "web_e13151bad784_chunk_e265db0c": {
+      "source_id": "web_e13151bad784",
+      "chunk_id": "web_e13151bad784_chunk_e265db0c",
+      "title": "Single-Phase Induction Motor: Theory, Design, and Starters | Electronics | Wikiteka, Search and share notes, summaries, assignments, and exams from Secondary School, High School, University, and University Entrance Exams",
+      "content": "T1=T2  ⟹  Net Torque=0T\\_1 = T\\_2 \\implies Net\\ Torque = 0T1​=T2​⟹NetTorque=0\n\n No directional push → rotor doesn’t start on its own.\n\n### 3) Conclusion (0.5 Mark)\n\nStarter is essential to:\n\n1. Create initial phase difference\n2. Limit starting current\n3. Enable smooth starting of the motor\n\n## Q4. Resistance Split-Phase Starting Method (5 Marks)\n\n### 1) Introduction (1 Mark) [...] ## Q3. Need for Starting Mechanism in Single-Phase Induction Motor (5 Marks)\n\n### 1) Why Starter Is Needed (2 Marks)\n\n At start, slip = 1 → high induced EMF in rotor.\n Low rotor impedance → very high starting current (4 to 10 × full-load).\n Causes:\n\n  + Voltage drop\n  + Heating\n  + Poor power factor\n Starter limits current and ensures safe acceleration.\n\n### 2) Why It’s Not Self-Starting (2 Marks)\n\n Stator field is pulsating, not rotating.\n Produces two opposite torques (T₁ and T₂). [...] ### ⚙ 2) Direct-On-Line (DOL) Starter\n\nConstruction:\n\n Contactor\n Start (ON) and Stop (OFF) push buttons\n No-volt coil (NVC) or no-volt release\n Overload relay\n\nWorking Principle:\n\n When ON is pressed, NVC energizes → main contacts close → motor gets full line voltage.\n A holding contact keeps the circuit latched.\n If overload occurs → relay trips → NVC de-energizes → motor disconnects.\n OFF button breaks the circuit manually.\n\n### ⚡ 3) Rotor Resistance\n\nConstruction:",
+      "score": 0.46450678,
+      "metadata": {
+        "url": "https://en.wikiteka.com/document/single-phase-induction-motor-theory-design-starters",
+        "source_type": "web"
+      }
+    },
+    "web_23ab4805c4d2_chunk_c48a47c2": {
+      "source_id": "web_23ab4805c4d2",
+      "chunk_id": "web_23ab4805c4d2_chunk_c48a47c2",
+      "title": "Induction motor - Wikipedia",
+      "content": "In two-pole single-phase motors, the torque goes to zero at 100% slip (zero speed), so these require alterations to the stator such as shaded-poles to provide starting torque. A single phase induction motor requires separate starting circuitry to provide a rotating field to the motor. The normal running windings within such a single-phase motor can cause the rotor to turn in either direction, so the starting circuit determines the operating direction.\n\n.-47) [...] Although polyphase motors are inherently self-starting, their starting and pull-up torque design limits must be high enough to overcome actual load conditions.\n\nIn wound rotor motors, rotor circuit connection through slip rings to external resistances allows change of speed-torque characteristics for acceleration control and speed control purposes.\n\n#### Speed control\n\n[edit]\n\n##### Resistance\n\n[edit] [...] single-phase motors having two windings can be viewed as two-phase motors, since a capacitor is used to generate a second power phase 90° from the single-phase supply and feeds it to the second motor winding. Single-phase motors require some mechanism to produce a rotating field on startup. Induction motors using a squirrel-cage rotor winding may have the rotor bars skewed slightly to smooth out torque in each revolution.",
+      "score": 0.3339375,
+      "metadata": {
+        "url": "https://en.wikipedia.org/wiki/Induction_motor",
+        "source_type": "web"
+      }
+    },
+    "web_db41d76d96d8_chunk_176233e3": {
+      "source_id": "web_db41d76d96d8",
+      "chunk_id": "web_db41d76d96d8_chunk_176233e3",
+      "title": "Shaded-pole motor - Wikipedia",
+      "content": "The power output of shaded pole motors is usually very low. Because there is often no explicit starting mechanism, the rotor of a motor operating from a constant frequency mains supply must be very light so that it is capable of reaching running speed within one cycle of the mains frequency. A further development dispenses with the shading rings altogether. The application of power gives the magnetised rotor enough of a 'flick' to move it fast enough to establish synchronism. A mechanical means [...] A shaded-pole motor is a motor in which the auxiliary winding is composed of a copper ring or bar surrounding a portion of each pole to produce a weakly rotating magnetic field. When single-phase alternating current is supplied to the stator winding, shading provided to the poles elicits a phase shift#Phase_shift \"Phase (waves)\") in the motor’s magnetic field, causing it to rotate. This auxiliary single-turn winding is called a shading coil. Currents induced in this coil by the magnetic field [...] Since the phase angle between the shaded and unshaded sections is small, shaded-pole motors produce only a small starting torque relative to torque at full speed. Shaded-pole motors of the asymmetrical type shown are reversible only by disassembly and flipping over of the stator, though some similar-looking motors have small, switch-shortable auxiliary windings of thin wire instead of thick copper bars and can reverse electrically. Another method of electrical reversing involves four coils (two",
+      "score": 0.6679062,
+      "metadata": {
+        "url": "https://en.wikipedia.org/wiki/Shaded-pole_motor",
+        "source_type": "web"
+      }
+    },
+    "web_9bf05140438a_chunk_1b64fbce": {
+      "source_id": "web_9bf05140438a",
+      "chunk_id": "web_9bf05140438a_chunk_1b64fbce",
+      "title": "[PDF] SINGLE-PHASE MOTORS",
+      "content": "Around the small part of the pole is placed a short-circuited Cu coil known as shading coil. This part of the pole is known as shaded part and the other as unshaded part. When an alternating current is passed through the exciting (or field) winding surrounding the whole pole, the axis of the pole shifts from the unshaded part a to the shaded part b.\nThis shifting of the magnetic axis is, in effect, equivalent to the actual physical movement of the pole. [...] Shaded pole single phase motor 1384 Electrical Technology Fig. 36.35 (c) represents the condition when the exciting current is rapidly decreasing from B to C. This again sets up induced current in the shading coil by transformer action. This current will flow in such a direction as to oppose this decrease in exciting current, with the result that the flux is strengthened in the shaded part of the pole. Consequently, the magnetic axis shifts to the middle part of the shaded pole i.e. along NE. [...] 36.21. Hysteresis Motor The operation of this motor depends on the presence of a continuously-revolving magnetic flux. Hence, for the split-phase operation, its stator has two wind-ings which remain connected to the single-phase sup-ply continuously both at starting as well as during the running of the motor. Usually, shaded-pole principle is employed for this purpose giving shaded-pole hys-teresis motor. Alternatively, stator winding of the type used in capacitor-type motor may be used giving",
+      "score": 0.5759458,
+      "metadata": {
+        "url": "https://nit-edu.org/wp-content/uploads/2021/09/Ch-36-Single-phase-motors.pdf",
+        "source_type": "web"
+      }
+    },
+    "web_f5fa995c9b66_chunk_e0f6c951": {
+      "source_id": "web_f5fa995c9b66",
+      "chunk_id": "web_f5fa995c9b66_chunk_e0f6c951",
+      "title": "Shaded Pole Induction Motor Overview | PDF | Electric Motor | Electromagnetic Induction",
+      "content": "The shaded pole induction motor is a simple and economical single-phase induction motor that uses a copper ring or shading coil to generate a rotating magnetic field. It works by inducing a phase difference between the shaded and unshaded parts of each pole, causing the magnetic flux to rotate. Due to its simple design with no starting or capacitor windings, it is reliable and low-cost, making it suitable to drive small fans and appliances. However, its starting torque and efficiency are low.",
+      "score": 0.566798,
+      "metadata": {
+        "url": "https://www.scribd.com/document/557607570/shaded-pole-induction-motor",
+        "source_type": "web"
+      }
+    }
+  },
+  "used_tokens": 17021,
+  "used_cost_usd": 0.014214,
+  "elapsed_seconds": 121.381,
+  "final_report": {
+    "topic": "Evolution of Polyphase Systems and Single-Circuit Self-Starting Motor Architectures",
+    "title": "Evolution of Polyphase Systems and Single-Circuit Self-Starting Motor Architectures",
+    "executive_summary": {
+      "section_id": "sec_executive_summary",
+      "title": "Executive Summary",
+      "content": "Polyphase power systems and alternating-current motors emerged in the late 1880s through foundational developments by Nikola Tesla and contemporaries [cite_1, cite_2, cite_3]. While polyphase systems are inherently self-starting, single-phase and single-circuit motor architectures present a fundamental challenge because they produce a pulsating magnetic field instead of a revolving one [cite_4, cite_5]. Overcoming this barrier led to the evolution of split-phase auxiliary windings, capacitor-start mechanisms, and shaded-pole configurations that introduce phase displacement to generate net starting torque [cite_4, cite_6, cite_7].",
+      "claims": [
+        {
+          "claim_id": "claim_exec_1",
+          "section_id": "sec_executive_summary",
+          "text": "Polyphase power systems and alternating-current motors emerged in the late 1880s through foundational developments by Nikola Tesla and other inventors.",
+          "citations": [],
+          "is_factual": false
+        },
+        {
+          "claim_id": "claim_exec_2",
+          "section_id": "sec_executive_summary",
+          "text": "Single-phase electric motors operating from a single-circuit supply are not inherently self-starting because a primary stator winding produces a pulsating magnetic field rather than a revolving magnetic field.",
+          "citations": [],
+          "is_factual": false
+        },
+        {
+          "claim_id": "claim_exec_3",
+          "section_id": "sec_executive_summary",
+          "text": "Motor architectures such as auxiliary split-phase windings, capacitors, and shaded poles have evolved to introduce spatial and temporal phase displacement to create starting torque.",
+          "citations": [],
+          "is_factual": false
+        }
+      ]
+    },
+    "sections": [
+      {
+        "section_id": "sec_evolution_polyphase",
+        "title": "Evolution of Polyphase Systems",
+        "content": "In February 1882, Nikola Tesla discovered the rotating magnetic field, utilizing it to construct alternating current induction motors and polyphase systems for power generation, transmission, and distribution [cite_1]. In 1888, Tesla published his classic paper titled 'A New System of Alternating Current Motors and Transformers,' which caught the attention of industrialist George Westinghouse [cite_1, cite_3]. Westinghouse subsequently licensed Tesla's patents in July 1888 [cite_3]. By the mid-1880s, broader European and American developments spawned two-phase and three-phase polyphase systems that enabled economical power transmission over considerable distances [cite_3, cite_4].",
+        "claims": [
+          {
+            "claim_id": "claim_poly_1",
+            "section_id": "sec_evolution_polyphase",
+            "text": "In February 1882, Nikola Tesla discovered the rotating magnetic field, which he used to construct the AC induction motor and polyphase system for the generation, transmission, distribution, and use of electric power.",
+            "citations": [],
+            "is_factual": false
+          },
+          {
+            "claim_id": "claim_poly_2",
+            "section_id": "sec_evolution_polyphase",
+            "text": "George Westinghouse licensed Nikola Tesla's U.S. patents for a polyphase AC induction motor and related transformer designs in July 1888.",
+            "citations": [],
+            "is_factual": false
+          },
+          {
+            "claim_id": "claim_poly_3",
+            "section_id": "sec_evolution_polyphase",
+            "text": "Initial development of alternating-current power production and distribution evolved from initial two-phase systems into three-phase or polyphase systems.",
+            "citations": [],
+            "is_factual": false
+          }
+        ]
+      },
+      {
+        "section_id": "sec_single_phase_challenge",
+        "title": "Single-Circuit and Single-Phase Motor Challenges",
+        "content": "Unlike polyphase motors, which are inherently self-starting, single-phase induction motors operating from a single-circuit supply present a unique fundamental challenge because they are not inherently self-starting [cite_4, cite_5]. When single-phase alternating current flows through a primary stator winding, it produces a pulsating magnetic field rather than a revolving magnetic field [cite_4]. According to double-revolving field theory, this pulsating field creates two equal and opposite rotating torques at standstill, resulting in zero net starting torque [cite_4].",
+        "claims": [
+          {
+            "claim_id": "claim_chal_1",
+            "section_id": "sec_single_phase_challenge",
+            "text": "Single-phase electric motors operating from a single-circuit supply are not inherently self-starting.",
+            "citations": [],
+            "is_factual": false
+          },
+          {
+            "claim_id": "claim_chal_2",
+            "section_id": "sec_single_phase_challenge",
+            "text": "A single-phase alternating current flowing through a primary stator winding produces a pulsating magnetic field rather than a revolving magnetic field.",
+            "citations": [],
+            "is_factual": false
+          },
+          {
+            "claim_id": "claim_chal_3",
+            "section_id": "sec_single_phase_challenge",
+            "text": "At standstill with 100% slip, oppositely rotating fields produce equal and opposite torques, resulting in a net starting torque of zero.",
+            "citations": [],
+            "is_factual": false
+          }
+        ]
+      },
+      {
+        "section_id": "sec_architectures",
+        "title": "Architectural Solutions for Self-Starting Operation",
+        "content": "To overcome the lack of inherent self-starting capability, motor designs introduce spatial and temporal phase displacement. Auxiliary winding architectures incorporate a main winding and a starting winding spaced 90 degrees electrically apart [cite_4]. In resistance split-phase motors, the auxiliary winding features a high resistance-to-reactance ratio to create a phase difference between the currents in the two stator windings [cite_4]. As noted in technical literature, 'It is so arranged that the phase-difference between the currents in the two stator windings is very large (ideal value being 90º). Hence, the motor behaves like a two-phase motor. These two currents produce a revolving flux and hence make the motor self-starting' [cite_4]. Capacitor-start and capacitor-run architectures utilize capacitors in series with the auxiliary winding to further enhance phase displacement and starting performance [cite_4]. For ultra-low-power applications, shaded-pole motors utilize short-circuited copper shading coils around a portion of each pole face to induce phase-shifted currents via transformer action, creating a weakly rotating magnetic field [cite_6, cite_7].",
+        "claims": [
+          {
+            "claim_id": "claim_arch_1",
+            "section_id": "sec_architectures",
+            "text": "The stator of a single-phase motor is provided with a starting or auxiliary winding spaced 90 degrees electrically apart from the main running winding.",
+            "citations": [],
+            "is_factual": false
+          },
+          {
+            "claim_id": "claim_arch_2",
+            "section_id": "sec_architectures",
+            "text": "Resistance split-phase motors arrange the phase difference between currents in the two stator windings to approach 90 degrees so the motor behaves like a two-phase motor and produces a revolving flux.",
+            "citations": [],
+            "is_factual": false
+          },
+          {
+            "claim_id": "claim_arch_3",
+            "section_id": "sec_architectures",
+            "text": "Shaded-pole motors employ short-circuited copper rings or shading coils around a portion of each pole to induce currents that shift the magnetic axis and produce a weakly rotating magnetic field.",
+            "citations": [],
+            "is_factual": false
+          }
+        ]
+      }
+    ],
+    "conclusion": {
+      "section_id": "sec_conclusion",
+      "title": "Conclusion",
+      "content": "The evolution from macro-level polyphase generation systems pioneered by Nikola Tesla and George Westinghouse down to single-circuit, self-starting fractional horsepower motors highlights continuous engineering adaptation [cite_1, cite_3]. While polyphase architectures provide inherent self-starting and high efficiency for heavy industrial use [cite_4], single-circuit variants successfully employ split-phase auxiliary branches, capacitors, or electromagnetic shading coils to synthesize the necessary revolving magnetic fields for reliable self-starting operation [cite_4, cite_6, cite_7].",
+      "claims": [
+        {
+          "claim_id": "claim_conc_1",
+          "section_id": "sec_conclusion",
+          "text": "Polyphase electrical systems and motors provide inherent self-starting capabilities and robust performance for power generation and industrial distribution.",
+          "citations": [],
+          "is_factual": false
+        },
+        {
+          "claim_id": "claim_conc_2",
+          "section_id": "sec_conclusion",
+          "text": "Single-circuit motor architectures successfully synthesize revolving magnetic fields using auxiliary split-phase windings, capacitors, or shading coils.",
+          "citations": [],
+          "is_factual": false
+        }
+      ]
+    },
+    "limitations": [
+      "Worker brief brief_01 failed due to a 503 high demand error from the upstream model provider.",
+      "Analysis is restricted strictly to the provided knowledge base, omitting broader historical expansions outside the supplied evidence corpus.",
+      "Brief 'brief_01' research incomplete: 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+      "Verification advisory: Gate 2 semantic verification failed due to 7 major and 0 critical grounding defects (Grounding score: 1.00 >= threshold 0.70)."
+    ],
+    "version": 1,
+    "research_team_version": "1.0.0",
+    "brief_coverages": [
+      {
+        "brief_id": "brief_02",
+        "coverage_summary": "Successfully covered single-phase motor starting challenges, split-phase resistance winding principles, capacitor-start configurations, and shaded-pole electromagnetic induction mechanisms."
+      }
+    ],
+    "unresolved_limitations": [
+      "Worker brief_01 experienced a 503 service overload and could not be retrieved.",
+      "Brief 'brief_01' research incomplete: 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
+    ],
+    "created_by": "Lead Research Synthesizer",
+    "created_at": "2026-03-30T12:00:00Z"
+  },
+  "error_message": null,
+  "created_at": "2026-11-20T14:39:53.761374Z",
+  "updated_at": "2026-11-20T14:41:55.142598Z"
+}

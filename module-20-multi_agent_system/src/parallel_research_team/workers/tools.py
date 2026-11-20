@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
+import os
 from typing import Any
-from urllib.parse import unquote
 
 import httpx
-from bs4 import BeautifulSoup
 from genai_core.observability import get_logger
 from genai_core.retrieval.in_memory_store import InMemoryVectorStore
 from genai_core.retrieval.protocol import VectorStoreAdapter
@@ -77,83 +76,81 @@ def create_research_tool_registry(
     collector: EvidenceCollector,
     retrieval_service: RetrievalService | None = None,
     http_client: httpx.AsyncClient | None = None,
+    tavily_api_key: str | None = None,
 ) -> ToolRegistry:
     """Build a ToolRegistry with research tools bound to the active EvidenceCollector."""
     registry = ToolRegistry()
 
     async def search_web(query: str, max_results: int = 3) -> str:
-        """Search public web pages for documentation, articles, and technical updates."""
+        """Search public web pages for documentation, articles, and technical updates using Tavily."""
         collector.record_query(query)
-        if not query or not query.strip():
+        clean_query = query.strip()
+        if not clean_query:
             collector.record_error("Empty web search query submitted.")
             return "Error: Empty search query."
 
-        headers = {
-            "User-Agent": (
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-            ),
-        }
-        url = "https://html.duckduckgo.com/html/"
-        data = {"q": query.strip()}
+        api_key = tavily_api_key or os.getenv("TAVILY_API_KEY", "").strip()
+        if not api_key:
+            msg = "Tavily API key is not configured (TAVILY_API_KEY)."
+            collector.record_error(msg)
+            return f"Error: {msg}"
 
         try:
+            results: list[dict[str, Any]] = []
             if http_client is not None:
-                resp = await http_client.post(url, data=data, headers=headers, timeout=10.0)
+                resp = await http_client.post(
+                    "https://api.tavily.com/search",
+                    json={
+                        "api_key": api_key,
+                        "query": clean_query,
+                        "max_results": max_results,
+                        "search_depth": "basic",
+                        "include_answer": False,
+                    },
+                    timeout=15.0,
+                )
+                if resp.status_code != 200:
+                    msg = f"Tavily search service returned status {resp.status_code}."
+                    collector.record_error(msg)
+                    return msg
+                data = resp.json()
+                results = data.get("results", [])
             else:
-                async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
-                    resp = await client.post(url, data=data, headers=headers)
+                from tavily import AsyncTavilyClient
 
-            if resp.status_code != 200:
-                msg = f"Web search service returned status {resp.status_code}."
-                collector.record_error(msg)
-                return msg
-
-            soup = BeautifulSoup(resp.text, "html.parser")
-            results: list[dict[str, str]] = []
-
-            for result_elem in soup.find_all("div", class_="result", limit=max_results * 2):
-                title_elem = result_elem.find("a", class_="result__a")
-                snippet_elem = result_elem.find("a", class_="result__snippet")
-
-                if title_elem and snippet_elem:
-                    title = title_elem.get_text(strip=True)
-                    href_val = title_elem.get("href", "")
-                    raw_href = href_val if isinstance(href_val, str) else str(href_val or "")
-                    snippet = snippet_elem.get_text(strip=True)
-
-                    clean_url = raw_href
-                    if "uddg=" in raw_href:
-                        part = raw_href.split("uddg=")[-1].split("&")[0]
-                        clean_url = unquote(part)
-
-                    results.append({"title": title, "url": clean_url, "snippet": snippet})
-                    if len(results) >= max_results:
-                        break
+                client = AsyncTavilyClient(api_key=api_key)
+                data = await client.search(
+                    query=clean_query,
+                    max_results=max_results,
+                    search_depth="basic",
+                    include_answer=False,
+                )
+                results = data.get("results", [])
 
             if not results:
-                return f"No web search results found for query: '{query}'."
+                return f"No web search results found for query: '{clean_query}'."
 
             formatted: list[str] = []
             for item in results:
                 ref = collector.add_web_source(
-                    url=item["url"],
-                    title=item["title"],
-                    content=item["snippet"],
+                    url=item.get("url", ""),
+                    title=item.get("title", item.get("url", "")),
+                    content=item.get("content", ""),
+                    score=float(item.get("score", 1.0)),
                 )
                 formatted.append(
                     f"Source ID: {ref.source_id}\n"
                     f"Chunk ID: {ref.chunk_id}\n"
                     f"Title: {ref.title}\n"
-                    f"URL: {item['url']}\n"
+                    f"URL: {item.get('url', '')}\n"
                     f"Content: {ref.content}\n"
                 )
 
             return "\n---\n".join(formatted)
 
         except Exception as exc:  # noqa: BLE001
-            _logger.warning("Web search error: %s", exc)
-            collector.record_error(f"Web search error: {exc}")
+            _logger.warning("Tavily web search error: %s", exc)
+            collector.record_error(f"Tavily web search error: {exc}")
             return f"Web search could not be completed: {exc}"
 
     async def search_knowledge_base(query: str, top_k: int = 3) -> str:

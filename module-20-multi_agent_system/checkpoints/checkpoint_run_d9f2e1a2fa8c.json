@@ -1,0 +1,760 @@
+{
+  "run_id": "run_d9f2e1a2fa8c",
+  "user_id": "default_user",
+  "topic": "What is the main operational difference between Tesla’s synchronous motor and his torque motor?",
+  "status": "partially_completed",
+  "effort_level": "parallel_decomposed",
+  "decomposition": {
+    "topic": "What is the main operational difference between Tesla’s synchronous motor and his torque motor?",
+    "effort_level": "parallel_decomposed",
+    "rationale": "The question requires comparing two different types of AC motors invented or studied by Nikola Tesla, analyzing their operational principles, and synthesizing the distinctions.",
+    "worker_count": 2,
+    "worker_briefs": [
+      {
+        "brief_id": "brief_01",
+        "title": "Tesla Synchronous Motor Analysis",
+        "topic": "What is the main operational difference between Tesla’s synchronous motor and his torque motor?",
+        "objective": "Investigate the design, operational principles, and characteristics of Nikola Tesla's synchronous motor.",
+        "brief_type": "exploratory_deep_dive",
+        "worker_type": "deep_dive",
+        "depends_on": [],
+        "task_boundaries": [
+          "Focus strictly on synchronous motor principles, constant speed operation, and excitation methods.",
+          "Do NOT discuss torque motors, shaded pole motors, or induction motor torque curves."
+        ],
+        "expected_output_format": {
+          "schema_name": "WorkerResearchOutput",
+          "required_fields": [
+            "findings_summary",
+            "claims",
+            "sources"
+          ],
+          "guidelines": "Structured findings with claims and source citations"
+        },
+        "suggested_tools": [
+          "search_web",
+          "search_knowledge_base"
+        ],
+        "max_steps": 5,
+        "timeout_seconds": 45.0
+      },
+      {
+        "brief_id": "brief_02",
+        "title": "Tesla Torque Motor Analysis",
+        "topic": "What is the main operational difference between Tesla’s synchronous motor and his torque motor?",
+        "objective": "Investigate the design, operational principles, and characteristics of Nikola Tesla's torque motor.",
+        "brief_type": "exploratory_deep_dive",
+        "worker_type": "deep_dive",
+        "depends_on": [],
+        "task_boundaries": [
+          "Focus strictly on torque motor designs, high torque output at low speeds, and stall characteristics.",
+          "Do NOT discuss standard synchronous motor phase locking or constant speed mechanisms."
+        ],
+        "expected_output_format": {
+          "schema_name": "WorkerResearchOutput",
+          "required_fields": [
+            "findings_summary",
+            "claims",
+            "sources"
+          ],
+          "guidelines": "Structured findings with claims and source citations"
+        },
+        "suggested_tools": [
+          "search_web",
+          "search_knowledge_base"
+        ],
+        "max_steps": 5,
+        "timeout_seconds": 45.0
+      }
+    ],
+    "input_tokens": 623,
+    "output_tokens": 677
+  },
+  "worker_results": {
+    "brief_01": {
+      "brief_id": "brief_01",
+      "status": "failed",
+      "output": {
+        "brief_id": "brief_01",
+        "findings_summary": "No textual synthesis produced for brief 'Tesla Synchronous Motor Analysis'.",
+        "claims": [
+          {
+            "claim_id": "claim_brief_01_1",
+            "section_id": "sec_brief_01",
+            "text": "No textual synthesis produced for brief 'Tesla Synchronous Motor Analysis'.",
+            "citations": [
+              {
+                "citation_id": "cite_brief_01_1",
+                "source_id": "web_4ec0855cf49b",
+                "chunk_id": "web_4ec0855cf49b_chunk_5ded35fa",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.9
+              }
+            ],
+            "is_factual": true
+          }
+        ],
+        "sources": [
+          {
+            "source_id": "web_4ec0855cf49b",
+            "chunk_id": "web_4ec0855cf49b_chunk_5ded35fa",
+            "title": "Synchronous Motor | Synchronous Motor working principle animations | nikola tesla inventions",
+            "content": "rotor rotates by a fixed amount here the fixed amount is 360 degrees but it can vary depending on the construction of the motor therefore to control the speed of synchronous motor we have to change the frequency of the alternating current now when the motor has achieved synchronous speed then a DC current is passed through the field coils in order to strongly energize the field magnets this DC current will not increase the speed of rotation of the motor but it will increase the power which the [...] the green coil is maximum and the current in the red coil is zero therefore a magnetic field will be generated around the green coil the direction of this generated magnetic field is given by the right hand grip rule now this magnetic field will induce two opposite poles a map pull pieces of the field magnets now at time T equals T1 we can see that current in the green coil reduces and the current in the red coil increases so two magnetic fields will be generated here the resultant of these two [...] the Armature will continue to rotate in a clockwise Direction and it will continue to gain speed initially the speed of rotation of the Armature is very slow therefore the pole pieces of the field magnet are subjected to Rapid reversals of magnetic polarity but as the speed of rotation of the Armature increases these magnetic pole reversals become less and less frequent and finally cease when the rotation of the Armature becomes synchronous with the rotating magnetic field but in the opposite",
+            "score": 0.6725468,
+            "metadata": {
+              "url": "https://www.youtube.com/watch?v=kN-lYToNU5s",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_ade9dfa530c4",
+            "chunk_id": "web_ade9dfa530c4_chunk_b1674518",
+            "title": "[PDF] THEORY, CONSTRUCTION, AND OPERATION",
+            "content": "On the other hand, if the machine is overexcited, the new phasor diagram is represented by motor in Figure 1.24b. The active power consumed from the network under these conditions is given by Active power = V1 × I1 × cos ϕ1 (per phase) If the breaking torque is increased, a limit is reached in which the rotor cannot keep up with the revolving ﬁeld. The machine then stalls. This is known 28 PRINCIPLES OF OPERATION OF SYNCHRONOUS MACHINES as “falling out of step,” “pulling out of step,” or [...] If the ﬁeld excitation is increased over the value required to produce (E1), the stator currents generate a ﬂux that counteracts the ﬁeld-generated ﬂux. Under BASIC OPERATION OF THE SYNCHRONOUS MACHINE 27 this condition, the machine is said to be overexcited, shown as condition no load (b) in Figure 1.24. The machine is behaving as a leading condenser; that is, it is delivering reactive power to the network. [...] The rotating magnetic ﬁeld (also known as revolving-ﬁeld) synchronous machine has the ﬁeld-winding wound on the rotating member (the rotor), and the armature wound on the stationary member (the stator). A dc current, creating a magnetic ﬁeld that must be rotated at synchronous speed, energizes the rotating ﬁeld-winding. The rotating ﬁeld winding can be energized through a set of slip rings and brushes (external excitation), or from a diode-bridge mounted on the rotor (self-excited). The",
+            "score": 0.542227,
+            "metadata": {
+              "url": "https://geosci.uchicago.edu/~moyer/GEOS24705/Readings/Klempner_Ch1.pdf",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_7f0fbcd02f41",
+            "chunk_id": "web_7f0fbcd02f41_chunk_538a94a7",
+            "title": "Tesla Polyphase Induction Motors | AC Motors | Electronics Textbook",
+            "content": "Conversely, the drive frequency may be increased to increase the synchronous speed of the motor. However, the voltage needs to be increased to overcome increasing reactance to keep current up to a normal value and maintain torque.\n\nThe inverter approximates sine waves to the motor with pulse width modulation outputs. This is a chopped waveform which is either on or off, high or low, the percentage of “on” time corresponds to the instantaneous sine wave voltage. [...] This group is called a phase belt (see the figure below). The distributed coils of the phase belt cancel some of the odd harmonics, producing a more sinusoidal magnetic field distribution across the pole. This is shown in the synchronous motor section.\n\nThe slots at the edge of the pole may have fewer turns than the other slots. Edge slots may contain windings from two phases. That is, the phase belts overlap.\n\nphase belts overlap\n\nphase belts overlap [...] However, the slip between the rotor and the synchronous speed stator field develops torque. It is the magnetic flux cutting the rotor conductors as it slips which develops torque. Thus, a loaded motor will slip in proportion to the mechanical load.\n\nIf the rotor were to run at synchronous speed, there would be no stator flux cutting the rotor, no current induced in the rotor, no torque.\n\n### Torque in Induction Motors",
+            "score": 0.47143617,
+            "metadata": {
+              "url": "https://www.allaboutcircuits.com/textbook/alternating-current/chpt-13/tesla-polyphase-induction-motors",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_1cc76cae1eb4",
+            "chunk_id": "web_1cc76cae1eb4_chunk_6f12b43c",
+            "title": "TESLA.NU - En sida om Nikola Tesla, Teslaspolar och hgspnningsteknik",
+            "content": "can be run as synchronous motor; Prior, alternating current will not start it; Construct a generator with two coils or sets of coils and connect them with a motor of corresponding coils or sets of coils; By means of two line wires, the motor and generator in like fashion; Related to US 390413 (for means of starting); Will operate as a single-circuit synchronizing system. 25. U.S. Patent 0,406,968 - Dynamo Electric Machine - 1889 July 16 - Relates to class of machines referred to as \"Unipolar\" [...] or a spring to give action and lessen the action of the heat to restore the magnetic effect to move the body in the opposite direction. 22. U.S. Patent 0,401,520 - Method of Operating Electro Magnetic Motors - 1889 April 16 - Improvements to previous instances of synchronous motors; Previous instances of synchronous motors have not been started by the alternating current generators; New discovery of simple method or plan of operating such motors; Requires no other device other than the motor [...] to produce rotation or operation of the motor; simple way consists of two circuits; alternate way consists of one line that divides the alternating current in the motor circuit and effects an artificial lag in one of the circuit of branches (such as by a different induction capacity). 28. U.S. Patent 0,416,192 - Method of Operating Electro-Magnetic Motors - 1889 December 3 - Related to US401520; Alternative improvements to synchronous motors; Torque and synchronous actions in motors; different",
+            "score": 0.61346817,
+            "metadata": {
+              "url": "http://www.tesla.nu/nt_patents.asp",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_9e6977b19a0e",
+            "chunk_id": "web_9e6977b19a0e_chunk_31bdafd0",
+            "title": "How Tesla Reinvented The Electric Motor",
+            "content": "stator and that iron rotor will follow in sync with the rotation of the stator's magnetic field again there is one caveat we need to cut channels into the iron material that line up with the shape of the magnetic field that surrounds it this will align the magnetic reluctance of the iron core with the magnetic field of the stator and allow them to rotate in sync this is our synchronous reluctance motor it's a very efficient motor design and it works very well at high speed because there is no [...] play the rotor will demagnetize and slow down from the time this induction motor was first patented by Nicola Tesla 1888 to the present day AC motors have been a staple of industrial society we see them in everything from elevators and street cars to ceiling fans and washing machines anything that plugs into the electrical grid and Spins is more than likely to have an AC induction motor inside so when it came time for Elon Musk and his crew of Founders at Tesla Motors to choose a power source [...] we have this dense iron core filled with strips of a magnetic Rare Earth element called neodymium the technical name for this new motor type is IPM syrm that means internal permanent magnet synchronous reluctance motor it's complicated here's the scoop you could make a permanent magnet motor by taking a metal cylinder sticking four magnets to the outside with South poles on the top and bottom and North Poles on the sides that would be your rotor and then when you stick that inside the stator",
+            "score": 0.5061566,
+            "metadata": {
+              "url": "https://www.youtube.com/watch?v=T0869sx7CAg",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_64b7d71f50fb",
+            "chunk_id": "web_64b7d71f50fb_chunk_16469767",
+            "title": "Tesla's AC Motor: The Rotating Magnetic Field That Powers Modern Industry - Kronecker Wallis",
+            "content": "Tesla documented his motor invention across multiple patents filed in 1887-1888, creating a comprehensive intellectual property portfolio that Westinghouse purchased for $60,000 plus royalties. These patents covered not just the motor itself but the entire polyphase AC power system: generators, transformers, transmission lines, and motors working together as an integrated system. [...] Reading Tesla’s original patent documents provides insight into his systematic approach to invention. He didn’t just create a motor; he envisioned and documented a complete power distribution system that would replace DC infrastructure. His patents describe multiple motor configurations, different numbers of phases, various rotor designs, and applications from industrial machinery to railway propulsion. [...] Wind turbines use induction generators (essentially motors running in reverse) to convert mechanical rotation into electrical power. The same principles Tesla identified operate in reverse: the turbine spins the rotor faster than the rotating magnetic field, causing it to generate electricity rather than consume it. As renewable energy expands globally, Tesla’s motor technology becomes ever more relevant.\n\n## Tesla’s Patents: Documenting a Revolution",
+            "score": 0.5016966,
+            "metadata": {
+              "url": "https://www.kroneckerwallis.com/tesla-ac-motor-the-rotating-magnetic-field-that-powers-modern-industry",
+              "source_type": "web"
+            }
+          }
+        ],
+        "search_queries_used": [
+          "Nikola Tesla synchronous motor design operational principles excitation",
+          "Nikola Tesla synchronous motor patents principles"
+        ],
+        "limitations": [
+          "503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later."
+        ]
+      },
+      "tokens_used": 2279,
+      "cost_usd": 0.000785,
+      "duration_ms": 41414.75,
+      "error_message": "503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+      "started_at": "2026-11-20T14:16:06.026346Z",
+      "completed_at": "2026-11-20T14:16:47.441103Z"
+    },
+    "brief_02": {
+      "brief_id": "brief_02",
+      "status": "timeout",
+      "output": {
+        "brief_id": "brief_02",
+        "findings_summary": "Execution interrupted (timeout): Worker timed out after 45.0s.",
+        "claims": [
+          {
+            "claim_id": "claim_brief_02_1",
+            "section_id": "sec_brief_02",
+            "text": "Execution interrupted (timeout): Worker timed out after 45.0s.",
+            "citations": [
+              {
+                "citation_id": "cite_brief_02_1",
+                "source_id": "THE PRODUCTION READY GENAI",
+                "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0035",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.9
+              }
+            ],
+            "is_factual": true
+          }
+        ],
+        "sources": [
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0035",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "What does Field(ge=0.0, le=1.0) do in a Pydantic model?\\nSets a default value ·  1.\\nConstrains the field's value to be between 0.0 and 1.0 inclusive ·  1.\\nMakes the field optional ·  1.\\nConverts the field to a string ·  1.\\nAnswer: b\\n16. What's the correct way to run CPU-bound Python work in true parallel?\\nasyncio.gather ·  1.\\nconcurrent.futures.ProcessPoolExecutor (multiprocessing) ·  1.\\ntime.sleep ·  1.\\nThreading always works fine for this ·  1.\\nAnswer: b\\n17. Why re-use a single httpx.AsyncClient instance across many requests instead of creating a new one per call?\\nIt's required by httpx ·  1.\\nConnection pooling avoids the overhead of re-establishing connections each time ·  1.\\nIt has no real effect ·  1.\\nIt reduces token usage ·  1.\\nAnswer: b\\n18. What does Literal[\"positive\", \"negative\", \"neutral\"] enforce in a Pydantic model?\\nA string of any value ·  1.\\nThat the field's value must be exactly one of the specified literal strings ·  1.\\nA default value ·  1.\\nNothing, it's just documentation ·  1.\\nAnswer: b\\n19. In an exponential backoff retry strategy, what typically happens between attempts?\\nThe wait time stays constant ·  1.\\nThe wait time increases (e.g., doubles) with each subsequent attempt ·  1.\\nThe wait time decreases ·  1.\\nThere is no wait time ·  1.\\nAnswer: b\\n20.",
+            "score": 0.162528,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0059",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "·\\nThe prompt implicitly pressures the model to produce an answer even when it doesn't have reliable information (e.g., 'What page is this quote from?' when the model was never shown page numbers). ·\\nThe task requires precise structured recall (exact citations, exact numbers) rather than gist-level understanding. ·\\nWhat genuinely mitigates hallucination in production: grounding the model in retrieved, verifiable source material (RAG, Module 9) , explicitly instructing the model that it's acceptable to say 'I don't know' , and evaluation/verification steps (Module 22, Module 19's Reflection) - not simply 'asking the model to be more careful,' which has limited effect on its own.\\nCost and Latency Engineering\\nThree levers dominate production cost and latency:\\nModel choice - larger/more capable models cost more per token and are typically slower; smaller/faster models cost less and respond faster but may need more careful prompting or fall back to a larger model for hard cases (a pattern covered in Module 21's model routing). 1.\\nInput token count - every token in your prompt (including retrieved context, conversation history, and system instructions) is billed and adds to processing time. 2.\\nOutput token count - output generation is inherently sequential (Module 3's 'next-token prediction' mechanics), so longer outputs take proportionally longer and cost proportionally more; max_tokens and prompt instructions that constrain output length are real latency levers, not just cost levers. 3.\\nArchitecture\\nExamples\\nGood Example: Reasoning Correctly About Context\\nAn engineer building a customer-support assistant retrieves the 5 most relevant knowledge-base articles (via Module 9's RAG techniques) for each query, rather than stuffing all 4,000 articles into a giant context window - respecting both cost and the 'lost in the middle' effect, and keeping responses fast and accurate.\\nBad Example: Misusing Context as a Database\\nA team dumps an entire 300-page product manual into the context window on every request 'since the model has a big context window now,' resulting in slow, expensive requests where the model frequently misses details buried in the middle of the document - a direct, avoidable consequence of the positional effects covered in this module's Theory section.\\nEnterprise Example\\nA legal-tech company's contract-review assistant was confidently citing clause numbers that didn't exist in the uploaded contract.",
+            "score": 0.140722,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0038",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "·\\nUnbounded concurrency - firing off asyncio.gather on 10,000 items at once against an API with strict rate limits, causing a wall of 429 errors instead of the intended speedup. Always bound concurrency with a Semaphore or batching. ·\\nTreating all LLM errors identically - retrying every failure blindly, including ones (like content filter blocks or invalid API keys) that will never succeed on retry, wasting time and sometimes money. ·\\nSkipping tests for async code because 'it's harder to test' - in practice, pytestasyncio and standard mocking patterns make this straightforward, and skipping it here creates fragile foundations for every later module. ·\\nOver-relying on notebooks for this module's exercises, missing the muscle memory of proper module/package structure that Module 2 builds on directly. ·\\nChecklist\\nComfortable writing async def functions and using await\\nCan explain when asyncio.gather helps and when it doesn't (I/O vs CPU-bound)\\nBuilt Pydantic models with field validation and custom validators\\nImplemented a generator and an async generator for streaming\\nBuilt and used a custom exception hierarchy for API errors\\nMini project (Concurrent Multi-Provider LLM Client) complete and tested\\nAt least 5 passing pytest tests with mocked external calls\\nMCQ score ≥ 80%\\nPractical test attempted and self-scored honestly\\nMODULE 2 - SOFTWARE ENGINEERING FUNDAMENTALS\\nIntroduction\\nModule 1 gave you the Python-specific muscles for AI engineering. Module 2 zooms out to the software engineering discipline that wraps around all of it: how to structure a real project, how to test it, how to review and version it, and how to keep it maintainable as it grows past a single script. This is the last 'pure backend' module before Module 3 introduces LLMs directly - treat it as the foundation everything from Module 5 onward is built on.\\nWhy This Topic Matters\\nThe gap between 'a script that works on my machine' and 'a service a team can maintain' is almost entirely software engineering discipline, not AI knowledge.",
+            "score": 0.140539,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "web_dc637c410e17",
+            "chunk_id": "web_dc637c410e17_chunk_a9351fe9",
+            "title": "Induction Motor Invention: From Tesla’s Legacy to 2026 Tech",
+            "content": "The short answer is that the polyphase induction motor was primarily invented by Nikola Tesla, who filed his seminal patents in 1888, though the Italian physicist Galileo Ferraris independently demonstrated the concept of a rotating magnetic field (RMF) shortly before. Tesla’s design won out because it was a complete system—an AC polyphase ecosystem that allowed for the efficient transmission of power and the conversion of that power into mechanical torque without the need for friction-heavy, [...] Design B: The standard \"Tesla\" legacy motor. It has normal starting torque and low starting current. It is the \"general purpose\" motor for 80% of industrial applications.\n Design C: High starting torque, used for loaded conveyors or reciprocating pumps. These motors have a \"double-cage\" rotor design, which adds complexity to vibration analysis.\n Design D: Very high slip and high starting torque, used for high-inertia loads like flywheels or punch presses. [...] In this design, the rotor has actual windings connected to external resistors via slip rings. This allows for high starting torque with low starting current.\n\n Best for: Large crushers, mill drives, or heavy-duty cranes.\n Maintenance Profile: High. You have reintroduced the very thing Tesla tried to eliminate: brushes and slip rings. These require monthly inspections for carbon dust buildup and \"filming\" of the rings.",
+            "score": 0.5574238,
+            "metadata": {
+              "url": "https://f7i.ai/blog/the-induction-motor-invention-how-a-19th-century-breakthrough-dictates-21st-century-reliability",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_23ab4805c4d2",
+            "chunk_id": "web_23ab4805c4d2_chunk_92904840",
+            "title": "Induction motor - Wikipedia",
+            "content": "The first AC commutator-free polyphase induction motors were independently invented by Galileo Ferraris and Nikola Tesla, a working motor model having been demonstrated by the former in 1885 and by the latter in 1887. Tesla applied for US patents in October and November 1887 and was granted some of these patents in May 1888. In April 1888, the Royal Academy of Science of Turin published Ferraris's research on his AC polyphase motor detailing the foundations of motor operation.-6)-15) In May [...] George Westinghouse, who was developing an alternating current power system at that time, licensed Tesla's patents in 1888 and purchased a US patent option on Ferraris' induction motor concept. Tesla was also employed for one year as a consultant. Westinghouse employee C. F. Scott \"Charles F. Scott (engineer)\") was assigned to assist Tesla and later took over development of the induction motor at Westinghouse.-16)-23)-24) Steadfast in his promotion of three-phase development, Mikhail [...] Polyphase motors have rotor bars shaped to give different speed-torque characteristics. The current distribution within the rotor bars varies depending on the frequency of the induced current. At standstill, the rotor current is the same frequency as the stator current, and tends to travel at the outermost parts of the cage rotor bars (by skin effect). The different bar shapes can give usefully different speed-torque characteristics as well as some control over the inrush current at startup.",
+            "score": 0.49453375,
+            "metadata": {
+              "url": "https://en.wikipedia.org/wiki/Induction_motor",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_b7d0de432b14",
+            "chunk_id": "web_b7d0de432b14_chunk_ebcffa73",
+            "title": "US7741750B1 - Induction motor with improved torque density - Google Patents",
+            "content": "1spans\n\n5spans\n\n1702along the middle of the air-gap.\n\n1704and flux density across the\n\n1706.\n\n1710and flux density across the\n\n1708.\n\n1707,\n\n1710through the stator and rotor slots is shown to be under 0.3 Tesla in this example, as indicated by the minimum pulses of the non-smooth pulsed curves of\n\n1802,\n\n1804, current\n\n1806and\n\n1808over a speed range, for embodiments of the present subject matter. [...] - the saturation level of the several central teeth of a particular pole is similarly high, unlike the conventional motor which has a more sinusoidal gradient.\n- the saturation level of most or all the teeth of a particular pole is deep, and the saturation level of the outside teeth is less than that of the central teeth.\n- each of the teeth 1101 - 1116 and 1181 - 1190 are at or above approximately 1.5 Tesla.\n- the saturation level is above 2.0 Tesla. [...] - the present induction motors disclosed here provide high torque capability over a wide speed range. They provide this improvement without undesired increases in size and weight.\n- Some of the motors disclosed here are able to produce short duration peak torque at 5 or more times that of continuous running torque.\n- the level of the continuous running torque is generally limited by the ability of the motor to cool, as well as the efficiency of the motor.",
+            "score": 0.45416957,
+            "metadata": {
+              "url": "https://patents.google.com/patent/US7741750B1/en",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_18da03d7ad88",
+            "chunk_id": "web_18da03d7ad88_chunk_a0d38f46",
+            "title": "US511916A - Nikola tesla - Google Patents",
+            "content": "WW/LGOOGO fhweutoz we umloxu. umcmm wm co: AAAAAA v,\n\nUNITED STATES PATENT OFFICE.\n\nNIKOLA TESLA, OF NEIV YORK, N. Y.\n\nELECTRIC G EN ERATO R.\n\nSPECIFICATION forming part of Letters Patent No. 511,916, dated January 2, 1894.\n\nApplication filed August 19,1893. Serial No. 483,562. (No model.)\n\nTo all whont it may concern.- [...] ' In case the power of the engine be comparatively small, as when the pressure is applied through a very small fraction of the total stroke, the electrical vibration will tend to control the period, and it is clear that if the character of such vibration be not very widely different from the average period of vibration of the engine under ordinary working conditions such control may be entirely adequate to produce the desired results. [...] ## Landscapes\n\n Engineering & Computer Science (AREA)\n Power Engineering (AREA)\n Compressors, Vaccum Pumps And Other Relevant Systems (AREA)\n\n## Description\n\n(No Model.) 2 Sheets-Sheet 1.\n\nN. TESLA.\n\nELECTRIC GENERATOR.\n\nNo. 511,916. Patented Jan. 2,1894.\n\nF IE TWO 1 (I! K .M I M HI l P 7 0 V H 7H? JV G A i E E a I c lxhmeom I I awqmboz' W M M NNNNNNNNNNNNN mouum counmv.\n\nwAwm'rou. 0. c4\n\n(No Model.) 2 Sheets-Sheet 2.\n\n11.1mm. ELECTRIC GENERATOR.\n\nNo. 511,916. Patented Jan. 2,1894.",
+            "score": 0.46584308,
+            "metadata": {
+              "url": "https://patents.google.com/patent/US511916A/en",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_27e19ac50d72",
+            "chunk_id": "web_27e19ac50d72_chunk_d28c4e86",
+            "title": "List of Nikola Tesla patents - Wikipedia",
+            "content": "4. U.S. patent 511,915 - Electrical Transmission of Power - 1894 January 2 - Method of operating electro-magnetic motors; Passing alternating currents through one of the energizing circuits and inducing by such current in the other energizing circuit or circuits of the motor. [...] 5. U.S. patent 511,916 - Electric Generator - 1894 January 2 - Combination with the piston or equivalent element of an engine which is free to reciprocate under the action thereon of steam or a gas under pressure, of the moving conductor or element of an electric generator in direct mechanical connection; Engine and generator being adjusted by their relative adjustment with respect to period to produce currents of constant period; Electric generator having inducing or induced elements one of [...] 2. U.S. patent 511,559 - Electrical Transmission of Power - 1893 December 26 - Method of operating motors having independent energizing circuits; Passing alternating currents through circuits and retarding the phases of the current in one circuit to a greater extent; Directing alternating currents from a single source through both circuits of a motor and varying or modifying the relative resistance or self-induction of motor circuits, producing in currents differences in phases.",
+            "score": 0.44676623,
+            "metadata": {
+              "url": "https://en.wikipedia.org/wiki/List_of_Nikola_Tesla_patents",
+              "source_type": "web"
+            }
+          },
+          {
+            "source_id": "web_4ec44359cdf3",
+            "chunk_id": "web_4ec44359cdf3_chunk_fca2f373",
+            "title": "Inventions & patents - The Nikola Tesla association | Genius for the future",
+            "content": "Applications in 1888\n\nUS Patent 390,413 System of Electrical Distribution\n\nUS Patent 390,414 Dynamo-Electric Machine\n\nUS Patent 390,820 Regulator for Alternate-Current Motors\n\nUS Patent 390,721 Dynamo-Electric Machine\n\nUS Patent 487,796 System of Electrical Transmissal of Power\n\nUS Patent 555,190 Alternating Motor\n\nUS Patent 511,915 Electrical Transmission of Power\n\nUS Patent 524,426 Electromagnetic Motor\n\nUS Patent 390,415 Dynamo-Electric Machine or Motor [...] US Patent 464,667 Electrical Condenser\n\nUS Patent 464,666 Electro-Magnetic Motor\n\nApplications in 1892\n\nUS Patent 514,167 Electrical Conductor\n\nUS Patent 514,972 Electric-Railway System\n\nUS Patent 514,170 Incandescent Electric Light\n\nApplications in 1893\n\nUS Patent 514,168 Means for Generating Electric Currents\n\nUS Patent 512,340 Coil for Electro-Magnets\n\nUS Patent 511,916 Electric Generator\n\nUS Patent 514,169 Reciprocating Engine\n\nUS Patent 514,973 Electrical Meter [...] US Patent 511,559 Electrical Transmission of Power\n\nUS Patent 511,560 System of Electrical Power Transmission\n\nApplications in 1889\n\nUS Patent 405,858 Electro-Magnetic Motor\n\nUS Patent 401,520 Method of Operating Electro-Magnetic Motors\n\nUS Patent 405,859 Method of Electrical Power Transmission\n\nUS Patent 406,968 Dynamo-Electric Machine\n\nUS Patent 459,772 Electro-Magnetic Motor\n\nUS Patent 416,191 Electro-Magnetic Motor\n\nUS Patent 416,192 Method of Operating Electro-Magnetic Motors",
+            "score": 0.37182066,
+            "metadata": {
+              "url": "https://www.unt-genius.hr/EN/inventions---patents.html",
+              "source_type": "web"
+            }
+          }
+        ],
+        "search_queries_used": [
+          "Tesla torque motor design high torque low speed stall characteristics",
+          "Nikola Tesla torque motor induction motor high torque low speed stall characteristics patents",
+          "Tesla US Patent 511,916 electrical transmission of power torque motor"
+        ],
+        "limitations": [
+          "Worker timed out after 45.0s."
+        ]
+      },
+      "tokens_used": 6204,
+      "cost_usd": 0.002055,
+      "duration_ms": 45004.43,
+      "error_message": "Worker timed out after 45.0s.",
+      "started_at": "2026-11-20T14:16:06.039494Z",
+      "completed_at": "2026-11-20T14:16:51.043935Z"
+    }
+  },
+  "authoritative_sources": {
+    "web_4ec0855cf49b_chunk_5ded35fa": {
+      "source_id": "web_4ec0855cf49b",
+      "chunk_id": "web_4ec0855cf49b_chunk_5ded35fa",
+      "title": "Synchronous Motor | Synchronous Motor working principle animations | nikola tesla inventions",
+      "content": "rotor rotates by a fixed amount here the fixed amount is 360 degrees but it can vary depending on the construction of the motor therefore to control the speed of synchronous motor we have to change the frequency of the alternating current now when the motor has achieved synchronous speed then a DC current is passed through the field coils in order to strongly energize the field magnets this DC current will not increase the speed of rotation of the motor but it will increase the power which the [...] the green coil is maximum and the current in the red coil is zero therefore a magnetic field will be generated around the green coil the direction of this generated magnetic field is given by the right hand grip rule now this magnetic field will induce two opposite poles a map pull pieces of the field magnets now at time T equals T1 we can see that current in the green coil reduces and the current in the red coil increases so two magnetic fields will be generated here the resultant of these two [...] the Armature will continue to rotate in a clockwise Direction and it will continue to gain speed initially the speed of rotation of the Armature is very slow therefore the pole pieces of the field magnet are subjected to Rapid reversals of magnetic polarity but as the speed of rotation of the Armature increases these magnetic pole reversals become less and less frequent and finally cease when the rotation of the Armature becomes synchronous with the rotating magnetic field but in the opposite",
+      "score": 0.6725468,
+      "metadata": {
+        "url": "https://www.youtube.com/watch?v=kN-lYToNU5s",
+        "source_type": "web"
+      }
+    },
+    "web_ade9dfa530c4_chunk_b1674518": {
+      "source_id": "web_ade9dfa530c4",
+      "chunk_id": "web_ade9dfa530c4_chunk_b1674518",
+      "title": "[PDF] THEORY, CONSTRUCTION, AND OPERATION",
+      "content": "On the other hand, if the machine is overexcited, the new phasor diagram is represented by motor in Figure 1.24b. The active power consumed from the network under these conditions is given by Active power = V1 × I1 × cos ϕ1 (per phase) If the breaking torque is increased, a limit is reached in which the rotor cannot keep up with the revolving ﬁeld. The machine then stalls. This is known 28 PRINCIPLES OF OPERATION OF SYNCHRONOUS MACHINES as “falling out of step,” “pulling out of step,” or [...] If the ﬁeld excitation is increased over the value required to produce (E1), the stator currents generate a ﬂux that counteracts the ﬁeld-generated ﬂux. Under BASIC OPERATION OF THE SYNCHRONOUS MACHINE 27 this condition, the machine is said to be overexcited, shown as condition no load (b) in Figure 1.24. The machine is behaving as a leading condenser; that is, it is delivering reactive power to the network. [...] The rotating magnetic ﬁeld (also known as revolving-ﬁeld) synchronous machine has the ﬁeld-winding wound on the rotating member (the rotor), and the armature wound on the stationary member (the stator). A dc current, creating a magnetic ﬁeld that must be rotated at synchronous speed, energizes the rotating ﬁeld-winding. The rotating ﬁeld winding can be energized through a set of slip rings and brushes (external excitation), or from a diode-bridge mounted on the rotor (self-excited). The",
+      "score": 0.542227,
+      "metadata": {
+        "url": "https://geosci.uchicago.edu/~moyer/GEOS24705/Readings/Klempner_Ch1.pdf",
+        "source_type": "web"
+      }
+    },
+    "web_7f0fbcd02f41_chunk_538a94a7": {
+      "source_id": "web_7f0fbcd02f41",
+      "chunk_id": "web_7f0fbcd02f41_chunk_538a94a7",
+      "title": "Tesla Polyphase Induction Motors | AC Motors | Electronics Textbook",
+      "content": "Conversely, the drive frequency may be increased to increase the synchronous speed of the motor. However, the voltage needs to be increased to overcome increasing reactance to keep current up to a normal value and maintain torque.\n\nThe inverter approximates sine waves to the motor with pulse width modulation outputs. This is a chopped waveform which is either on or off, high or low, the percentage of “on” time corresponds to the instantaneous sine wave voltage. [...] This group is called a phase belt (see the figure below). The distributed coils of the phase belt cancel some of the odd harmonics, producing a more sinusoidal magnetic field distribution across the pole. This is shown in the synchronous motor section.\n\nThe slots at the edge of the pole may have fewer turns than the other slots. Edge slots may contain windings from two phases. That is, the phase belts overlap.\n\nphase belts overlap\n\nphase belts overlap [...] However, the slip between the rotor and the synchronous speed stator field develops torque. It is the magnetic flux cutting the rotor conductors as it slips which develops torque. Thus, a loaded motor will slip in proportion to the mechanical load.\n\nIf the rotor were to run at synchronous speed, there would be no stator flux cutting the rotor, no current induced in the rotor, no torque.\n\n### Torque in Induction Motors",
+      "score": 0.47143617,
+      "metadata": {
+        "url": "https://www.allaboutcircuits.com/textbook/alternating-current/chpt-13/tesla-polyphase-induction-motors",
+        "source_type": "web"
+      }
+    },
+    "web_1cc76cae1eb4_chunk_6f12b43c": {
+      "source_id": "web_1cc76cae1eb4",
+      "chunk_id": "web_1cc76cae1eb4_chunk_6f12b43c",
+      "title": "TESLA.NU - En sida om Nikola Tesla, Teslaspolar och hgspnningsteknik",
+      "content": "can be run as synchronous motor; Prior, alternating current will not start it; Construct a generator with two coils or sets of coils and connect them with a motor of corresponding coils or sets of coils; By means of two line wires, the motor and generator in like fashion; Related to US 390413 (for means of starting); Will operate as a single-circuit synchronizing system. 25. U.S. Patent 0,406,968 - Dynamo Electric Machine - 1889 July 16 - Relates to class of machines referred to as \"Unipolar\" [...] or a spring to give action and lessen the action of the heat to restore the magnetic effect to move the body in the opposite direction. 22. U.S. Patent 0,401,520 - Method of Operating Electro Magnetic Motors - 1889 April 16 - Improvements to previous instances of synchronous motors; Previous instances of synchronous motors have not been started by the alternating current generators; New discovery of simple method or plan of operating such motors; Requires no other device other than the motor [...] to produce rotation or operation of the motor; simple way consists of two circuits; alternate way consists of one line that divides the alternating current in the motor circuit and effects an artificial lag in one of the circuit of branches (such as by a different induction capacity). 28. U.S. Patent 0,416,192 - Method of Operating Electro-Magnetic Motors - 1889 December 3 - Related to US401520; Alternative improvements to synchronous motors; Torque and synchronous actions in motors; different",
+      "score": 0.61346817,
+      "metadata": {
+        "url": "http://www.tesla.nu/nt_patents.asp",
+        "source_type": "web"
+      }
+    },
+    "web_9e6977b19a0e_chunk_31bdafd0": {
+      "source_id": "web_9e6977b19a0e",
+      "chunk_id": "web_9e6977b19a0e_chunk_31bdafd0",
+      "title": "How Tesla Reinvented The Electric Motor",
+      "content": "stator and that iron rotor will follow in sync with the rotation of the stator's magnetic field again there is one caveat we need to cut channels into the iron material that line up with the shape of the magnetic field that surrounds it this will align the magnetic reluctance of the iron core with the magnetic field of the stator and allow them to rotate in sync this is our synchronous reluctance motor it's a very efficient motor design and it works very well at high speed because there is no [...] play the rotor will demagnetize and slow down from the time this induction motor was first patented by Nicola Tesla 1888 to the present day AC motors have been a staple of industrial society we see them in everything from elevators and street cars to ceiling fans and washing machines anything that plugs into the electrical grid and Spins is more than likely to have an AC induction motor inside so when it came time for Elon Musk and his crew of Founders at Tesla Motors to choose a power source [...] we have this dense iron core filled with strips of a magnetic Rare Earth element called neodymium the technical name for this new motor type is IPM syrm that means internal permanent magnet synchronous reluctance motor it's complicated here's the scoop you could make a permanent magnet motor by taking a metal cylinder sticking four magnets to the outside with South poles on the top and bottom and North Poles on the sides that would be your rotor and then when you stick that inside the stator",
+      "score": 0.5061566,
+      "metadata": {
+        "url": "https://www.youtube.com/watch?v=T0869sx7CAg",
+        "source_type": "web"
+      }
+    },
+    "web_64b7d71f50fb_chunk_16469767": {
+      "source_id": "web_64b7d71f50fb",
+      "chunk_id": "web_64b7d71f50fb_chunk_16469767",
+      "title": "Tesla's AC Motor: The Rotating Magnetic Field That Powers Modern Industry - Kronecker Wallis",
+      "content": "Tesla documented his motor invention across multiple patents filed in 1887-1888, creating a comprehensive intellectual property portfolio that Westinghouse purchased for $60,000 plus royalties. These patents covered not just the motor itself but the entire polyphase AC power system: generators, transformers, transmission lines, and motors working together as an integrated system. [...] Reading Tesla’s original patent documents provides insight into his systematic approach to invention. He didn’t just create a motor; he envisioned and documented a complete power distribution system that would replace DC infrastructure. His patents describe multiple motor configurations, different numbers of phases, various rotor designs, and applications from industrial machinery to railway propulsion. [...] Wind turbines use induction generators (essentially motors running in reverse) to convert mechanical rotation into electrical power. The same principles Tesla identified operate in reverse: the turbine spins the rotor faster than the rotating magnetic field, causing it to generate electricity rather than consume it. As renewable energy expands globally, Tesla’s motor technology becomes ever more relevant.\n\n## Tesla’s Patents: Documenting a Revolution",
+      "score": 0.5016966,
+      "metadata": {
+        "url": "https://www.kroneckerwallis.com/tesla-ac-motor-the-rotating-magnetic-field-that-powers-modern-industry",
+        "source_type": "web"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0035": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0035",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "What does Field(ge=0.0, le=1.0) do in a Pydantic model?\\nSets a default value ·  1.\\nConstrains the field's value to be between 0.0 and 1.0 inclusive ·  1.\\nMakes the field optional ·  1.\\nConverts the field to a string ·  1.\\nAnswer: b\\n16. What's the correct way to run CPU-bound Python work in true parallel?\\nasyncio.gather ·  1.\\nconcurrent.futures.ProcessPoolExecutor (multiprocessing) ·  1.\\ntime.sleep ·  1.\\nThreading always works fine for this ·  1.\\nAnswer: b\\n17. Why re-use a single httpx.AsyncClient instance across many requests instead of creating a new one per call?\\nIt's required by httpx ·  1.\\nConnection pooling avoids the overhead of re-establishing connections each time ·  1.\\nIt has no real effect ·  1.\\nIt reduces token usage ·  1.\\nAnswer: b\\n18. What does Literal[\"positive\", \"negative\", \"neutral\"] enforce in a Pydantic model?\\nA string of any value ·  1.\\nThat the field's value must be exactly one of the specified literal strings ·  1.\\nA default value ·  1.\\nNothing, it's just documentation ·  1.\\nAnswer: b\\n19. In an exponential backoff retry strategy, what typically happens between attempts?\\nThe wait time stays constant ·  1.\\nThe wait time increases (e.g., doubles) with each subsequent attempt ·  1.\\nThe wait time decreases ·  1.\\nThere is no wait time ·  1.\\nAnswer: b\\n20.",
+      "score": 0.162528,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0059": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0059",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "·\\nThe prompt implicitly pressures the model to produce an answer even when it doesn't have reliable information (e.g., 'What page is this quote from?' when the model was never shown page numbers). ·\\nThe task requires precise structured recall (exact citations, exact numbers) rather than gist-level understanding. ·\\nWhat genuinely mitigates hallucination in production: grounding the model in retrieved, verifiable source material (RAG, Module 9) , explicitly instructing the model that it's acceptable to say 'I don't know' , and evaluation/verification steps (Module 22, Module 19's Reflection) - not simply 'asking the model to be more careful,' which has limited effect on its own.\\nCost and Latency Engineering\\nThree levers dominate production cost and latency:\\nModel choice - larger/more capable models cost more per token and are typically slower; smaller/faster models cost less and respond faster but may need more careful prompting or fall back to a larger model for hard cases (a pattern covered in Module 21's model routing). 1.\\nInput token count - every token in your prompt (including retrieved context, conversation history, and system instructions) is billed and adds to processing time. 2.\\nOutput token count - output generation is inherently sequential (Module 3's 'next-token prediction' mechanics), so longer outputs take proportionally longer and cost proportionally more; max_tokens and prompt instructions that constrain output length are real latency levers, not just cost levers. 3.\\nArchitecture\\nExamples\\nGood Example: Reasoning Correctly About Context\\nAn engineer building a customer-support assistant retrieves the 5 most relevant knowledge-base articles (via Module 9's RAG techniques) for each query, rather than stuffing all 4,000 articles into a giant context window - respecting both cost and the 'lost in the middle' effect, and keeping responses fast and accurate.\\nBad Example: Misusing Context as a Database\\nA team dumps an entire 300-page product manual into the context window on every request 'since the model has a big context window now,' resulting in slow, expensive requests where the model frequently misses details buried in the middle of the document - a direct, avoidable consequence of the positional effects covered in this module's Theory section.\\nEnterprise Example\\nA legal-tech company's contract-review assistant was confidently citing clause numbers that didn't exist in the uploaded contract.",
+      "score": 0.140722,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0038": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0038",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "·\\nUnbounded concurrency - firing off asyncio.gather on 10,000 items at once against an API with strict rate limits, causing a wall of 429 errors instead of the intended speedup. Always bound concurrency with a Semaphore or batching. ·\\nTreating all LLM errors identically - retrying every failure blindly, including ones (like content filter blocks or invalid API keys) that will never succeed on retry, wasting time and sometimes money. ·\\nSkipping tests for async code because 'it's harder to test' - in practice, pytestasyncio and standard mocking patterns make this straightforward, and skipping it here creates fragile foundations for every later module. ·\\nOver-relying on notebooks for this module's exercises, missing the muscle memory of proper module/package structure that Module 2 builds on directly. ·\\nChecklist\\nComfortable writing async def functions and using await\\nCan explain when asyncio.gather helps and when it doesn't (I/O vs CPU-bound)\\nBuilt Pydantic models with field validation and custom validators\\nImplemented a generator and an async generator for streaming\\nBuilt and used a custom exception hierarchy for API errors\\nMini project (Concurrent Multi-Provider LLM Client) complete and tested\\nAt least 5 passing pytest tests with mocked external calls\\nMCQ score ≥ 80%\\nPractical test attempted and self-scored honestly\\nMODULE 2 - SOFTWARE ENGINEERING FUNDAMENTALS\\nIntroduction\\nModule 1 gave you the Python-specific muscles for AI engineering. Module 2 zooms out to the software engineering discipline that wraps around all of it: how to structure a real project, how to test it, how to review and version it, and how to keep it maintainable as it grows past a single script. This is the last 'pure backend' module before Module 3 introduces LLMs directly - treat it as the foundation everything from Module 5 onward is built on.\\nWhy This Topic Matters\\nThe gap between 'a script that works on my machine' and 'a service a team can maintain' is almost entirely software engineering discipline, not AI knowledge.",
+      "score": 0.140539,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "web_dc637c410e17_chunk_a9351fe9": {
+      "source_id": "web_dc637c410e17",
+      "chunk_id": "web_dc637c410e17_chunk_a9351fe9",
+      "title": "Induction Motor Invention: From Tesla’s Legacy to 2026 Tech",
+      "content": "The short answer is that the polyphase induction motor was primarily invented by Nikola Tesla, who filed his seminal patents in 1888, though the Italian physicist Galileo Ferraris independently demonstrated the concept of a rotating magnetic field (RMF) shortly before. Tesla’s design won out because it was a complete system—an AC polyphase ecosystem that allowed for the efficient transmission of power and the conversion of that power into mechanical torque without the need for friction-heavy, [...] Design B: The standard \"Tesla\" legacy motor. It has normal starting torque and low starting current. It is the \"general purpose\" motor for 80% of industrial applications.\n Design C: High starting torque, used for loaded conveyors or reciprocating pumps. These motors have a \"double-cage\" rotor design, which adds complexity to vibration analysis.\n Design D: Very high slip and high starting torque, used for high-inertia loads like flywheels or punch presses. [...] In this design, the rotor has actual windings connected to external resistors via slip rings. This allows for high starting torque with low starting current.\n\n Best for: Large crushers, mill drives, or heavy-duty cranes.\n Maintenance Profile: High. You have reintroduced the very thing Tesla tried to eliminate: brushes and slip rings. These require monthly inspections for carbon dust buildup and \"filming\" of the rings.",
+      "score": 0.5574238,
+      "metadata": {
+        "url": "https://f7i.ai/blog/the-induction-motor-invention-how-a-19th-century-breakthrough-dictates-21st-century-reliability",
+        "source_type": "web"
+      }
+    },
+    "web_23ab4805c4d2_chunk_92904840": {
+      "source_id": "web_23ab4805c4d2",
+      "chunk_id": "web_23ab4805c4d2_chunk_92904840",
+      "title": "Induction motor - Wikipedia",
+      "content": "The first AC commutator-free polyphase induction motors were independently invented by Galileo Ferraris and Nikola Tesla, a working motor model having been demonstrated by the former in 1885 and by the latter in 1887. Tesla applied for US patents in October and November 1887 and was granted some of these patents in May 1888. In April 1888, the Royal Academy of Science of Turin published Ferraris's research on his AC polyphase motor detailing the foundations of motor operation.-6)-15) In May [...] George Westinghouse, who was developing an alternating current power system at that time, licensed Tesla's patents in 1888 and purchased a US patent option on Ferraris' induction motor concept. Tesla was also employed for one year as a consultant. Westinghouse employee C. F. Scott \"Charles F. Scott (engineer)\") was assigned to assist Tesla and later took over development of the induction motor at Westinghouse.-16)-23)-24) Steadfast in his promotion of three-phase development, Mikhail [...] Polyphase motors have rotor bars shaped to give different speed-torque characteristics. The current distribution within the rotor bars varies depending on the frequency of the induced current. At standstill, the rotor current is the same frequency as the stator current, and tends to travel at the outermost parts of the cage rotor bars (by skin effect). The different bar shapes can give usefully different speed-torque characteristics as well as some control over the inrush current at startup.",
+      "score": 0.49453375,
+      "metadata": {
+        "url": "https://en.wikipedia.org/wiki/Induction_motor",
+        "source_type": "web"
+      }
+    },
+    "web_b7d0de432b14_chunk_ebcffa73": {
+      "source_id": "web_b7d0de432b14",
+      "chunk_id": "web_b7d0de432b14_chunk_ebcffa73",
+      "title": "US7741750B1 - Induction motor with improved torque density - Google Patents",
+      "content": "1spans\n\n5spans\n\n1702along the middle of the air-gap.\n\n1704and flux density across the\n\n1706.\n\n1710and flux density across the\n\n1708.\n\n1707,\n\n1710through the stator and rotor slots is shown to be under 0.3 Tesla in this example, as indicated by the minimum pulses of the non-smooth pulsed curves of\n\n1802,\n\n1804, current\n\n1806and\n\n1808over a speed range, for embodiments of the present subject matter. [...] - the saturation level of the several central teeth of a particular pole is similarly high, unlike the conventional motor which has a more sinusoidal gradient.\n- the saturation level of most or all the teeth of a particular pole is deep, and the saturation level of the outside teeth is less than that of the central teeth.\n- each of the teeth 1101 - 1116 and 1181 - 1190 are at or above approximately 1.5 Tesla.\n- the saturation level is above 2.0 Tesla. [...] - the present induction motors disclosed here provide high torque capability over a wide speed range. They provide this improvement without undesired increases in size and weight.\n- Some of the motors disclosed here are able to produce short duration peak torque at 5 or more times that of continuous running torque.\n- the level of the continuous running torque is generally limited by the ability of the motor to cool, as well as the efficiency of the motor.",
+      "score": 0.45416957,
+      "metadata": {
+        "url": "https://patents.google.com/patent/US7741750B1/en",
+        "source_type": "web"
+      }
+    },
+    "web_18da03d7ad88_chunk_a0d38f46": {
+      "source_id": "web_18da03d7ad88",
+      "chunk_id": "web_18da03d7ad88_chunk_a0d38f46",
+      "title": "US511916A - Nikola tesla - Google Patents",
+      "content": "WW/LGOOGO fhweutoz we umloxu. umcmm wm co: AAAAAA v,\n\nUNITED STATES PATENT OFFICE.\n\nNIKOLA TESLA, OF NEIV YORK, N. Y.\n\nELECTRIC G EN ERATO R.\n\nSPECIFICATION forming part of Letters Patent No. 511,916, dated January 2, 1894.\n\nApplication filed August 19,1893. Serial No. 483,562. (No model.)\n\nTo all whont it may concern.- [...] ' In case the power of the engine be comparatively small, as when the pressure is applied through a very small fraction of the total stroke, the electrical vibration will tend to control the period, and it is clear that if the character of such vibration be not very widely different from the average period of vibration of the engine under ordinary working conditions such control may be entirely adequate to produce the desired results. [...] ## Landscapes\n\n Engineering & Computer Science (AREA)\n Power Engineering (AREA)\n Compressors, Vaccum Pumps And Other Relevant Systems (AREA)\n\n## Description\n\n(No Model.) 2 Sheets-Sheet 1.\n\nN. TESLA.\n\nELECTRIC GENERATOR.\n\nNo. 511,916. Patented Jan. 2,1894.\n\nF IE TWO 1 (I! K .M I M HI l P 7 0 V H 7H? JV G A i E E a I c lxhmeom I I awqmboz' W M M NNNNNNNNNNNNN mouum counmv.\n\nwAwm'rou. 0. c4\n\n(No Model.) 2 Sheets-Sheet 2.\n\n11.1mm. ELECTRIC GENERATOR.\n\nNo. 511,916. Patented Jan. 2,1894.",
+      "score": 0.46584308,
+      "metadata": {
+        "url": "https://patents.google.com/patent/US511916A/en",
+        "source_type": "web"
+      }
+    },
+    "web_27e19ac50d72_chunk_d28c4e86": {
+      "source_id": "web_27e19ac50d72",
+      "chunk_id": "web_27e19ac50d72_chunk_d28c4e86",
+      "title": "List of Nikola Tesla patents - Wikipedia",
+      "content": "4. U.S. patent 511,915 - Electrical Transmission of Power - 1894 January 2 - Method of operating electro-magnetic motors; Passing alternating currents through one of the energizing circuits and inducing by such current in the other energizing circuit or circuits of the motor. [...] 5. U.S. patent 511,916 - Electric Generator - 1894 January 2 - Combination with the piston or equivalent element of an engine which is free to reciprocate under the action thereon of steam or a gas under pressure, of the moving conductor or element of an electric generator in direct mechanical connection; Engine and generator being adjusted by their relative adjustment with respect to period to produce currents of constant period; Electric generator having inducing or induced elements one of [...] 2. U.S. patent 511,559 - Electrical Transmission of Power - 1893 December 26 - Method of operating motors having independent energizing circuits; Passing alternating currents through circuits and retarding the phases of the current in one circuit to a greater extent; Directing alternating currents from a single source through both circuits of a motor and varying or modifying the relative resistance or self-induction of motor circuits, producing in currents differences in phases.",
+      "score": 0.44676623,
+      "metadata": {
+        "url": "https://en.wikipedia.org/wiki/List_of_Nikola_Tesla_patents",
+        "source_type": "web"
+      }
+    },
+    "web_4ec44359cdf3_chunk_fca2f373": {
+      "source_id": "web_4ec44359cdf3",
+      "chunk_id": "web_4ec44359cdf3_chunk_fca2f373",
+      "title": "Inventions & patents - The Nikola Tesla association | Genius for the future",
+      "content": "Applications in 1888\n\nUS Patent 390,413 System of Electrical Distribution\n\nUS Patent 390,414 Dynamo-Electric Machine\n\nUS Patent 390,820 Regulator for Alternate-Current Motors\n\nUS Patent 390,721 Dynamo-Electric Machine\n\nUS Patent 487,796 System of Electrical Transmissal of Power\n\nUS Patent 555,190 Alternating Motor\n\nUS Patent 511,915 Electrical Transmission of Power\n\nUS Patent 524,426 Electromagnetic Motor\n\nUS Patent 390,415 Dynamo-Electric Machine or Motor [...] US Patent 464,667 Electrical Condenser\n\nUS Patent 464,666 Electro-Magnetic Motor\n\nApplications in 1892\n\nUS Patent 514,167 Electrical Conductor\n\nUS Patent 514,972 Electric-Railway System\n\nUS Patent 514,170 Incandescent Electric Light\n\nApplications in 1893\n\nUS Patent 514,168 Means for Generating Electric Currents\n\nUS Patent 512,340 Coil for Electro-Magnets\n\nUS Patent 511,916 Electric Generator\n\nUS Patent 514,169 Reciprocating Engine\n\nUS Patent 514,973 Electrical Meter [...] US Patent 511,559 Electrical Transmission of Power\n\nUS Patent 511,560 System of Electrical Power Transmission\n\nApplications in 1889\n\nUS Patent 405,858 Electro-Magnetic Motor\n\nUS Patent 401,520 Method of Operating Electro-Magnetic Motors\n\nUS Patent 405,859 Method of Electrical Power Transmission\n\nUS Patent 406,968 Dynamo-Electric Machine\n\nUS Patent 459,772 Electro-Magnetic Motor\n\nUS Patent 416,191 Electro-Magnetic Motor\n\nUS Patent 416,192 Method of Operating Electro-Magnetic Motors",
+      "score": 0.37182066,
+      "metadata": {
+        "url": "https://www.unt-genius.hr/EN/inventions---patents.html",
+        "source_type": "web"
+      }
+    }
+  },
+  "used_tokens": 31781,
+  "used_cost_usd": 0.024314,
+  "elapsed_seconds": 510.589,
+  "final_report": {
+    "topic": "What is the main operational difference between Tesla’s synchronous motor and his torque motor?",
+    "title": "Operational Differences Between Tesla’s Synchronous and Torque Motors",
+    "executive_summary": {
+      "section_id": "sec_executive_summary",
+      "title": "Executive Summary",
+      "content": "Nikola Tesla's pioneering work in alternating current machinery encompassed multiple motor topologies designed for distinct operational demands. While synchronous motors operate by locking the rotor in step with the rotating magnetic field of the stator once synchronous speed is attained [cite_1], torque and induction action rely on relative motion, or slip, between the stator field and the rotor conductors to induce current and generate mechanical torque [cite_2]. Worker briefs brief_01 and brief_02 failed or timed out during parallel execution, leaving historical patent nuances as the primary evidence pool [cite_3].",
+      "claims": [
+        {
+          "claim_id": "claim_exec_1",
+          "section_id": "sec_executive_summary",
+          "text": "Synchronous motors operate by locking the rotor in step with the rotating magnetic field of the stator once synchronous speed is attained.",
+          "citations": [
+            {
+              "citation_id": "cite_1",
+              "source_id": "web_4ec0855cf49b",
+              "chunk_id": "web_4ec0855cf49b_chunk_5ded35fa",
+              "citation_type": "paraphrase",
+              "quoted_passage": null,
+              "confidence": 0.95
+            }
+          ],
+          "is_factual": true
+        },
+        {
+          "claim_id": "claim_exec_2",
+          "section_id": "sec_executive_summary",
+          "text": "Torque and induction action rely on relative motion, or slip, between the stator field and the rotor conductors to induce current and generate mechanical torque.",
+          "citations": [
+            {
+              "citation_id": "cite_2",
+              "source_id": "web_7f0fbcd02f41",
+              "chunk_id": "web_7f0fbcd02f41_chunk_538a94a7",
+              "citation_type": "paraphrase",
+              "quoted_passage": null,
+              "confidence": 0.95
+            }
+          ],
+          "is_factual": true
+        },
+        {
+          "claim_id": "claim_exec_3",
+          "section_id": "sec_executive_summary",
+          "text": "Worker briefs brief_01 and brief_02 failed or timed out during parallel execution.",
+          "citations": [
+            {
+              "citation_id": "cite_3",
+              "source_id": "THE PRODUCTION READY GENAI",
+              "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0038",
+              "citation_type": "paraphrase",
+              "quoted_passage": null,
+              "confidence": 0.9
+            }
+          ],
+          "is_factual": true
+        }
+      ]
+    },
+    "sections": [
+      {
+        "section_id": "sec_operational_principles",
+        "title": "Operational Principles of Synchronous Motors",
+        "content": "Tesla's synchronous motor designs require the rotor to match the rotational speed of the stator's magnetic field [cite_4]. As documented in historical descriptions, \"the Armature will continue to rotate in a clockwise Direction and it will continue to gain speed initially the speed of rotation of the Armature is very slow... and finally cease when the rotation of the Armature becomes synchronous with the rotating magnetic field\" [cite_5]. Once synchronous speed is achieved, direct current is typically passed through field coils to strongly energize the field magnets [cite_6].",
+        "claims": [
+          {
+            "claim_id": "claim_op_1",
+            "section_id": "sec_operational_principles",
+            "text": "Tesla's synchronous motor designs require the rotor to match the rotational speed of the stator's magnetic field.",
+            "citations": [
+              {
+                "citation_id": "cite_4",
+                "source_id": "web_4ec0855cf49b",
+                "chunk_id": "web_4ec0855cf49b_chunk_5ded35fa",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.95
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_op_2",
+            "section_id": "sec_operational_principles",
+            "text": "The armature continues to gain speed until rotation becomes synchronous with the rotating magnetic field.",
+            "citations": [
+              {
+                "citation_id": "cite_5",
+                "source_id": "web_4ec0855cf49b",
+                "chunk_id": "web_4ec0855cf49b_chunk_5ded35fa",
+                "citation_type": "quotation",
+                "quoted_passage": "the Armature will continue to rotate in a clockwise Direction and it will continue to gain speed initially the speed of rotation of the Armature is very slow therefore the pole pieces of the field magnet are subjected to Rapid reversals of magnetic polarity but as the speed of rotation of the Armature increases these magnetic pole reversals become less and less frequent and finally cease when the rotation of the Armature becomes synchronous with the rotating magnetic field",
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_op_3",
+            "section_id": "sec_operational_principles",
+            "text": "Once synchronous speed is achieved, direct current is passed through field coils to strongly energize the field magnets.",
+            "citations": [
+              {
+                "citation_id": "cite_6",
+                "source_id": "web_4ec0855cf49b",
+                "chunk_id": "web_4ec0855cf49b_chunk_5ded35fa",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.95
+              }
+            ],
+            "is_factual": true
+          }
+        ]
+      },
+      {
+        "section_id": "sec_torque_induction",
+        "title": "Torque and Induction Action",
+        "content": "In contrast to strictly synchronous operation, torque and induction motor variants rely on slip to generate rotational force [cite_7]. As noted in technical analyses, \"the slip between the rotor and the synchronous speed stator field develops torque. It is the magnetic flux cutting the rotor conductors as it slips which develops torque\" [cite_8]. Consequently, if a rotor were to run perfectly at synchronous speed without slip, no stator flux would cut the rotor, preventing current induction and torque production [cite_9].",
+        "claims": [
+          {
+            "claim_id": "claim_tq_1",
+            "section_id": "sec_torque_induction",
+            "text": "Torque and induction motor variants rely on slip to generate rotational force.",
+            "citations": [
+              {
+                "citation_id": "cite_7",
+                "source_id": "web_7f0fbcd02f41",
+                "chunk_id": "web_7f0fbcd02f41_chunk_538a94a7",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.95
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_tq_2",
+            "section_id": "sec_torque_induction",
+            "text": "The slip between the rotor and the synchronous speed stator field develops torque through magnetic flux cutting the rotor conductors.",
+            "citations": [
+              {
+                "citation_id": "cite_8",
+                "source_id": "web_7f0fbcd02f41",
+                "chunk_id": "web_7f0fbcd02f41_chunk_538a94a7",
+                "citation_type": "quotation",
+                "quoted_passage": "the slip between the rotor and the synchronous speed stator field develops torque. It is the magnetic flux cutting the rotor conductors as it slips which develops torque.",
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_tq_3",
+            "section_id": "sec_torque_induction",
+            "text": "If a rotor runs at synchronous speed, there is no stator flux cutting the rotor and no torque is produced.",
+            "citations": [
+              {
+                "citation_id": "cite_9",
+                "source_id": "web_7f0fbcd02f41",
+                "chunk_id": "web_7f0fbcd02f41_chunk_538a94a7",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.95
+              }
+            ],
+            "is_factual": true
+          }
+        ]
+      }
+    ],
+    "conclusion": {
+      "section_id": "sec_conclusion",
+      "title": "Conclusion",
+      "content": "The primary operational difference lies in the requirement for speed synchronization versus relative slip [cite_10]. Synchronous motors maintain a rigid lock between the rotor and the rotating magnetic field [cite_11], whereas torque and induction designs depend on continuous slip where flux cuts rotor conductors to maintain mechanical output [cite_12].",
+      "claims": [
+        {
+          "claim_id": "claim_conc_1",
+          "section_id": "sec_conclusion",
+          "text": "The primary operational difference lies in the requirement for speed synchronization versus relative slip.",
+          "citations": [
+            {
+              "citation_id": "cite_10",
+              "source_id": "web_1cc76cae1eb4",
+              "chunk_id": "web_1cc76cae1eb4_chunk_6f12b43c",
+              "citation_type": "paraphrase",
+              "quoted_passage": null,
+              "confidence": 0.9
+            }
+          ],
+          "is_factual": true
+        },
+        {
+          "claim_id": "claim_conc_2",
+          "section_id": "sec_conclusion",
+          "text": "Synchronous motors maintain a rigid lock between the rotor and the rotating magnetic field.",
+          "citations": [
+            {
+              "citation_id": "cite_11",
+              "source_id": "web_4ec0855cf49b",
+              "chunk_id": "web_4ec0855cf49b_chunk_5ded35fa",
+              "citation_type": "paraphrase",
+              "quoted_passage": null,
+              "confidence": 0.95
+            }
+          ],
+          "is_factual": true
+        },
+        {
+          "claim_id": "claim_conc_3",
+          "section_id": "sec_conclusion",
+          "text": "Torque and induction designs depend on continuous slip where flux cuts rotor conductors to maintain mechanical output.",
+          "citations": [
+            {
+              "citation_id": "cite_12",
+              "source_id": "web_7f0fbcd02f41",
+              "chunk_id": "web_7f0fbcd02f41_chunk_538a94a7",
+              "citation_type": "paraphrase",
+              "quoted_passage": null,
+              "confidence": 0.95
+            }
+          ],
+          "is_factual": true
+        }
+      ]
+    },
+    "limitations": [
+      "Worker brief brief_01 failed due to a 503 high demand error.",
+      "Worker brief brief_02 timed out after 45 seconds.",
+      "Brief 'brief_01' research incomplete: 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+      "Brief 'brief_02' research incomplete: Worker timed out after 45.0s.",
+      "Verification advisory: Gate 2 semantic verification failed (Grounding score: 0.88 < threshold 0.70)."
+    ],
+    "version": 2,
+    "research_team_version": "1.0.0",
+    "brief_coverages": [
+      {
+        "brief_id": "brief_01",
+        "coverage_summary": "Failed due to high demand error."
+      },
+      {
+        "brief_id": "brief_02",
+        "coverage_summary": "Timed out during execution."
+      }
+    ],
+    "unresolved_limitations": [
+      "Complete reliance on fallback evidence pool due to parallel worker failures.",
+      "Brief 'brief_01' research incomplete: 503: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+      "Brief 'brief_02' research incomplete: Worker timed out after 45.0s."
+    ],
+    "created_by": "Lead Research Synthesizer",
+    "created_at": "2026-03-30T00:00:00Z"
+  },
+  "error_message": null,
+  "created_at": "2026-11-20T14:15:55.699934Z",
+  "updated_at": "2026-11-20T14:24:26.288986Z"
+}

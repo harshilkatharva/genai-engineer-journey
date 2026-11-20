@@ -225,3 +225,25 @@ This document records all significant architectural, technical, and structural d
   - Consecutive Failure Circuit Breaker: If tools return 3 consecutive errors, unavailabilities (such as web search returning status 202), or empty results, workers must immediately stop tool calling and synthesize with accumulated evidence.
   - Mandatory Textual Synthesis: Workers must conclude tool loops by producing a structured textual synthesis conforming to the schema before their step limit is reached.
 - **Consequences:** Eliminates endless retry loops on unavailable tools (such as rate-limited web searches) while preserving thorough evidence collection when productive sources are active, allowing workers to complete with `WorkerStatus.COMPLETED`.
+
+---
+
+## [2026-11-20] DEC-20-024: Migration from DuckDuckGo Web Scraping to Tavily Search SDK
+
+- **Status:** Accepted
+- **Context:** Automated web scraping via DuckDuckGo HTML (`https://html.duckduckgo.com/html/`) frequently triggered HTTP 202 rate-limiting and anti-bot challenges during automated multi-agent research runs. This caused web searches to fail, leaving the `AuthoritativeSourcePool` empty and producing citation integrity verification failures.
+- **Decision:** Replaced DuckDuckGo with Tavily Search API (`tavily-python` SDK and REST endpoint) in `src/parallel_research_team/workers/tools.py`. Added `tavily_api_key` to `ResearchTeamConfig` reading from `TAVILY_API_KEY` in `.env`. Maintained dual execution support: `AsyncTavilyClient` for live runs and mockable HTTP POST endpoint for unit testing.
+- **Consequences:** Provides fast, reliable, structured web search results with rich snippets, clean URLs, and source attribution without anti-bot blocks, populating the `AuthoritativeSourcePool` with real authoritative chunks.
+
+---
+
+## [2026-11-20] DEC-20-025: Two-Stage Verification Hardening, Prompt Grounding Enforcement, and Citation Reconciliation
+
+- **Status:** Accepted
+- **Context:** Checkpoint inspection revealed that Gate 2 verification produced confusing summaries where reports with high grounding scores (e.g. 0.88 >= 0.70 threshold) still failed due to major defects (such as neutral entailment or prose inconsistencies) while printing `< threshold` error strings. Additionally, synthesis LLM output occasionally contained orphaned chunk citations, non-verbatim quotation substrings, and unevidenced prose assertions.
+- **Decision:**
+  1. Updated `ResearchVerifier` in `src/parallel_research_team/synthesis/verifier.py` to differentiate between grounding score threshold deficits and defect count failures (`major_count` / `critical_count`).
+  2. Hardened `src/parallel_research_team/prompts/v1/synthesis/system.jinja2` with strict constraints requiring that all factual assertions in section prose have direct evidence in `<evidence>` chunks, direct entailment, and non-factual claims marked `is_factual=False`.
+  3. Added post-synthesis citation reconciler in `src/parallel_research_team/synthesis/engine.py` to prune citations to missing chunks, safely downgrade loose quotations to paraphrases, and align section IDs.
+  4. Added transient retry loops with exponential backoff for 503 high-demand / 429 rate-limit errors in `DecompositionEngine` and `SynthesisEngine`.
+- **Consequences:** Eliminates misleading verification diagnostics, prevents Gate 1 and Gate 2 structural failure cascades, and automatically shields research runs from transient LLM provider demand spikes.

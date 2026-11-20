@@ -228,3 +228,135 @@ async def test_synthesis_engine_all_workers_failed_and_zero_sources_raises(
             worker_results=worker_results,
             source_pool=AuthoritativeSourcePool(),
         )
+
+
+@pytest.mark.asyncio
+async def test_synthesis_engine_citation_reconciler(
+    test_config: ResearchTeamConfig,
+) -> None:
+    mock_llm = MagicMock()
+    # Report with an invalid citation and an inaccurate quotation
+    bad_report = Report(
+        topic="Testing Reconciler",
+        title="Reconciler Test",
+        executive_summary=ReportSection(
+            section_id="sec_exec",
+            title="Summary",
+            content="Some prose.",
+            claims=[
+                Claim(
+                    claim_id="c_valid_quote",
+                    section_id="sec_exec",
+                    text="Exact valid quote.",
+                    citations=[
+                        Citation(
+                            citation_id="cite_1",
+                            source_id="src_1",
+                            chunk_id="chk_1",
+                            citation_type=CitationType.QUOTATION,
+                            quoted_passage="concurrency scaling",
+                        ),
+                        Citation(
+                            citation_id="cite_fake",
+                            source_id="fake_src",
+                            chunk_id="fake_chk",
+                            citation_type=CitationType.PARAPHRASE,
+                        ),
+                    ],
+                ),
+                Claim(
+                    claim_id="c_invalid_quote",
+                    section_id="sec_exec",
+                    text="Inaccurate quote passage.",
+                    citations=[
+                        Citation(
+                            citation_id="cite_2",
+                            source_id="src_1",
+                            chunk_id="chk_1",
+                            citation_type=CitationType.QUOTATION,
+                            quoted_passage="this string does not exist in source",
+                        )
+                    ],
+                ),
+            ],
+        ),
+        sections=[],
+        conclusion=ReportSection(
+            section_id="sec_concl",
+            title="Conclusion",
+            content="Done.",
+            claims=[
+                Claim(
+                    claim_id="c_orphan",
+                    section_id="sec_concl",
+                    text="Claim with only fake citation.",
+                    is_factual=True,
+                    citations=[
+                        Citation(
+                            citation_id="cite_orphan",
+                            source_id="nonexistent",
+                            chunk_id="nonexistent",
+                            citation_type=CitationType.PARAPHRASE,
+                        )
+                    ],
+                )
+            ],
+        ),
+    )
+
+    mock_response = MagicMock()
+    mock_response.error = None
+    mock_response.structured_response = bad_report
+    mock_response.usage = {"input_tokens": 100, "output_tokens": 50}
+    mock_llm.complete_structure = AsyncMock(return_value=mock_response)
+
+    engine = SynthesisEngine(
+        config=test_config,
+        llm_service=mock_llm,
+        prompt_manager=PromptTemplateManager(config=test_config),
+    )
+
+    pool = AuthoritativeSourcePool(
+        [
+            SourceReference(
+                source_id="src_1",
+                chunk_id="chk_1",
+                title="Real Source",
+                content="This text discusses concurrency scaling in distributed workers.",
+            )
+        ]
+    )
+
+    report = await engine.synthesize(
+        topic="Testing Reconciler",
+        worker_results={
+            "b1": WorkerExecutionResult(
+                brief_id="b1",
+                status=WorkerStatus.COMPLETED,
+                output=WorkerResearchOutput(
+                    brief_id="b1",
+                    findings_summary="Findings",
+                    sources=[],
+                    claims=[],
+                ),
+            )
+        },
+        source_pool=pool,
+    )
+
+    c1 = report.executive_summary.claims[0]
+    assert c1.section_id == "sec_exec"
+    # cite_fake was pruned, only cite_1 remained
+    assert len(c1.citations) == 1
+    assert c1.citations[0].citation_id == "cite_1"
+    assert c1.citations[0].citation_type == CitationType.QUOTATION
+
+    c2 = report.executive_summary.claims[1]
+    # Inaccurate quotation was downgraded to paraphrase
+    assert c2.citations[0].citation_type == CitationType.PARAPHRASE
+    assert c2.citations[0].quoted_passage is None
+
+    # Orphan claim had its citation pruned and was downgraded from factual
+    c_orphan = report.conclusion.claims[0]
+    assert len(c_orphan.citations) == 0
+    assert c_orphan.is_factual is False

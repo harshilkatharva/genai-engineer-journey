@@ -133,14 +133,22 @@ class ResearchVerifier:
         all_issues = gate1_issues + gate2_issues
         passed = bool(gate1_report.passed and gate2_report.passed)
 
-        summary = (
-            f"All verification gates passed (Gate 2 score: {gate2_report.grounding_score:.2f})."
-            if passed
-            else (
+        if passed:
+            summary = (
+                f"All verification gates passed (Gate 2 score: {gate2_report.grounding_score:.2f})."
+            )
+        elif gate2_report.grounding_score < self.config.semantic_verification_threshold:
+            summary = (
                 f"Gate 2 semantic verification failed (Grounding score: {gate2_report.grounding_score:.2f} < "
                 f"threshold {self.config.semantic_verification_threshold:.2f})."
             )
-        )
+        else:
+            summary = (
+                f"Gate 2 semantic verification failed due to {gate2_report.major_count} major and "
+                f"{gate2_report.critical_count} critical grounding defects "
+                f"(Grounding score: {gate2_report.grounding_score:.2f} >= "
+                f"threshold {self.config.semantic_verification_threshold:.2f})."
+            )
 
         return SynthesisVerificationResult(
             passed=passed,

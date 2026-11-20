@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
 from typing import TYPE_CHECKING, Any
 
@@ -161,16 +162,54 @@ class DecompositionEngine:
             self.config.max_workers,
         )
 
-        # 3. Request structured completion via LLMService
-        try:
-            llm_response = await self.llm_service.complete_structure(
-                prompt=full_prompt,
-                response_schema=ResearchDecomposition,
-                provider=self.config.default_provider,
-                model=self.config.default_model,
-            )
-        except Exception as exc:
-            raise DecompositionError(f"LLM decomposition completion call failed: {exc}") from exc
+        # 3. Request structured completion via LLMService with transient retry
+        max_attempts = 3
+        llm_response = None
+        for attempt in range(1, max_attempts + 1):
+            try:
+                llm_response = await self.llm_service.complete_structure(
+                    prompt=full_prompt,
+                    response_schema=ResearchDecomposition,
+                    provider=self.config.default_provider,
+                    model=self.config.default_model,
+                )
+            except Exception as exc:
+                if attempt == max_attempts:
+                    raise DecompositionError(
+                        f"LLM decomposition completion call failed: {exc}"
+                    ) from exc
+                await asyncio.sleep(2.0 * attempt)
+                continue
+
+            err = getattr(llm_response, "error", None)
+            if err is not None and isinstance(getattr(err, "message", None), str):
+                err_msg = err.message.lower()
+                is_transient = any(
+                    k in err_msg
+                    for k in [
+                        "high demand",
+                        "rate limit",
+                        "503",
+                        "429",
+                        "resource exhausted",
+                        "try again",
+                    ]
+                )
+                if is_transient and attempt < max_attempts:
+                    _logger.warning(
+                        "Transient LLM error on decomposition attempt %d/%d: %s. Retrying in %.1fs...",
+                        attempt,
+                        max_attempts,
+                        err.message,
+                        3.0 * attempt,
+                    )
+                    await asyncio.sleep(3.0 * attempt)
+                    continue
+                raise DecompositionError(f"LLM decomposition error: {err.message}")
+            break
+
+        if llm_response is None:
+            raise DecompositionError("LLM decomposition failed to produce a response.")
 
         plan: Any = getattr(llm_response, "structured_response", None)
         if not isinstance(plan, ResearchDecomposition):
