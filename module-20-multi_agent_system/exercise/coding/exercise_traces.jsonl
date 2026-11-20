@@ -1,0 +1,2 @@
+{"span_id": "c1e95dda", "run_id": "run_59089c", "parent_id": null, "agent_name": "lead_orchestrator", "tokens": 120, "latency": 0.45}
+{"span_id": "afdbf634", "run_id": "run_59089c", "parent_id": "c1e95dda", "agent_name": "billing_agent", "tokens": 45, "latency": 0.0502}
