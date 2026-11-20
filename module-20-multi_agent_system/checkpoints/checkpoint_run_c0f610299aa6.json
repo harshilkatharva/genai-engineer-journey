@@ -1,0 +1,444 @@
+{
+  "run_id": "run_c0f610299aa6",
+  "user_id": "default_user",
+  "topic": "What is the scope of the Production GenAI handbook?",
+  "status": "partially_completed",
+  "effort_level": "direct",
+  "decomposition": {
+    "topic": "What is the scope of the Production GenAI handbook?",
+    "effort_level": "direct",
+    "rationale": "The request asks for a specific definition and scope overview of a single handbook, which fits the direct single worker criteria for narrow factual lookup and definition.",
+    "worker_count": 1,
+    "worker_briefs": [
+      {
+        "brief_id": "brief_01",
+        "title": "Scope and Contents of the Production GenAI Handbook",
+        "topic": "What is the scope of the Production GenAI handbook?",
+        "objective": "Identify and document the exact topics, chapters, and conceptual boundaries covered in the Production GenAI handbook.",
+        "brief_type": "factual_retrieval",
+        "worker_type": "default",
+        "depends_on": [],
+        "task_boundaries": [
+          "Focus strictly on the official outline, table of contents, and stated objectives of the Production GenAI handbook.",
+          "Do NOT include general generative AI engineering guides or textbooks outside of the specified Production GenAI handbook."
+        ],
+        "expected_output_format": {
+          "schema_name": "WorkerResearchOutput",
+          "required_fields": [
+            "findings_summary",
+            "claims",
+            "sources"
+          ],
+          "guidelines": "Structured findings with claims and source citations"
+        },
+        "suggested_tools": [
+          "search_web",
+          "search_knowledge_base"
+        ],
+        "max_steps": 4,
+        "timeout_seconds": 45.0
+      }
+    ],
+    "input_tokens": 617,
+    "output_tokens": 370
+  },
+  "worker_results": {
+    "brief_01": {
+      "brief_id": "brief_01",
+      "status": "partial",
+      "output": {
+        "brief_id": "brief_01",
+        "findings_summary": "No textual synthesis produced for brief 'Scope and Contents of the Production GenAI Handbook'.",
+        "claims": [
+          {
+            "claim_id": "claim_brief_01_1",
+            "section_id": "sec_brief_01",
+            "text": "No textual synthesis produced for brief 'Scope and Contents of the Production GenAI Handbook'.",
+            "citations": [
+              {
+                "citation_id": "cite_brief_01_1",
+                "source_id": "THE PRODUCTION READY GENAI",
+                "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0000",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.9
+              }
+            ],
+            "is_factual": true
+          }
+        ],
+        "sources": [
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0000",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "THE PRODUCTION-READY GENAI & AGENTIC AI ENGINEER HANDBOOK\\nFrom Data Scientist to Production AI Engineer\\nVersion:\\n1.0 (2026 Edition)\\nAuthor:\\nAtharva System (Hardik Upadhay)\\nPrepared for:\\nJunior Developers, Data Scientists, Backend Engineers, and AI\\nEnthusiasts transitioning into Production GenAI & Agentic AI Engineering\\nHow This Handbook Is Being Delivered\\nBecause of its scope (50,000-80,000 words across 30 modules, three capstones, and a full career-readiness section), this handbook is built in phases and appended to this same file.",
+            "score": 0.866315,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0001",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "THE PRODUCTION-READY GENAI & AGENTIC AI ENGINEER HANDBOOK\\nFrom Data Scientist to Production AI Engineer\\nVersion:\\n1.0 (2026 Edition)\\nAuthor:\\nAtharva System (Hardik Upadhay)\\nPrepared for:\\nJunior Developers, Data Scientists, Backend Engineers, and AI\\nEnthusiasts transitioning into Production GenAI & Agentic AI Engineering\\nHow This Handbook Is Being Delivered\\nBecause of its scope (50,000-80,000 words across 30 modules, three capstones, and a full career-readiness section), this handbook is built in phases and appended to this same file. This document currently contains:\\nTable of Contents (full, for the entire handbook) ·\\nIntroduction ·\\nLearning Roadmap ·\\nModule 0: Getting Started ·\\nModule 1: Python for AI Engineers ·\\nModule 2: Software Engineering Fundamentals ·\\nModule 3: How LLMs Actually Work ·\\nModule 4: Prompt Engineering ·\\nModule 5: FastAPI ·\\nModule 6: Building AI Applications ·\\nModule 7: Embeddings ·\\nModule 8: Vector Databases ·\\nModule 9: Retrieval-Augmented Generation ·\\nSubsequent phases will append Modules 10 onward, the capstones, and the career/ reference material, in the same structure.\\nTABLE OF CONTENTS\\nFront Matter\\nIntroduction ·\\nLearning Roadmap ·\\nFoundations\\nModule 0 - Getting Started ·\\nModule 1 - Python for AI Engineers ·\\nModule 2 - Software Engineering Fundamentals ·\\nModule 3 - How LLMs Actually Work ·\\nModule 4 - Prompt Engineering ·\\nBuilding Applications\\nModule 5 - FastAPI ·\\nModule 6 - Building AI Applications ·\\nModule 7 - Embeddings ·\\nModule 8 - Vector Databases ·\\nModule 9 - Retrieval-Augmented Generation ·\\nFrameworks\\nModule 10 - LangChain ·\\nModule 11 - LangGraph ·\\nModule 12 - LlamaIndex ·\\nModule 13 - Model Context Protocol ·\\nModule 14 - Tool Calling ·\\nModule 15 - Function Calling ·\\nModule 16 - Memory ·\\nAgentic AI\\nModule 17 - AI Agents ·\\nModule 18 - Planning ·\\nModule 19 - Reflection ·\\nModule 20 - Multi-Agent Systems ·\\nProduction Engineering\\nModule 21 - Production AI ·\\nModule 22 - Evaluation ·\\nModule 23 - Observability ·\\nModule 24 - Guardrails ·\\nModule 25 - AI Security ·\\nModule 26 - Deployment ·\\nModule 27 - Cloud ·\\nPortfolio & Career\\nModule 28 - Capstone Projects ·\\nModule 29 - Interview Preparation ·\\nModule 30 - Career Roadmap ·\\nReference Material\\nGitHub Portfolio Guide ·\\nResume Guide ·\\nLinkedIn Guide ·\\nOpen Source Contribution Guide ·\\nCertifications ·\\nBooks, Blogs, Podcasts, Research Papers, Newsletters ·\\nCommunities ·\\nCheat Sheets (Python, FastAPI, Git, Docker, Linux, Prompt Engineering, LLMs, RAG, Vector DBs, LangChain, LangGraph, MCP , Agents, Deployment, Cloud, AWS, Kubernetes, Redis, PostgreSQL) ·\\nAppendix: Glossary (300+ terms) ·\\nINTRODUCTION\\nWhy AI Is Changing Software Engineering\\nFor thirty years, software engineering meant writing deterministic instructions: given input X, produce output Y, exactly, every time.",
+            "score": 0.82005,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0017",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "4.\\nWrite a small script that makes one call each to OpenAI, Anthropic, and Google AI Studio, printing the model's response - confirming connectivity. 5.\\nInitialize Docker and run docker run hello-world to confirm your Docker install works. 6.\\nPush the project to GitHub with a .gitignore that excludes .env , __pycache__/ , and .venv/ . 7.\\nMini Project\\n'Environment Health Check CLI' - Build a small command-line script, healthcheck.py , that:\\nLoads all required environment variables and reports which are missing. ·\\nPings OpenAI, Anthropic, and Google AI Studio with a trivial request each, reporting latency and success/failure for each. ·\\nConfirms Docker is running by checking docker info via subprocess . ·\\nOutputs a clean, color-coded summary (use the rich library) of environment readiness. ·\\nThis becomes a genuinely useful tool you'll reuse (and extend) throughout the rest of the handbook.\\nAssignment\\nExtend the Health Check CLI to also verify PostgreSQL and Redis connectivity (even though we haven't used them yet - install them now via Docker Compose so Module 8 and Module 16 have zero setup friction). Write a docker-compose.yml that spins up both, and have the CLI attempt a connection to each.\\nCoding Exercises\\nWrite a function load_required_env(names: list[str]) -> dict that raises a clear, custom exception listing all missing variables at once (not just the first one). 1.\\nWrite a function that redacts an API key for safe logging (e.g., sk-ab...wxyz instead of the full key). 2.\\nWrite a .gitignore generator function that takes a project type ('python', 'node') and writes an appropriate .gitignore . 3.\\nWrite a retry decorator ( @retry(max_attempts=3, backoff=2) ) usable on any API call function. 4.\\nWrite a function that measures and returns the latency of an arbitrary callable. 5.\\nWrite a function that validates an OpenAI-style API key's format (starts with sk-, correct length range) before even attempting a network call. 6.\\nWrite a small config validator using pydantic.BaseSettings (or pydantic-settings ) instead of manual os.environ calls, and explain the trade-off vs. the manual approach.",
+            "score": 0.383483,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0007",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "AI engineers increasingly need to reason about model routing, caching, and quantization/serving trade-offs, not just prompt quality. 4.\\nSecurity is catching up to a new threat surface. Prompt injection, data exfiltration through tool calls, and unsafe autonomous actions are real production risks, not academic curiosities. AI Security (Module 25) is no longer optional reading. 5.\\nAI Engineer vs. ML Engineer vs. LLM Engineer vs. Prompt Engineer vs. AI Solutions Architect vs. Agentic AI Engineer\\nThese titles get used loosely in job postings, which causes real confusion. Here's a grounded comparison based on what each role actually does day to day.\\nA useful mental model: ML Engineers build the model. LLM Engineers work close to the model internals. Prompt Engineers get the most out of an existing model through instructions alone. AI/GenAI Engineers build products around models. Agentic AI Engineers build products where the model takes autonomous multi-step action. AI Solutions Architects decide how all of the above fit together at an organizational level.\\nThis handbook is built specifically to take you to AI Engineer , with a strong on-ramp into Agentic AI Engineer - the two roles with the fastest-growing hiring demand in 2026, and the roles most directly reachable from a Data Science background.\\nWho Should Use This Handbook\\nData Scientists who know Python, pandas, and modeling but have never shipped a production API or built an LLM-powered application. ·\\nJunior/Backend Developers who are comfortable with software engineering but new to LLMs, embeddings, and agents. ·\\nFreshers and career switchers with basic Python literacy who are targeting AI Engineer roles directly. ·\\nEngineering teams onboarding new hires into an AI platform team, using this as a structured internal curriculum. ·\\nPrerequisites\\nBefore starting, you should already be comfortable with:\\nPython fundamentals - variables, functions, classes, loops, list/dict comprehensions, virtual environments, pip. ·\\nBasic command line usage - navigating directories, running scripts, editing environment variables. ·\\nBasic Git - clone, commit, push, pull, branch. ·\\nBasic understanding of APIs - what a REST endpoint is, what JSON is, what an HTTP status code means. ·\\nBasic SQL - SELECT/INSERT/UPDATE/DELETE, JOINs.",
+            "score": 0.691887,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0006",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "You still need logs and metrics, but you also need to see prompts, completions, token costs, latency per step, and tool-call traces because a bug might not be a stack trace, it might be a subtly wrong instruction fifteen tokens into a system prompt. ·\\nNone of this makes classical software engineering obsolete. Quite the opposite production AI systems still need clean APIs, databases, authentication, caching, queues, and deployment pipelines. AI Engineering is best understood as software engineering plus a new, probabilistic component that needs its own discipline of prompt design, retrieval design, evaluation, and guardrails. This handbook treats it that way: roughly half classical backend engineering, half AI-specific engineering, glued together by production practices.\\nThe Future of AI Engineering\\nA few trends are already visible and worth naming explicitly, because they shape how you should learn:\\nAgentic systems are becoming the default interface , not just chatbots. Instead of 'ask a question, get an answer,' production systems increasingly plan, call tools, retrieve data, verify their own output, and take multi-step actions with oversight. Understanding planning, reflection, and multi-agent coordination (Modules 17-20) is quickly becoming as fundamental as understanding REST APIs was a decade ago. 1.\\nStandardized interoperability layers are emerging. The Model Context Protocol (MCP) is one of the clearest examples: instead of every framework inventing its own way to expose tools and data sources to a model, MCP standardizes it, the same way HTTP standardized how browsers and servers talk. Learning MCP now is analogous to learning REST in the early 2010s. 2.\\nEvaluation and observability are maturing into first-class disciplines , not afterthoughts. Companies that shipped AI features fast in 2023-2024 are now investing heavily in eval infrastructure because 'it seemed to work in the demo' doesn't survive contact with production traffic. 3.\\nCost and latency engineering matter as much as accuracy. A model that's 2% more accurate but 5x more expensive and 3x slower is frequently the wrong choice. AI engineers increasingly need to reason about model routing, caching, and quantization/serving trade-offs, not just prompt quality. 4.\\nSecurity is catching up to a new threat surface. Prompt injection, data exfiltration through tool calls, and unsafe autonomous actions are real production risks, not academic curiosities.",
+            "score": 0.626011,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0039",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "This is the last 'pure backend' module before Module 3 introduces LLMs directly - treat it as the foundation everything from Module 5 onward is built on.\\nWhy This Topic Matters\\nThe gap between 'a script that works on my machine' and 'a service a team can maintain' is almost entirely software engineering discipline, not AI knowledge. Companies hiring AI Engineers consistently report that the differentiator between a junior and a senior candidate isn't who knows more about transformers - it's who can hand off clean, tested, documented code that someone else can safely modify six months later.\\nIndustry Relevance\\nProduction AI codebases fail in the same ways any production codebase fails: untested code that breaks silently, undocumented assumptions that create bugs, dependency chaos, and unreviewed changes that introduce regressions. The AI-specific parts (Modules 3+) sit on top of this foundation - if the foundation is weak, every module after this one inherits that weakness.\\nCommon Misconceptions\\n'AI code is exempt from normal software engineering practices because it's experimental.' Prototyping can be loose; anything heading to production needs the same rigor as any other backend service. ·\\n'Testing LLM-integrated code isn't really possible since outputs vary.' You can't unit-test exact LLM output text, but you absolutely can and should test everything around it: input validation, retrieval logic, parsing, error handling, and use evaluation harnesses (Module 22) for the model-facing parts. ·\\n'Code review slows AI teams down too much given how fast things move.' The opposite is empirically true - teams that skip review on AI-integrated code accumulate prompt regressions and silent breakages far faster than teams that review, because the failure modes are less visible than a stack trace. ·\\nLearning Objectives\\nBy the end of this module, you will be able to:\\nStructure a production-grade Python project using pyproject.toml and a src/ layout. 1.\\nWrite effective unit, integration, and mocked-dependency tests with pytest . 2.\\nUse git effectively, including branching strategy, commit hygiene, and resolving conflicts. 3.\\nApply SOLID-adjacent design principles pragmatically to AI application code. 4.\\nSet up linting, formatting, and pre-commit hooks ( ruff , black -equivalent, mypy ). 5.\\nWrite clear technical documentation (README, docstrings, architecture decision records).",
+            "score": 0.551487,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          }
+        ],
+        "search_queries_used": [
+          "Production GenAI handbook table of contents topics chapters",
+          "Production GenAI handbook",
+          "\"THE PRODUCTION-READY GENAI & AGENTIC AI ENGINEER HANDBOOK\" objective scope topics"
+        ],
+        "limitations": [
+          "Web search service returned status 202.",
+          "Step limit (4) reached.",
+          "Output format missing expected elements: findings_summary, claims, sources"
+        ]
+      },
+      "tokens_used": 3447,
+      "cost_usd": 0.001267,
+      "duration_ms": 28691.06,
+      "error_message": "Step limit (4) reached.",
+      "started_at": "2026-11-20T10:44:37.205844Z",
+      "completed_at": "2026-11-20T10:45:05.896913Z"
+    }
+  },
+  "authoritative_sources": {
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0000": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0000",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "THE PRODUCTION-READY GENAI & AGENTIC AI ENGINEER HANDBOOK\\nFrom Data Scientist to Production AI Engineer\\nVersion:\\n1.0 (2026 Edition)\\nAuthor:\\nAtharva System (Hardik Upadhay)\\nPrepared for:\\nJunior Developers, Data Scientists, Backend Engineers, and AI\\nEnthusiasts transitioning into Production GenAI & Agentic AI Engineering\\nHow This Handbook Is Being Delivered\\nBecause of its scope (50,000-80,000 words across 30 modules, three capstones, and a full career-readiness section), this handbook is built in phases and appended to this same file.",
+      "score": 0.866315,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0001": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0001",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "THE PRODUCTION-READY GENAI & AGENTIC AI ENGINEER HANDBOOK\\nFrom Data Scientist to Production AI Engineer\\nVersion:\\n1.0 (2026 Edition)\\nAuthor:\\nAtharva System (Hardik Upadhay)\\nPrepared for:\\nJunior Developers, Data Scientists, Backend Engineers, and AI\\nEnthusiasts transitioning into Production GenAI & Agentic AI Engineering\\nHow This Handbook Is Being Delivered\\nBecause of its scope (50,000-80,000 words across 30 modules, three capstones, and a full career-readiness section), this handbook is built in phases and appended to this same file. This document currently contains:\\nTable of Contents (full, for the entire handbook) ·\\nIntroduction ·\\nLearning Roadmap ·\\nModule 0: Getting Started ·\\nModule 1: Python for AI Engineers ·\\nModule 2: Software Engineering Fundamentals ·\\nModule 3: How LLMs Actually Work ·\\nModule 4: Prompt Engineering ·\\nModule 5: FastAPI ·\\nModule 6: Building AI Applications ·\\nModule 7: Embeddings ·\\nModule 8: Vector Databases ·\\nModule 9: Retrieval-Augmented Generation ·\\nSubsequent phases will append Modules 10 onward, the capstones, and the career/ reference material, in the same structure.\\nTABLE OF CONTENTS\\nFront Matter\\nIntroduction ·\\nLearning Roadmap ·\\nFoundations\\nModule 0 - Getting Started ·\\nModule 1 - Python for AI Engineers ·\\nModule 2 - Software Engineering Fundamentals ·\\nModule 3 - How LLMs Actually Work ·\\nModule 4 - Prompt Engineering ·\\nBuilding Applications\\nModule 5 - FastAPI ·\\nModule 6 - Building AI Applications ·\\nModule 7 - Embeddings ·\\nModule 8 - Vector Databases ·\\nModule 9 - Retrieval-Augmented Generation ·\\nFrameworks\\nModule 10 - LangChain ·\\nModule 11 - LangGraph ·\\nModule 12 - LlamaIndex ·\\nModule 13 - Model Context Protocol ·\\nModule 14 - Tool Calling ·\\nModule 15 - Function Calling ·\\nModule 16 - Memory ·\\nAgentic AI\\nModule 17 - AI Agents ·\\nModule 18 - Planning ·\\nModule 19 - Reflection ·\\nModule 20 - Multi-Agent Systems ·\\nProduction Engineering\\nModule 21 - Production AI ·\\nModule 22 - Evaluation ·\\nModule 23 - Observability ·\\nModule 24 - Guardrails ·\\nModule 25 - AI Security ·\\nModule 26 - Deployment ·\\nModule 27 - Cloud ·\\nPortfolio & Career\\nModule 28 - Capstone Projects ·\\nModule 29 - Interview Preparation ·\\nModule 30 - Career Roadmap ·\\nReference Material\\nGitHub Portfolio Guide ·\\nResume Guide ·\\nLinkedIn Guide ·\\nOpen Source Contribution Guide ·\\nCertifications ·\\nBooks, Blogs, Podcasts, Research Papers, Newsletters ·\\nCommunities ·\\nCheat Sheets (Python, FastAPI, Git, Docker, Linux, Prompt Engineering, LLMs, RAG, Vector DBs, LangChain, LangGraph, MCP , Agents, Deployment, Cloud, AWS, Kubernetes, Redis, PostgreSQL) ·\\nAppendix: Glossary (300+ terms) ·\\nINTRODUCTION\\nWhy AI Is Changing Software Engineering\\nFor thirty years, software engineering meant writing deterministic instructions: given input X, produce output Y, exactly, every time.",
+      "score": 0.82005,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0017": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0017",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "4.\\nWrite a small script that makes one call each to OpenAI, Anthropic, and Google AI Studio, printing the model's response - confirming connectivity. 5.\\nInitialize Docker and run docker run hello-world to confirm your Docker install works. 6.\\nPush the project to GitHub with a .gitignore that excludes .env , __pycache__/ , and .venv/ . 7.\\nMini Project\\n'Environment Health Check CLI' - Build a small command-line script, healthcheck.py , that:\\nLoads all required environment variables and reports which are missing. ·\\nPings OpenAI, Anthropic, and Google AI Studio with a trivial request each, reporting latency and success/failure for each. ·\\nConfirms Docker is running by checking docker info via subprocess . ·\\nOutputs a clean, color-coded summary (use the rich library) of environment readiness. ·\\nThis becomes a genuinely useful tool you'll reuse (and extend) throughout the rest of the handbook.\\nAssignment\\nExtend the Health Check CLI to also verify PostgreSQL and Redis connectivity (even though we haven't used them yet - install them now via Docker Compose so Module 8 and Module 16 have zero setup friction). Write a docker-compose.yml that spins up both, and have the CLI attempt a connection to each.\\nCoding Exercises\\nWrite a function load_required_env(names: list[str]) -> dict that raises a clear, custom exception listing all missing variables at once (not just the first one). 1.\\nWrite a function that redacts an API key for safe logging (e.g., sk-ab...wxyz instead of the full key). 2.\\nWrite a .gitignore generator function that takes a project type ('python', 'node') and writes an appropriate .gitignore . 3.\\nWrite a retry decorator ( @retry(max_attempts=3, backoff=2) ) usable on any API call function. 4.\\nWrite a function that measures and returns the latency of an arbitrary callable. 5.\\nWrite a function that validates an OpenAI-style API key's format (starts with sk-, correct length range) before even attempting a network call. 6.\\nWrite a small config validator using pydantic.BaseSettings (or pydantic-settings ) instead of manual os.environ calls, and explain the trade-off vs. the manual approach.",
+      "score": 0.383483,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0007": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0007",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "AI engineers increasingly need to reason about model routing, caching, and quantization/serving trade-offs, not just prompt quality. 4.\\nSecurity is catching up to a new threat surface. Prompt injection, data exfiltration through tool calls, and unsafe autonomous actions are real production risks, not academic curiosities. AI Security (Module 25) is no longer optional reading. 5.\\nAI Engineer vs. ML Engineer vs. LLM Engineer vs. Prompt Engineer vs. AI Solutions Architect vs. Agentic AI Engineer\\nThese titles get used loosely in job postings, which causes real confusion. Here's a grounded comparison based on what each role actually does day to day.\\nA useful mental model: ML Engineers build the model. LLM Engineers work close to the model internals. Prompt Engineers get the most out of an existing model through instructions alone. AI/GenAI Engineers build products around models. Agentic AI Engineers build products where the model takes autonomous multi-step action. AI Solutions Architects decide how all of the above fit together at an organizational level.\\nThis handbook is built specifically to take you to AI Engineer , with a strong on-ramp into Agentic AI Engineer - the two roles with the fastest-growing hiring demand in 2026, and the roles most directly reachable from a Data Science background.\\nWho Should Use This Handbook\\nData Scientists who know Python, pandas, and modeling but have never shipped a production API or built an LLM-powered application. ·\\nJunior/Backend Developers who are comfortable with software engineering but new to LLMs, embeddings, and agents. ·\\nFreshers and career switchers with basic Python literacy who are targeting AI Engineer roles directly. ·\\nEngineering teams onboarding new hires into an AI platform team, using this as a structured internal curriculum. ·\\nPrerequisites\\nBefore starting, you should already be comfortable with:\\nPython fundamentals - variables, functions, classes, loops, list/dict comprehensions, virtual environments, pip. ·\\nBasic command line usage - navigating directories, running scripts, editing environment variables. ·\\nBasic Git - clone, commit, push, pull, branch. ·\\nBasic understanding of APIs - what a REST endpoint is, what JSON is, what an HTTP status code means. ·\\nBasic SQL - SELECT/INSERT/UPDATE/DELETE, JOINs.",
+      "score": 0.691887,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0006": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0006",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "You still need logs and metrics, but you also need to see prompts, completions, token costs, latency per step, and tool-call traces because a bug might not be a stack trace, it might be a subtly wrong instruction fifteen tokens into a system prompt. ·\\nNone of this makes classical software engineering obsolete. Quite the opposite production AI systems still need clean APIs, databases, authentication, caching, queues, and deployment pipelines. AI Engineering is best understood as software engineering plus a new, probabilistic component that needs its own discipline of prompt design, retrieval design, evaluation, and guardrails. This handbook treats it that way: roughly half classical backend engineering, half AI-specific engineering, glued together by production practices.\\nThe Future of AI Engineering\\nA few trends are already visible and worth naming explicitly, because they shape how you should learn:\\nAgentic systems are becoming the default interface , not just chatbots. Instead of 'ask a question, get an answer,' production systems increasingly plan, call tools, retrieve data, verify their own output, and take multi-step actions with oversight. Understanding planning, reflection, and multi-agent coordination (Modules 17-20) is quickly becoming as fundamental as understanding REST APIs was a decade ago. 1.\\nStandardized interoperability layers are emerging. The Model Context Protocol (MCP) is one of the clearest examples: instead of every framework inventing its own way to expose tools and data sources to a model, MCP standardizes it, the same way HTTP standardized how browsers and servers talk. Learning MCP now is analogous to learning REST in the early 2010s. 2.\\nEvaluation and observability are maturing into first-class disciplines , not afterthoughts. Companies that shipped AI features fast in 2023-2024 are now investing heavily in eval infrastructure because 'it seemed to work in the demo' doesn't survive contact with production traffic. 3.\\nCost and latency engineering matter as much as accuracy. A model that's 2% more accurate but 5x more expensive and 3x slower is frequently the wrong choice. AI engineers increasingly need to reason about model routing, caching, and quantization/serving trade-offs, not just prompt quality. 4.\\nSecurity is catching up to a new threat surface. Prompt injection, data exfiltration through tool calls, and unsafe autonomous actions are real production risks, not academic curiosities.",
+      "score": 0.626011,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0039": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0039",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "This is the last 'pure backend' module before Module 3 introduces LLMs directly - treat it as the foundation everything from Module 5 onward is built on.\\nWhy This Topic Matters\\nThe gap between 'a script that works on my machine' and 'a service a team can maintain' is almost entirely software engineering discipline, not AI knowledge. Companies hiring AI Engineers consistently report that the differentiator between a junior and a senior candidate isn't who knows more about transformers - it's who can hand off clean, tested, documented code that someone else can safely modify six months later.\\nIndustry Relevance\\nProduction AI codebases fail in the same ways any production codebase fails: untested code that breaks silently, undocumented assumptions that create bugs, dependency chaos, and unreviewed changes that introduce regressions. The AI-specific parts (Modules 3+) sit on top of this foundation - if the foundation is weak, every module after this one inherits that weakness.\\nCommon Misconceptions\\n'AI code is exempt from normal software engineering practices because it's experimental.' Prototyping can be loose; anything heading to production needs the same rigor as any other backend service. ·\\n'Testing LLM-integrated code isn't really possible since outputs vary.' You can't unit-test exact LLM output text, but you absolutely can and should test everything around it: input validation, retrieval logic, parsing, error handling, and use evaluation harnesses (Module 22) for the model-facing parts. ·\\n'Code review slows AI teams down too much given how fast things move.' The opposite is empirically true - teams that skip review on AI-integrated code accumulate prompt regressions and silent breakages far faster than teams that review, because the failure modes are less visible than a stack trace. ·\\nLearning Objectives\\nBy the end of this module, you will be able to:\\nStructure a production-grade Python project using pyproject.toml and a src/ layout. 1.\\nWrite effective unit, integration, and mocked-dependency tests with pytest . 2.\\nUse git effectively, including branching strategy, commit hygiene, and resolving conflicts. 3.\\nApply SOLID-adjacent design principles pragmatically to AI application code. 4.\\nSet up linting, formatting, and pre-commit hooks ( ruff , black -equivalent, mypy ). 5.\\nWrite clear technical documentation (README, docstrings, architecture decision records).",
+      "score": 0.551487,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    }
+  },
+  "used_tokens": 10882,
+  "used_cost_usd": 0.010298,
+  "elapsed_seconds": 40.476,
+  "final_report": {
+    "topic": "What is the scope of the Production GenAI handbook?",
+    "title": "Scope and Contents of the Production-Ready GenAI & Agentic AI Engineer Handbook",
+    "executive_summary": {
+      "section_id": "sec_executive_summary",
+      "title": "Executive Summary",
+      "content": "The Production-Ready GenAI & Agentic AI Engineer Handbook, authored by Hardik Upadhay of Atharva System for the 2026 edition, spans 50,000 to 80,000 words across 30 comprehensive modules, three capstone projects, and an extensive career-readiness section [cite_1]. It is specifically designed to transition junior developers, data scientists, backend engineers, and AI enthusiasts into production AI and agentic AI engineers [cite_1]. The curriculum bridges classical backend engineering and modern probabilistic AI techniques [cite_2].",
+      "claims": [
+        {
+          "claim_id": "claim_exec_1",
+          "section_id": "sec_executive_summary",
+          "text": "The Production-Ready GenAI & Agentic AI Engineer Handbook spans 50,000 to 80,000 words across 30 modules, three capstones, and a career-readiness section, authored by Atharva System (Hardik Upadhay) for the 2026 edition.",
+          "citations": [
+            {
+              "citation_id": "cite_1",
+              "source_id": "THE PRODUCTION READY GENAI",
+              "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0000",
+              "citation_type": "quotation",
+              "quoted_passage": "Because of its scope (50,000-80,000 words across 30 modules, three capstones, and a full career-readiness section), this handbook is built in phases and appended to this same file.",
+              "confidence": 1.0
+            }
+          ],
+          "is_factual": true
+        },
+        {
+          "claim_id": "claim_exec_2",
+          "section_id": "sec_executive_summary",
+          "text": "The handbook is prepared for junior developers, data scientists, backend engineers, and AI enthusiasts transitioning into Production GenAI & Agentic AI Engineering.",
+          "citations": [
+            {
+              "citation_id": "cite_2",
+              "source_id": "THE PRODUCTION READY GENAI",
+              "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0000",
+              "citation_type": "quotation",
+              "quoted_passage": "Prepared for:\nJunior Developers, Data Scientists, Backend Engineers, and AI\nEnthusiasts transitioning into Production GenAI & Agentic AI Engineering",
+              "confidence": 1.0
+            }
+          ],
+          "is_factual": true
+        }
+      ]
+    },
+    "sections": [
+      {
+        "section_id": "sec_structure",
+        "title": "Curriculum Structure and Module Breakdown",
+        "content": "The handbook's table of contents is meticulously organized into thematic blocks covering front matter, foundations, building applications, frameworks, agentic AI, production engineering, portfolio and career sections, and extensive reference materials [cite_3]. The core modules span from getting started and Python programming up to advanced multi-agent systems, cloud deployment, and security [cite_3].",
+        "claims": [
+          {
+            "claim_id": "claim_struct_1",
+            "section_id": "sec_structure",
+            "text": "The curriculum includes front matter, foundations, building applications, frameworks, agentic AI, production engineering, portfolio and career tracks, and reference materials.",
+            "citations": [
+              {
+                "citation_id": "cite_3",
+                "source_id": "THE PRODUCTION READY GENAI",
+                "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0001",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.95
+              }
+            ],
+            "is_factual": true
+          }
+        ]
+      },
+      {
+        "section_id": "sec_target_audience",
+        "title": "Target Audience and Prerequisites",
+        "content": "The curriculum targets data scientists familiar with Python and pandas, junior and backend developers new to LLMs, freshers seeking direct entry into AI roles, and engineering teams onboarding internal platform personnel [cite_4]. Prerequisites include core Python knowledge, basic command line usage, Git version control, basic understanding of REST APIs and JSON, and basic SQL proficiency [cite_5].",
+        "claims": [
+          {
+            "claim_id": "claim_aud_1",
+            "section_id": "sec_target_audience",
+            "text": "The handbook targets data scientists, junior/backend developers, career switchers, and engineering teams onboarding new hires.",
+            "citations": [
+              {
+                "citation_id": "cite_4",
+                "source_id": "THE PRODUCTION READY GENAI",
+                "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0007",
+                "citation_type": "quotation",
+                "quoted_passage": "Data Scientists who know Python, pandas, and modeling but have never shipped a production API or built an LLM-powered application. ·\nJunior/Backend Developers who are comfortable with software engineering but new to LLMs, embeddings, and agents. ·\nFreshers and career switchers with basic Python literacy who are targeting AI Engineer roles directly. ·\nEngineering teams onboarding new hires into an AI platform team, using this as a structured internal curriculum.",
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_aud_2",
+            "section_id": "sec_target_audience",
+            "text": "Prerequisites include Python fundamentals, basic command line usage, basic Git, basic API understanding, and basic SQL.",
+            "citations": [
+              {
+                "citation_id": "cite_5",
+                "source_id": "THE PRODUCTION READY GENAI",
+                "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0007",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.95
+              }
+            ],
+            "is_factual": true
+          }
+        ]
+      },
+      {
+        "section_id": "sec_philosophy",
+        "title": "Engineering Philosophy and Future Trends",
+        "content": "AI engineering is framed as roughly half classical backend engineering and half AI-specific engineering, combined with production practices [cite_6]. Important future trends highlighted include agentic systems becoming default interfaces, standardized interoperability layers like the Model Context Protocol (MCP), maturing evaluation and observability disciplines, cost and latency optimization, and addressing new security threat surfaces such as prompt injection [cite_7].",
+        "claims": [
+          {
+            "claim_id": "claim_phil_1",
+            "section_id": "sec_philosophy",
+            "text": "AI Engineering is treated as roughly half classical backend engineering and half AI-specific engineering, glued together by production practices.",
+            "citations": [
+              {
+                "citation_id": "cite_6",
+                "source_id": "THE PRODUCTION READY GENAI",
+                "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0006",
+                "citation_type": "quotation",
+                "quoted_passage": "AI Engineering is best understood as software engineering plus a new, probabilistic component that needs its own discipline of prompt design, retrieval design, evaluation, and guardrails. This handbook treats it that way: roughly half classical backend engineering, half AI-specific engineering, glued together by production practices.",
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_phil_2",
+            "section_id": "sec_philosophy",
+            "text": "Emerging industry trends include agentic systems, MCP interoperability, evaluation maturity, latency/cost engineering, and AI security.",
+            "citations": [
+              {
+                "citation_id": "cite_7",
+                "source_id": "THE PRODUCTION READY GENAI",
+                "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0006",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.95
+              }
+            ],
+            "is_factual": true
+          }
+        ]
+      }
+    ],
+    "conclusion": {
+      "section_id": "sec_conclusion",
+      "title": "Conclusion",
+      "content": "The Production-Ready GenAI & Agentic AI Engineer Handbook provides an extensive, highly structured blueprint for mastering modern AI engineering. By combining foundational software engineering principles with cutting-edge modules on agentic workflows, frameworks, security, and production operations, it bridges the gap between experimental prototyping and robust production deployment [cite_8].",
+      "claims": [
+        {
+          "claim_id": "claim_conc_1",
+          "section_id": "sec_conclusion",
+          "text": "The handbook provides a structured blueprint combining software engineering with agentic workflows and production operations.",
+          "citations": [
+            {
+              "citation_id": "cite_8",
+              "source_id": "THE PRODUCTION READY GENAI",
+              "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0006",
+              "citation_type": "paraphrase",
+              "quoted_passage": null,
+              "confidence": 0.95
+            }
+          ],
+          "is_factual": true
+        }
+      ]
+    },
+    "limitations": [
+      "Worker brief brief_01 returned partial evidence with no pre-synthesized textual summary, requiring direct extraction from raw evidence chunks.",
+      "Evidence provided covers front matter, introduction, roadmap, and foundational software engineering modules up to Module 9, but subsequent modules (10 through 30) are referenced primarily via the table of contents rather than detailed lesson text.",
+      "Brief 'brief_01' partially completed: Step limit (4) reached.",
+      "Verification advisory: Gate 1 failed: 2 critical and 0 major citation/structural defects found."
+    ],
+    "version": 1,
+    "research_team_version": "1.0.0",
+    "brief_coverages": [
+      {
+        "brief_id": "brief_01",
+        "coverage_summary": "Extracted handbook scope, architecture, audience, and curriculum table of contents directly from authoritative source chunks."
+      }
+    ],
+    "unresolved_limitations": [
+      "Incomplete deep-dive details for modules beyond Module 9 due to phased handbook delivery format.",
+      "Brief 'brief_01' partially completed: Step limit (4) reached."
+    ],
+    "created_by": "Lead Research Synthesizer",
+    "created_at": "2026-03-31T00:00:00Z"
+  },
+  "error_message": null,
+  "created_at": "2026-11-20T10:44:32.973007Z",
+  "updated_at": "2026-11-20T10:45:13.449135Z"
+}

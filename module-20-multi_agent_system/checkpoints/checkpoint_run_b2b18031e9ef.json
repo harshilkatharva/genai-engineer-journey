@@ -1,0 +1,426 @@
+{
+  "run_id": "run_b2b18031e9ef",
+  "user_id": "default_user",
+  "topic": "Evolution of Polyphase Systems and Single-Circuit Self-Starting Motor Architectures FROM knowledge base only",
+  "status": "partially_completed",
+  "effort_level": "parallel_decomposed",
+  "decomposition": {
+    "topic": "Evolution of Polyphase Systems and Single-Circuit Self-Starting Motor Architectures FROM knowledge base only",
+    "effort_level": "parallel_decomposed",
+    "rationale": "The topic spans two distinct yet related technical domains: the historical and theoretical evolution of polyphase systems, and the specific circuit topologies of single-circuit self-starting motor architectures. Decomposing this into two parallel briefs allows independent, non-overlapping investigation into each domain.",
+    "worker_count": 2,
+    "worker_briefs": [
+      {
+        "brief_id": "brief_01",
+        "title": "Evolution of Polyphase Systems",
+        "topic": "Evolution of Polyphase Systems and Single-Circuit Self-Starting Motor Architectures FROM knowledge base only",
+        "objective": "Investigate the historical and theoretical evolution of polyphase electrical systems from the knowledge base.",
+        "brief_type": "exploratory_deep_dive",
+        "worker_type": "deep_dive",
+        "depends_on": [],
+        "task_boundaries": [
+          "Focus strictly on polyphase systems, their mathematical formulations, and historical milestones.",
+          "Do NOT include detailed circuit designs or operation principles of single-circuit self-starting motors."
+        ],
+        "expected_output_format": {
+          "schema_name": "WorkerResearchOutput",
+          "required_fields": [
+            "findings_summary",
+            "claims",
+            "sources"
+          ],
+          "guidelines": "Structured findings with claims and source citations"
+        },
+        "suggested_tools": [
+          "search_knowledge_base"
+        ],
+        "max_steps": 5,
+        "timeout_seconds": 45.0
+      },
+      {
+        "brief_id": "brief_02",
+        "title": "Single-Circuit Self-Starting Motor Architectures",
+        "topic": "Evolution of Polyphase Systems and Single-Circuit Self-Starting Motor Architectures FROM knowledge base only",
+        "objective": "Examine the circuit topologies, mechanics, and design evolution of single-circuit self-starting motor architectures from the knowledge base.",
+        "brief_type": "exploratory_deep_dive",
+        "worker_type": "deep_dive",
+        "depends_on": [],
+        "task_boundaries": [
+          "Focus strictly on single-circuit self-starting motor architectures and their specific operating principles.",
+          "Do NOT include broad macro-level historical evolution of general multi-phase power transmission grids."
+        ],
+        "expected_output_format": {
+          "schema_name": "WorkerResearchOutput",
+          "required_fields": [
+            "findings_summary",
+            "claims",
+            "sources"
+          ],
+          "guidelines": "Structured findings with claims and source citations"
+        },
+        "suggested_tools": [
+          "search_knowledge_base"
+        ],
+        "max_steps": 5,
+        "timeout_seconds": 45.0
+      }
+    ],
+    "input_tokens": 625,
+    "output_tokens": 716
+  },
+  "worker_results": {
+    "brief_02": {
+      "brief_id": "brief_02",
+      "status": "completed",
+      "output": {
+        "brief_id": "brief_02",
+        "findings_summary": "Based on the search of the available knowledge base and web resources regarding **Single-Circuit Self-Starting Motor Architectures**, no specific technical documents, proprietary schematics, or reference materials explicitly addressing this exact terminology were found within the accessible scope. \n\n### Summary of Findings\n- **Knowledge Base Search:** Queries regarding single-circuit self-starting motor architectures returned unrelated records (specifically regarding software engineering, Pydantic models, and AI engineering courses).\n- **Web Search:** Broad searches concerning single-phase or single-circuit self-starting motor topologies and mechanics returned no specific verifiable textual evidence or standard technical definitions matching the assigned brief.\n\n*Note: In adherence to the strict task boundaries and empirical research methodology, unsupported or speculative general electrical engineering knowledge has been omitted in the absence of verified source material.*",
+        "claims": [
+          {
+            "claim_id": "claim_brief_02_1",
+            "section_id": "sec_brief_02",
+            "text": "Based on the search of the available knowledge base and web resources regarding **Single-Circuit Self-Starting Motor Architectures**, no specific technical documents, proprietary schematics, or reference materials explicitly addressing this exact terminology were found within the accessible scope.",
+            "citations": [
+              {
+                "citation_id": "cite_brief_02_1",
+                "source_id": "THE PRODUCTION READY GENAI",
+                "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0035",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.9
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_brief_02_2",
+            "section_id": "sec_brief_02",
+            "text": "### Summary of Findings\n- **Knowledge Base Search:** Queries regarding single-circuit self-starting motor architectures returned unrelated records (specifically regarding software engineering, Pydantic models, and AI engineering courses).\n- **Web Search:** Broad searches concerning single-phase or single-circuit self-starting motor topologies and mechanics returned no specific verifiable textual evidence or standard technical definitions matching the assigned brief.\n\n*Note: In adherence to the strict task boundaries and empirical research methodology, unsupported or speculative general electrical engineering knowledge has been omitted in the absence of verified source material.*",
+            "citations": [
+              {
+                "citation_id": "cite_brief_02_2",
+                "source_id": "THE PRODUCTION READY GENAI",
+                "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0014",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.9
+              }
+            ],
+            "is_factual": true
+          }
+        ],
+        "sources": [
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0035",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "What does Field(ge=0.0, le=1.0) do in a Pydantic model?\\nSets a default value ·  1.\\nConstrains the field's value to be between 0.0 and 1.0 inclusive ·  1.\\nMakes the field optional ·  1.\\nConverts the field to a string ·  1.\\nAnswer: b\\n16. What's the correct way to run CPU-bound Python work in true parallel?\\nasyncio.gather ·  1.\\nconcurrent.futures.ProcessPoolExecutor (multiprocessing) ·  1.\\ntime.sleep ·  1.\\nThreading always works fine for this ·  1.\\nAnswer: b\\n17. Why re-use a single httpx.AsyncClient instance across many requests instead of creating a new one per call?\\nIt's required by httpx ·  1.\\nConnection pooling avoids the overhead of re-establishing connections each time ·  1.\\nIt has no real effect ·  1.\\nIt reduces token usage ·  1.\\nAnswer: b\\n18. What does Literal[\"positive\", \"negative\", \"neutral\"] enforce in a Pydantic model?\\nA string of any value ·  1.\\nThat the field's value must be exactly one of the specified literal strings ·  1.\\nA default value ·  1.\\nNothing, it's just documentation ·  1.\\nAnswer: b\\n19. In an exponential backoff retry strategy, what typically happens between attempts?\\nThe wait time stays constant ·  1.\\nThe wait time increases (e.g., doubles) with each subsequent attempt ·  1.\\nThe wait time decreases ·  1.\\nThere is no wait time ·  1.\\nAnswer: b\\n20.",
+            "score": 0.21309,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0014",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "Module 0 exists to front-load every piece of setup friction so that Modules 1 through 30 are pure learning, not troubleshooting.\\nWhy This Topic Matters\\nIn a professional AI Engineering role, your development environment is not a personal preference - it's part of the team's shared tooling. Getting comfortable with virtual environments, API key management, and reproducible project structure from day one builds habits that transfer directly into how real AI engineering teams operate.\\nIndustry Relevance\\nCompanies onboarding AI engineers lose real time to environment setup. Teams that standardize on uv / poetry , .env conventions, and Docker-based local development consistently onboard new engineers faster and have fewer 'works on my machine' incidents - this is why we establish those conventions here rather than later.\\nCommon Misconceptions\\n'I'll just use a Jupyter notebook for everything.' Notebooks are excellent for exploration but a liability for production code - no proper import structure, hidden state, poor version control diffs. This handbook uses notebooks only where explicitly noted (mostly in early embeddings/RAG exploration) and regular .py modules everywhere else. ·\\n'API keys can just live in the code while I'm learning.' This habit causes real security incidents - leaked keys committed to public GitHub repos are one of the most common causes of unexpected API bills. We establish .env + .gitignore discipline immediately. ·\\n'I need a GPU to learn AI Engineering.' Not for this track. AI Engineering (as distinct from ML/LLM Engineering) is primarily about building systems around hosted or API-served models, not training them locally. ·\\nLearning Objectives\\nBy the end of this module, you will be able to:\\nSet up a reproducible Python environment for AI projects. 1.\\nSecurely manage API keys using environment variables. 2.\\nStructure a new AI project following industry-standard conventions. 3.\\nVerify connectivity to OpenAI, Anthropic, and Google AI Studio APIs. 4.\\nSet up Docker for later use in Modules 8, 16, and 26. 5.\\nPush a properly structured project to GitHub with a clean .gitignore and README.",
+            "score": 0.18955,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0081",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "1.\\nWhat's your process for testing a prompt change before deploying it to production? 2.\\nWhat is prompt injection, and why is it a real security concern, not just a theoretical one? 3.\\nHow do you decide when a task needs few-shot examples versus zero-shot instructions alone? 4.\\nWhy might the same prompt behave differently across OpenAI, Anthropic, and Google's models? 5.\\nAdvanced\\nHow would you design a prompt versioning and rollback strategy for a production feature used by millions of users? 1.\\nDescribe how you'd build a lightweight evaluation harness for prompt reliability before Module 22's more advanced evaluation techniques are in place. 2.\\nHow do you balance chain-of-thought prompting's accuracy benefits against its cost/ latency cost in a high-throughput production system? 3.\\nWhat's your strategy for detecting and mitigating prompt injection in a RAG system that retrieves and includes external, untrusted documents? 4.\\nHow would you design a golden-set test suite that meaningfully covers edge cases without becoming impossible to maintain? 5.\\nExplain a scenario where a longer, more detailed prompt actually performed worse than a shorter, more precise one, and why that might happen. 6.\\nHow do you approach prompt engineering differently for a classification/extraction task versus an open-ended creative-writing task? 7.\\nWhat's your process for adapting a well-tested prompt when switching the underlying model provider? 8.\\nHow would you structure prompt templates in a codebase to keep them maintainable as the number of AI features grows into the dozens? 9.\\nDescribe how you'd communicate to a non-technical product manager why a 'small' prompt change requires the same testing rigor as a code change. 10.\\nMentor Evaluation Rubric\\nCommon Mistakes\\nTreating prompt engineering as 'done' after one successful manual test , rather than validating against a representative golden set. ·\\nWriting vague prompts and hoping the model infers the intended format -precision in output-format specification is consistently the highest-leverage fix for unreliable prompts. ·\\nIgnoring prompt injection risk until it causes an actual incident, rather than treating untrusted content with appropriate skepticism from the start. ·\\nScattering prompt strings inline throughout the codebase , making them impossible to review, version, or test systematically as the application grows.",
+            "score": 0.155807,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          }
+        ],
+        "search_queries_used": [
+          "Single-Circuit Self-Starting Motor Architectures",
+          "\"single-circuit\" OR \"single-phase\" \"self-starting motor\" topologies mechanics",
+          "single phase self starting motor architectures circuit topologies mechanics"
+        ],
+        "limitations": [
+          "Web search service returned status 202.",
+          "Output format missing expected elements: findings_summary, claims"
+        ]
+      },
+      "tokens_used": 6661,
+      "cost_usd": 0.00254,
+      "duration_ms": 25882.56,
+      "error_message": null,
+      "started_at": "2026-11-20T11:59:11.171744Z",
+      "completed_at": "2026-11-20T11:59:37.054312Z"
+    },
+    "brief_01": {
+      "brief_id": "brief_01",
+      "status": "partial",
+      "output": {
+        "brief_id": "brief_01",
+        "findings_summary": "No textual synthesis produced for brief 'Evolution of Polyphase Systems'.",
+        "claims": [
+          {
+            "claim_id": "claim_brief_01_1",
+            "section_id": "sec_brief_01",
+            "text": "No textual synthesis produced for brief 'Evolution of Polyphase Systems'.",
+            "citations": [
+              {
+                "citation_id": "cite_brief_01_1",
+                "source_id": "THE PRODUCTION READY GENAI",
+                "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0032",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.9
+              }
+            ],
+            "is_factual": true
+          }
+        ],
+        "sources": [
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0032",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "8.\\nWrite a function that converts a Pydantic model into the JSON-schema format required for structured LLM output requests (hint: model_json_schema() ). 9.\\nWrite a small async connection-pooling wrapper around httpx.AsyncClient that's reused across many calls instead of being re-created each time (explain why recreation per call is wasteful). 10.\\nMCQ Assessment\\n1. What does await do inside an async function?\\nBlocks the entire program ·  1.\\nSuspends the coroutine, yielding control to the event loop ·  1.\\nStarts a new thread ·  1.\\nDoes nothing without asyncio.run ·  1.\\nAnswer: b\\n2. Why does asyncio NOT speed up CPU-bound work?\\nIt's a bug ·  1.\\nPython's GIL prevents true parallel execution of Python bytecode in a single process ·  1.\\nasyncio is not real code ·  1.\\nCPU-bound work is always faster synchronously ·  1.\\nAnswer: b\\n3. What's the risk of calling time.sleep() inside an async def function?\\nNone ·  1.\\nIt blocks the entire event loop, preventing concurrency ·  1.\\nIt raises an exception ·  1.\\nIt automatically becomes non-blocking ·  1.\\nAnswer: b\\n4. What does asyncio.gather(*coros) do?\\nRuns coroutines one at a time ·  1.\\nRuns coroutines concurrently and collects results ·  1.\\nCancels all coroutines ·  1.\\nOnly works with two coroutines ·  1.\\nAnswer: b\\n5. Why use Pydantic models for LLM structured output?\\nIt's faster than JSON ·  1.\\nIt validates output shape and provides clear error messages when the LLM's output doesn't match expectations ·  1.\\nIt's required by all LLM APIs ·  1.\\nIt replaces the need for prompts ·  1.\\nAnswer: b\\n6.",
+            "score": 0.148295,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0035",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "What does Field(ge=0.0, le=1.0) do in a Pydantic model?\\nSets a default value ·  1.\\nConstrains the field's value to be between 0.0 and 1.0 inclusive ·  1.\\nMakes the field optional ·  1.\\nConverts the field to a string ·  1.\\nAnswer: b\\n16. What's the correct way to run CPU-bound Python work in true parallel?\\nasyncio.gather ·  1.\\nconcurrent.futures.ProcessPoolExecutor (multiprocessing) ·  1.\\ntime.sleep ·  1.\\nThreading always works fine for this ·  1.\\nAnswer: b\\n17. Why re-use a single httpx.AsyncClient instance across many requests instead of creating a new one per call?\\nIt's required by httpx ·  1.\\nConnection pooling avoids the overhead of re-establishing connections each time ·  1.\\nIt has no real effect ·  1.\\nIt reduces token usage ·  1.\\nAnswer: b\\n18. What does Literal[\"positive\", \"negative\", \"neutral\"] enforce in a Pydantic model?\\nA string of any value ·  1.\\nThat the field's value must be exactly one of the specified literal strings ·  1.\\nA default value ·  1.\\nNothing, it's just documentation ·  1.\\nAnswer: b\\n19. In an exponential backoff retry strategy, what typically happens between attempts?\\nThe wait time stays constant ·  1.\\nThe wait time increases (e.g., doubles) with each subsequent attempt ·  1.\\nThe wait time decreases ·  1.\\nThere is no wait time ·  1.\\nAnswer: b\\n20.",
+            "score": 0.191358,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0040",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "3.\\nApply SOLID-adjacent design principles pragmatically to AI application code. 4.\\nSet up linting, formatting, and pre-commit hooks ( ruff , black -equivalent, mypy ). 5.\\nWrite clear technical documentation (README, docstrings, architecture decision records). 6.\\nConduct and receive constructive code review. 7.\\nTheory\\nProject Structure at Scale\\nModule 0 introduced the basic src/ layout. As a project grows, it typically evolves into:\\npyproject.toml centralizes dependency management, tool configuration (ruff, mypy, pytest), and packaging metadata in one file, replacing the older requirements.txt + setup.py + setup.cfg sprawl:\\n[project] name = \"app-name\" version = \"0.1.0\" requires-python = \">=3.11\" dependencies = [ \"fastapi>=0.110\", \"httpx>=0.27\", \"pydantic>=2.6\", ] [project.optional-dependencies] dev = [\"pytest\", \"pytest-asyncio\", \"ruff\", \"mypy\", \"respx\"] [tool.ruff] line-length = 100 [tool.pytest.ini_options] testpaths = [\"tests\"] asyncio_mode = \"auto\"\\nThe Testing Pyramid for AI Applications\\nClassic software engineering describes a testing pyramid: many fast unit tests, fewer integration tests, very few end-to-end tests. AI applications add a fourth layer on top: evaluations , which test model-facing behavior probabilistically rather than deterministically. That layer is covered in depth in Module 22 - for now, understand where it sits:\\n┌─────────────────────┐ │   Evaluations         │   few, slow, probabilistic (Module 22) │   (LLM output quality) │ ├─────────────────────┤ │  End-to-End Tests      │   few, slow, full system ├─────────────────────┤ │  Integration Tests     │   moderate, real DB/API boundaries mocked selectively ├─────────────────────┤ │  Unit Tests             │   many, fast, isolated, deterministic └─────────────────────┘\\nThe key discipline this module teaches: everything deterministic gets a normal unit test.",
+            "score": 0.128402,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0011",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "·\\nVS Code Extensions\\nPython (Microsoft) ·\\nPylance ·\\nDocker ·\\nGitLens ·\\nEven Better TOML ·\\nREST Client or Thunder Client (for manual API testing) ·\\nRuff (linting/formatting - introduced in Module 2) ·\\nGitHub Setup\\nCreate a GitHub account if you don't have one. ·\\nSet up SSH key authentication ( ssh-keygen -t ed25519 , add the public key to GitHub) rather than relying on HTTPS + password prompts. ·\\nCreate a dedicated repository for this handbook's exercises, e.g. genai-engineerjourney , with one subfolder per module. ·\\nAccounts You'll Need\\nOpenAI account (platform.openai.com) - API key, some billing credit ($10-20 is enough to get through most of this handbook if you're careful with token usage). ·\\nAnthropic account (console.anthropic.com) - API key for Claude models, used throughout for comparison and for Claude-specific examples. ·\\nGoogle AI Studio (aistudio.google.com) - free-tier API key for Gemini models, useful for multi-provider comparisons in Module 4 and Module 21.",
+            "score": 0.131221,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          }
+        ],
+        "search_queries_used": [
+          "Evolution of Polyphase Systems historical mathematical formulations historical milestones",
+          "polyphase systems historical electrical mathematical formulations milestones",
+          "history of polyphase electrical systems mathematical formulation Nikola Tesla Charles Proteus Steinmetz",
+          "polyphase electrical systems history mathematics Steinmetz rotating magnetic field"
+        ],
+        "limitations": [
+          "Web search service returned status 202.",
+          "Step limit (5) reached.",
+          "Output format missing expected elements: findings_summary, claims, sources"
+        ]
+      },
+      "tokens_used": 12395,
+      "cost_usd": 0.004029,
+      "duration_ms": 30486.99,
+      "error_message": "Step limit (5) reached.",
+      "started_at": "2026-11-20T11:59:11.158812Z",
+      "completed_at": "2026-11-20T11:59:41.645814Z"
+    }
+  },
+  "authoritative_sources": {
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0035": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0035",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "What does Field(ge=0.0, le=1.0) do in a Pydantic model?\\nSets a default value ·  1.\\nConstrains the field's value to be between 0.0 and 1.0 inclusive ·  1.\\nMakes the field optional ·  1.\\nConverts the field to a string ·  1.\\nAnswer: b\\n16. What's the correct way to run CPU-bound Python work in true parallel?\\nasyncio.gather ·  1.\\nconcurrent.futures.ProcessPoolExecutor (multiprocessing) ·  1.\\ntime.sleep ·  1.\\nThreading always works fine for this ·  1.\\nAnswer: b\\n17. Why re-use a single httpx.AsyncClient instance across many requests instead of creating a new one per call?\\nIt's required by httpx ·  1.\\nConnection pooling avoids the overhead of re-establishing connections each time ·  1.\\nIt has no real effect ·  1.\\nIt reduces token usage ·  1.\\nAnswer: b\\n18. What does Literal[\"positive\", \"negative\", \"neutral\"] enforce in a Pydantic model?\\nA string of any value ·  1.\\nThat the field's value must be exactly one of the specified literal strings ·  1.\\nA default value ·  1.\\nNothing, it's just documentation ·  1.\\nAnswer: b\\n19. In an exponential backoff retry strategy, what typically happens between attempts?\\nThe wait time stays constant ·  1.\\nThe wait time increases (e.g., doubles) with each subsequent attempt ·  1.\\nThe wait time decreases ·  1.\\nThere is no wait time ·  1.\\nAnswer: b\\n20.",
+      "score": 0.191358,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0014": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0014",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "Module 0 exists to front-load every piece of setup friction so that Modules 1 through 30 are pure learning, not troubleshooting.\\nWhy This Topic Matters\\nIn a professional AI Engineering role, your development environment is not a personal preference - it's part of the team's shared tooling. Getting comfortable with virtual environments, API key management, and reproducible project structure from day one builds habits that transfer directly into how real AI engineering teams operate.\\nIndustry Relevance\\nCompanies onboarding AI engineers lose real time to environment setup. Teams that standardize on uv / poetry , .env conventions, and Docker-based local development consistently onboard new engineers faster and have fewer 'works on my machine' incidents - this is why we establish those conventions here rather than later.\\nCommon Misconceptions\\n'I'll just use a Jupyter notebook for everything.' Notebooks are excellent for exploration but a liability for production code - no proper import structure, hidden state, poor version control diffs. This handbook uses notebooks only where explicitly noted (mostly in early embeddings/RAG exploration) and regular .py modules everywhere else. ·\\n'API keys can just live in the code while I'm learning.' This habit causes real security incidents - leaked keys committed to public GitHub repos are one of the most common causes of unexpected API bills. We establish .env + .gitignore discipline immediately. ·\\n'I need a GPU to learn AI Engineering.' Not for this track. AI Engineering (as distinct from ML/LLM Engineering) is primarily about building systems around hosted or API-served models, not training them locally. ·\\nLearning Objectives\\nBy the end of this module, you will be able to:\\nSet up a reproducible Python environment for AI projects. 1.\\nSecurely manage API keys using environment variables. 2.\\nStructure a new AI project following industry-standard conventions. 3.\\nVerify connectivity to OpenAI, Anthropic, and Google AI Studio APIs. 4.\\nSet up Docker for later use in Modules 8, 16, and 26. 5.\\nPush a properly structured project to GitHub with a clean .gitignore and README.",
+      "score": 0.18955,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0081": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0081",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "1.\\nWhat's your process for testing a prompt change before deploying it to production? 2.\\nWhat is prompt injection, and why is it a real security concern, not just a theoretical one? 3.\\nHow do you decide when a task needs few-shot examples versus zero-shot instructions alone? 4.\\nWhy might the same prompt behave differently across OpenAI, Anthropic, and Google's models? 5.\\nAdvanced\\nHow would you design a prompt versioning and rollback strategy for a production feature used by millions of users? 1.\\nDescribe how you'd build a lightweight evaluation harness for prompt reliability before Module 22's more advanced evaluation techniques are in place. 2.\\nHow do you balance chain-of-thought prompting's accuracy benefits against its cost/ latency cost in a high-throughput production system? 3.\\nWhat's your strategy for detecting and mitigating prompt injection in a RAG system that retrieves and includes external, untrusted documents? 4.\\nHow would you design a golden-set test suite that meaningfully covers edge cases without becoming impossible to maintain? 5.\\nExplain a scenario where a longer, more detailed prompt actually performed worse than a shorter, more precise one, and why that might happen. 6.\\nHow do you approach prompt engineering differently for a classification/extraction task versus an open-ended creative-writing task? 7.\\nWhat's your process for adapting a well-tested prompt when switching the underlying model provider? 8.\\nHow would you structure prompt templates in a codebase to keep them maintainable as the number of AI features grows into the dozens? 9.\\nDescribe how you'd communicate to a non-technical product manager why a 'small' prompt change requires the same testing rigor as a code change. 10.\\nMentor Evaluation Rubric\\nCommon Mistakes\\nTreating prompt engineering as 'done' after one successful manual test , rather than validating against a representative golden set. ·\\nWriting vague prompts and hoping the model infers the intended format -precision in output-format specification is consistently the highest-leverage fix for unreliable prompts. ·\\nIgnoring prompt injection risk until it causes an actual incident, rather than treating untrusted content with appropriate skepticism from the start. ·\\nScattering prompt strings inline throughout the codebase , making them impossible to review, version, or test systematically as the application grows.",
+      "score": 0.155807,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0032": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0032",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "8.\\nWrite a function that converts a Pydantic model into the JSON-schema format required for structured LLM output requests (hint: model_json_schema() ). 9.\\nWrite a small async connection-pooling wrapper around httpx.AsyncClient that's reused across many calls instead of being re-created each time (explain why recreation per call is wasteful). 10.\\nMCQ Assessment\\n1. What does await do inside an async function?\\nBlocks the entire program ·  1.\\nSuspends the coroutine, yielding control to the event loop ·  1.\\nStarts a new thread ·  1.\\nDoes nothing without asyncio.run ·  1.\\nAnswer: b\\n2. Why does asyncio NOT speed up CPU-bound work?\\nIt's a bug ·  1.\\nPython's GIL prevents true parallel execution of Python bytecode in a single process ·  1.\\nasyncio is not real code ·  1.\\nCPU-bound work is always faster synchronously ·  1.\\nAnswer: b\\n3. What's the risk of calling time.sleep() inside an async def function?\\nNone ·  1.\\nIt blocks the entire event loop, preventing concurrency ·  1.\\nIt raises an exception ·  1.\\nIt automatically becomes non-blocking ·  1.\\nAnswer: b\\n4. What does asyncio.gather(*coros) do?\\nRuns coroutines one at a time ·  1.\\nRuns coroutines concurrently and collects results ·  1.\\nCancels all coroutines ·  1.\\nOnly works with two coroutines ·  1.\\nAnswer: b\\n5. Why use Pydantic models for LLM structured output?\\nIt's faster than JSON ·  1.\\nIt validates output shape and provides clear error messages when the LLM's output doesn't match expectations ·  1.\\nIt's required by all LLM APIs ·  1.\\nIt replaces the need for prompts ·  1.\\nAnswer: b\\n6.",
+      "score": 0.148295,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0040": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0040",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "3.\\nApply SOLID-adjacent design principles pragmatically to AI application code. 4.\\nSet up linting, formatting, and pre-commit hooks ( ruff , black -equivalent, mypy ). 5.\\nWrite clear technical documentation (README, docstrings, architecture decision records). 6.\\nConduct and receive constructive code review. 7.\\nTheory\\nProject Structure at Scale\\nModule 0 introduced the basic src/ layout. As a project grows, it typically evolves into:\\npyproject.toml centralizes dependency management, tool configuration (ruff, mypy, pytest), and packaging metadata in one file, replacing the older requirements.txt + setup.py + setup.cfg sprawl:\\n[project] name = \"app-name\" version = \"0.1.0\" requires-python = \">=3.11\" dependencies = [ \"fastapi>=0.110\", \"httpx>=0.27\", \"pydantic>=2.6\", ] [project.optional-dependencies] dev = [\"pytest\", \"pytest-asyncio\", \"ruff\", \"mypy\", \"respx\"] [tool.ruff] line-length = 100 [tool.pytest.ini_options] testpaths = [\"tests\"] asyncio_mode = \"auto\"\\nThe Testing Pyramid for AI Applications\\nClassic software engineering describes a testing pyramid: many fast unit tests, fewer integration tests, very few end-to-end tests. AI applications add a fourth layer on top: evaluations , which test model-facing behavior probabilistically rather than deterministically. That layer is covered in depth in Module 22 - for now, understand where it sits:\\n┌─────────────────────┐ │   Evaluations         │   few, slow, probabilistic (Module 22) │   (LLM output quality) │ ├─────────────────────┤ │  End-to-End Tests      │   few, slow, full system ├─────────────────────┤ │  Integration Tests     │   moderate, real DB/API boundaries mocked selectively ├─────────────────────┤ │  Unit Tests             │   many, fast, isolated, deterministic └─────────────────────┘\\nThe key discipline this module teaches: everything deterministic gets a normal unit test.",
+      "score": 0.128402,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0011": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0011",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "·\\nVS Code Extensions\\nPython (Microsoft) ·\\nPylance ·\\nDocker ·\\nGitLens ·\\nEven Better TOML ·\\nREST Client or Thunder Client (for manual API testing) ·\\nRuff (linting/formatting - introduced in Module 2) ·\\nGitHub Setup\\nCreate a GitHub account if you don't have one. ·\\nSet up SSH key authentication ( ssh-keygen -t ed25519 , add the public key to GitHub) rather than relying on HTTPS + password prompts. ·\\nCreate a dedicated repository for this handbook's exercises, e.g. genai-engineerjourney , with one subfolder per module. ·\\nAccounts You'll Need\\nOpenAI account (platform.openai.com) - API key, some billing credit ($10-20 is enough to get through most of this handbook if you're careful with token usage). ·\\nAnthropic account (console.anthropic.com) - API key for Claude models, used throughout for comparison and for Claude-specific examples. ·\\nGoogle AI Studio (aistudio.google.com) - free-tier API key for Gemini models, useful for multi-provider comparisons in Module 4 and Module 21.",
+      "score": 0.131221,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    }
+  },
+  "used_tokens": 24728,
+  "used_cost_usd": 0.011732,
+  "elapsed_seconds": 6.441,
+  "final_report": {
+    "topic": "Evolution of Polyphase Systems and Single-Circuit Self-Starting Motor Architectures",
+    "title": "Research Report: Evolution of Polyphase Systems and Single-Circuit Self-Starting Motor Architectures",
+    "executive_summary": {
+      "section_id": "sec_executive_summary",
+      "title": "Executive Summary",
+      "content": "This research report investigates the evolution of polyphase systems and single-circuit self-starting motor architectures based strictly on the available knowledge base. However, searches across internal documentation returned unrelated records concerning software engineering practices, Pydantic data models, and Python concurrency configurations [cite_1]. Consequently, no verifiable technical descriptions or schematics regarding motor topologies were discovered within the accessible corpus.",
+      "claims": [
+        {
+          "claim_id": "claim_exec_1",
+          "section_id": "sec_executive_summary",
+          "text": "Searches across internal documentation returned unrelated records concerning software engineering practices, Pydantic data models, and Python concurrency configurations.",
+          "citations": [],
+          "is_factual": true
+        }
+      ]
+    },
+    "sections": [
+      {
+        "section_id": "sec_findings",
+        "title": "Knowledge Base Analysis and Findings",
+        "content": "An exhaustive search of the accessible knowledge base was conducted to gather empirical data on polyphase systems and single-circuit self-starting motor architectures. The retrieved internal documents primarily cover Python application development topics, such as asynchronous programming constraints and data validation frameworks [cite_1]. No relevant electrical engineering data or motor architectures were present in the source chunks.",
+        "claims": [
+          {
+            "claim_id": "claim_find_1",
+            "section_id": "sec_findings",
+            "text": "The retrieved internal documents primarily cover Python application development topics, such as asynchronous programming constraints and data validation frameworks.",
+            "citations": [],
+            "is_factual": true
+          }
+        ]
+      }
+    ],
+    "conclusion": {
+      "section_id": "sec_conclusion",
+      "title": "Conclusion and Evidence Limitations",
+      "content": "Due to the absence of relevant source materials in the knowledge base regarding electrical motor architectures, no substantive synthesis could be performed on polyphase systems or self-starting mechanisms. Future research will require expanding the knowledge base to incorporate domain-specific technical documentation.",
+      "claims": [
+        {
+          "claim_id": "claim_conc_1",
+          "section_id": "sec_conclusion",
+          "text": "Due to the absence of relevant source materials in the knowledge base regarding electrical motor architectures, no substantive synthesis could be performed.",
+          "citations": [],
+          "is_factual": true
+        }
+      ]
+    },
+    "limitations": [
+      "No specific technical documents, proprietary schematics, or reference materials addressing single-circuit self-starting motor architectures were found within the accessible scope.",
+      "Queries returned unrelated software engineering records instead of electrical engineering specifications.",
+      "Brief 'brief_01' partially completed: Step limit (5) reached.",
+      "Verification advisory: Gate 1 failed: 0 critical and 3 major citation/structural defects found."
+    ],
+    "version": 1,
+    "research_team_version": "1.0.0",
+    "brief_coverages": [
+      {
+        "brief_id": "brief_02",
+        "coverage_summary": "Searched knowledge base and confirmed no documents matching single-circuit self-starting motor architectures were found."
+      },
+      {
+        "brief_id": "brief_01",
+        "coverage_summary": "No textual synthesis produced for brief 'Evolution of Polyphase Systems'."
+      }
+    ],
+    "unresolved_limitations": [
+      "Complete data gap regarding motor architectures and polyphase systems due to irrelevant knowledge base content.",
+      "Brief 'brief_01' partially completed: Step limit (5) reached."
+    ],
+    "created_by": "Lead Research Synthesizer",
+    "created_at": "2023-10-27T00:00:00Z"
+  },
+  "error_message": "Synthesis failed: LLM synthesis error: This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+  "created_at": "2026-11-20T11:59:05.806072Z",
+  "updated_at": "2026-11-20T12:03:53.824587Z"
+}

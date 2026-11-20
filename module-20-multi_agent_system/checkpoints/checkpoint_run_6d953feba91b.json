@@ -1,0 +1,433 @@
+{
+  "run_id": "run_6d953feba91b",
+  "user_id": "default_user",
+  "topic": "What is the main operational difference between Tesla’s synchronous motor and his torque motor?",
+  "status": "partially_completed",
+  "effort_level": "parallel_decomposed",
+  "decomposition": {
+    "topic": "What is the main operational difference between Tesla’s synchronous motor and his torque motor?",
+    "effort_level": "parallel_decomposed",
+    "rationale": "The topic requires comparing two specific historical motor designs invented by Nikola Tesla, analyzing their operational principles, and synthesizing the distinctions.",
+    "worker_count": 2,
+    "worker_briefs": [
+      {
+        "brief_id": "brief_01",
+        "title": "Tesla Synchronous Motor Analysis",
+        "topic": "What is the main operational difference between Tesla’s synchronous motor and his torque motor?",
+        "objective": "Investigate the design, operational principles, and primary use cases of Nikola Tesla's synchronous motor design.",
+        "brief_type": "factual_retrieval",
+        "worker_type": "default",
+        "depends_on": [],
+        "task_boundaries": [
+          "Focus strictly on Nikola Tesla's synchronous motor design and constant speed operation.",
+          "Do NOT discuss asynchronous induction motors or torque motors."
+        ],
+        "expected_output_format": {
+          "schema_name": "WorkerResearchOutput",
+          "required_fields": [
+            "findings_summary",
+            "claims",
+            "sources"
+          ],
+          "guidelines": "Structured findings with claims and source citations"
+        },
+        "suggested_tools": [
+          "search_web",
+          "search_knowledge_base"
+        ],
+        "max_steps": 5,
+        "timeout_seconds": 45.0
+      },
+      {
+        "brief_id": "brief_02",
+        "title": "Tesla Torque Motor Analysis",
+        "topic": "What is the main operational difference between Tesla’s synchronous motor and his torque motor?",
+        "objective": "Investigate the design, operational principles, and primary use cases of Nikola Tesla's torque motor design.",
+        "brief_type": "factual_retrieval",
+        "worker_type": "default",
+        "depends_on": [],
+        "task_boundaries": [
+          "Focus strictly on Nikola Tesla's torque motor design and high-torque or stalled-rotor operation.",
+          "Do NOT discuss standard synchronous motors or general induction motors."
+        ],
+        "expected_output_format": {
+          "schema_name": "WorkerResearchOutput",
+          "required_fields": [
+            "findings_summary",
+            "claims",
+            "sources"
+          ],
+          "guidelines": "Structured findings with claims and source citations"
+        },
+        "suggested_tools": [
+          "search_web",
+          "search_knowledge_base"
+        ],
+        "max_steps": 5,
+        "timeout_seconds": 45.0
+      }
+    ],
+    "input_tokens": 623,
+    "output_tokens": 650
+  },
+  "worker_results": {
+    "brief_01": {
+      "brief_id": "brief_01",
+      "status": "partial",
+      "output": {
+        "brief_id": "brief_01",
+        "findings_summary": "No textual synthesis produced for brief 'Tesla Synchronous Motor Analysis'.",
+        "claims": [
+          {
+            "claim_id": "claim_brief_01_1",
+            "section_id": "sec_brief_01",
+            "text": "No textual synthesis produced for brief 'Tesla Synchronous Motor Analysis'.",
+            "citations": [
+              {
+                "citation_id": "cite_brief_01_1",
+                "source_id": "THE PRODUCTION READY GENAI",
+                "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0035",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.9
+              }
+            ],
+            "is_factual": true
+          }
+        ],
+        "sources": [
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0035",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "What does Field(ge=0.0, le=1.0) do in a Pydantic model?\\nSets a default value ·  1.\\nConstrains the field's value to be between 0.0 and 1.0 inclusive ·  1.\\nMakes the field optional ·  1.\\nConverts the field to a string ·  1.\\nAnswer: b\\n16. What's the correct way to run CPU-bound Python work in true parallel?\\nasyncio.gather ·  1.\\nconcurrent.futures.ProcessPoolExecutor (multiprocessing) ·  1.\\ntime.sleep ·  1.\\nThreading always works fine for this ·  1.\\nAnswer: b\\n17. Why re-use a single httpx.AsyncClient instance across many requests instead of creating a new one per call?\\nIt's required by httpx ·  1.\\nConnection pooling avoids the overhead of re-establishing connections each time ·  1.\\nIt has no real effect ·  1.\\nIt reduces token usage ·  1.\\nAnswer: b\\n18. What does Literal[\"positive\", \"negative\", \"neutral\"] enforce in a Pydantic model?\\nA string of any value ·  1.\\nThat the field's value must be exactly one of the specified literal strings ·  1.\\nA default value ·  1.\\nNothing, it's just documentation ·  1.\\nAnswer: b\\n19. In an exponential backoff retry strategy, what typically happens between attempts?\\nThe wait time stays constant ·  1.\\nThe wait time increases (e.g., doubles) with each subsequent attempt ·  1.\\nThe wait time decreases ·  1.\\nThere is no wait time ·  1.\\nAnswer: b\\n20.",
+            "score": 0.133684,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0026",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "Doing it concurrently with asyncio means the user waits for roughly the maximum of those latencies (with some overhead), because the I/O waits overlap.\\nThis matters because it's the single largest, easiest performance win available in AI application backends - and it's why virtually every serious framework in this space (FastAPI, LangGraph runtimes, MCP servers) is async-first.\\nImportant nuance: Python's asyncio concurrency helps for I/O-bound work (waiting on network responses) but does not give you true parallelism for CPU-bound work (e.g., heavy local text processing, embedding computation without a GPU) - that's constrained by the Global Interpreter Lock (GIL) and requires multiprocessing or native extensions instead. Know which kind of work you're doing before reaching for asyncio .\\nAsync Fundamentals\\nimport asyncio import httpx async def fetch_completion(client: httpx.AsyncClient, prompt: str) -> str: response = await client.post( \"https://api.example.com/v1/complete\", json={\"prompt\": prompt}, timeout=30.0, ) response.raise_for_status() return response.json()[\"text\"] async def main(): prompts = [\"Summarize X\", \"Summarize Y\", \"Summarize Z\"] async with httpx.AsyncClient() as client: # Sequential: total time ≈ sum of all latencies results_sequential = [] for p in prompts: results_sequential.append( await fetch_completion(client, p)) # Concurrent: total time ≈ max of all latencies results_concurrent = await asyncio.gather( *(fetch_completion(client, p) for p in prompts) ) asyncio.run(main())\\nKey vocabulary:\\nCoroutine - a function defined with async def ; calling it returns a coroutine object, it doesn't execute until awaited. ·\\nawait - suspends the current coroutine until the awaited operation completes, yielding control back to the event loop so other work can proceed. ·\\nEvent loop - the scheduler that manages which coroutine runs when. ·\\nasyncio.gather - runs multiple coroutines concurrently and collects their results.",
+            "score": 0.130819,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0032",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "8.\\nWrite a function that converts a Pydantic model into the JSON-schema format required for structured LLM output requests (hint: model_json_schema() ). 9.\\nWrite a small async connection-pooling wrapper around httpx.AsyncClient that's reused across many calls instead of being re-created each time (explain why recreation per call is wasteful). 10.\\nMCQ Assessment\\n1. What does await do inside an async function?\\nBlocks the entire program ·  1.\\nSuspends the coroutine, yielding control to the event loop ·  1.\\nStarts a new thread ·  1.\\nDoes nothing without asyncio.run ·  1.\\nAnswer: b\\n2. Why does asyncio NOT speed up CPU-bound work?\\nIt's a bug ·  1.\\nPython's GIL prevents true parallel execution of Python bytecode in a single process ·  1.\\nasyncio is not real code ·  1.\\nCPU-bound work is always faster synchronously ·  1.\\nAnswer: b\\n3. What's the risk of calling time.sleep() inside an async def function?\\nNone ·  1.\\nIt blocks the entire event loop, preventing concurrency ·  1.\\nIt raises an exception ·  1.\\nIt automatically becomes non-blocking ·  1.\\nAnswer: b\\n4. What does asyncio.gather(*coros) do?\\nRuns coroutines one at a time ·  1.\\nRuns coroutines concurrently and collects results ·  1.\\nCancels all coroutines ·  1.\\nOnly works with two coroutines ·  1.\\nAnswer: b\\n5. Why use Pydantic models for LLM structured output?\\nIt's faster than JSON ·  1.\\nIt validates output shape and provides clear error messages when the LLM's output doesn't match expectations ·  1.\\nIt's required by all LLM APIs ·  1.\\nIt replaces the need for prompts ·  1.\\nAnswer: b\\n6.",
+            "score": 0.108125,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          }
+        ],
+        "search_queries_used": [
+          "Nikola Tesla synchronous motor design operational principles constant speed patent",
+          "Tesla synchronous motor US Patent constant speed",
+          "Tesla synchronous motor design operation",
+          "Tesla synchronous motor",
+          "Tesla synchronous motor patent constant speed"
+        ],
+        "limitations": [
+          "Web search service returned status 202.",
+          "Step limit (5) reached.",
+          "Output format missing expected elements: findings_summary, claims, sources"
+        ]
+      },
+      "tokens_used": 3712,
+      "cost_usd": 0.001353,
+      "duration_ms": 19438.65,
+      "error_message": "Step limit (5) reached.",
+      "started_at": "2026-11-20T12:10:02.299755Z",
+      "completed_at": "2026-11-20T12:10:21.738413Z"
+    },
+    "brief_02": {
+      "brief_id": "brief_02",
+      "status": "partial",
+      "output": {
+        "brief_id": "brief_02",
+        "findings_summary": "No textual synthesis produced for brief 'Tesla Torque Motor Analysis'.",
+        "claims": [
+          {
+            "claim_id": "claim_brief_02_1",
+            "section_id": "sec_brief_02",
+            "text": "No textual synthesis produced for brief 'Tesla Torque Motor Analysis'.",
+            "citations": [
+              {
+                "citation_id": "cite_brief_02_1",
+                "source_id": "THE PRODUCTION READY GENAI",
+                "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0013",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.9
+              }
+            ],
+            "is_factual": true
+          }
+        ],
+        "sources": [
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0013",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "·\\nUseful Browser Extensions\\nA JSON formatter (for reading API responses) ·\\nA REST client extension if you prefer browser-based testing over Postman/Thunder Client ·\\nLEARNING ROADMAP\\nVisual Roadmap (Conceptual Flow)\\nASCII Roadmap\\n[ FOUNDATIONS ] Module 0  -> Getting Started Module 1  -> Python for AI Engineers Module 2  -> Software Engineering Fundamentals | v [ LLM CORE ] Module 3  -> How LLMs Actually Work Module 4  -> Prompt Engineering | v [ APPLICATION LAYER ] Module 5  -> FastAPI Module 6  -> Building AI Applications | v [ RAG STACK ] Module 7  -> Embeddings Module 8  -> Vector Databases Module 9  -> Retrieval-Augmented Generation | v [ FRAMEWORKS & PROTOCOLS ] Module 10 -> LangChain Module 11 -> LangGraph Module 12 -> LlamaIndex Module 13 -> Model Context Protocol | v [ AGENT BUILDING BLOCKS ] Module 14 -> Tool Calling Module 15 -> Function Calling Module 16 -> Memory | v [ AGENTIC AI ] Module 17 -> AI Agents Module 18 -> Planning Module 19 -> Reflection Module 20 -> Multi-Agent Systems | v [ PRODUCTION ENGINEERING ] Module 21 -> Production AI Module 22 -> Evaluation Module 23 -> Observability Module 24 -> Guardrails Module 25 -> AI Security Module 26 -> Deployment Module 27 -> Cloud | v [ PORTFOLIO & CAREER ] Module 28 -> Capstone Projects Module 29 -> Interview Preparation Module 30 -> Career Roadmap\\nMilestone Roadmap\\nSkill Dependency Graph\\nEstimated Timeline\\nFast track (full-time, strong prior software background): 6 weeks ·\\nStandard track (part-time, Data Science background): 12-16 weeks ·\\nExtended track (part-time, learning Python and backend concepts alongside): 20-24 weeks ·\\nMODULE 0 - GETTING STARTED\\nIntroduction\\nEvery learner who skips setup pays for it later - usually at the worst possible time, mid-way through a module, debugging an environment issue instead of learning the actual concept. Module 0 exists to front-load every piece of setup friction so that Modules 1 through 30 are pure learning, not troubleshooting.\\nWhy This Topic Matters\\nIn a professional AI Engineering role, your development environment is not a personal preference - it's part of the team's shared tooling.",
+            "score": 0.094515,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0071",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "·\\nOrder matters less than diversity for most models, but placing the most representative example last (closest to the actual query) sometimes helps. ·\\nfew_shot_prompt = \"\"\" Classify the sentiment of each review as positive, negative, or neutral. Review: \"This product changed my life, highly recommend!\" Sentiment: positive Review: \"It's fine, does what it says, nothing special.\" Sentiment: neutral Review: \"Broke after two days, waste of money.\" Sentiment: negative Review: \"{user_review}\" Sentiment: \"\"\"\\nChain-of-Thought and Structured Reasoning\\nFor tasks involving multi-step reasoning (arithmetic, logic, multi-step analysis), explicitly instructing the model to reason step by step before producing a final answer ('chain-of-thought' prompting) measurably improves accuracy on many tasks, at the cost of more output tokens (and therefore latency and cost):\\ncot_prompt = \"\"\" Solve this step by step, showing your reasoning, then give the final answer on its own line prefixed with \"Final Answer:\". Problem: A store had 120 units of inventory. It sold 35% on Monday and 20% of what remained on Tuesday. How many units are left? \"\"\"\\nNote: some modern models (including 'reasoning' model variants) perform internal step-by-step reasoning automatically and may not need explicit chain-of-thought instructions the same way earlier-generation models did - always test whether explicit CoT instruction actually helps for your specific model and task rather than assuming it always will.\\nPrompting for Reliable Structured Output\\nGetting an LLM to reliably return valid, schema-conformant JSON (or other structured formats) is one of the most common production prompt-engineering tasks, because structured output is what lets deterministic code (Module 2's territory) consume LLM output safely. Effective techniques, usually combined:\\nExplicit schema in the prompt , ideally generated directly from your Pydantic model ( model_json_schema() ) so the prompt and your validation code never drift apart. 1.\\nProvider-native structured output / JSON mode features , where available most major providers now offer a mode that constrains generation to valid JSON matching a supplied schema, which is more reliable than instruction alone. 2.\\nA worked example of correctly formatted output as a few-shot example.",
+            "score": 0.084019,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          },
+          {
+            "source_id": "THE PRODUCTION READY GENAI",
+            "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0002",
+            "title": "Internal Document (THE PRODUCTION READY GENAI)",
+            "content": "This document currently contains:\\nTable of Contents (full, for the entire handbook) ·\\nIntroduction ·\\nLearning Roadmap ·\\nModule 0: Getting Started ·\\nModule 1: Python for AI Engineers ·\\nModule 2: Software Engineering Fundamentals ·\\nModule 3: How LLMs Actually Work ·\\nModule 4: Prompt Engineering ·\\nModule 5: FastAPI ·\\nModule 6: Building AI Applications ·\\nModule 7: Embeddings ·\\nModule 8: Vector Databases ·\\nModule 9: Retrieval-Augmented Generation ·\\nSubsequent phases will append Modules 10 onward, the capstones, and the career/ reference material, in the same structure.\\nTABLE OF CONTENTS\\nFront Matter\\nIntroduction ·\\nLearning Roadmap ·\\nFoundations\\nModule 0 - Getting Started ·\\nModule 1 - Python for AI Engineers ·\\nModule 2 - Software Engineering Fundamentals ·\\nModule 3 - How LLMs Actually Work ·\\nModule 4 - Prompt Engineering ·\\nBuilding Applications\\nModule 5 - FastAPI ·\\nModule 6 - Building AI Applications ·\\nModule 7 - Embeddings ·\\nModule 8 - Vector Databases ·\\nModule 9 - Retrieval-Augmented Generation ·\\nFrameworks\\nModule 10 - LangChain ·\\nModule 11 - LangGraph ·\\nModule 12 - LlamaIndex ·\\nModule 13 - Model Context Protocol ·\\nModule 14 - Tool Calling ·\\nModule 15 - Function Calling ·\\nModule 16 - Memory ·\\nAgentic AI\\nModule 17 - AI Agents ·\\nModule 18 - Planning ·\\nModule 19 - Reflection ·\\nModule 20 - Multi-Agent Systems ·\\nProduction Engineering\\nModule 21 - Production AI ·\\nModule 22 - Evaluation ·\\nModule 23 - Observability ·\\nModule 24 - Guardrails ·\\nModule 25 - AI Security ·\\nModule 26 - Deployment ·\\nModule 27 - Cloud ·\\nPortfolio & Career\\nModule 28 - Capstone Projects ·\\nModule 29 - Interview Preparation ·\\nModule 30 - Career Roadmap ·\\nReference Material\\nGitHub Portfolio Guide ·\\nResume Guide ·\\nLinkedIn Guide ·\\nOpen Source Contribution Guide ·\\nCertifications ·\\nBooks, Blogs, Podcasts, Research Papers, Newsletters ·\\nCommunities ·\\nCheat Sheets (Python, FastAPI, Git, Docker, Linux, Prompt Engineering, LLMs, RAG, Vector DBs, LangChain, LangGraph, MCP , Agents, Deployment, Cloud, AWS, Kubernetes, Redis, PostgreSQL) ·\\nAppendix: Glossary (300+ terms) ·\\nINTRODUCTION\\nWhy AI Is Changing Software Engineering\\nFor thirty years, software engineering meant writing deterministic instructions: given input X, produce output Y, exactly, every time. Testing meant enumerating cases.",
+            "score": 0.080125,
+            "metadata": {
+              "page_no": "01",
+              "uploaded_at": "25/08/2026",
+              "uploaded_by": "test_01_no_index",
+              "document_name": "THE PRODUCTION READY GENAI"
+            }
+          }
+        ],
+        "search_queries_used": [
+          "Nikola Tesla torque motor patent stalled rotor high torque",
+          "Tesla torque motor patent alternating current electrical motor",
+          "Nikola Tesla patent electrical motor torque high starting torque",
+          "Tesla torque motor",
+          "\"Tesla\" \"torque motor\" patent electrical machine"
+        ],
+        "limitations": [
+          "Web search service returned status 202.",
+          "Step limit (5) reached.",
+          "Output format missing expected elements: findings_summary, claims, sources"
+        ]
+      },
+      "tokens_used": 4172,
+      "cost_usd": 0.001511,
+      "duration_ms": 25713.5,
+      "error_message": "Step limit (5) reached.",
+      "started_at": "2026-11-20T12:10:02.317310Z",
+      "completed_at": "2026-11-20T12:10:28.030817Z"
+    }
+  },
+  "authoritative_sources": {
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0035": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0035",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "What does Field(ge=0.0, le=1.0) do in a Pydantic model?\\nSets a default value ·  1.\\nConstrains the field's value to be between 0.0 and 1.0 inclusive ·  1.\\nMakes the field optional ·  1.\\nConverts the field to a string ·  1.\\nAnswer: b\\n16. What's the correct way to run CPU-bound Python work in true parallel?\\nasyncio.gather ·  1.\\nconcurrent.futures.ProcessPoolExecutor (multiprocessing) ·  1.\\ntime.sleep ·  1.\\nThreading always works fine for this ·  1.\\nAnswer: b\\n17. Why re-use a single httpx.AsyncClient instance across many requests instead of creating a new one per call?\\nIt's required by httpx ·  1.\\nConnection pooling avoids the overhead of re-establishing connections each time ·  1.\\nIt has no real effect ·  1.\\nIt reduces token usage ·  1.\\nAnswer: b\\n18. What does Literal[\"positive\", \"negative\", \"neutral\"] enforce in a Pydantic model?\\nA string of any value ·  1.\\nThat the field's value must be exactly one of the specified literal strings ·  1.\\nA default value ·  1.\\nNothing, it's just documentation ·  1.\\nAnswer: b\\n19. In an exponential backoff retry strategy, what typically happens between attempts?\\nThe wait time stays constant ·  1.\\nThe wait time increases (e.g., doubles) with each subsequent attempt ·  1.\\nThe wait time decreases ·  1.\\nThere is no wait time ·  1.\\nAnswer: b\\n20.",
+      "score": 0.133684,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0026": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0026",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "Doing it concurrently with asyncio means the user waits for roughly the maximum of those latencies (with some overhead), because the I/O waits overlap.\\nThis matters because it's the single largest, easiest performance win available in AI application backends - and it's why virtually every serious framework in this space (FastAPI, LangGraph runtimes, MCP servers) is async-first.\\nImportant nuance: Python's asyncio concurrency helps for I/O-bound work (waiting on network responses) but does not give you true parallelism for CPU-bound work (e.g., heavy local text processing, embedding computation without a GPU) - that's constrained by the Global Interpreter Lock (GIL) and requires multiprocessing or native extensions instead. Know which kind of work you're doing before reaching for asyncio .\\nAsync Fundamentals\\nimport asyncio import httpx async def fetch_completion(client: httpx.AsyncClient, prompt: str) -> str: response = await client.post( \"https://api.example.com/v1/complete\", json={\"prompt\": prompt}, timeout=30.0, ) response.raise_for_status() return response.json()[\"text\"] async def main(): prompts = [\"Summarize X\", \"Summarize Y\", \"Summarize Z\"] async with httpx.AsyncClient() as client: # Sequential: total time ≈ sum of all latencies results_sequential = [] for p in prompts: results_sequential.append( await fetch_completion(client, p)) # Concurrent: total time ≈ max of all latencies results_concurrent = await asyncio.gather( *(fetch_completion(client, p) for p in prompts) ) asyncio.run(main())\\nKey vocabulary:\\nCoroutine - a function defined with async def ; calling it returns a coroutine object, it doesn't execute until awaited. ·\\nawait - suspends the current coroutine until the awaited operation completes, yielding control back to the event loop so other work can proceed. ·\\nEvent loop - the scheduler that manages which coroutine runs when. ·\\nasyncio.gather - runs multiple coroutines concurrently and collects their results.",
+      "score": 0.130819,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0032": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0032",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "8.\\nWrite a function that converts a Pydantic model into the JSON-schema format required for structured LLM output requests (hint: model_json_schema() ). 9.\\nWrite a small async connection-pooling wrapper around httpx.AsyncClient that's reused across many calls instead of being re-created each time (explain why recreation per call is wasteful). 10.\\nMCQ Assessment\\n1. What does await do inside an async function?\\nBlocks the entire program ·  1.\\nSuspends the coroutine, yielding control to the event loop ·  1.\\nStarts a new thread ·  1.\\nDoes nothing without asyncio.run ·  1.\\nAnswer: b\\n2. Why does asyncio NOT speed up CPU-bound work?\\nIt's a bug ·  1.\\nPython's GIL prevents true parallel execution of Python bytecode in a single process ·  1.\\nasyncio is not real code ·  1.\\nCPU-bound work is always faster synchronously ·  1.\\nAnswer: b\\n3. What's the risk of calling time.sleep() inside an async def function?\\nNone ·  1.\\nIt blocks the entire event loop, preventing concurrency ·  1.\\nIt raises an exception ·  1.\\nIt automatically becomes non-blocking ·  1.\\nAnswer: b\\n4. What does asyncio.gather(*coros) do?\\nRuns coroutines one at a time ·  1.\\nRuns coroutines concurrently and collects results ·  1.\\nCancels all coroutines ·  1.\\nOnly works with two coroutines ·  1.\\nAnswer: b\\n5. Why use Pydantic models for LLM structured output?\\nIt's faster than JSON ·  1.\\nIt validates output shape and provides clear error messages when the LLM's output doesn't match expectations ·  1.\\nIt's required by all LLM APIs ·  1.\\nIt replaces the need for prompts ·  1.\\nAnswer: b\\n6.",
+      "score": 0.108125,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0013": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0013",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "·\\nUseful Browser Extensions\\nA JSON formatter (for reading API responses) ·\\nA REST client extension if you prefer browser-based testing over Postman/Thunder Client ·\\nLEARNING ROADMAP\\nVisual Roadmap (Conceptual Flow)\\nASCII Roadmap\\n[ FOUNDATIONS ] Module 0  -> Getting Started Module 1  -> Python for AI Engineers Module 2  -> Software Engineering Fundamentals | v [ LLM CORE ] Module 3  -> How LLMs Actually Work Module 4  -> Prompt Engineering | v [ APPLICATION LAYER ] Module 5  -> FastAPI Module 6  -> Building AI Applications | v [ RAG STACK ] Module 7  -> Embeddings Module 8  -> Vector Databases Module 9  -> Retrieval-Augmented Generation | v [ FRAMEWORKS & PROTOCOLS ] Module 10 -> LangChain Module 11 -> LangGraph Module 12 -> LlamaIndex Module 13 -> Model Context Protocol | v [ AGENT BUILDING BLOCKS ] Module 14 -> Tool Calling Module 15 -> Function Calling Module 16 -> Memory | v [ AGENTIC AI ] Module 17 -> AI Agents Module 18 -> Planning Module 19 -> Reflection Module 20 -> Multi-Agent Systems | v [ PRODUCTION ENGINEERING ] Module 21 -> Production AI Module 22 -> Evaluation Module 23 -> Observability Module 24 -> Guardrails Module 25 -> AI Security Module 26 -> Deployment Module 27 -> Cloud | v [ PORTFOLIO & CAREER ] Module 28 -> Capstone Projects Module 29 -> Interview Preparation Module 30 -> Career Roadmap\\nMilestone Roadmap\\nSkill Dependency Graph\\nEstimated Timeline\\nFast track (full-time, strong prior software background): 6 weeks ·\\nStandard track (part-time, Data Science background): 12-16 weeks ·\\nExtended track (part-time, learning Python and backend concepts alongside): 20-24 weeks ·\\nMODULE 0 - GETTING STARTED\\nIntroduction\\nEvery learner who skips setup pays for it later - usually at the worst possible time, mid-way through a module, debugging an environment issue instead of learning the actual concept. Module 0 exists to front-load every piece of setup friction so that Modules 1 through 30 are pure learning, not troubleshooting.\\nWhy This Topic Matters\\nIn a professional AI Engineering role, your development environment is not a personal preference - it's part of the team's shared tooling.",
+      "score": 0.094515,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0071": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0071",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "·\\nOrder matters less than diversity for most models, but placing the most representative example last (closest to the actual query) sometimes helps. ·\\nfew_shot_prompt = \"\"\" Classify the sentiment of each review as positive, negative, or neutral. Review: \"This product changed my life, highly recommend!\" Sentiment: positive Review: \"It's fine, does what it says, nothing special.\" Sentiment: neutral Review: \"Broke after two days, waste of money.\" Sentiment: negative Review: \"{user_review}\" Sentiment: \"\"\"\\nChain-of-Thought and Structured Reasoning\\nFor tasks involving multi-step reasoning (arithmetic, logic, multi-step analysis), explicitly instructing the model to reason step by step before producing a final answer ('chain-of-thought' prompting) measurably improves accuracy on many tasks, at the cost of more output tokens (and therefore latency and cost):\\ncot_prompt = \"\"\" Solve this step by step, showing your reasoning, then give the final answer on its own line prefixed with \"Final Answer:\". Problem: A store had 120 units of inventory. It sold 35% on Monday and 20% of what remained on Tuesday. How many units are left? \"\"\"\\nNote: some modern models (including 'reasoning' model variants) perform internal step-by-step reasoning automatically and may not need explicit chain-of-thought instructions the same way earlier-generation models did - always test whether explicit CoT instruction actually helps for your specific model and task rather than assuming it always will.\\nPrompting for Reliable Structured Output\\nGetting an LLM to reliably return valid, schema-conformant JSON (or other structured formats) is one of the most common production prompt-engineering tasks, because structured output is what lets deterministic code (Module 2's territory) consume LLM output safely. Effective techniques, usually combined:\\nExplicit schema in the prompt , ideally generated directly from your Pydantic model ( model_json_schema() ) so the prompt and your validation code never drift apart. 1.\\nProvider-native structured output / JSON mode features , where available most major providers now offer a mode that constrains generation to valid JSON matching a supplied schema, which is more reliable than instruction alone. 2.\\nA worked example of correctly formatted output as a few-shot example.",
+      "score": 0.084019,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    },
+    "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0002": {
+      "source_id": "THE PRODUCTION READY GENAI",
+      "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0002",
+      "title": "Internal Document (THE PRODUCTION READY GENAI)",
+      "content": "This document currently contains:\\nTable of Contents (full, for the entire handbook) ·\\nIntroduction ·\\nLearning Roadmap ·\\nModule 0: Getting Started ·\\nModule 1: Python for AI Engineers ·\\nModule 2: Software Engineering Fundamentals ·\\nModule 3: How LLMs Actually Work ·\\nModule 4: Prompt Engineering ·\\nModule 5: FastAPI ·\\nModule 6: Building AI Applications ·\\nModule 7: Embeddings ·\\nModule 8: Vector Databases ·\\nModule 9: Retrieval-Augmented Generation ·\\nSubsequent phases will append Modules 10 onward, the capstones, and the career/ reference material, in the same structure.\\nTABLE OF CONTENTS\\nFront Matter\\nIntroduction ·\\nLearning Roadmap ·\\nFoundations\\nModule 0 - Getting Started ·\\nModule 1 - Python for AI Engineers ·\\nModule 2 - Software Engineering Fundamentals ·\\nModule 3 - How LLMs Actually Work ·\\nModule 4 - Prompt Engineering ·\\nBuilding Applications\\nModule 5 - FastAPI ·\\nModule 6 - Building AI Applications ·\\nModule 7 - Embeddings ·\\nModule 8 - Vector Databases ·\\nModule 9 - Retrieval-Augmented Generation ·\\nFrameworks\\nModule 10 - LangChain ·\\nModule 11 - LangGraph ·\\nModule 12 - LlamaIndex ·\\nModule 13 - Model Context Protocol ·\\nModule 14 - Tool Calling ·\\nModule 15 - Function Calling ·\\nModule 16 - Memory ·\\nAgentic AI\\nModule 17 - AI Agents ·\\nModule 18 - Planning ·\\nModule 19 - Reflection ·\\nModule 20 - Multi-Agent Systems ·\\nProduction Engineering\\nModule 21 - Production AI ·\\nModule 22 - Evaluation ·\\nModule 23 - Observability ·\\nModule 24 - Guardrails ·\\nModule 25 - AI Security ·\\nModule 26 - Deployment ·\\nModule 27 - Cloud ·\\nPortfolio & Career\\nModule 28 - Capstone Projects ·\\nModule 29 - Interview Preparation ·\\nModule 30 - Career Roadmap ·\\nReference Material\\nGitHub Portfolio Guide ·\\nResume Guide ·\\nLinkedIn Guide ·\\nOpen Source Contribution Guide ·\\nCertifications ·\\nBooks, Blogs, Podcasts, Research Papers, Newsletters ·\\nCommunities ·\\nCheat Sheets (Python, FastAPI, Git, Docker, Linux, Prompt Engineering, LLMs, RAG, Vector DBs, LangChain, LangGraph, MCP , Agents, Deployment, Cloud, AWS, Kubernetes, Redis, PostgreSQL) ·\\nAppendix: Glossary (300+ terms) ·\\nINTRODUCTION\\nWhy AI Is Changing Software Engineering\\nFor thirty years, software engineering meant writing deterministic instructions: given input X, produce output Y, exactly, every time. Testing meant enumerating cases.",
+      "score": 0.080125,
+      "metadata": {
+        "page_no": "01",
+        "uploaded_at": "25/08/2026",
+        "uploaded_by": "test_01_no_index",
+        "document_name": "THE PRODUCTION READY GENAI"
+      }
+    }
+  },
+  "used_tokens": 14161,
+  "used_cost_usd": 0.008888,
+  "elapsed_seconds": 73.452,
+  "final_report": {
+    "topic": "What is the main operational difference between Tesla’s synchronous motor and his torque motor?",
+    "title": "Analysis of Tesla Motor Operation: Synchronous vs Torque Motors",
+    "executive_summary": {
+      "section_id": "sec_exec",
+      "title": "Executive Summary",
+      "content": "This research report investigates the operational differences between Nikola Tesla's synchronous motor and torque motor configurations. Due to limitations in the available evidence pool—which primarily consists of AI engineering and software architecture documentation rather than historical electrical engineering texts—direct technical comparisons of these specific motor types could not be extracted from the source text [cite_1]. Consequently, this report highlights the data gap and outlines the need for targeted electrical engineering source materials.",
+      "claims": [
+        {
+          "claim_id": "claim_exec_1",
+          "section_id": "sec_exec",
+          "text": "Direct technical comparisons of Tesla's synchronous and torque motors could not be extracted from the source text due to evidence limitations.",
+          "citations": [
+            {
+              "citation_id": "cite_1",
+              "source_id": "THE PRODUCTION READY GENAI",
+              "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0013",
+              "citation_type": "paraphrase",
+              "quoted_passage": null,
+              "confidence": 0.5
+            }
+          ],
+          "is_factual": true
+        }
+      ]
+    },
+    "sections": [
+      {
+        "section_id": "sec_findings",
+        "title": "Findings on Motor Operations",
+        "content": "The provided evidence base focuses heavily on software engineering, asynchronous programming, Pydantic models, and LLM orchestration frameworks, containing no historical or operational data regarding Nikola Tesla's electrical motor designs [cite_2]. Therefore, an empirical comparison of synchronous versus torque motor mechanics cannot be established from the retrieved corpus.",
+        "claims": [
+          {
+            "claim_id": "claim_findings_1",
+            "section_id": "sec_findings",
+            "text": "The provided evidence base contains no historical or operational data regarding Nikola Tesla's electrical motor designs.",
+            "citations": [
+              {
+                "citation_id": "cite_2",
+                "source_id": "THE PRODUCTION READY GENAI",
+                "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0002",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 0.5
+              }
+            ],
+            "is_factual": true
+          }
+        ]
+      }
+    ],
+    "conclusion": {
+      "section_id": "sec_conclusion",
+      "title": "Conclusion",
+      "content": "In summary, the specific operational differences between Tesla's synchronous and torque motors remain unaddressed by the current evidence pool, which is entirely dedicated to software and AI engineering documentation [cite_3]. Future research must incorporate historical electrical engineering primary sources to answer this prompt.",
+      "claims": [
+        {
+          "claim_id": "claim_conclusion_1",
+          "section_id": "sec_conclusion",
+          "text": "The current evidence pool is entirely dedicated to software and AI engineering documentation, leaving historical motor differences unaddressed.",
+          "citations": [
+            {
+              "citation_id": "cite_3",
+              "source_id": "THE PRODUCTION READY GENAI",
+              "chunk_id": "21df6095-47e3-4d1c-a52b-f6753f90149b_chunk_0071",
+              "citation_type": "paraphrase",
+              "quoted_passage": null,
+              "confidence": 0.5
+            }
+          ],
+          "is_factual": true
+        }
+      ]
+    },
+    "limitations": [
+      "Worker brief_01 produced no textual synthesis for Tesla Synchronous Motor Analysis.",
+      "Worker brief_02 produced no textual synthesis for Tesla Torque Motor Analysis.",
+      "The authoritative evidence pool entirely consists of software engineering and AI framework documentation instead of historical electrical engineering literature.",
+      "Brief 'brief_01' partially completed: Step limit (5) reached.",
+      "Brief 'brief_02' partially completed: Step limit (5) reached.",
+      "Verification advisory: Gate 2 semantic verification failed (Grounding score: 0.83 < threshold 0.70)."
+    ],
+    "version": 1,
+    "research_team_version": "1.0.0",
+    "brief_coverages": [
+      {
+        "brief_id": "brief_01",
+        "coverage_summary": "Failed to yield relevant historical or technical data on Tesla synchronous motors due to unrelated source corpus."
+      },
+      {
+        "brief_id": "brief_02",
+        "coverage_summary": "Failed to yield relevant historical or technical data on Tesla torque motors due to unrelated source corpus."
+      }
+    ],
+    "unresolved_limitations": [
+      "Complete absence of primary or secondary literature concerning Nikola Tesla's motor patents and operational specifications.",
+      "Brief 'brief_01' partially completed: Step limit (5) reached.",
+      "Brief 'brief_02' partially completed: Step limit (5) reached."
+    ],
+    "created_by": "Lead Research Synthesizer",
+    "created_at": "2023-10-27T00:00:00Z"
+  },
+  "error_message": null,
+  "created_at": "2026-11-20T12:09:59.387854Z",
+  "updated_at": "2026-11-20T12:11:12.839758Z"
+}
