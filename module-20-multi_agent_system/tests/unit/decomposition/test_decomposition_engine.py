@@ -20,6 +20,7 @@ from parallel_research_team.models import (
 
 def _create_mock_response(plan: ResearchDecomposition) -> MagicMock:
     resp = MagicMock()
+    resp.error = None
     resp.structured_response = plan
     resp.usage = {"input_tokens": 120, "output_tokens": 250}
     return resp
@@ -163,6 +164,7 @@ async def test_decomposition_llm_failure_raises(test_config: ResearchTeamConfig)
 async def test_decomposition_non_schema_response_raises(test_config: ResearchTeamConfig) -> None:
     mock_llm = MagicMock()
     resp = MagicMock()
+    resp.error = None
     resp.structured_response = "Not a ResearchDecomposition"
     mock_llm.complete_structure = AsyncMock(return_value=resp)
 

@@ -180,6 +180,43 @@ async def test_verifier_gate2_failure_below_threshold(
 
 
 @pytest.mark.asyncio
+async def test_verifier_gate2_failure_due_to_major_defects_above_threshold(
+    test_config: ResearchTeamConfig,
+) -> None:
+    test_config.enable_semantic_verification = True
+    test_config.semantic_verification_threshold = 0.70
+    report, pool = _create_valid_report_and_pool()
+
+    mock_gate2_report = SemanticGroundingReport(
+        passed=False,
+        all_claims_grounded=False,
+        grounding_score=0.88,
+        claim_evaluations=[],
+        issues=[],
+        critical_count=0,
+        major_count=1,
+        minor_count=0,
+        tokens_used=100,
+        cost_usd=0.001,
+    )
+
+    verifier = ResearchVerifier(config=test_config)
+
+    with patch(
+        "parallel_research_team.synthesis.verifier.SemanticGroundingVerifier.verify_grounding",
+        new_callable=AsyncMock,
+    ) as mock_verify:
+        mock_verify.return_value = mock_gate2_report
+        result = await verifier.verify(report=report, source_pool=pool)
+
+    assert result.passed is False
+    assert result.gate1_passed is True
+    assert result.gate2_passed is False
+    assert "0.88 >= threshold 0.70" in result.summary
+    assert "1 major" in result.summary
+
+
+@pytest.mark.asyncio
 async def test_verifier_gate2_exception_shielding(
     test_config: ResearchTeamConfig,
 ) -> None:

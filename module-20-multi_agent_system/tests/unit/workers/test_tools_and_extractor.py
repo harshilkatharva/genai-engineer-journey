@@ -83,20 +83,19 @@ def test_create_retrieval_service_invalid_mode_raises() -> None:
 async def test_research_tools_execution() -> None:
     collector = EvidenceCollector()
 
-    # 1. Mock HTTP client for search_web
-    mock_html = """
-    <html>
-      <body>
-        <div class="result">
-          <a class="result__a" href="https://example.com/doc1">Doc Title 1</a>
-          <a class="result__snippet">Snippet 1 details on parallel research.</a>
-        </div>
-      </body>
-    </html>
-    """
+    # 1. Mock HTTP client for search_web (Tavily JSON API)
     mock_response = MagicMock(spec=httpx.Response)
     mock_response.status_code = 200
-    mock_response.text = mock_html
+    mock_response.json.return_value = {
+        "results": [
+            {
+                "title": "Doc Title 1",
+                "url": "https://example.com/doc1",
+                "content": "Snippet 1 details on parallel research.",
+                "score": 0.95,
+            }
+        ]
+    }
 
     mock_http_client = AsyncMock(spec=httpx.AsyncClient)
     mock_http_client.post.return_value = mock_response

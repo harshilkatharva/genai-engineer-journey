@@ -84,8 +84,10 @@ class ResearchTeamConfig(BaseSettings):
     )
 
     # -------------------------------------------------------------------------
-    # Dual Retrieval Storage
+    # Dual Retrieval Storage & Web Search
     # -------------------------------------------------------------------------
+    tavily_api_key: str | None = Field(default=None, description="Tavily API key for web search")
+
     retrieval_mode: str = Field(
         default="in_memory", description="Retrieval mode: 'in_memory' or 'postgres'"
     )

@@ -27,6 +27,7 @@ dependencies = [
     "module-17-ai-agents",
     "module-18-planning",
     "module-19-reflection",
+    "tavily-python>=0.8.5",
 ]
 
 [tool.uv.sources]
@@ -79,7 +80,7 @@ module = [
     "plan_and_execute_research_assistant.*",
     "self_improving_report_writer",
     "self_improving_report_writer.*",
-    "bs4",
-    "bs4.*",
+    "tavily",
+    "tavily.*",
 ]
 ignore_missing_imports = true

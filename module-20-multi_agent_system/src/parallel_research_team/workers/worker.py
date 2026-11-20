@@ -97,6 +97,7 @@ class DefaultResearchWorker(ResearchWorkerProtocol):
             collector=collector,
             retrieval_service=self.retrieval_service,
             http_client=self.http_client,
+            tavily_api_key=self.config.tavily_api_key,
         )
 
         executor = ToolExecutor(

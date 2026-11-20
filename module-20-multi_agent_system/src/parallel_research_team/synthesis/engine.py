@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
+import asyncio
+
 from genai_core import LLMService
 from genai_core.observability import get_logger
 
 from ..core.budget import SharedRunBudget
 from ..core.config import ResearchTeamConfig, get_research_team_config
 from ..exceptions import SynthesisError
-from ..models import Report, WorkerExecutionResult, WorkerStatus
+from ..models import CitationType, Report, WorkerExecutionResult, WorkerStatus
 from ..prompts.manager import PromptTemplateManager, get_prompt_manager
 from ..telemetry.pricing import PricingCalculator
 from .source_pool import AuthoritativeSourcePool
@@ -93,20 +95,53 @@ class SynthesisEngine:
             len(source_pool),
         )
 
-        # 3. Request structured completion conforming to Report schema
-        try:
-            response = await self.llm_service.complete_structure(
-                prompt=full_prompt,
-                response_schema=Report,
-                provider=self.config.synthesis_provider,
-                model=self.config.synthesis_model,
-            )
-        except Exception as exc:
-            _logger.exception("LLM structured synthesis failed")
-            raise SynthesisError(f"LLM synthesis call failed: {exc}") from exc
+        # 3. Request structured completion conforming to Report schema with transient retry
+        max_attempts = 3
+        response = None
+        for attempt in range(1, max_attempts + 1):
+            try:
+                response = await self.llm_service.complete_structure(
+                    prompt=full_prompt,
+                    response_schema=Report,
+                    provider=self.config.synthesis_provider,
+                    model=self.config.synthesis_model,
+                )
+            except Exception as exc:
+                if attempt == max_attempts:
+                    _logger.exception("LLM structured synthesis failed")
+                    raise SynthesisError(f"LLM synthesis call failed: {exc}") from exc
+                await asyncio.sleep(2.0 * attempt)
+                continue
 
-        if response.error:
-            raise SynthesisError(f"LLM synthesis error: {response.error.message}")
+            err = getattr(response, "error", None)
+            if err is not None and isinstance(getattr(err, "message", None), str):
+                err_msg = err.message.lower()
+                is_transient = any(
+                    k in err_msg
+                    for k in [
+                        "high demand",
+                        "rate limit",
+                        "503",
+                        "429",
+                        "resource exhausted",
+                        "try again",
+                    ]
+                )
+                if is_transient and attempt < max_attempts:
+                    _logger.warning(
+                        "Transient LLM error on synthesis attempt %d/%d: %s. Retrying in %.1fs...",
+                        attempt,
+                        max_attempts,
+                        err.message,
+                        3.0 * attempt,
+                    )
+                    await asyncio.sleep(3.0 * attempt)
+                    continue
+                raise SynthesisError(f"LLM synthesis error: {err.message}")
+            break
+
+        if response is None:
+            raise SynthesisError("LLM synthesis failed to produce a response.")
 
         report = response.structured_response
         if not isinstance(report, Report):
@@ -147,6 +182,42 @@ class SynthesisEngine:
                 )
                 for b_id in worker_results
             ]
+
+        # 6. Post-Synthesis Claim Alignment & Citation Reconciler
+        valid_source_chunks: dict[tuple[str, str], str] = {
+            (src.source_id, src.chunk_id): src.content for src in source_pool.list_sources()
+        }
+
+        all_sections = [report.executive_summary] + report.sections + [report.conclusion]
+        for section in all_sections:
+            if not section:
+                continue
+            for claim in section.claims:
+                claim.section_id = section.section_id
+                valid_citations = []
+                for cite in claim.citations:
+                    chunk_key = (cite.source_id, cite.chunk_id)
+                    if chunk_key in valid_source_chunks:
+                        if (
+                            cite.citation_type
+                            and cite.citation_type.value == "quotation"
+                            and cite.quoted_passage
+                        ):
+                            chunk_text = valid_source_chunks[chunk_key]
+                            if cite.quoted_passage not in chunk_text:
+                                cite.citation_type = CitationType.PARAPHRASE
+                                cite.quoted_passage = None
+                        valid_citations.append(cite)
+                    else:
+                        _logger.warning(
+                            "Pruning invalid citation %s referencing missing chunk (%s, %s)",
+                            cite.citation_id,
+                            cite.source_id,
+                            cite.chunk_id,
+                        )
+                claim.citations = valid_citations
+                if claim.is_factual and not claim.citations:
+                    claim.is_factual = False
 
         report.research_team_version = self.config.system_version
         return report

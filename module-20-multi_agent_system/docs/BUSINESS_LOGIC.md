@@ -327,6 +327,7 @@ class CheckpointState(BaseModel):
    - For citations with `CitationType.QUOTATION`, the `quoted_passage` must match a substring in the referenced source chunk after whitespace/quote normalization.
    - Reports failing Gate 1 with critical defects cannot be marked `COMPLETED`.
 4. **Rule 5.4.4 (Gate 2 Semantic Grounding):** Module 19's `SemanticGroundingVerifier` verifies claim-passage entailment with a default pass threshold of **$\ge 0.70$** (configured via `ResearchTeamConfig.semantic_verification_threshold`).
+5. **Rule 5.4.5 (Post-Synthesis Reconciliation):** Before passing to verification gates, `SynthesisEngine` deterministically reconciles all citations against the `AuthoritativeSourcePool`. Any citation pointing to an unknown chunk is pruned; if an altered quotation is detected, it is downgraded to a paraphrase; and if a factual claim has no remaining valid citations, its status is safely updated to `is_factual=False` to prevent Gate 1 / Gate 2 failures.
 
 ---
 
