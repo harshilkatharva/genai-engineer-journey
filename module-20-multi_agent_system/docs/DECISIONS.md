@@ -213,3 +213,15 @@ This document records all significant architectural, technical, and structural d
   - Registered brief archetype aliases in `workers/__init__.py`.
   - Added optional `llm_service` and `retrieval_service` parameters to `ParallelResearchTeam.__init__` and `ParallelResearchScheduler.__init__`.
 - **Consequences:** Full live Google GenAI API schema compatibility without breaking existing report contracts or type safety.
+
+---
+
+## [2026-11-20] DEC-20-023: Worker Prompt Enforcement for Tool Iteration Ceiling and Textual Synthesis
+
+- **Status:** Accepted
+- **Context:** Checkpoint inspection across past runs revealed a recurring pattern where research workers consumed all 4–5 available tool loop steps consecutively querying knowledge base and web search without yielding control to generate their final textual response. Consequently, `ToolLoopRunner` hard-terminated workers with `ToolLoopStatus.MAX_ITERATIONS_REACHED` (`status=partial`), resulting in unpopulated findings summaries (`"No textual synthesis produced"`) and causing orchestrator runs to settle in `PARTIALLY_COMPLETED`.
+- **Decision:** Updated worker prompt templates (`src/parallel_research_team/prompts/v1/worker/system.jinja2` and `user.jinja2`) with refined dynamic stopping rules:
+  - Productive research: If tools return real, valid evidence and further investigation is needed to fulfill the brief, workers continue their loop as normal.
+  - Consecutive Failure Circuit Breaker: If tools return 3 consecutive errors, unavailabilities (such as web search returning status 202), or empty results, workers must immediately stop tool calling and synthesize with accumulated evidence.
+  - Mandatory Textual Synthesis: Workers must conclude tool loops by producing a structured textual synthesis conforming to the schema before their step limit is reached.
+- **Consequences:** Eliminates endless retry loops on unavailable tools (such as rate-limited web searches) while preserving thorough evidence collection when productive sources are active, allowing workers to complete with `WorkerStatus.COMPLETED`.

@@ -1,0 +1,273 @@
+{
+  "run_id": "run_e8b76fb2d5b3",
+  "user_id": "default_user",
+  "topic": "Which suitor is Clarissa's family trying to force her to marry, and why do they favor him?",
+  "status": "completed",
+  "effort_level": "direct",
+  "decomposition": {
+    "topic": "Which suitor is Clarissa's family trying to force her to marry, and why do they favor him?",
+    "effort_level": "direct",
+    "rationale": "The user's question focuses on a single factual literary inquiry regarding Clarissa's suitor and her family's motivation in Samuel Richardson's novel Clarissa. A single worker brief is sufficient to retrieve and synthesize this specific literary detail.",
+    "worker_count": 1,
+    "worker_briefs": [
+      {
+        "brief_id": "brief_01",
+        "title": "Clarissa's Suitor and Family Motivation Analysis",
+        "topic": "Which suitor is Clarissa's family trying to force her to marry, and why do they favor him?",
+        "objective": "Identify the specific suitor promoted by Clarissa's family and analyze the economic, social, or familial reasons behind their preference.",
+        "brief_type": "factual_retrieval",
+        "worker_type": "default",
+        "depends_on": [],
+        "task_boundaries": [
+          "Focus strictly on the identity of the suitor and the reasons for the Harlowe family's preference.",
+          "Do NOT analyze other suitors such as Robert Lovelace except as necessary context for the forced marriage."
+        ],
+        "expected_output_format": {
+          "schema_name": "WorkerResearchOutput",
+          "required_fields": [
+            "findings_summary",
+            "claims",
+            "sources"
+          ],
+          "guidelines": "Structured findings with claims and source citations"
+        },
+        "suggested_tools": [
+          "search_web",
+          "search_knowledge_base"
+        ],
+        "max_steps": 5,
+        "timeout_seconds": 45.0
+      }
+    ],
+    "input_tokens": 629,
+    "output_tokens": 447
+  },
+  "worker_results": {
+    "brief_01": {
+      "brief_id": "brief_01",
+      "status": "completed",
+      "output": {
+        "brief_id": "brief_01",
+        "findings_summary": "### Research Findings & Summary\n\n**Assigned Brief:** Clarissa's Suitor and Family Motivation Analysis  \n**Objective:** Identify the specific suitor promoted by Clarissa's family and analyze the economic, social, or familial reasons behind their preference.\n\n#### 1. Identity of the Suitor\n* **Name:** Roger Solmes (frequently referred to as Mr. Solmes).\n* **Context:** He is the wealthy, unappealing suitor forcefully promoted by the Harlowe family to Clarissa Harlowe in Samuel Richardson's epistolary novel *Clarissa* (1748).\n\n#### 2. Economic, Social, and Familial Motivations of the Harlowe Family\nBased on established literary analysis and the plot of *Clarissa*, the family's relentless pressure on Clarissa to accept Roger Solmes is driven by several key factors:\n* **Land Aggrandizement and Estate Consolidation:** Solmes is exceptionally wealthy and possesses extensive landed property. The Harlowe family is eager to consolidate and expand their estate holdings, and Solmes offers lucrative property settlements and financial terms that appeal to the family's avarice.\n* **Elevation of Family Status:** Despite their wealth, the Harlowes are socially insecure (parvenus relative to the ancient aristocracy) and are obsessed with increasing their political and social influence. Aligning Clarissa with Solmes—who is willing to structure settlements advantageously for the Harlowe family line—serves their ambition to climb higher in social standing.\n* **Patriarchal Control and Family Authority:** The Harlowe family (particularly James Harlowe Jr. and Arabella, supported by the parents) demands absolute obedience. Their preference for Solmes becomes a test of patriarchal authority over Clarissa, especially because she independently inherited property from her grandfather (the Harlowe-Place estate), which threatens male family control and provokes their intense jealousy.\n\n***\n\n*Note: Due to consecutive web search service status errors (202), tool execution was halted in accordance with the circuit breaker protocol, and the synthesis is compiled from core literary knowledge regarding Samuel Richardson's novel.*",
+        "claims": [
+          {
+            "claim_id": "claim_brief_01_1",
+            "section_id": "sec_brief_01",
+            "text": "### Research Findings & Summary\n\n**Assigned Brief:** Clarissa's Suitor and Family Motivation Analysis  \n**Objective:** Identify the specific suitor promoted by Clarissa's family and analyze the economic, social, or familial reasons behind their preference.\n\n#### 1.",
+            "citations": [],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_brief_01_2",
+            "section_id": "sec_brief_01",
+            "text": "Identity of the Suitor\n* **Name:** Roger Solmes (frequently referred to as Mr.",
+            "citations": [],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_brief_01_3",
+            "section_id": "sec_brief_01",
+            "text": "Solmes).\n* **Context:** He is the wealthy, unappealing suitor forcefully promoted by the Harlowe family to Clarissa Harlowe in Samuel Richardson's epistolary novel *Clarissa* (1748).\n\n#### 2.",
+            "citations": [],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_brief_01_4",
+            "section_id": "sec_brief_01",
+            "text": "Economic, Social, and Familial Motivations of the Harlowe Family\nBased on established literary analysis and the plot of *Clarissa*, the family's relentless pressure on Clarissa to accept Roger Solmes is driven by several key factors:\n* **Land Aggrandizement and Estate Consolidation:** Solmes is exceptionally wealthy and possesses extensive landed property.",
+            "citations": [],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_brief_01_5",
+            "section_id": "sec_brief_01",
+            "text": "The Harlowe family is eager to consolidate and expand their estate holdings, and Solmes offers lucrative property settlements and financial terms that appeal to the family's avarice.\n* **Elevation of Family Status:** Despite their wealth, the Harlowes are socially insecure (parvenus relative to the ancient aristocracy) and are obsessed with increasing their political and social influence.",
+            "citations": [],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_brief_01_6",
+            "section_id": "sec_brief_01",
+            "text": "Aligning Clarissa with Solmes—who is willing to structure settlements advantageously for the Harlowe family line—serves their ambition to climb higher in social standing.\n* **Patriarchal Control and Family Authority:** The Harlowe family (particularly James Harlowe Jr.",
+            "citations": [],
+            "is_factual": true
+          }
+        ],
+        "sources": [],
+        "search_queries_used": [
+          "Clarissa Harlowe suitor family motivation Solmes",
+          "Clarissa Harlowe Roger Solmes family reasons Richardson"
+        ],
+        "limitations": [
+          "Web search service returned status 202.",
+          "Output format missing expected elements: findings_summary, claims, sources"
+        ]
+      },
+      "tokens_used": 2989,
+      "cost_usd": 0.002025,
+      "duration_ms": 11962.09,
+      "error_message": null,
+      "started_at": "2026-11-20T12:44:06.535903Z",
+      "completed_at": "2026-11-20T12:44:18.498001Z"
+    }
+  },
+  "authoritative_sources": {},
+  "used_tokens": 6526,
+  "used_cost_usd": 0.007834,
+  "elapsed_seconds": 19.373,
+  "final_report": {
+    "topic": "Which suitor is Clarissa's family trying to force her to marry, and why do they favor him?",
+    "title": "Analysis of Clarissa's Suitor and Family Motivations in Samuel Richardson's Clarissa",
+    "executive_summary": {
+      "section_id": "sec_exec",
+      "title": "Executive Summary",
+      "content": "In Samuel Richardson's 1748 epistolary novel Clarissa, the Harlowe family attempts to force Clarissa to marry Roger Solmes [cite_1]. The family heavily favors Solmes due to his immense wealth, extensive landed property, and willingness to offer lucrative property settlements that align with their desires for estate consolidation and social elevation [cite_2].",
+      "claims": [
+        {
+          "claim_id": "claim_1",
+          "section_id": "sec_exec",
+          "text": "The Harlowe family attempts to force Clarissa to marry Roger Solmes.",
+          "citations": [],
+          "is_factual": true
+        },
+        {
+          "claim_id": "claim_2",
+          "section_id": "sec_exec",
+          "text": "The family favors Solmes due to his immense wealth, extensive landed property, and lucrative property settlements.",
+          "citations": [],
+          "is_factual": true
+        }
+      ]
+    },
+    "sections": [
+      {
+        "section_id": "sec_identity",
+        "title": "Identity of the Suitor",
+        "content": "The specific suitor promoted by the Harlowe family is Roger Solmes, frequently referred to as Mr. Solmes [cite_3]. He is characterized as a wealthy yet unappealing suitor forcefully pushed onto Clarissa Harlowe [cite_4].",
+        "claims": [
+          {
+            "claim_id": "claim_3",
+            "section_id": "sec_identity",
+            "text": "The specific suitor promoted by the Harlowe family is Roger Solmes, also known as Mr. Solmes.",
+            "citations": [
+              {
+                "citation_id": "cite_3",
+                "source_id": "brief_01",
+                "chunk_id": "chunk_1",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_4",
+            "section_id": "sec_identity",
+            "text": "He is a wealthy and unappealing suitor forcefully promoted to Clarissa Harlowe.",
+            "citations": [
+              {
+                "citation_id": "cite_4",
+                "source_id": "brief_01",
+                "chunk_id": "chunk_1",
+                "citation_type": "quotation",
+                "quoted_passage": "He is the wealthy, unappealing suitor forcefully promoted by the Harlowe family to Clarissa Harlowe",
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          }
+        ]
+      },
+      {
+        "section_id": "sec_motivations",
+        "title": "Economic, Social, and Familial Motivations",
+        "content": "The Harlowe family's insistence on the match with Solmes is propelled by multiple strategic factors. First, Solmes offers land aggrandizement and estate consolidation through extensive landed property and lucrative financial terms [cite_5]. Second, the family seeks the elevation of their social status despite their underlying social insecurity relative to the ancient aristocracy [cite_6]. Finally, enforcing this marriage serves as a direct exercise of patriarchal control and family authority, exacerbated by jealousy over the property Clarissa independently inherited from her grandfather [cite_7].",
+        "claims": [
+          {
+            "claim_id": "claim_5",
+            "section_id": "sec_motivations",
+            "text": "Solmes offers land aggrandizement and estate consolidation via extensive landed property and lucrative financial terms.",
+            "citations": [
+              {
+                "citation_id": "cite_5",
+                "source_id": "brief_01",
+                "chunk_id": "chunk_2",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_6",
+            "section_id": "sec_motivations",
+            "text": "The family aims to elevate their social status and political influence despite being socially insecure parvenus.",
+            "citations": [
+              {
+                "citation_id": "cite_6",
+                "source_id": "brief_01",
+                "chunk_id": "chunk_2",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          },
+          {
+            "claim_id": "claim_7",
+            "section_id": "sec_motivations",
+            "text": "The match serves to assert patriarchal control over Clarissa and counter male family jealousy regarding her independent inheritance.",
+            "citations": [
+              {
+                "citation_id": "cite_7",
+                "source_id": "brief_01",
+                "chunk_id": "chunk_2",
+                "citation_type": "paraphrase",
+                "quoted_passage": null,
+                "confidence": 1.0
+              }
+            ],
+            "is_factual": true
+          }
+        ]
+      }
+    ],
+    "conclusion": {
+      "section_id": "sec_conclusion",
+      "title": "Conclusion",
+      "content": "In summary, the Harlowe family's pressure on Clarissa to marry Roger Solmes stems from a combination of avarice, social ambition, and patriarchal dominance. By leveraging Solmes's wealth and property settlements, the family attempted to secure their own status and control over Clarissa's independent estate.",
+      "claims": [
+        {
+          "claim_id": "claim_8",
+          "section_id": "sec_conclusion",
+          "text": "The Harlowe family's pressure on Clarissa to marry Roger Solmes stems from avarice, social ambition, and patriarchal dominance.",
+          "citations": [],
+          "is_factual": true
+        }
+      ]
+    },
+    "limitations": [
+      "Web search service status errors (202) halted tool execution, requiring synthesis to rely solely on core literary knowledge of Samuel Richardson's novel rather than live web extraction.",
+      "Verification advisory: Gate 1 failed: 5 critical and 3 major citation/structural defects found."
+    ],
+    "version": 1,
+    "research_team_version": "1.0.0",
+    "brief_coverages": [
+      {
+        "brief_id": "brief_01",
+        "coverage_summary": "Identified Roger Solmes as the suitor and analyzed the economic, social, and familial motivations of the Harlowe family."
+      }
+    ],
+    "unresolved_limitations": [
+      "Detailed contemporary critical commentary or recent scholarly articles could not be fetched due to search service interruptions."
+    ],
+    "created_by": "Lead Research Synthesizer",
+    "created_at": "2023-10-25T00:00:00Z"
+  },
+  "error_message": null,
+  "created_at": "2026-11-20T12:44:04.360521Z",
+  "updated_at": "2026-11-20T12:44:23.733571Z"
+}
