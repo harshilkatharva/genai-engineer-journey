@@ -194,3 +194,22 @@ This document records all significant architectural, technical, and structural d
 - **Context:** Previous orchestrator code contained temporary static placeholders (`decomp_tokens = 1200`, `synth_tokens = 2000`) and heuristic input/output ratio approximations (`0.75 / 0.25`), which bypassed the real usage data returned by `LLMService` and caused inaccurate cost tracking.
 - **Decision:** Updated `DecompositionEngine` and `SynthesisEngine` to extract real dynamic usage (`input_tokens`, `output_tokens`) from `LLMManagerResponse.usage`, record exact expenditure in `SharedRunBudget`, and expose `last_input_tokens`, `last_output_tokens`, `last_total_tokens`, and `last_cost_usd`. Updated `ParallelResearchTeam` to read these exact values directly into `ResearchTelemetryTracker`. Added `input_tokens` and `output_tokens` directly to `ResearchDecomposition` for durable checkpoint persistence.
 - **Consequences:** 100% exact token accounting and monetary billing across all pipeline stages with zero static constants or heuristics.
+
+---
+
+## [2026-11-20] DEC-20-022: Gemini Developer API Schema Compliance, Synthesis Engine Structured Call, and Type Alignment
+
+- **Status:** Accepted
+- **Context:** During live integration testing with Gemini Developer API (`gemini-3.5-flash-lite`, `gemini-3.1-flash-lite`):
+  1. Pydantic schema validation using `gt=0.0` emitted `exclusiveMinimum: 0.0`, strictly rejected by Google GenAI Developer API.
+  2. Free-form dictionary typing (`dict[str, str]` on `Report.brief_coverages`) generated `additionalProperties: true`, which is unsupported in Developer API mode.
+  3. `SynthesisEngine.synthesize()` invoked `LLMService.complete_structure(messages=...)`, whereas `LLMService.complete_structure` expects `prompt: str`.
+  4. Worker registry factory required archetype alias bindings (`"factual"`, `"comparative"`, `"exploratory"`, `"deep_dive"`) to dynamically route decomposed briefs to `DefaultResearchWorker`.
+  5. Integration testing required clean dependency injection of `llm_service` and `retrieval_service` in `ParallelResearchTeam` and `ParallelResearchScheduler`.
+- **Decision:**
+  - Updated `WorkerBrief.timeout_seconds` to use `ge=1.0` (`minimum: 1.0`).
+  - Created a dedicated `BriefCoverage` model (`brief_id`, `coverage_summary`) and migrated `Report.brief_coverages` to `list[BriefCoverage]`, adding backward-compatible dictionary coercion via `@field_validator(mode="before")`.
+  - Updated `SynthesisEngine` to invoke `LLMService.complete_structure(prompt=full_prompt)`.
+  - Registered brief archetype aliases in `workers/__init__.py`.
+  - Added optional `llm_service` and `retrieval_service` parameters to `ParallelResearchTeam.__init__` and `ParallelResearchScheduler.__init__`.
+- **Consequences:** Full live Google GenAI API schema compatibility without breaking existing report contracts or type safety.
