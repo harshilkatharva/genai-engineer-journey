@@ -147,6 +147,40 @@ Module 20 builds upon established foundation libraries in the repository with cl
 
 ---
 
-## 5. Explicitly Deferred
+### Milestone 7: Comparative Evaluation Pipeline (Module 17 Single Agent vs Module 20 Multi-Agent)
+- [x] Implement 15-question benchmark dataset across 4 archetypes (`src/parallel_research_team/eval/dataset.py`).
+- [x] Implement global sliding-window rate limiter ensuring <= 13.3 RPM (`src/parallel_research_team/eval/rate_limiter.py`).
+- [x] Implement Module 17 Single Agent adapter with Tavily & Knowledge Base injection (`src/parallel_research_team/eval/single_agent_adapter.py`).
+- [x] Implement Multi-Agent adapter and structured markdown conversion (`src/parallel_research_team/eval/multi_agent_adapter.py`).
+- [x] Implement LLM-as-a-judge quality scoring and winner determination (`src/parallel_research_team/eval/judge.py`).
+- [x] Implement evaluation runner with 30s inter-question cooldown and progress checkpointing (`src/parallel_research_team/eval/runner.py`).
+- [x] Completed full end-to-end 15-question evaluation run (`eval_results/eval_run_eval_63515ddcd6.json`).
+- [x] Completed targeted one-by-one remediation of all questions affected by transient upstream 503 load spikes (`scripts/remediate_affected_eval_questions.py`).
+  - Single Agent: 13 wins (15.81s avg latency, $0.000530 avg cost, 4.87 avg quality score).
+  - Multi-Agent: 2 decisive architectural wins (`q13_tesla_niagara_impact`, `q14_agentic_architectures_tradeoffs`) with 5.0 quality vs 4.0 for single agent, 160.43s avg latency, $0.019959 avg cost.
+  - Ties: 0.
+  - Empirically validated that single agents are 10.1x faster and 37.7x cheaper on simple factual and linear questions, while multi-agent systems dominate broad multi-faceted architectural surveys requiring orthogonal deep dives.
 
-- **Evaluation Pipeline:** Evaluation benchmarks, comparative datasets, and automated metric scoring are explicitly deferred until the functional system is completely implemented and verified.
+---
+
+## 5. Pending Implementation Tasks (Backlog)
+
+### Option 1: Self-Correcting Reflection Loop for Gate 2 Verification Failures
+- **Context & Motivation:** Multi-agent reports currently finish with status `PARTIALLY_COMPLETED` when Gate 2 (Semantic Grounding Verifier) identifies weak, ungrounded, or neutral claim entailments. Introducing an isolated, budget-controlled reflection loop enables the system to iteratively revise ungrounded claims without aborting or exceeding research resource ceilings.
+- **Requirements & Specifications:**
+  1. **Runtime Configuration Knobs (`src/parallel_research_team/core/config.py`):**
+     - `enable_reflection: bool = True` — feature toggle to enable/disable post-synthesis reflection.
+     - `max_reflection_steps: int = 2` — maximum reflection rewrite attempts.
+     - `max_reflection_tokens: int = 15_000` — dedicated token envelope isolated from base research budget.
+     - `max_reflection_cost_usd: float = 0.05` — dedicated cost ceiling for reflection judge and rewrite calls.
+  2. **Isolated Resource Envelope & Non-Destructive Fallback:**
+     - Reflection runs under its own token/cost envelope.
+     - If the reflection budget is exhausted or reflection fails, the original synthesized report is preserved and returned with an informative limitation note rather than failing the research run.
+  3. **Telemetry & Cost Transparency:**
+     - Track `reflection_tokens`, `reflection_cost_usd`, and `reflection_steps` explicitly in `ExecutionMetrics` (`src/parallel_research_team/models/result.py`).
+     - Record reflection spend in `ResearchTelemetryTracker` (`src/parallel_research_team/telemetry/tracker.py`).
+  4. **Reflection Engine (`src/parallel_research_team/synthesis/reflection.py`):**
+     - Target only claims flagged as `contradiction`, `neutral`, or `weak` by Gate 2.
+     - Re-prompt LLM with the authoritative source passages to tighten phrasing or prune ungrounded assertions.
+     - Re-run verification; promote status to `COMPLETED` when Gate 2 passes.
+

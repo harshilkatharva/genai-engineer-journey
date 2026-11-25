@@ -410,3 +410,56 @@ sequenceDiagram
     deactivate Orch
     end
 ```
+
+
+---
+
+## 9. Comparative Evaluation Pipeline Flow
+
+The evaluation pipeline compares Module 17 Single Agent against Module 20 Multi-Agent across the 15-question benchmark dataset while strictly enforcing $\le 13.3$ RPM rate limiting:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Runner as EvaluationPipelineRunner
+    participant Limiter as AsyncRateLimiter (<=13.3 RPM)
+    participant SA as SingleAgentAdapter (Module 17)
+    participant MA as MultiAgentAdapter (Module 20)
+    participant Judge as EvaluationJudge
+    participant File as eval_run_<id>.json
+
+    loop For each benchmark question
+        Runner->>Limiter: acquire()
+        Runner->>SA: run(question.query)
+        activate SA
+        SA-->>Runner: (single_answer, single_metrics)
+        deactivate SA
+
+        Runner->>Runner: Pause 10s (inter-agent cooldown)
+
+        Runner->>Limiter: acquire()
+        Runner->>MA: run(question.query)
+        activate MA
+        MA-->>Runner: (multi_answer, multi_metrics)
+        deactivate MA
+
+        Runner->>Limiter: acquire()
+        Runner->>Judge: evaluate_answer(single_answer)
+        Judge-->>Runner: single_quality (1.0 to 5.0)
+
+        Runner->>Limiter: acquire()
+        Runner->>Judge: evaluate_answer(multi_answer)
+        Judge-->>Runner: multi_quality (1.0 to 5.0)
+
+        Runner->>Judge: determine_winner(single, multi)
+        Judge-->>Runner: ExpectedWinner (SINGLE_AGENT / MULTI_AGENT / TIE)
+
+        Runner->>File: Persist question result checkpoint
+
+        opt More questions remaining
+            Runner->>Runner: Break 30.0s (inter-question cooldown)
+        end
+    end
+
+    Runner-->>Runner: Generate final scorecard summary
+```

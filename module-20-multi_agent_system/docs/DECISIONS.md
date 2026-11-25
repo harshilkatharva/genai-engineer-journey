@@ -300,3 +300,31 @@ This document records all significant architectural, technical, and structural d
   4. Added orchestrator post-synthesis failure limitation reconciliation ensuring all failed, timed-out, or partial worker briefs are disclosed in `report.limitations` and `report.unresolved_limitations`. Removed tautological mock limitation seeding in `test_orchestrator.py`.
 - **Consequences:** Resolves Findings 09, 10, 11, 12, and 13. All 13 findings from the bug audit report are now completely resolved. Resumed runs strictly enforce wall-clock limits and preserve duration history, reflection judge spend is fully metered, checkpoint identities are stable across pre-decomposition restarts, and failure reporting is genuinely tested without mock tautology.
 
+
+---
+
+## [2026-11-25] DEC-20-029: Comparative Evaluation Pipeline (Module 17 Single Agent vs Module 20 Multi-Agent) with Rate Limiting Guardrails
+
+- **Status:** Accepted
+- **Context:** To evaluate the architectural trade-offs between a bounded single-agent tool loop and a multi-agent parallel research team, a 15-question benchmark pipeline was required. The evaluation must operate under strict Gemini Developer API free-tier quotas (15 RPM maximum) without hitting rate limit errors (HTTP 429), ensure fair comparison across identical information sources (Tavily search & handbook vector database), evaluate quality, latency, and cost, and include questions where multi-agent should not help.
+- **Decision:**
+  1. Built a curated 15-question benchmark dataset (`src/parallel_research_team/eval/dataset.py`) divided into 4 archetypes: Simple Factual (4 questions), Linear Synthesis (3 questions), Multi-Faceted Comparison (4 questions), and Architectural Survey (4 questions). Categories 1 and 2 explicitly establish negative controls where single agents are hypothesized to win on cost and latency while matching quality.
+  2. Implemented an asynchronous global rate limiter (`AsyncRateLimiter` in `rate_limiter.py`) enforcing a minimum interval of 4.5 seconds between any LLM calls across all agents and judges (guaranteeing $\le 13.3$ RPM ceiling). Implemented a mandatory 30-second cooldown break between evaluation questions.
+  3. Implemented `SingleAgentAdapter` (`single_agent_adapter.py`) wrapping Module 17's `BoundedAgent`, injecting custom `ToolRegistry` with Tavily web search (`search_web`) and handbook knowledge base search (`search_knowledge_base`) without modifying any code inside `module-17`.
+  4. Implemented `MultiAgentAdapter` (`multi_agent_adapter.py`) wrapping Module 20's `ParallelResearchTeam`, extracting formatted report text and multi-agent metrics.
+  5. Implemented `EvaluationJudge` (`judge.py`) using structured LLM judging on a 1.0–5.0 scale across Factuality (35%), Comprehensiveness (35%), Clarity (15%), and Relevance (15%), with an efficiency-based tiebreaker when quality difference is $< 0.30$.
+  6. Implemented `EvaluationPipelineRunner` (`runner.py`) with per-question atomic checkpoint persistence (`eval_results/eval_run_<run_id>.json`).
+- **Consequences:** Provides an objective, reproducible evaluation harness. Verified end-to-end on Question 1 (`q01_clarissa_recipient`): Single Agent won decisively (18.16s vs 167.56s, $0.00123 vs $0.00819, 5.00 vs 4.85 quality), confirming the hypothesis that multi-agent systems introduce unnecessary overhead on simple factual questions.
+
+---
+
+## [2026-11-25] DEC-20-030: 15-Question Comparative Benchmark Remediation & Reflection Loop Backlog
+
+- **Status:** Accepted
+- **Context:** During continuous execution of the 15-question benchmark pipeline, transient Gemini API load spikes (HTTP 503) caused several multi-agent runs to abort. Additionally, questions where the multi-agent system produced reports were marked `RunStatus.PARTIALLY_COMPLETED` because Gate 2 verification (Semantic Grounding Verifier) flagged ungrounded or weak claims, raising the question of adding a self-correcting reflection loop.
+- **Decision:**
+  1. Implemented progressive backoff retries (`max_attempts = 5`, delay factor `4.0 * attempt`) in `DecompositionEngine` and `SynthesisEngine` to insulate against transient 503 errors.
+  2. Executed targeted one-by-one remediation (`scripts/remediate_affected_eval_questions.py`) with 25-second inter-question cooldown pauses, re-running affected systems and replacing outcomes in `eval_results/eval_run_eval_63515ddcd6.json`.
+  3. Placed Option 1 (Self-Correcting Reflection Loop) into the pending implementation backlog in `docs/GOAL.md`. The design features an isolated token/cost envelope (`max_reflection_tokens = 15_000`, `max_reflection_cost_usd = $0.05`), feature toggle (`enable_reflection`), and graceful non-destructive fallback to prevent reflection exhaustion from aborting research.
+- **Consequences:** All 15 benchmark questions now have complete, valid outputs with 0 unhandled failures. Final results reveal Single Agent winning 13/15 questions with 10.1x lower latency (15.81s vs 160.43s) and 37.7x lower cost ($0.00053 vs $0.01996), while Multi-Agent delivers decisive structural superiority on deep architectural surveys (`q13` and `q14`, scoring 5.0 vs 4.0).
+

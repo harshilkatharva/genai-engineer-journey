@@ -369,3 +369,21 @@ class CheckpointState(BaseModel):
    - Wall-clock elapsed duration.
    - Worker breakdown: total, completed, partial, failed, and timed-out.
 5. **Rule 7.1.5 (Graceful Budget Exhaustion Interception):** When `BudgetExceededError` occurs, the orchestrator MUST NOT crash the process. It must transition the run to `RunStatus.PARTIALLY_COMPLETED`, preserve all gathered evidence and partial deliverables, synthesize a partial report if evidence exists, and record a user-friendly explanatory disclosure in `report.limitations` and `report.unresolved_limitations`.
+
+
+---
+
+## 8. Comparative Evaluation & Benchmark Protocol
+
+### 8.1 Benchmark Dataset Governance
+1. **Rule 8.1.1 (Archetype Distribution):** The benchmark suite must contain at least 15 curated questions spanning 4 archetypes:
+   - Simple Factual (4 questions): Atomic single-fact queries. Single agent must outperform or match multi-agent.
+   - Linear Synthesis (3 questions): Stepwise reasoning queries. Multi-agent fan-out should not provide quality advantage.
+   - Multi-Faceted Comparison (4 questions): Multiple orthogonal dimensions. Multi-agent should win on coverage and trade-off depth.
+   - Architectural Survey (4 questions): Full-stack systems architecture. Multi-agent should win on comprehensiveness and structural clarity.
+2. **Rule 8.1.2 (Fair Comparison Tool Equivalence):** The Single Agent baseline (Module 17 `BoundedAgent`) must be supplied with the exact same search tools as Module 20 (`search_web` via Tavily and `search_knowledge_base` via the handbook vector store) to ensure pure architectural comparison.
+
+### 8.2 Rate Limiting & Cooldown Protection
+1. **Rule 8.2.1 (Hard RPM Ceiling):** All LLM requests during evaluation must be guarded by `AsyncRateLimiter` with a maximum ceiling of $\le 13.3$ RPM (`min_interval_seconds = 4.5s`) to prevent HTTP 429 rate limit errors on Gemini free tiers.
+2. **Rule 8.2.2 (Mandatory Inter-Question Break):** A mandatory 30-second cooldown pause (`await asyncio.sleep(30.0)`) must be enforced between benchmark questions.
+3. **Rule 8.2.3 (Atomic Progress Checkpointing):** Each question result must be appended and persisted to `eval_results/eval_run_<run_id>.json` immediately upon completion.
