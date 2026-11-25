@@ -73,16 +73,19 @@ class EvidenceCollector:
         metadata: dict[str, Any] | None = None,
     ) -> SourceReference:
         """Deterministically hash a web snippet into a SourceReference."""
+        clean_content = content.strip() if content else ""
+        if not clean_content:
+            clean_content = (title or url or "Web search result content unavailable.").strip()
         source_id = create_deterministic_source_id(url, prefix="web")
-        chunk_id = create_deterministic_chunk_id(source_id, content)
+        chunk_id = create_deterministic_chunk_id(source_id, clean_content)
         meta = {"url": url, "source_type": "web"}
         if metadata:
             meta.update(metadata)
         return self.add_source(
             source_id=source_id,
             chunk_id=chunk_id,
-            title=title or url,
-            content=content,
+            title=title or url or "Untitled Web Source",
+            content=clean_content,
             score=score,
             metadata=meta,
         )

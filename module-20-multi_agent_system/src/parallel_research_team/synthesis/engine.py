@@ -52,6 +52,10 @@ class SynthesisEngine:
         if not clean_topic:
             raise SynthesisError("Cannot synthesize report: topic cannot be empty.")
 
+        # Check shared budget before dispatching expensive synthesis LLM call
+        if shared_budget is not None:
+            await shared_budget.check_budget()
+
         # 1. Process worker deliverables, extract findings, and document worker failures
         worker_findings: dict[str, str] = {}
         unresolved_limitations: list[str] = []

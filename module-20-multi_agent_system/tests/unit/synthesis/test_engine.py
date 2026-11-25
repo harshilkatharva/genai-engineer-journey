@@ -8,7 +8,7 @@ import pytest
 
 from parallel_research_team.core.budget import SharedRunBudget
 from parallel_research_team.core.config import ResearchTeamConfig
-from parallel_research_team.exceptions import SynthesisError
+from parallel_research_team.exceptions import BudgetExceededError, SynthesisError
 from parallel_research_team.models import (
     Citation,
     CitationType,
@@ -360,3 +360,26 @@ async def test_synthesis_engine_citation_reconciler(
     c_orphan = report.conclusion.claims[0]
     assert len(c_orphan.citations) == 0
     assert c_orphan.is_factual is False
+
+
+@pytest.mark.asyncio
+async def test_synthesis_engine_enforces_budget_ceiling(
+    test_config: ResearchTeamConfig,
+) -> None:
+    budget = SharedRunBudget(config=test_config, max_total_tokens=100, max_total_cost_usd=1.0)
+    await budget.record_usage(tokens=150, cost_usd=0.01)
+
+    mock_llm = AsyncMock()
+    engine = SynthesisEngine(config=test_config, llm_service=mock_llm)
+    pool = AuthoritativeSourcePool()
+
+    with pytest.raises(BudgetExceededError, match="Token budget exhausted"):
+        await engine.synthesize(
+            topic="Exhausted Run",
+            worker_results={},
+            source_pool=pool,
+            shared_budget=budget,
+        )
+
+    # LLM completion must NOT have been called
+    mock_llm.complete_structure.assert_not_called()

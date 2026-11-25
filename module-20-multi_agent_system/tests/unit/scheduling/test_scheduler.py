@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+from typing import Any
 from unittest.mock import AsyncMock
 
 import pytest
@@ -325,3 +326,68 @@ async def test_scheduler_pre_exhausted_budget(test_config: ResearchTeamConfig) -
     results = await scheduler.schedule_and_execute(briefs=briefs, shared_budget=budget)
     assert results["b_ex"].status == WorkerStatus.FAILED
     assert "budget already exhausted" in (results["b_ex"].error_message or "").lower()
+
+
+@pytest.mark.asyncio
+async def test_scheduler_upstream_cancellation_unblocks_downstream_workers(
+    test_config: ResearchTeamConfig,
+) -> None:
+    budget = SharedRunBudget(config=test_config, max_total_tokens=10000, max_total_cost_usd=1.0)
+    registry = WorkerRegistry()
+
+    class FailingWorker(ResearchWorkerProtocol):
+        def __init__(self, brief: WorkerBrief, config: Any, **kwargs: Any) -> None:
+            self.brief = brief
+
+        @property
+        def worker_type(self) -> str:
+            return "cancelling"
+
+        async def execute(
+            self, brief: WorkerBrief, shared_budget: SharedRunBudget
+        ) -> WorkerExecutionResult:
+            if brief.brief_id == "b_up":
+                raise asyncio.CancelledError("Upstream cancelled")
+            return WorkerExecutionResult(
+                brief_id=brief.brief_id,
+                status=WorkerStatus.COMPLETED,
+                output=WorkerResearchOutput(
+                    brief_id=brief.brief_id,
+                    findings_summary="Downstream worker finished successfully.",
+                    sources=[],
+                    claims=[],
+                ),
+                tokens_used=100,
+                cost_usd=0.001,
+            )
+
+    registry.register("cancelling", FailingWorker)
+
+    scheduler = ParallelResearchScheduler(config=test_config, worker_registry=registry)
+    briefs = [
+        WorkerBrief(
+            brief_id="b_up",
+            title="Upstream",
+            topic="Topic",
+            objective="Obj",
+            task_boundaries=["In", "Out"],
+            worker_type="cancelling",
+        ),
+        WorkerBrief(
+            brief_id="b_down",
+            title="Downstream",
+            topic="Topic",
+            objective="Obj",
+            task_boundaries=["In", "Out"],
+            worker_type="cancelling",
+            depends_on=["b_up"],
+        ),
+    ]
+
+    # Must complete without hanging in deadlock
+    results = await asyncio.wait_for(
+        scheduler.schedule_and_execute(briefs=briefs, shared_budget=budget),
+        timeout=3.0,
+    )
+    assert results["b_up"].status == WorkerStatus.FAILED
+    assert results["b_down"].status == WorkerStatus.COMPLETED

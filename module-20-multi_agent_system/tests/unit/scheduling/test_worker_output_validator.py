@@ -174,3 +174,79 @@ def test_validator_preserves_failed_or_timeout_result() -> None:
     validated = validator.validate(result, brief)
     assert validated.status == WorkerStatus.TIMEOUT
     assert validated.error_message == "Worker timed out after 45s."
+
+
+def test_validator_field_names_not_required_in_summary_prose() -> None:
+    validator = WorkerOutputValidator()
+    brief = WorkerBrief(
+        brief_id="b7",
+        title="Title",
+        topic="Topic",
+        objective="Objective",
+        task_boundaries=["In", "Out"],
+    )
+    output = WorkerResearchOutput(
+        brief_id="b7",
+        findings_summary="Quantum annealing demonstrates quadratic speedups over simulated annealing.",
+        sources=[{"source_id": "src_1", "chunk_id": "chk_1", "content": "Text"}],
+        claims=[
+            {
+                "claim_id": "c1",
+                "text": "Speedups occur in specific regimes.",
+                "citations": [{"source_id": "src_1", "chunk_id": "chk_1"}],
+            }
+        ],
+    )
+    result = WorkerExecutionResult(
+        brief_id="b7",
+        status=WorkerStatus.COMPLETED,
+        output=output,
+    )
+
+    validated = validator.validate(result, brief)
+    assert validated.status == WorkerStatus.COMPLETED
+    assert validated.output is not None
+    # Must NOT have appended spurious "Output format missing expected elements"
+    assert not any("missing expected elements" in lim for lim in validated.output.limitations)
+
+
+def test_validator_phantom_citations_discard_claims_and_downgrade_with_sources() -> None:
+    validator = WorkerOutputValidator()
+    brief = WorkerBrief(
+        brief_id="b8",
+        title="Title",
+        topic="Topic",
+        objective="Objective",
+        task_boundaries=["In", "Out"],
+    )
+    output = WorkerResearchOutput(
+        brief_id="b8",
+        findings_summary="Valid findings text.",
+        sources=[{"source_id": "src_real", "chunk_id": "chk_real", "content": "Real evidence."}],
+        claims=[
+            {
+                "claim_id": "c_real",
+                "text": "Real claim grounded in evidence.",
+                "citations": [{"source_id": "src_real", "chunk_id": "chk_real"}],
+            },
+            {
+                "claim_id": "c_phantom",
+                "text": "Hallucinated claim with no evidence.",
+                "citations": [{"source_id": "src_fake", "chunk_id": "chk_fake"}],
+            },
+        ],
+    )
+    result = WorkerExecutionResult(
+        brief_id="b8",
+        status=WorkerStatus.COMPLETED,
+        output=output,
+    )
+
+    validated = validator.validate(result, brief)
+    # Must downgrade to PARTIAL because of phantom citations
+    assert validated.status == WorkerStatus.PARTIAL
+    assert validated.output is not None
+    # Phantom claim must be discarded, real claim preserved
+    assert len(validated.output.claims) == 1
+    assert validated.output.claims[0]["claim_id"] == "c_real"
+    assert any("reference sources not present" in lim for lim in validated.output.limitations)

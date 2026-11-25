@@ -101,89 +101,91 @@ class ParallelResearchScheduler:
         )
 
         async def _execute_single_brief(brief: WorkerBrief) -> WorkerExecutionResult:
-            # A. Wait for upstream dependency completions if specified
-            if brief.depends_on:
-                for dep_id in brief.depends_on:
-                    if dep_id in completed_events:
-                        await completed_events[dep_id].wait()
+            try:
+                # A. Wait for upstream dependency completions if specified
+                if brief.depends_on:
+                    for dep_id in brief.depends_on:
+                        if dep_id in completed_events:
+                            await completed_events[dep_id].wait()
 
-            # B. Acquire concurrency slot
-            async with semaphore:
-                # Proactive budget check before worker instantiation
-                if not await shared_budget.can_proceed():
-                    res = WorkerExecutionResult(
-                        brief_id=brief.brief_id,
-                        status=WorkerStatus.FAILED,
-                        error_message="Shared run budget already exhausted before worker execution.",
-                        started_at=datetime.now(UTC),
-                        completed_at=datetime.now(UTC),
-                    )
-                else:
-                    try:
-                        worker_kwargs: dict[str, Any] = {}
-                        if self.retrieval_service is not None:
-                            worker_kwargs["retrieval_service"] = self.retrieval_service
-                        if self.llm_service is not None:
-                            worker_kwargs["llm_service"] = self.llm_service
-
-                        worker = self.worker_registry.create_worker(
-                            brief=brief,
-                            config=self.config,
-                            **worker_kwargs,
-                        )
-                        raw_result = await worker.execute(
-                            brief=brief,
-                            shared_budget=shared_budget,
-                        )
-                        res = self.validator.validate(raw_result, brief)
-                    except Exception as exc:
-                        _logger.exception(
-                            "Unexpected failure in worker execution for brief '%s'",
-                            brief.brief_id,
-                        )
+                # B. Acquire concurrency slot
+                async with semaphore:
+                    # Proactive budget check before worker instantiation
+                    if not await shared_budget.can_proceed():
                         res = WorkerExecutionResult(
                             brief_id=brief.brief_id,
                             status=WorkerStatus.FAILED,
-                            error_message=f"Unhandled worker failure: {exc}",
+                            error_message="Shared run budget already exhausted before worker execution.",
                             started_at=datetime.now(UTC),
                             completed_at=datetime.now(UTC),
                         )
+                    else:
+                        try:
+                            worker_kwargs: dict[str, Any] = {}
+                            if self.retrieval_service is not None:
+                                worker_kwargs["retrieval_service"] = self.retrieval_service
+                            if self.llm_service is not None:
+                                worker_kwargs["llm_service"] = self.llm_service
 
-                # C. Real-time incremental state update & atomic checkpoint persistence
-                async with state_lock:
-                    results[brief.brief_id] = res
+                            worker = self.worker_registry.create_worker(
+                                brief=brief,
+                                config=self.config,
+                                **worker_kwargs,
+                            )
+                            raw_result = await worker.execute(
+                                brief=brief,
+                                shared_budget=shared_budget,
+                            )
+                            res = self.validator.validate(raw_result, brief)
+                        except Exception as exc:
+                            _logger.exception(
+                                "Unexpected failure in worker execution for brief '%s'",
+                                brief.brief_id,
+                            )
+                            res = WorkerExecutionResult(
+                                brief_id=brief.brief_id,
+                                status=WorkerStatus.FAILED,
+                                error_message=f"Unhandled worker failure: {exc}",
+                                started_at=datetime.now(UTC),
+                                completed_at=datetime.now(UTC),
+                            )
 
-                    if checkpoint is not None:
-                        checkpoint.worker_results[brief.brief_id] = res
+                    # C. Real-time incremental state update & atomic checkpoint persistence
+                    async with state_lock:
+                        results[brief.brief_id] = res
 
-                        # Accumulate authoritative sources in real time
-                        if res.output and res.output.sources:
-                            for src in res.output.sources:
-                                s_id = str(src.get("source_id", "")).strip()
-                                c_id = str(src.get("chunk_id", "")).strip()
-                                if s_id and c_id:
-                                    checkpoint.authoritative_sources[f"{s_id}#{c_id}"] = src
-                                elif c_id:
-                                    checkpoint.authoritative_sources[c_id] = src
+                        if checkpoint is not None:
+                            checkpoint.worker_results[brief.brief_id] = res
 
-                        checkpoint.used_tokens = shared_budget.current_tokens
-                        checkpoint.used_cost_usd = shared_budget.current_cost_usd
-                        checkpoint.elapsed_seconds = shared_budget.elapsed_seconds
-                        checkpoint.updated_at = datetime.now(UTC)
+                            # Accumulate authoritative sources in real time
+                            if res.output and res.output.sources:
+                                for src in res.output.sources:
+                                    s_id = str(src.get("source_id", "")).strip()
+                                    c_id = str(src.get("chunk_id", "")).strip()
+                                    if s_id and c_id:
+                                        checkpoint.authoritative_sources[f"{s_id}#{c_id}"] = src
+                                    elif c_id:
+                                        checkpoint.authoritative_sources[c_id] = src
 
-                        if self.checkpoint_store is not None:
-                            try:
-                                await self.checkpoint_store.save_checkpoint(checkpoint)
-                            except Exception as cp_err:  # noqa: BLE001
-                                _logger.warning(
-                                    "Failed to persist real-time checkpoint for brief '%s': %s",
-                                    brief.brief_id,
-                                    cp_err,
-                                )
+                            checkpoint.used_tokens = shared_budget.current_tokens
+                            checkpoint.used_cost_usd = shared_budget.current_cost_usd
+                            checkpoint.elapsed_seconds = shared_budget.elapsed_seconds
+                            checkpoint.updated_at = datetime.now(UTC)
 
-                # Signal dependent workers
+                            if self.checkpoint_store is not None:
+                                try:
+                                    await self.checkpoint_store.save_checkpoint(checkpoint)
+                                except Exception as cp_err:  # noqa: BLE001
+                                    _logger.warning(
+                                        "Failed to persist real-time checkpoint for brief '%s': %s",
+                                        brief.brief_id,
+                                        cp_err,
+                                    )
+
+                    return res
+            finally:
+                # Signal dependent workers even on cancellation, failure, or exception
                 completed_events[brief.brief_id].set()
-                return res
 
         # 3. Dispatch all tasks concurrently with exception shielding
         tasks = [_execute_single_brief(b) for b in briefs]

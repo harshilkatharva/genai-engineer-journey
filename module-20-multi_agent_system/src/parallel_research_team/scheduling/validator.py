@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from genai_core.observability import get_logger
 
 from ..models import WorkerBrief, WorkerExecutionResult, WorkerStatus
@@ -64,14 +66,21 @@ class WorkerOutputValidator:
                 known_chunk_ids.add(chk_id)
 
         phantom_citations: list[str] = []
+        valid_claims: list[dict[str, Any]] = []
         for claim in output.claims:
-            for cite in claim.get("citations", []):
+            claim_citations = claim.get("citations", [])
+            has_phantom = False
+            for cite in claim_citations:
                 cite_src = str(cite.get("source_id", "")).strip()
                 cite_chk = str(cite.get("chunk_id", "")).strip()
 
                 is_known = (cite_src, cite_chk) in known_source_keys or cite_chk in known_chunk_ids
                 if not is_known:
                     phantom_citations.append(f"({cite_src}, {cite_chk})")
+                    has_phantom = True
+
+            if not has_phantom:
+                valid_claims.append(claim)
 
         if phantom_citations:
             _logger.warning(
@@ -81,22 +90,41 @@ class WorkerOutputValidator:
             )
             warn_msg = (
                 f"Validation note: Citations {', '.join(phantom_citations)} reference "
-                "sources not present in the worker's retrieved source list."
+                "sources not present in the worker's retrieved source list. Ungrounded claims discarded."
             )
             if warn_msg not in output.limitations:
                 output.limitations.append(warn_msg)
-            # Downgrade to partial if citations cannot be grounded
-            if result.status == WorkerStatus.COMPLETED and not output.sources:
+            # Discard ungrounded claims referencing unretrieved sources
+            output.claims = valid_claims
+            # Downgrade to partial if phantom citations were produced
+            if result.status == WorkerStatus.COMPLETED:
                 result.status = WorkerStatus.PARTIAL
-                result.error_message = "Output claims cannot be verified: zero sources retrieved."
+                result.error_message = (
+                    "Worker produced ungrounded claims with phantom citations."
+                    if output.sources
+                    else "Output claims cannot be verified: zero sources retrieved."
+                )
 
         # 3. Format required fields check
         required_fields = brief.expected_output_format.required_fields
         if required_fields:
             missing_fields: list[str] = []
             for field in required_fields:
-                if field.lower() not in output.findings_summary.lower():
-                    missing_fields.append(field)
+                if hasattr(output, field):
+                    val = getattr(output, field)
+                    if val is None or (isinstance(val, (str, list, dict)) and len(val) == 0):
+                        missing_fields.append(field)
+                elif (
+                    hasattr(output, "model_extra")
+                    and output.model_extra
+                    and field in output.model_extra
+                ):
+                    val = output.model_extra[field]
+                    if val is None or (isinstance(val, (str, list, dict)) and len(val) == 0):
+                        missing_fields.append(field)
+                else:
+                    if field.lower() not in output.findings_summary.lower():
+                        missing_fields.append(field)
 
             if missing_fields:
                 _logger.info(

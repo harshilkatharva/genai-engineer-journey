@@ -171,3 +171,49 @@ def test_evidence_extractor() -> None:
     assert output.search_queries_used == ["agent architecture"]
     assert len(output.claims) >= 1
     assert output.claims[0]["citations"][0]["source_id"] == ref.source_id
+
+
+def test_evidence_collector_empty_content_graceful() -> None:
+    collector = EvidenceCollector()
+    ref = collector.add_web_source(
+        url="https://example.com/empty",
+        title="Empty Page",
+        content="",
+    )
+    assert ref.source_id.startswith("web_")
+    assert ref.content == "Empty Page"
+    assert len(collector.get_sources()) == 1
+
+
+@pytest.mark.asyncio
+async def test_research_tools_empty_snippet_graceful() -> None:
+    from unittest.mock import AsyncMock, MagicMock
+
+    import httpx
+
+    from parallel_research_team.workers.tools import create_research_tool_registry
+
+    collector = EvidenceCollector()
+    mock_response = MagicMock(spec=httpx.Response)
+    mock_response.status_code = 200
+    mock_response.json.return_value = {
+        "results": [
+            {"title": "Result 1", "url": "https://example.com/1", "content": ""},
+            {
+                "title": "Result 2",
+                "url": "https://example.com/2",
+                "content": "Valid snippet content.",
+            },
+        ]
+    }
+    mock_http_client = AsyncMock(spec=httpx.AsyncClient)
+    mock_http_client.post.return_value = mock_response
+
+    registry = create_research_tool_registry(collector=collector, http_client=mock_http_client)
+
+    tool = registry.get_or_fail("search_web")
+    output = await tool.run(query="test query")
+
+    assert "Result 1" in output
+    assert "Result 2" in output
+    assert len(collector.get_sources()) == 2

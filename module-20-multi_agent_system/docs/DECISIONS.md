@@ -262,3 +262,22 @@ This document records all significant architectural, technical, and structural d
   2. Updated `orchestrator.py.resume()` to initialize `ResearchTelemetryTracker` with `initial_tokens=0, initial_cost_usd=0.0`, reconstruct decomposition tokens explicitly from checkpoint balances (`max(0, checkpoint.used_tokens - sum(worker_tokens))`), and allow the loop over `checkpoint.worker_results.values()` to populate worker breakdown once, avoiding telemetry double-counting.
   3. Updated `source_pool.py.to_dict()` to serialize pooled sources keyed by composite key `f"{ref.source_id}#{ref.chunk_id}"`, and updated `scheduler.py` to index `checkpoint.authoritative_sources` by `f"{s_id}#{c_id}"`, preventing chunk collision and preserving all retrieved evidence.
 - **Consequences:** Resolves Findings 01, 02, and 03. Defective reports failing verification cannot masquerade as `COMPLETED`, resumed run telemetry matches exact consumption without inflation, and multi-document evidence with colliding chunk indices is completely preserved across checkpoints and runs.
+
+---
+
+## [2026-11-25] DEC-20-027: Bug Audit Fixes — Scheduler Deadlock Prevention, Synthesis Budget Check, Output Validator Grounding, and Web Snippet Resilience
+
+- **Status:** Accepted
+- **Context:** Following the module bug audit (`docs/MODULE_20_BUG_AUDIT.md`), five additional bugs (Findings 04 through 08) were confirmed and required resolution:
+  1. *Finding 04 (High):* In `scheduler.py`, `completed_events[brief.brief_id].set()` was executed outside a `finally:` block. Cancellation or unhandled exceptions in upstream workers prevented signaling dependent tasks, causing permanent deadlock during concurrent DAG execution.
+  2. *Finding 05 (Medium):* In `synthesis/engine.py`, `SynthesisEngine.synthesize()` never called `shared_budget.check_budget()` prior to executing the structured report generation LLM call, bypassing budget ceilings when token or wall-clock limits were breached.
+  3. *Finding 06 (Medium):* In `scheduling/validator.py`, `WorkerOutputValidator` checked for the presence of schema field names (`"sources"`, `"claims"`, `"findings_summary"`) as literal substrings in free-form narrative `output.findings_summary` rather than inspecting attributes on `output`.
+  4. *Finding 07 (Medium):* In `scheduling/validator.py`, claims referencing phantom sources were flagged but never discarded, and worker status was not downgraded to `PARTIAL` when `output.sources` contained any sources.
+  5. *Finding 08 (Medium):* In `workers/tools.py` and `workers/extractor.py`, web results with empty snippet contents raised an unhandled `ValidationError` during `SourceReference` instantiation, crashing the web search tool loop.
+- **Decision:**
+  1. Enclosed `_execute_single_brief` in `scheduler.py` in a `try...finally: completed_events[brief.brief_id].set()` block to guarantee upstream signaling and unblock dependent workers under all execution outcomes (cancellation, exceptions, timeouts).
+  2. Added proactive `await shared_budget.check_budget()` check at the start of `SynthesisEngine.synthesize()`, immediately enforcing ceilings and propagating `BudgetExceededError` to the orchestrator.
+  3. Updated `WorkerOutputValidator` to inspect attributes on `output` (and extra model fields) for required schema fields, restricting substring search in `findings_summary` only to custom non-model field guidelines.
+  4. Updated `WorkerOutputValidator` to discard claims referencing ungrounded/phantom sources (`output.claims = valid_claims`) and downgrade `result.status` to `WorkerStatus.PARTIAL` whenever phantom citations are detected.
+  5. Handled empty snippets in `tools.py` and fallback content in `extractor.py.add_web_source()`, gracefully assigning title/URL fallback content and wrapping item ingestion in error shielding.
+- **Consequences:** Resolves Findings 04 through 08. Eliminates scheduler deadlocks, halts synthesis on budget exhaustion, eliminates spurious output limitation flags on professional summaries, discards ungrounded worker claims, and prevents web search tool crashes on empty snippets.

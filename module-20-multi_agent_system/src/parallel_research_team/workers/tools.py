@@ -132,19 +132,29 @@ def create_research_tool_registry(
 
             formatted: list[str] = []
             for item in results:
-                ref = collector.add_web_source(
-                    url=item.get("url", ""),
-                    title=item.get("title", item.get("url", "")),
-                    content=item.get("content", ""),
-                    score=float(item.get("score", 1.0)),
-                )
-                formatted.append(
-                    f"Source ID: {ref.source_id}\n"
-                    f"Chunk ID: {ref.chunk_id}\n"
-                    f"Title: {ref.title}\n"
-                    f"URL: {item.get('url', '')}\n"
-                    f"Content: {ref.content}\n"
-                )
+                content = (item.get("content") or item.get("snippet") or "").strip()
+                if not content:
+                    content = (item.get("title") or item.get("url") or "").strip()
+                if not content:
+                    continue
+
+                try:
+                    ref = collector.add_web_source(
+                        url=item.get("url", ""),
+                        title=item.get("title", item.get("url", "")),
+                        content=content,
+                        score=float(item.get("score", 1.0)),
+                    )
+                    formatted.append(
+                        f"Source ID: {ref.source_id}\n"
+                        f"Chunk ID: {ref.chunk_id}\n"
+                        f"Title: {ref.title}\n"
+                        f"URL: {item.get('url', '')}\n"
+                        f"Content: {ref.content}\n"
+                    )
+                except Exception as exc:  # noqa: BLE001
+                    _logger.warning("Failed to add web source for %s: %s", item.get("url"), exc)
+                    continue
 
             return "\n---\n".join(formatted)
 
