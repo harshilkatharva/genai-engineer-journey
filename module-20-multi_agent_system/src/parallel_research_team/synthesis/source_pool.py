@@ -80,9 +80,12 @@ class AuthoritativeSourcePool:
             return dict(self._sources)
 
     def to_dict(self) -> dict[str, dict[str, Any]]:
-        """Serialize pooled sources into a dictionary keyed by chunk_id for checkpoint storage."""
+        """Serialize pooled sources into a dictionary keyed by composite key for checkpoint storage."""
         with self._lock:
-            return {chunk_id: ref.model_dump() for chunk_id, ref in self._chunk_map.items()}
+            return {
+                f"{ref.source_id}#{ref.chunk_id}": ref.model_dump()
+                for ref in self._sources.values()
+            }
 
     @classmethod
     def from_dict(cls, data: dict[str, dict[str, Any]]) -> AuthoritativeSourcePool:

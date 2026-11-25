@@ -247,3 +247,18 @@ This document records all significant architectural, technical, and structural d
   3. Added post-synthesis citation reconciler in `src/parallel_research_team/synthesis/engine.py` to prune citations to missing chunks, safely downgrade loose quotations to paraphrases, and align section IDs.
   4. Added transient retry loops with exponential backoff for 503 high-demand / 429 rate-limit errors in `DecompositionEngine` and `SynthesisEngine`.
 - **Consequences:** Eliminates misleading verification diagnostics, prevents Gate 1 and Gate 2 structural failure cascades, and automatically shields research runs from transient LLM provider demand spikes.
+
+---
+
+## [2026-11-25] DEC-20-026: Bug Audit Fixes — Verification Status Enforcement, Resume Telemetry De-duplication, and Composite Keying for Authoritative Evidence
+
+- **Status:** Accepted
+- **Context:** Three high/critical bugs were found, confirmed and required resolution:
+  1. *Finding 01 (Critical):* In `orchestrator.py`, Step 5 ("Final Outcome Determination") ignored `verification_result.passed`, allowing reports with failing verification (e.g. ungrounded claims or hallucinated citations) to settle in `RunStatus.COMPLETED`.
+  2. *Finding 02 (High):* In `orchestrator.py.resume()`, `ResearchTelemetryTracker` initialized `initial_tokens` with `checkpoint.used_tokens` (which already included completed worker tokens) and subsequently looped over `checkpoint.worker_results.values()` to record worker metrics, causing `tracker.finish()` to double-count tokens and costs on resume.
+  3. *Finding 03 (High):* In `source_pool.py.to_dict()` and `scheduler.py`, pooled and checkpointed sources were indexed solely by `chunk_id`. When distinct documents shared identical chunk identifiers (such as `"chunk_0"`), later sources silently overwrote earlier sources, leading to data loss and citation failures upon resumption.
+- **Decision:**
+  1. Updated `orchestrator.py` in both `run()` and `resume()` so that Step 5 inspects `verif_failed = bool(verification_result and not verification_result.passed)`. If verification failed, the run settles in `RunStatus.PARTIALLY_COMPLETED` rather than `COMPLETED`.
+  2. Updated `orchestrator.py.resume()` to initialize `ResearchTelemetryTracker` with `initial_tokens=0, initial_cost_usd=0.0`, reconstruct decomposition tokens explicitly from checkpoint balances (`max(0, checkpoint.used_tokens - sum(worker_tokens))`), and allow the loop over `checkpoint.worker_results.values()` to populate worker breakdown once, avoiding telemetry double-counting.
+  3. Updated `source_pool.py.to_dict()` to serialize pooled sources keyed by composite key `f"{ref.source_id}#{ref.chunk_id}"`, and updated `scheduler.py` to index `checkpoint.authoritative_sources` by `f"{s_id}#{c_id}"`, preventing chunk collision and preserving all retrieved evidence.
+- **Consequences:** Resolves Findings 01, 02, and 03. Defective reports failing verification cannot masquerade as `COMPLETED`, resumed run telemetry matches exact consumption without inflation, and multi-document evidence with colliding chunk indices is completely preserved across checkpoints and runs.

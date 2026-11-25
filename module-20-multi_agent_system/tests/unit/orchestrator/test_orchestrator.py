@@ -324,3 +324,82 @@ async def test_orchestrator_all_workers_failed(
     assert result.status == RunStatus.FAILED
     assert result.error_message is not None
     assert "All research workers failed" in result.error_message
+
+
+async def test_orchestrator_verification_failure_sets_partially_completed(
+    test_config: ResearchTeamConfig, tmp_path: Path
+) -> None:
+    store = FileCheckpointStore(base_dir=tmp_path / "checkpoints", config=test_config)
+
+    mock_decomp = AsyncMock()
+    brief = WorkerBrief(
+        brief_id="brief_01",
+        title="Direct Search",
+        topic="Topic",
+        objective="Look up info",
+        brief_type=BriefType.FACTUAL_RETRIEVAL,
+        task_boundaries=["Focus strictly on topic"],
+        expected_output_format=OutputFormatSpec(),
+    )
+    mock_decomp.decompose.return_value = ResearchDecomposition(
+        topic="Topic",
+        effort_level=EffortLevel.DIRECT,
+        worker_count=1,
+        worker_briefs=[brief],
+        rationale="Narrow query",
+    )
+
+    mock_scheduler = AsyncMock()
+    source = SourceReference(
+        source_id="src_01",
+        chunk_id="chk_01",
+        title="Docs",
+        content="Evidence content text.",
+    )
+    worker_res = WorkerExecutionResult(
+        brief_id="brief_01",
+        status=WorkerStatus.COMPLETED,
+        output=WorkerResearchOutput(
+            brief_id="brief_01",
+            findings_summary="Findings summary",
+            claims=[{"claim_id": "cl_1", "text": "Claim text"}],
+            sources=[source.model_dump()],
+        ),
+        tokens_used=800,
+        cost_usd=0.002,
+        duration_ms=450.0,
+    )
+    mock_scheduler.schedule_and_execute.return_value = {"brief_01": worker_res}
+
+    mock_synthesis = AsyncMock()
+    mock_synthesis.synthesize.return_value = _create_mock_report("Topic")
+
+    # Verifier reports failure (Gate 1 failed due to hallucinated citation)
+    mock_verifier = AsyncMock()
+    mock_verifier.verify.return_value = SynthesisVerificationResult(
+        passed=False,
+        gate1_passed=False,
+        gate2_passed=False,
+        summary="Gate 1 hallucinated citation detected",
+        issues=[{"error": "Citation not in pool"}],
+    )
+
+    team = ParallelResearchTeam(
+        config=test_config,
+        decomposition_engine=mock_decomp,
+        scheduler=mock_scheduler,
+        synthesis_engine=mock_synthesis,
+        verifier=mock_verifier,
+        checkpoint_store=store,
+    )
+
+    result = await team.run(topic="Topic")
+
+    # Must be PARTIALLY_COMPLETED, NOT COMPLETED
+    assert result.status == RunStatus.PARTIALLY_COMPLETED
+    assert result.report is not None
+    assert any("Verification advisory" in lim for lim in result.report.limitations)
+
+    saved_checkpoint = await store.get_checkpoint(result.run_id)
+    assert saved_checkpoint is not None
+    assert saved_checkpoint.status == RunStatus.PARTIALLY_COMPLETED

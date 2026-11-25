@@ -159,9 +159,12 @@ class ParallelResearchScheduler:
                         # Accumulate authoritative sources in real time
                         if res.output and res.output.sources:
                             for src in res.output.sources:
-                                chunk_id = str(src.get("chunk_id", "")).strip()
-                                if chunk_id:
-                                    checkpoint.authoritative_sources[chunk_id] = src
+                                s_id = str(src.get("source_id", "")).strip()
+                                c_id = str(src.get("chunk_id", "")).strip()
+                                if s_id and c_id:
+                                    checkpoint.authoritative_sources[f"{s_id}#{c_id}"] = src
+                                elif c_id:
+                                    checkpoint.authoritative_sources[c_id] = src
 
                         checkpoint.used_tokens = shared_budget.current_tokens
                         checkpoint.used_cost_usd = shared_budget.current_cost_usd

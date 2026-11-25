@@ -163,7 +163,7 @@ async def test_resume_executes_only_pending_briefs(
         effort_level=EffortLevel.PARALLEL_DECOMPOSED,
         decomposition=decomposition,
         worker_results={"brief_01": res1},
-        authoritative_sources={"chk_01": source1.model_dump()},
+        authoritative_sources={"src_01#chk_01": source1.model_dump()},
         used_tokens=2000,
         used_cost_usd=0.006,
         elapsed_seconds=5.0,
@@ -229,5 +229,90 @@ async def test_resume_executes_only_pending_briefs(
     assert updated_cp.status == RunStatus.COMPLETED
     assert "brief_01" in updated_cp.worker_results
     assert "brief_02" in updated_cp.worker_results
-    assert "chk_01" in updated_cp.authoritative_sources
-    assert "chk_02" in updated_cp.authoritative_sources
+    assert "src_01#chk_01" in updated_cp.authoritative_sources
+    assert "src_02#chk_02" in updated_cp.authoritative_sources
+
+
+async def test_resume_no_double_counting_telemetry(
+    test_config: ResearchTeamConfig, tmp_path: Path
+) -> None:
+    store = FileCheckpointStore(base_dir=tmp_path / "checkpoints", config=test_config)
+
+    b1 = WorkerBrief(
+        brief_id="brief_01",
+        title="Subtopic 1",
+        topic="Big Topic",
+        objective="Analyze subtopic 1",
+        brief_type=BriefType.FACTUAL_RETRIEVAL,
+        task_boundaries=["B1"],
+        expected_output_format=OutputFormatSpec(),
+    )
+    decomposition = ResearchDecomposition(
+        topic="Big Topic",
+        effort_level=EffortLevel.DIRECT,
+        worker_count=1,
+        worker_briefs=[b1],
+        rationale="Decomp",
+    )
+
+    source1 = SourceReference(
+        source_id="src_01",
+        chunk_id="chk_01",
+        title="Source 1",
+        content="Evidence 1",
+    )
+    res1 = WorkerExecutionResult(
+        brief_id="brief_01",
+        status=WorkerStatus.COMPLETED,
+        output=WorkerResearchOutput(
+            brief_id="brief_01",
+            findings_summary="Findings for 1",
+            claims=[],
+            sources=[source1.model_dump()],
+        ),
+        tokens_used=1500,
+        cost_usd=0.005,
+    )
+
+    # Checkpoint has 500 decomp tokens + 1500 worker tokens = 2000 used_tokens
+    checkpoint = CheckpointState(
+        run_id="run_resume_telemetry",
+        user_id="user_tel",
+        topic="Big Topic",
+        status=RunStatus.EXECUTING,
+        effort_level=EffortLevel.DIRECT,
+        decomposition=decomposition,
+        worker_results={"brief_01": res1},
+        authoritative_sources={"src_01#chk_01": source1.model_dump()},
+        used_tokens=2000,
+        used_cost_usd=0.007,
+        elapsed_seconds=5.0,
+    )
+    await store.save_checkpoint(checkpoint)
+
+    mock_synthesis = AsyncMock()
+    mock_report = _create_mock_report("Big Topic")
+    mock_synthesis.synthesize.return_value = mock_report
+    mock_synthesis.last_total_tokens = 300
+    mock_synthesis.last_cost_usd = 0.001
+
+    mock_verifier = AsyncMock()
+    mock_verifier.verify.return_value = SynthesisVerificationResult(
+        passed=True, gate1_passed=True, gate2_passed=True, summary="Clean"
+    )
+
+    team = ParallelResearchTeam(
+        config=test_config,
+        checkpoint_store=store,
+        synthesis_engine=mock_synthesis,
+        verifier=mock_verifier,
+    )
+
+    result = await team.resume("run_resume_telemetry")
+    assert result.status == RunStatus.COMPLETED
+    assert result.metrics is not None
+
+    # Total tokens should be 500 (decomp) + 1500 (worker_1) + 300 (synthesis) = 2300, NOT 3800
+    assert result.metrics.total_tokens == 2300
+    assert result.metrics.worker_breakdown["brief_01"]["tokens"] == 1500
+    assert result.metrics.total_cost_usd == 0.008

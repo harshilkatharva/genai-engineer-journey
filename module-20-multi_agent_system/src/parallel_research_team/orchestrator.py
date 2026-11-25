@@ -272,6 +272,7 @@ class ParallelResearchTeam:
                 report.unresolved_limitations.append(budget_warning)
 
         # 4. Verification Stage
+        verification_result = None
         if report:
             checkpoint.status = RunStatus.VERIFYING
             await self.checkpoint_store.save_checkpoint(checkpoint)
@@ -299,7 +300,12 @@ class ParallelResearchTeam:
                 r.status in (WorkerStatus.FAILED, WorkerStatus.TIMEOUT, WorkerStatus.PARTIAL)
                 for r in worker_results.values()
             )
-            final_status = RunStatus.PARTIALLY_COMPLETED if any_failures else RunStatus.COMPLETED
+            verif_failed = bool(verification_result and not verification_result.passed)
+            final_status = (
+                RunStatus.PARTIALLY_COMPLETED
+                if (any_failures or verif_failed)
+                else RunStatus.COMPLETED
+            )
         else:
             final_status = RunStatus.FAILED
 
@@ -386,11 +392,32 @@ class ParallelResearchTeam:
         )
         budget.start_timer()
 
+        decomp_tokens = max(
+            0,
+            checkpoint.used_tokens - sum(r.tokens_used for r in checkpoint.worker_results.values()),
+        )
+        decomp_cost = max(
+            0.0,
+            round(
+                checkpoint.used_cost_usd
+                - sum(r.cost_usd for r in checkpoint.worker_results.values()),
+                6,
+            ),
+        )
+
         tracker = ResearchTelemetryTracker(
             pricing_calculator=self.pricing_calculator,
-            initial_tokens=checkpoint.used_tokens,
-            initial_cost_usd=checkpoint.used_cost_usd,
+            initial_tokens=0,
+            initial_cost_usd=0.0,
         )
+        if checkpoint.decomposition:
+            tracker.record_decomposition(
+                tokens=decomp_tokens,
+                cost_usd=decomp_cost,
+                latency_ms=0.0,
+                model=self.config.default_model,
+            )
+
         for r in checkpoint.worker_results.values():
             tracker.record_worker_result(r, model=self.config.default_model)
 
@@ -474,6 +501,7 @@ class ParallelResearchTeam:
                 report.unresolved_limitations.append(budget_warning)
 
         # Verification
+        verification_result = None
         if report:
             checkpoint.status = RunStatus.VERIFYING
             await self.checkpoint_store.save_checkpoint(checkpoint)
@@ -498,7 +526,12 @@ class ParallelResearchTeam:
                 r.status in (WorkerStatus.FAILED, WorkerStatus.TIMEOUT, WorkerStatus.PARTIAL)
                 for r in checkpoint.worker_results.values()
             )
-            final_status = RunStatus.PARTIALLY_COMPLETED if any_failures else RunStatus.COMPLETED
+            verif_failed = bool(verification_result and not verification_result.passed)
+            final_status = (
+                RunStatus.PARTIALLY_COMPLETED
+                if (any_failures or verif_failed)
+                else RunStatus.COMPLETED
+            )
         else:
             final_status = RunStatus.FAILED
 

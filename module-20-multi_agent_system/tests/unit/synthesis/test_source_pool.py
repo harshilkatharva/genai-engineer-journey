@@ -79,12 +79,43 @@ def test_source_pool_serialization_roundtrip() -> None:
     pool.add_source(src)
 
     data = pool.to_dict()
-    assert "chk_10" in data
+    assert "src_10#chk_10" in data
 
     restored = AuthoritativeSourcePool.from_dict(data)
     assert len(restored) == 1
     assert restored.has_source("src_10", "chk_10")
     assert restored.get("src_10", "chk_10").content == "Content 10"  # type: ignore[union-attr]
+
+
+def test_source_pool_preserves_colliding_chunk_ids() -> None:
+    pool = AuthoritativeSourcePool()
+    src1 = SourceReference(
+        source_id="doc_1",
+        chunk_id="chunk_0",
+        title="Doc 1",
+        content="Content 1",
+    )
+    src2 = SourceReference(
+        source_id="doc_2",
+        chunk_id="chunk_0",
+        title="Doc 2",
+        content="Content 2",
+    )
+    pool.add_source(src1)
+    pool.add_source(src2)
+
+    assert len(pool) == 2
+    data = pool.to_dict()
+    assert len(data) == 2
+    assert "doc_1#chunk_0" in data
+    assert "doc_2#chunk_0" in data
+
+    restored = AuthoritativeSourcePool.from_dict(data)
+    assert len(restored) == 2
+    assert restored.has_source("doc_1", "chunk_0")
+    assert restored.has_source("doc_2", "chunk_0")
+    assert restored.get("doc_1", "chunk_0").content == "Content 1"  # type: ignore[union-attr]
+    assert restored.get("doc_2", "chunk_0").content == "Content 2"  # type: ignore[union-attr]
 
 
 def test_source_pool_thread_safety() -> None:

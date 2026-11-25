@@ -208,7 +208,7 @@ async def test_scheduler_real_time_checkpointing(test_config: ResearchTeamConfig
     assert len(results) == 2
     # Checkpoint store must have been invoked after each worker completion
     assert mock_checkpoint_store.save_checkpoint.call_count >= 2
-    assert "chk_101" in checkpoint.authoritative_sources
+    assert "src_1#chk_101" in checkpoint.authoritative_sources
     assert checkpoint.used_tokens == 200
 
 
