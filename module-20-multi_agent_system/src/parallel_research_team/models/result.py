@@ -25,6 +25,15 @@ class ExecutionMetrics(BaseModel):
     partial_workers: int = Field(default=0, ge=0)
     failed_workers: int = Field(default=0, ge=0)
     timed_out_workers: int = Field(default=0, ge=0)
+    reflection_tokens: int = Field(
+        default=0, ge=0, description="Tokens consumed exclusively by the reflection loop"
+    )
+    reflection_cost_usd: float = Field(
+        default=0.0, ge=0.0, description="USD cost incurred exclusively by the reflection loop"
+    )
+    reflection_steps: int = Field(
+        default=0, ge=0, description="Number of reflection revision iterations executed"
+    )
 
 
 class ResearchTeamRunResult(BaseModel):

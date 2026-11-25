@@ -163,24 +163,21 @@ Module 20 builds upon established foundation libraries in the repository with cl
 
 ---
 
-## 5. Pending Implementation Tasks (Backlog)
+### Milestone 8: Self-Correcting Reflection Loop for Gate 2 Verification Defects (Option 1)
+- [x] Added runtime configuration knobs in `src/parallel_research_team/core/config.py`: `enable_reflection`, `max_reflection_steps` (2), `max_reflection_tokens` (15,000), `max_reflection_cost_usd` ($0.05).
+- [x] Extended `RunStatus` with `RunStatus.REFLECTING = "reflecting"` (`models/checkpoint.py`).
+- [x] Extended `ExecutionMetrics` and `ResearchTelemetryTracker` with `reflection_tokens`, `reflection_cost_usd`, and `reflection_steps` (`models/result.py`, `telemetry/tracker.py`).
+- [x] Implemented versioned reflection prompts in `prompts/v1/reflection/` (`system.jinja2`, `user.jinja2`) and wired into `PromptTemplateManager.render_reflection_prompts()`.
+- [x] Implemented `ReflectionEngine` in `src/parallel_research_team/synthesis/reflection.py`:
+  - Iteratively targets claims flagged as `CONTRADICTS` or `NEUTRAL` by Gate 2.
+  - Re-prompts the synthesizer with authoritative evidence chunks to ground or prune ungrounded claims.
+  - Enforces strict isolated reflection token/cost envelope without crashing or aborting the primary research budget.
+  - Re-verifies revised report candidates and updates final verification status.
+- [x] Integrated reflection loop into `ParallelResearchTeam` orchestrator (`orchestrator.py`) across both `run()` and `resume()`, promoting successful revisions to `RunStatus.COMPLETED`.
+- [x] Unit test suite in `tests/unit/synthesis/test_reflection.py` with 100% pass rate.
 
-### Option 1: Self-Correcting Reflection Loop for Gate 2 Verification Failures
-- **Context & Motivation:** Multi-agent reports currently finish with status `PARTIALLY_COMPLETED` when Gate 2 (Semantic Grounding Verifier) identifies weak, ungrounded, or neutral claim entailments. Introducing an isolated, budget-controlled reflection loop enables the system to iteratively revise ungrounded claims without aborting or exceeding research resource ceilings.
-- **Requirements & Specifications:**
-  1. **Runtime Configuration Knobs (`src/parallel_research_team/core/config.py`):**
-     - `enable_reflection: bool = True` — feature toggle to enable/disable post-synthesis reflection.
-     - `max_reflection_steps: int = 2` — maximum reflection rewrite attempts.
-     - `max_reflection_tokens: int = 15_000` — dedicated token envelope isolated from base research budget.
-     - `max_reflection_cost_usd: float = 0.05` — dedicated cost ceiling for reflection judge and rewrite calls.
-  2. **Isolated Resource Envelope & Non-Destructive Fallback:**
-     - Reflection runs under its own token/cost envelope.
-     - If the reflection budget is exhausted or reflection fails, the original synthesized report is preserved and returned with an informative limitation note rather than failing the research run.
-  3. **Telemetry & Cost Transparency:**
-     - Track `reflection_tokens`, `reflection_cost_usd`, and `reflection_steps` explicitly in `ExecutionMetrics` (`src/parallel_research_team/models/result.py`).
-     - Record reflection spend in `ResearchTelemetryTracker` (`src/parallel_research_team/telemetry/tracker.py`).
-  4. **Reflection Engine (`src/parallel_research_team/synthesis/reflection.py`):**
-     - Target only claims flagged as `contradiction`, `neutral`, or `weak` by Gate 2.
-     - Re-prompt LLM with the authoritative source passages to tighten phrasing or prune ungrounded assertions.
-     - Re-run verification; promote status to `COMPLETED` when Gate 2 passes.
+---
+
+## 5. Pending Implementation Tasks (Backlog)
+- *None currently pending. All milestones (1 through 8) implemented and validated.*
 

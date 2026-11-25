@@ -351,6 +351,48 @@ sequenceDiagram
 
 ---
 
+## 7.1 Self-Correcting Reflection Loop Flow (Option 1)
+
+When Gate 2 flags claims with neutral or contradictory semantic entailment, `ReflectionEngine` executes an iterative revision loop under an isolated resource envelope:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Orch as Orchestrator (RunStatus: REFLECTING)
+    participant Refl as ReflectionEngine
+    participant LLM as LLMService
+    participant Verif as ResearchVerifier
+    participant Store as CheckpointStore
+
+    Orch->>Store: save_checkpoint(status=REFLECTING)
+    Orch->>Refl: reflect_and_revise(topic, report, source_pool, verif_result, verifier)
+    activate Refl
+
+    loop Step 1 to max_reflection_steps (until pass or budget exhausted)
+        Refl->>Refl: Check isolated token/cost budget
+        alt Budget Exhausted
+            Refl-->>Orch: Return best candidate (exhausted_budget=True)
+        else Budget Available
+            Refl->>Refl: Extract Gate 2 claim defects & reasoning
+            Refl->>LLM: complete_structure(response_model=Report, prompt=reflection_prompt)
+            LLM-->>Refl: Revised Report candidate
+            Refl->>Verif: verify(revised_candidate, source_pool)
+            Verif-->>Refl: new_verification_result
+
+            alt New Verification Passed
+                Refl-->>Orch: ReflectionOutcome(report, passed=True, improved=True)
+            else Grounding Score Improved
+                Refl->>Refl: Update best candidate & continue
+            end
+        end
+    end
+
+    deactivate Refl
+    Orch->>Orch: If Gate 2 passed, promote final_status to COMPLETED
+```
+
+---
+
 ## 8. End-to-End Orchestrator and Checkpoint Resumption Flow
 
 `ParallelResearchTeam` coordinates the full lifecycle and provides crash-resilient resumption:

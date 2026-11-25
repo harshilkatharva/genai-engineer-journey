@@ -22,6 +22,7 @@ class RunStatus(StrEnum):
     VALIDATING = "validating"
     SYNTHESIZING = "synthesizing"
     VERIFYING = "verifying"
+    REFLECTING = "reflecting"
     COMPLETED = "completed"
     PARTIALLY_COMPLETED = "partially_completed"
     FAILED = "failed"

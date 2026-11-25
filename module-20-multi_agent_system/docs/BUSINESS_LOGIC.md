@@ -387,3 +387,24 @@ class CheckpointState(BaseModel):
 1. **Rule 8.2.1 (Hard RPM Ceiling):** All LLM requests during evaluation must be guarded by `AsyncRateLimiter` with a maximum ceiling of $\le 13.3$ RPM (`min_interval_seconds = 4.5s`) to prevent HTTP 429 rate limit errors on Gemini free tiers.
 2. **Rule 8.2.2 (Mandatory Inter-Question Break):** A mandatory 30-second cooldown pause (`await asyncio.sleep(30.0)`) must be enforced between benchmark questions.
 3. **Rule 8.2.3 (Atomic Progress Checkpointing):** Each question result must be appended and persisted to `eval_results/eval_run_<run_id>.json` immediately upon completion.
+
+---
+
+## 9. Self-Correcting Reflection Loop Rules (Option 1)
+
+### 9.1 Reflection Activation & Scope
+1. **Rule 9.1.1 (Trigger Condition):** Reflection is triggered exclusively when:
+   - `enable_reflection = True` in `ResearchTeamConfig`.
+   - Gate 1 has passed, but Gate 2 semantic verification failed (`passed = False`) due to ungrounded or weak claims (`entailment in ("NEUTRAL", "CONTRADICTS")` or score $< 0.70$).
+   - The primary research run has not exceeded its base budget (`budget_exceeded = False`).
+2. **Rule 9.1.2 (Targeted Defect Correction):** The reflection prompt must provide the LLM with specific defective claim IDs, sections, defect categories, reasoning, and cited evidence chunk contents. The LLM must revise only the flagged claims to reflect source evidence strictly, without modifying unaffected validated sections.
+
+### 9.2 Budget Isolation & Non-Destructive Fallback
+1. **Rule 9.2.1 (Dedicated Token & Cost Envelope):** Reflection operations are governed by isolated ceilings:
+   - `max_reflection_steps`: at most 2 revision iterations (configurable 1–5).
+   - `max_reflection_tokens`: isolated ceiling of 15,000 tokens (minimum 1,000).
+   - `max_reflection_cost_usd`: isolated financial ceiling of $0.05 USD.
+2. **Rule 9.2.2 (Non-Destructive Budget Exhaustion):** Exhaustion of the reflection budget or LLM revision errors MUST NOT abort or fail the primary research run. The system must preserve the best available report candidate, record an explanatory advisory in `report.limitations`, and proceed to terminal outcome determination.
+3. **Rule 9.2.3 (Full Telemetry Accounting):** All reflection LLM and verifier tokens and costs must be recorded in `ResearchTelemetryTracker.record_reflection()` and exposed via `ExecutionMetrics.reflection_tokens`, `reflection_cost_usd`, and `reflection_steps`.
+4. **Rule 9.2.4 (Status Promotion):** If reflection successfully resolves all Gate 2 defects (`verification_result.passed = True`) and no workers failed, the orchestrator must promote the run status to `RunStatus.COMPLETED`.
+

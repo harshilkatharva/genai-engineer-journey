@@ -1,0 +1,32 @@
+RESEARCH TOPIC:
+{{ topic }}
+
+ORIGINAL SYNTHESIZED REPORT:
+{{ current_report_json }}
+
+VERIFICATION FEEDBACK & DEFECTS:
+{{ verification_summary }}
+
+SPECIFIC UNGROUNDED OR DEFECTIVE CLAIMS:
+{% for defect in defects %}
+- Section [{{ defect.section_id }}] | Claim [{{ defect.claim_id }}]: "{{ defect.claim_text }}"
+  Defect/Entailment: {{ defect.entailment }} (Score: {{ defect.score }})
+  Reasoning: {{ defect.reasoning }}
+  Cited Chunks: {{ defect.cited_chunk_ids }}
+{% endfor %}
+
+{% if general_issues %}
+ADDITIONAL VERIFICATION ISSUES:
+{% for issue in general_issues %}
+- [{{ issue.severity | default('ISSUE') }}] {{ issue.message | default(issue.error | default('Verification issue')) }}
+{% endfor %}
+{% endif %}
+
+AUTHORITATIVE EVIDENCE POOL:
+{% for src in sources %}
+<evidence source_id="{{ src.source_id }}" chunk_id="{{ src.chunk_id }}" title="{{ src.title }}">
+{{ src.content }}
+</evidence>
+{% endfor %}
+
+Produce an improved, fully grounded Report conforming to the schema, with all flagged defects resolved.

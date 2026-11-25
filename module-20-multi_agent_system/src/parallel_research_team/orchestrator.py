@@ -27,6 +27,7 @@ from .scheduling.scheduler import ParallelResearchScheduler
 from .storage.file_store import FileCheckpointStore
 from .storage.protocol import CheckpointStore
 from .synthesis.engine import SynthesisEngine
+from .synthesis.reflection import ReflectionEngine
 from .synthesis.source_pool import AuthoritativeSourcePool
 from .synthesis.verifier import ResearchVerifier
 from .telemetry.pricing import PricingCalculator
@@ -55,6 +56,7 @@ class ParallelResearchTeam:
         scheduler: ParallelResearchScheduler | None = None,
         synthesis_engine: SynthesisEngine | None = None,
         verifier: ResearchVerifier | None = None,
+        reflection_engine: ReflectionEngine | None = None,
         checkpoint_store: CheckpointStore | None = None,
         memory_service: Any | None = None,
         pricing_calculator: PricingCalculator | None = None,
@@ -82,6 +84,11 @@ class ParallelResearchTeam:
         self.verifier = verifier or ResearchVerifier(
             config=self.config,
             judge_llm_service=llm_service,
+        )
+        self.reflection_engine = reflection_engine or ReflectionEngine(
+            config=self.config,
+            llm_service=llm_service,
+            pricing_calculator=self.pricing_calculator,
         )
 
     async def run(
@@ -302,6 +309,30 @@ class ParallelResearchTeam:
                     tokens=verification_result.tokens_used,
                     cost_usd=verification_result.cost_usd,
                 )
+
+            # 4.1 Reflection Loop (Self-correction on verification defects)
+            if (
+                self.config.enable_reflection
+                and not verification_result.passed
+                and not budget_exceeded
+            ):
+                checkpoint.status = RunStatus.REFLECTING
+                await self.checkpoint_store.save_checkpoint(checkpoint)
+                refl_outcome = await self.reflection_engine.reflect_and_revise(
+                    topic=clean_topic,
+                    current_report=report,
+                    source_pool=source_pool,
+                    verification_result=verification_result,
+                    verifier=self.verifier,
+                )
+                report = refl_outcome.report
+                verification_result = refl_outcome.verification_result
+                tracker.record_reflection(
+                    tokens=refl_outcome.tokens_used,
+                    cost_usd=refl_outcome.cost_usd,
+                    steps=refl_outcome.steps_executed,
+                )
+
             if not verification_result.passed:
                 _logger.warning(
                     "Report verification identified issues: %s", verification_result.summary
@@ -553,6 +584,30 @@ class ParallelResearchTeam:
                     tokens=verification_result.tokens_used,
                     cost_usd=verification_result.cost_usd,
                 )
+
+            # Reflection Loop (Self-correction on verification defects)
+            if (
+                self.config.enable_reflection
+                and not verification_result.passed
+                and not budget_exceeded
+            ):
+                checkpoint.status = RunStatus.REFLECTING
+                await self.checkpoint_store.save_checkpoint(checkpoint)
+                refl_outcome = await self.reflection_engine.reflect_and_revise(
+                    topic=checkpoint.topic,
+                    current_report=report,
+                    source_pool=source_pool,
+                    verification_result=verification_result,
+                    verifier=self.verifier,
+                )
+                report = refl_outcome.report
+                verification_result = refl_outcome.verification_result
+                tracker.record_reflection(
+                    tokens=refl_outcome.tokens_used,
+                    cost_usd=refl_outcome.cost_usd,
+                    steps=refl_outcome.steps_executed,
+                )
+
             if not verification_result.passed:
                 verif_note = f"Verification advisory: {verification_result.summary}"
                 if verif_note not in report.limitations:

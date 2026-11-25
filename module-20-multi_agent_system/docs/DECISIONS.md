@@ -328,3 +328,18 @@ This document records all significant architectural, technical, and structural d
   3. Placed Option 1 (Self-Correcting Reflection Loop) into the pending implementation backlog in `docs/GOAL.md`. The design features an isolated token/cost envelope (`max_reflection_tokens = 15_000`, `max_reflection_cost_usd = $0.05`), feature toggle (`enable_reflection`), and graceful non-destructive fallback to prevent reflection exhaustion from aborting research.
 - **Consequences:** All 15 benchmark questions now have complete, valid outputs with 0 unhandled failures. Final results reveal Single Agent winning 13/15 questions with 10.1x lower latency (15.81s vs 160.43s) and 37.7x lower cost ($0.00053 vs $0.01996), while Multi-Agent delivers decisive structural superiority on deep architectural surveys (`q13` and `q14`, scoring 5.0 vs 4.0).
 
+---
+
+## [2026-11-25] DEC-20-031: Self-Correcting Reflection Loop for Gate 2 Verification Defects
+
+- **Status:** Accepted
+- **Context:** Synthesized multi-agent reports frequently concluded with status `PARTIALLY_COMPLETED` when Gate 2 (Module 19 `SemanticGroundingVerifier`) identified claims with neutral or weak entailment scores relative to cited source chunks. An automated revision loop was required to correct ungrounded assertions before terminal outcome determination, while guaranteeing that reflection spend cannot abort or exhaust the main research run budget.
+- **Decision:**
+  1. Added dedicated configuration controls in `ResearchTeamConfig`: `enable_reflection: bool = True`, `max_reflection_steps: int = 2`, `max_reflection_tokens: int = 15_000`, `max_reflection_cost_usd: float = 0.05`.
+  2. Extended `RunStatus` with `RunStatus.REFLECTING = "reflecting"` and `ExecutionMetrics` with `reflection_tokens`, `reflection_cost_usd`, and `reflection_steps`.
+  3. Created versioned prompt templates `src/parallel_research_team/prompts/v1/reflection/` (`system.jinja2`, `user.jinja2`) specifically instructing the model to rectify flagged claims using authoritative `<evidence>` chunks without modifying validated sections.
+  4. Implemented `ReflectionEngine` (`src/parallel_research_team/synthesis/reflection.py`) operating with an isolated resource envelope. If the reflection token or cost envelope is exhausted, or if an LLM error occurs, the engine executes a non-destructive fallback, preserving the best available report candidate and documenting an advisory limitation.
+  5. Integrated reflection into `ParallelResearchTeam` orchestrator (`orchestrator.py`) in both `run()` and `resume()`. Reports whose Gate 2 defects are successfully rectified are promoted to `RunStatus.COMPLETED`.
+- **Consequences:** Multi-agent reports now have autonomous self-healing capability against semantic grounding issues without compromising budget containment or crashing on reflection failure. Verified by unit tests in `tests/unit/synthesis/test_reflection.py` with 100% pass rate.
+
+

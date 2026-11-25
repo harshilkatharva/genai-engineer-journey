@@ -44,6 +44,11 @@ class ResearchTelemetryTracker:
             "issues_count": 0,
             "summary": "",
         }
+        self.reflection_metrics: dict[str, Any] = {
+            "tokens": 0,
+            "cost_usd": 0.0,
+            "steps": 0,
+        }
 
     @property
     def elapsed_ms(self) -> float:
@@ -147,6 +152,22 @@ class ResearchTelemetryTracker:
             "cost_usd": max(0.0, cost_usd),
         }
 
+    def record_reflection(
+        self,
+        tokens: int,
+        cost_usd: float,
+        steps: int = 1,
+    ) -> None:
+        """Record telemetry for self-correcting reflection iterations."""
+        current_tok = self.reflection_metrics.get("tokens", 0)
+        current_cost = self.reflection_metrics.get("cost_usd", 0.0)
+        current_steps = self.reflection_metrics.get("steps", 0)
+        self.reflection_metrics = {
+            "tokens": current_tok + max(0, tokens),
+            "cost_usd": round(current_cost + max(0.0, float(cost_usd)), 6),
+            "steps": current_steps + max(0, steps),
+        }
+
     def finish(self) -> ExecutionMetrics:
         """Halt execution timer and produce aggregated ExecutionMetrics."""
         if self._end_time is None:
@@ -160,19 +181,25 @@ class ResearchTelemetryTracker:
         verif_tokens = self.verification_metrics.get("tokens", 0)
         verif_costs = self.verification_metrics.get("cost_usd", 0.0)
 
+        refl_tokens = self.reflection_metrics.get("tokens", 0)
+        refl_costs = self.reflection_metrics.get("cost_usd", 0.0)
+        refl_steps = self.reflection_metrics.get("steps", 0)
+
         total_tokens = (
             self.initial_tokens
             + self.decomposition_metrics["tokens"]
             + worker_tokens
             + self.synthesis_metrics["tokens"]
             + verif_tokens
+            + refl_tokens
         )
         total_cost_usd = round(
             self.initial_cost_usd
             + self.decomposition_metrics["cost_usd"]
             + worker_costs
             + self.synthesis_metrics["cost_usd"]
-            + verif_costs,
+            + verif_costs
+            + refl_costs,
             6,
         )
 
@@ -204,4 +231,7 @@ class ResearchTelemetryTracker:
             partial_workers=partial,
             failed_workers=failed,
             timed_out_workers=timed_out,
+            reflection_tokens=refl_tokens,
+            reflection_cost_usd=round(refl_costs, 6),
+            reflection_steps=refl_steps,
         )

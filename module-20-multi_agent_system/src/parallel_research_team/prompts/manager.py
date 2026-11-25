@@ -131,6 +131,34 @@ class PromptTemplateManager:
         )
         return system_prompt, user_prompt
 
+    def render_reflection_prompts(
+        self,
+        topic: str,
+        current_report_json: str,
+        verification_summary: str,
+        defects: list[dict[str, Any]],
+        general_issues: list[dict[str, Any]],
+        sources: list[SourceReference] | list[dict[str, Any]],
+        version: str | None = None,
+    ) -> tuple[str, str]:
+        """Render system and user prompts for self-correcting report reflection."""
+        system_prompt = self.render_template(
+            "reflection/system",
+            version=version,
+            topic=topic,
+        )
+        user_prompt = self.render_template(
+            "reflection/user",
+            version=version,
+            topic=topic,
+            current_report_json=current_report_json,
+            verification_summary=verification_summary,
+            defects=defects,
+            general_issues=general_issues,
+            sources=sources,
+        )
+        return system_prompt, user_prompt
+
     def get_metadata(self, version: str | None = None) -> dict[str, Any]:
         """Load metadata.json for the specified prompt version."""
         ver = version or self.default_version

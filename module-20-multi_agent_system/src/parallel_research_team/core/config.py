@@ -48,6 +48,23 @@ class ResearchTeamConfig(BaseSettings):
     )
 
     # -------------------------------------------------------------------------
+    # Reflection Loop Knobs (Self-Correction for Gate 2 Issues)
+    # -------------------------------------------------------------------------
+    enable_reflection: bool = Field(
+        default=True,
+        description="Enable self-correcting reflection loop on Gate 2 verification issues",
+    )
+    max_reflection_steps: int = Field(
+        default=2, ge=1, le=5, description="Maximum self-correcting reflection revisions"
+    )
+    max_reflection_tokens: int = Field(
+        default=15_000, ge=1_000, description="Dedicated token envelope for reflection loop"
+    )
+    max_reflection_cost_usd: float = Field(
+        default=0.05, gt=0.0, description="Dedicated USD budget ceiling for reflection loop"
+    )
+
+    # -------------------------------------------------------------------------
     # Concurrency & Scaling Knobs
     # -------------------------------------------------------------------------
     max_concurrency: int = Field(
