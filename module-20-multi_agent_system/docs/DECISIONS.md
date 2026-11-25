@@ -268,7 +268,7 @@ This document records all significant architectural, technical, and structural d
 ## [2026-11-25] DEC-20-027: Bug Audit Fixes — Scheduler Deadlock Prevention, Synthesis Budget Check, Output Validator Grounding, and Web Snippet Resilience
 
 - **Status:** Accepted
-- **Context:** Following the module bug audit (`docs/MODULE_20_BUG_AUDIT.md`), five additional bugs (Findings 04 through 08) were confirmed and required resolution:
+- **Context:** Five additional bugs (Findings 04 through 08) were confirmed and required resolution:
   1. *Finding 04 (High):* In `scheduler.py`, `completed_events[brief.brief_id].set()` was executed outside a `finally:` block. Cancellation or unhandled exceptions in upstream workers prevented signaling dependent tasks, causing permanent deadlock during concurrent DAG execution.
   2. *Finding 05 (Medium):* In `synthesis/engine.py`, `SynthesisEngine.synthesize()` never called `shared_budget.check_budget()` prior to executing the structured report generation LLM call, bypassing budget ceilings when token or wall-clock limits were breached.
   3. *Finding 06 (Medium):* In `scheduling/validator.py`, `WorkerOutputValidator` checked for the presence of schema field names (`"sources"`, `"claims"`, `"findings_summary"`) as literal substrings in free-form narrative `output.findings_summary` rather than inspecting attributes on `output`.
@@ -281,3 +281,22 @@ This document records all significant architectural, technical, and structural d
   4. Updated `WorkerOutputValidator` to discard claims referencing ungrounded/phantom sources (`output.claims = valid_claims`) and downgrade `result.status` to `WorkerStatus.PARTIAL` whenever phantom citations are detected.
   5. Handled empty snippets in `tools.py` and fallback content in `extractor.py.add_web_source()`, gracefully assigning title/URL fallback content and wrapping item ingestion in error shielding.
 - **Consequences:** Resolves Findings 04 through 08. Eliminates scheduler deadlocks, halts synthesis on budget exhaustion, eliminates spurious output limitation flags on professional summaries, discards ungrounded worker claims, and prevents web search tool crashes on empty snippets.
+
+---
+
+## [2026-11-25] DEC-20-028: Bug Audit Fixes — Resumed Wall-Clock Preservation, Gate 2 Telemetry Accounting, Checkpoint ID Consistency, and Genuine Failure Propagation Testing
+
+- **Status:** Accepted
+- **Context:** The remaining findings (Findings 09 through 13) were addressed:
+  1. *Finding 09 (Medium):* `SharedRunBudget` lacked `initial_elapsed_seconds`. Resumed runs reset the monotonic deadline to 180s regardless of prior execution time and overwrote `checkpoint.elapsed_seconds` with the time of the resumed slice alone.
+  2. *Finding 10 (Low):* Verified that line 129 in `tests/integration/test_integration_llm_service.py` correctly tests `claim.text != ""` and is free of attribute mismatch.
+  3. *Finding 11 (Low):* Gate 2 reflection LLM judge tokens and costs in `SynthesisVerifier` were omitted from `SynthesisVerificationResult` and `ResearchTelemetryTracker`, underreporting final run spend.
+  4. *Finding 12 (Low):* Resuming a run before decomposition called `self.run()`, which generated a new `run_id` and abandoned the original checkpoint on disk.
+  5. *Finding 13 (Low):* `test_orchestrator.py` manually pre-seeded worker failure limitations into `mock_report.limitations` before synthesis, making the test assertion tautological against the test setup rather than verifying orchestrator failure propagation.
+- **Decision:**
+  1. Updated `SharedRunBudget` to accept `initial_elapsed_seconds`, subtract it from remaining monotonic deadline (`remaining = max(0.0, max_wall_clock - initial_elapsed)`), and accumulate elapsed duration (`initial_elapsed + (now - start)`). Resumption in `orchestrator.py` now passes `checkpoint.elapsed_seconds` into the budget.
+  2. Updated `SynthesisVerificationResult` and `ResearchVerifier` to capture `tokens_used` and `cost_usd` from `gate2_report`. Updated `ResearchTelemetryTracker.record_verification()` and `tracker.finish()` to meter and aggregate verification spend in `ExecutionMetrics` and record usage in `budget`.
+  3. Updated `orchestrator.run()` to accept an optional `run_id` parameter (`run_id = run_id or f"run_{uuid.uuid4().hex[:12]}"`), and updated `resume()` to pass `run_id=run_id` when re-running pre-decomposition, maintaining checkpoint continuity.
+  4. Added orchestrator post-synthesis failure limitation reconciliation ensuring all failed, timed-out, or partial worker briefs are disclosed in `report.limitations` and `report.unresolved_limitations`. Removed tautological mock limitation seeding in `test_orchestrator.py`.
+- **Consequences:** Resolves Findings 09, 10, 11, 12, and 13. All 13 findings from the bug audit report are now completely resolved. Resumed runs strictly enforce wall-clock limits and preserve duration history, reflection judge spend is fully metered, checkpoint identities are stable across pre-decomposition restarts, and failure reporting is genuinely tested without mock tautology.
+

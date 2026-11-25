@@ -150,3 +150,24 @@ def test_resume_initial_tokens_and_cost() -> None:
 
     assert metrics.total_tokens == 5500
     assert metrics.total_cost_usd == 0.016
+
+
+def test_tracker_verification_metrics_included_in_finish() -> None:
+    tracker = ResearchTelemetryTracker()
+    tracker.record_decomposition(tokens=500, cost_usd=0.001)
+    tracker.record_synthesis(tokens=800, cost_usd=0.002, latency_ms=100.0)
+    tracker.record_verification(
+        passed=True,
+        gate1_passed=True,
+        gate2_passed=True,
+        summary="Clean",
+        tokens=350,
+        cost_usd=0.0015,
+    )
+    metrics = tracker.finish()
+
+    # 500 (decomp) + 800 (synth) + 350 (verif) = 1650
+    assert metrics.total_tokens == 1650
+    assert metrics.total_cost_usd == 0.0045
+    assert tracker.verification_metrics["tokens"] == 350
+    assert tracker.verification_metrics["cost_usd"] == 0.0015

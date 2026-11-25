@@ -210,10 +210,6 @@ async def test_orchestrator_parallel_run_with_worker_failure_isolation(
 
     mock_synthesis = AsyncMock()
     mock_report = _create_mock_report("Comparative Study")
-    mock_report.limitations.append("Brief 'brief_02' research incomplete: External API timeout")
-    mock_report.unresolved_limitations.append(
-        "Brief 'brief_02' research incomplete: External API timeout"
-    )
     mock_synthesis.synthesize.return_value = mock_report
 
     mock_verifier = AsyncMock()

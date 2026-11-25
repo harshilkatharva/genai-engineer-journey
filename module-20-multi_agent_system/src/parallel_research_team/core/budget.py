@@ -25,6 +25,7 @@ class SharedRunBudget:
         max_wall_clock_seconds: float | None = None,
         initial_tokens: int = 0,
         initial_cost_usd: float = 0.0,
+        initial_elapsed_seconds: float = 0.0,
     ) -> None:
         cfg = config or get_research_team_config()
         self.max_total_tokens = (
@@ -41,6 +42,7 @@ class SharedRunBudget:
 
         self.current_tokens: int = max(0, initial_tokens)
         self.current_cost_usd: float = max(0.0, initial_cost_usd)
+        self.initial_elapsed_seconds: float = max(0.0, initial_elapsed_seconds)
         self.start_monotonic: float | None = None
         self.deadline_monotonic: float | None = None
         self._lock = asyncio.Lock()
@@ -50,14 +52,15 @@ class SharedRunBudget:
         if self.start_monotonic is None:
             now = time.monotonic()
             self.start_monotonic = now
-            self.deadline_monotonic = now + self.max_wall_clock_seconds
+            remaining_seconds = max(0.0, self.max_wall_clock_seconds - self.initial_elapsed_seconds)
+            self.deadline_monotonic = now + remaining_seconds
 
     @property
     def elapsed_seconds(self) -> float:
-        """Seconds elapsed since timer start."""
+        """Seconds elapsed since timer start plus initial elapsed seconds."""
         if self.start_monotonic is None:
-            return 0.0
-        return round(time.monotonic() - self.start_monotonic, 3)
+            return self.initial_elapsed_seconds
+        return round(self.initial_elapsed_seconds + (time.monotonic() - self.start_monotonic), 3)
 
     def is_deadline_exceeded(self) -> bool:
         """Check if monotonic deadline has passed."""

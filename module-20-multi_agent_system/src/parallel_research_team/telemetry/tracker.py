@@ -133,6 +133,8 @@ class ResearchTelemetryTracker:
         gate2_passed: bool | None = None,
         issues_count: int = 0,
         summary: str = "",
+        tokens: int = 0,
+        cost_usd: float = 0.0,
     ) -> None:
         """Record telemetry for the verification gate execution."""
         self.verification_metrics = {
@@ -141,6 +143,8 @@ class ResearchTelemetryTracker:
             "gate2_passed": gate2_passed,
             "issues_count": max(0, issues_count),
             "summary": summary,
+            "tokens": max(0, tokens),
+            "cost_usd": max(0.0, cost_usd),
         }
 
     def finish(self) -> ExecutionMetrics:
@@ -153,17 +157,22 @@ class ResearchTelemetryTracker:
         worker_tokens = sum(m.get("tokens", 0) for m in self.worker_breakdown.values())
         worker_costs = sum(m.get("cost_usd", 0.0) for m in self.worker_breakdown.values())
 
+        verif_tokens = self.verification_metrics.get("tokens", 0)
+        verif_costs = self.verification_metrics.get("cost_usd", 0.0)
+
         total_tokens = (
             self.initial_tokens
             + self.decomposition_metrics["tokens"]
             + worker_tokens
             + self.synthesis_metrics["tokens"]
+            + verif_tokens
         )
         total_cost_usd = round(
             self.initial_cost_usd
             + self.decomposition_metrics["cost_usd"]
             + worker_costs
-            + self.synthesis_metrics["cost_usd"],
+            + self.synthesis_metrics["cost_usd"]
+            + verif_costs,
             6,
         )
 

@@ -111,3 +111,21 @@ async def test_deadline_exceeded() -> None:
 
     with pytest.raises(BudgetExceededError, match="Execution deadline exceeded"):
         await budget.check_budget()
+
+
+def test_budget_resumption_initial_elapsed_seconds() -> None:
+    budget = SharedRunBudget(
+        max_total_tokens=10_000,
+        max_total_cost_usd=1.0,
+        max_wall_clock_seconds=180.0,
+        initial_elapsed_seconds=150.0,
+    )
+    assert budget.elapsed_seconds == 150.0
+
+    budget.start_timer()
+    assert budget.start_monotonic is not None
+    assert budget.deadline_monotonic is not None
+    # Remaining time should be ~30.0s, not 180.0s
+    remaining = budget.deadline_monotonic - budget.start_monotonic
+    assert abs(remaining - 30.0) < 0.1
+    assert budget.elapsed_seconds >= 150.0

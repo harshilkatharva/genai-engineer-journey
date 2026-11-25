@@ -35,6 +35,8 @@ class SynthesisVerificationResult(BaseModel):
     gate2_report: SemanticGroundingReport | None = None
     issues: list[dict[str, Any]] = Field(default_factory=list)
     summary: str = Field(default="")
+    tokens_used: int = Field(default=0, ge=0, description="Gate 2 judge tokens consumed")
+    cost_usd: float = Field(default=0.0, ge=0.0, description="Gate 2 judge USD cost incurred")
 
 
 class ResearchVerifier:
@@ -150,6 +152,9 @@ class ResearchVerifier:
                 f"threshold {self.config.semantic_verification_threshold:.2f})."
             )
 
+        gate2_tokens = int(getattr(gate2_report, "tokens_used", 0) or 0)
+        gate2_cost = float(getattr(gate2_report, "cost_usd", 0.0) or 0.0)
+
         return SynthesisVerificationResult(
             passed=passed,
             gate1_passed=gate1_report.passed,
@@ -158,4 +163,6 @@ class ResearchVerifier:
             gate2_report=gate2_report,
             issues=all_issues,
             summary=summary,
+            tokens_used=gate2_tokens,
+            cost_usd=gate2_cost,
         )

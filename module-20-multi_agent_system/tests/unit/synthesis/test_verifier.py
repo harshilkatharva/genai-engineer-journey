@@ -236,3 +236,36 @@ async def test_verifier_gate2_exception_shielding(
     assert result.gate1_passed is True
     assert result.gate2_passed is False
     assert any("Judge model rate limit" in str(iss) for iss in result.issues)
+
+
+@pytest.mark.asyncio
+async def test_verifier_attaches_gate2_token_and_cost(
+    test_config: ResearchTeamConfig,
+) -> None:
+    test_config.enable_semantic_verification = True
+    report, pool = _create_valid_report_and_pool()
+    verifier = ResearchVerifier(config=test_config)
+
+    mock_gate2_report = SemanticGroundingReport(
+        passed=True,
+        all_claims_grounded=True,
+        grounding_score=0.95,
+        claim_evaluations=[],
+        issues=[],
+        critical_count=0,
+        major_count=0,
+        minor_count=0,
+        tokens_used=280,
+        cost_usd=0.0012,
+    )
+
+    with patch(
+        "parallel_research_team.synthesis.verifier.SemanticGroundingVerifier.verify_grounding",
+        new_callable=AsyncMock,
+    ) as mock_verify:
+        mock_verify.return_value = mock_gate2_report
+        result = await verifier.verify(report=report, source_pool=pool)
+
+    assert result.passed is True
+    assert result.tokens_used == 280
+    assert result.cost_usd == 0.0012

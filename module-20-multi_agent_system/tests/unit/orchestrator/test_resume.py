@@ -316,3 +316,79 @@ async def test_resume_no_double_counting_telemetry(
     assert result.metrics.total_tokens == 2300
     assert result.metrics.worker_breakdown["brief_01"]["tokens"] == 1500
     assert result.metrics.total_cost_usd == 0.008
+
+
+async def test_resume_before_decomposition_preserves_run_id(
+    test_config: ResearchTeamConfig, tmp_path: Path
+) -> None:
+    store = FileCheckpointStore(base_dir=tmp_path / "checkpoints", config=test_config)
+
+    checkpoint = CheckpointState(
+        run_id="run_pre_decomp_999",
+        user_id="user_pre",
+        topic="Pre Decomp Topic",
+        status=RunStatus.DECOMPOSING,
+        decomposition=None,
+    )
+    await store.save_checkpoint(checkpoint)
+
+    mock_decomp = AsyncMock()
+    brief = WorkerBrief(
+        brief_id="brief_01",
+        title="Direct Search",
+        topic="Pre Decomp Topic",
+        objective="Analyze topic",
+        brief_type=BriefType.FACTUAL_RETRIEVAL,
+        task_boundaries=["Bound"],
+        expected_output_format=OutputFormatSpec(),
+    )
+    mock_decomp.decompose.return_value = ResearchDecomposition(
+        topic="Pre Decomp Topic",
+        effort_level=EffortLevel.DIRECT,
+        worker_count=1,
+        worker_briefs=[brief],
+        rationale="Direct",
+    )
+
+    mock_scheduler = AsyncMock()
+    source = SourceReference(
+        source_id="src_01",
+        chunk_id="chk_01",
+        title="Source Docs",
+        content="Evidence content text.",
+    )
+    worker_res = WorkerExecutionResult(
+        brief_id="brief_01",
+        status=WorkerStatus.COMPLETED,
+        output=WorkerResearchOutput(
+            brief_id="brief_01",
+            findings_summary="Findings text",
+            claims=[],
+            sources=[source.model_dump()],
+        ),
+        tokens_used=500,
+        cost_usd=0.001,
+    )
+    mock_scheduler.schedule_and_execute.return_value = {"brief_01": worker_res}
+
+    mock_synthesis = AsyncMock()
+    mock_synthesis.synthesize.return_value = _create_mock_report("Pre Decomp Topic")
+
+    mock_verifier = AsyncMock()
+    mock_verifier.verify.return_value = SynthesisVerificationResult(
+        passed=True, gate1_passed=True, gate2_passed=True, summary="Clean"
+    )
+
+    team = ParallelResearchTeam(
+        config=test_config,
+        decomposition_engine=mock_decomp,
+        scheduler=mock_scheduler,
+        synthesis_engine=mock_synthesis,
+        verifier=mock_verifier,
+        checkpoint_store=store,
+    )
+
+    result = await team.resume("run_pre_decomp_999")
+    # Must preserve the same run_id!
+    assert result.run_id == "run_pre_decomp_999"
+    assert result.status == RunStatus.COMPLETED

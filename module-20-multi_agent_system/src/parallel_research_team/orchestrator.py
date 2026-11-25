@@ -90,13 +90,14 @@ class ParallelResearchTeam:
         user_id: str = "default_user",
         session_id: str | None = None,
         effort_override: EffortLevel | None = None,
+        run_id: str | None = None,
     ) -> ResearchTeamRunResult:
         """Execute a complete end-to-end research run."""
         clean_topic = topic.strip() if topic else ""
         if not clean_topic:
             raise ValueError("Research topic cannot be empty or pure whitespace.")
 
-        run_id = f"run_{uuid.uuid4().hex[:12]}"
+        run_id = run_id or f"run_{uuid.uuid4().hex[:12]}"
         sess_id = session_id or f"sess_{uuid.uuid4().hex[:8]}"
 
         budget = SharedRunBudget(config=self.config)
@@ -271,6 +272,16 @@ class ParallelResearchTeam:
             if budget_warning not in report.unresolved_limitations:
                 report.unresolved_limitations.append(budget_warning)
 
+        if report:
+            for b_id, r in worker_results.items():
+                if r.status in (WorkerStatus.FAILED, WorkerStatus.TIMEOUT, WorkerStatus.PARTIAL):
+                    err_msg = r.error_message or f"Worker encountered status: {r.status.value}"
+                    note = f"Brief '{b_id}' research incomplete: {err_msg}"
+                    if note not in report.limitations:
+                        report.limitations.append(note)
+                    if note not in report.unresolved_limitations:
+                        report.unresolved_limitations.append(note)
+
         # 4. Verification Stage
         verification_result = None
         if report:
@@ -283,7 +294,14 @@ class ParallelResearchTeam:
                 gate2_passed=verification_result.gate2_passed,
                 issues_count=len(verification_result.issues),
                 summary=verification_result.summary,
+                tokens=verification_result.tokens_used,
+                cost_usd=verification_result.cost_usd,
             )
+            if verification_result.tokens_used > 0:
+                await budget.record_usage(
+                    tokens=verification_result.tokens_used,
+                    cost_usd=verification_result.cost_usd,
+                )
             if not verification_result.passed:
                 _logger.warning(
                     "Report verification identified issues: %s", verification_result.summary
@@ -369,7 +387,11 @@ class ParallelResearchTeam:
 
         if not checkpoint.decomposition:
             _logger.info("Resuming run %s before decomposition completed: re-running", run_id)
-            return await self.run(topic=checkpoint.topic, user_id=checkpoint.user_id)
+            return await self.run(
+                topic=checkpoint.topic,
+                user_id=checkpoint.user_id,
+                run_id=run_id,
+            )
 
         # Restore evidence and state
         source_pool = AuthoritativeSourcePool.from_dict(checkpoint.authoritative_sources)
@@ -389,6 +411,7 @@ class ParallelResearchTeam:
             config=self.config,
             initial_tokens=checkpoint.used_tokens,
             initial_cost_usd=checkpoint.used_cost_usd,
+            initial_elapsed_seconds=checkpoint.elapsed_seconds,
         )
         budget.start_timer()
 
@@ -500,6 +523,16 @@ class ParallelResearchTeam:
             if budget_warning not in report.unresolved_limitations:
                 report.unresolved_limitations.append(budget_warning)
 
+        if report:
+            for b_id, r in checkpoint.worker_results.items():
+                if r.status in (WorkerStatus.FAILED, WorkerStatus.TIMEOUT, WorkerStatus.PARTIAL):
+                    err_msg = r.error_message or f"Worker encountered status: {r.status.value}"
+                    note = f"Brief '{b_id}' research incomplete: {err_msg}"
+                    if note not in report.limitations:
+                        report.limitations.append(note)
+                    if note not in report.unresolved_limitations:
+                        report.unresolved_limitations.append(note)
+
         # Verification
         verification_result = None
         if report:
@@ -512,7 +545,14 @@ class ParallelResearchTeam:
                 gate2_passed=verification_result.gate2_passed,
                 issues_count=len(verification_result.issues),
                 summary=verification_result.summary,
+                tokens=verification_result.tokens_used,
+                cost_usd=verification_result.cost_usd,
             )
+            if verification_result.tokens_used > 0:
+                await budget.record_usage(
+                    tokens=verification_result.tokens_used,
+                    cost_usd=verification_result.cost_usd,
+                )
             if not verification_result.passed:
                 verif_note = f"Verification advisory: {verification_result.summary}"
                 if verif_note not in report.limitations:
